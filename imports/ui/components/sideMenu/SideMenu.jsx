@@ -59,6 +59,8 @@ export default class SlideMenu extends Component {
           Contact
         </Link>
       </Menu>
+      
+      
     );
   }
 };
