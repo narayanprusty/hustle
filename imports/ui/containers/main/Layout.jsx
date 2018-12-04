@@ -3,9 +3,8 @@ import { BrowserRouter, Route, Switch, Redirect ,Link} from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
 import Hello from '../../pages/Hello';
 import Register from '../../pages/register/Register';
-import Layout from './Layout';
-import SlideMenu from '../../components/sideMenu/SideMenu';
-export default class Main extends Component {
+
+export default class Layout extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -13,11 +12,10 @@ export default class Main extends Component {
 
   render() {
     return (
-      <div>
-        <SlideMenu />
-       <Layout />
-        
-      </div>
+        <div className="page-container">
+        <Route exact path="/hello" component={Hello} />
+        <Route exact path="/signup" component={Register} />
+        </div>
     );
   }
 }
