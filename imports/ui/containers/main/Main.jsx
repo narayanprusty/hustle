@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect ,Link} from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
 import { slide as Menu } from "react-burger-menu";
+import Hello from '../../pages/Hello';
+import Register from '../../pages/register/Register';
 var styles = {
   bmBurgerButton: {
     position: "fixed",
@@ -46,17 +48,17 @@ class SlideMenu extends Component {
   render() {
     return (
       <Menu styles={styles}>
-        <a id="home" className="bm-item" href="/">
+        <Link to='/'>
           Home
-        </a>
+          </Link>
         <br />
-        <a id="about" className="bm-item" href="/about">
-          About
-        </a>
+        <Link to="/hello">
+          Hello
+        </Link>
         <br />
-        <a id="contact" className="bm-item" href="/contact">
+        <Link to="/signup">
           Contact
-        </a>
+        </Link>
       </Menu>
     );
   }
@@ -78,13 +80,10 @@ export default class Main extends Component {
     return (
       <div>
         <SlideMenu />
-        {/* <ion-header>
-                <ion-item >
-                <button onClick={this.openMenu}>
-                <ion-icon name="menu"></ion-icon>
-                </button>
-                </ion-item>
-            </ion-header> */}
+        <div className="page-container">
+        <Route exact path="/hello" component={Hello} />
+        <Route exact path="/signup" component={Register} />
+        </div>
       </div>
     );
   }
