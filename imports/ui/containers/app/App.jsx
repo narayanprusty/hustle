@@ -5,7 +5,7 @@ import Main from "../main/Main";
 const App = () => (
   <BrowserRouter>
     <Switch>
-      <Route exact path="/" compoonent={Main} />
+      <Route exact path="/" component={Main} />
     </Switch>
   </BrowserRouter>
 );
