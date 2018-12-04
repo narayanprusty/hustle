@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import LaddaButton, { S, SLIDE_UP } from 'react-ladda';
 
 export default class Register extends Component {
+	
 	constructor(props){
 		super();
 

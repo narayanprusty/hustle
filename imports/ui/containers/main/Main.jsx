@@ -70,12 +70,6 @@ export default class Main extends Component {
     this.state = {};
   }
 
-  openMenu = () => {
-    this.setState({
-      openMenu: this.state.openMenu ? false : true
-    });
-  };
-
   render() {
     return (
       <div>
@@ -84,6 +78,7 @@ export default class Main extends Component {
         <Route exact path="/hello" component={Hello} />
         <Route exact path="/signup" component={Register} />
         </div>
+        
       </div>
     );
   }
