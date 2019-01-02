@@ -17,48 +17,49 @@ export default class Register extends Component {
         register_formloading: true
       }, 
       () => {
-        debugger;
-        // Accounts.createUser(
-        //   {
-        //     email: this.email.value,
-        //     password: this.pass.value,
-        //     profile: {
-        //       firstName: this.fname.value,
-        //       lastName: this.lname.value
-        //     }
-        //   },
-        //   error => {
-        //     console.log(error);
-        //     if (error) {
-        //       if (error.error && error.error === "unverified-account-created") {
-        //         this.setState({
-        //           register_formloading: false,
-        //           formSubmitError: "",
-        //           formSubmitSuccess: true
-        //         });
-        //       } else if (error && !error.error) {
-        //         this.setState({
-        //           register_formloading: false,
-        //           formSubmitError:
-        //             "An error occured during creating your account.",
-        //           formSubmitSuccess: true
-        //         });
-        //       } else {
-        //         this.setState({
-        //           register_formloading: false,
-        //           formSubmitError: error.reason,
-        //           formSubmitSuccess: false
-        //         });
-        //       }
-        //     } else {
-        //       this.setState({
-        //         register_formloading: false,
-        //         formSubmitError: "",
-        //         formSubmitSuccess: false
-        //       });
-        //     }
-        //   }
-        // );
+        
+        Accounts.createUser(
+          {
+            email: this.state.email,
+            password: this.state.password,
+            profile: {
+              firstName: this.state.first_name,
+              lastName: this.state.last_name,
+              userType:this.state.userType
+            }
+          },
+          error => {
+            console.log(error);
+            if (error) {
+              if (error.error && error.error === "unverified-account-created") {
+                this.setState({
+                  register_formloading: false,
+                  formSubmitError: "",
+                  formSubmitSuccess: true
+                });
+              } else if (error && !error.error) {
+                this.setState({
+                  register_formloading: false,
+                  formSubmitError:
+                    "An error occured during creating your account.",
+                  formSubmitSuccess: true
+                });
+              } else {
+                this.setState({
+                  register_formloading: false,
+                  formSubmitError: error.reason,
+                  formSubmitSuccess: false
+                });
+              }
+            } else {
+              this.setState({
+                register_formloading: false,
+                formSubmitError: "",
+                formSubmitSuccess: false
+              });
+            }
+          }
+        );
       }
     );
   };
@@ -122,7 +123,7 @@ export default class Register extends Component {
           <div style={{textAlign:"center"}}>
           <button
             className="button button-medium button-energized"
-            onClick={this.alert.bind(this)}
+            onClick={this.createAccount.bind(this)}
           >
             submit
           </button>
