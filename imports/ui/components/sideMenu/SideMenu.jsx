@@ -43,15 +43,23 @@ var styles = {
   }
 };
 
+var isMenuOpen = function(state) {
+  return state.isOpen;
+};
+
 export default class SlideMenu extends Component {
+  state={
+    isMenuOpen:false
+  }
+ 
   render() {
     return (
-      <Menu styles={styles}>
+      <Menu styles={styles} isOpen={ this.state.isMenuOpen } >
         <Link to='/'>
           Home
-          </Link>
+        </Link>
         <br />
-        <Link to="/hello">
+        <Link to="/hello" >
           Hello
         </Link>
         <br />
