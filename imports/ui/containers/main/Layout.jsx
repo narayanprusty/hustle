@@ -12,7 +12,7 @@ export default class Layout extends Component {
 
   render() {
     return (
-        <div className="page-container">
+        <div className="page-container" style={{paddingLeft:'10%',paddingTop:'4%'}}>
         <Route exact path="/hello" component={Hello} />
         <Route exact path="/signup" component={Register} />
         </div>

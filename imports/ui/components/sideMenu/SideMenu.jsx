@@ -64,7 +64,7 @@ export default class SlideMenu extends Component {
         </Link>
         <br />
         <Link to="/signup">
-          Contact
+          Register
         </Link>
       </Menu>
       
