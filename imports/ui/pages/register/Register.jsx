@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import './Register.css';
 
 export default class Register extends Component {
   constructor(props) {
@@ -17,8 +18,8 @@ export default class Register extends Component {
         register_formloading: true
       },
       () => {
-		  debugger;
-		  console.log(this.email.value);
+        debugger;
+        console.log(this.email.value);
         // Accounts.createUser(
         //   {
         //     email: this.email.value,
@@ -64,64 +65,71 @@ export default class Register extends Component {
     );
   };
 
-  inputHandler=(e)=>{
-	debugger;
-	this.setState({
-		[e.target.name]:e.target.value
-	})
+  inputHandler = e => {
+    debugger;
+    this.setState({
+      [e.target.name]: e.target.value
+    });
   };
-  alert=()=>{
-	  alert('Onclick is working');
-  }
+  alert = () => {
+    alert("Onclick is working");
+  };
   render() {
-	const rounded ={
-		width: '100%',
-	  height: '100px',
-	  '-moz-border-radius': '50px',
-	  '-webkit-border-radius': '50px',
-	  'border-radius': '10px',
-	  'margin-bottom': '10px',
-	}
+    const rounded = {
+      width: "100%",
+      height: "100px",
+      "-moz-border-radius": "50px",
+      "-webkit-border-radius": "50px",
+      "border-radius": "10px",
+      "margin-bottom": "10px"
+    };
     return (
       <div
         style={{
-          textAlign: "center",
           maxWidth: "600px"
         }}
       >
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Register</ion-card-title>
-          </ion-card-header>
+          <img src="/images/HUS5.png"/>
 
-          <ion-card-content >
-            <ion-item>
-              <ion-label fixed>First Name:</ion-label>
-              <ion-input name="firstname" placeholder="Enter your first name" onChange={this.inputHandler.bind(this)} />
-            </ion-item>
-            <ion-item>
-              <ion-label fixed>Last Name:</ion-label>
-              <ion-input name="lastname" placeholder="Enter your last name" />
-            </ion-item>
-            <ion-item>
-              <ion-label fixed>Email:</ion-label>
-              <ion-input name="email" placeholder="Enter your email" />
-            </ion-item>
-            <ion-item>
-              <ion-label fixed>Phone:</ion-label>
-              <ion-input name="phone" placeholder="Enter your phone number" />
-            </ion-item>
-            <ion-item>
-              <ion-label fixed>Password:</ion-label>
-              <ion-input
-                name="password"
-                placeholder="Enter your password"
-                type="password"
-              />
-            </ion-item>
-          </ion-card-content>
-          <ion-button type='submit' onClick={this.alert.bind()}>Register</ion-button>
-        </ion-card>
+          <div class="switch-field">
+      <div class="switch-title">I am:</div>
+      <input type="radio" id="switch_left" name="switch_2" value="yes" checked/>
+      <label for="switch_left">Driver</label>
+      <input type="radio" id="switch_right" name="switch_2" value="no" />
+      <label for="switch_right">Rider</label>
+    </div>
+
+        <div className="list">
+          <label className="item item-input item-stacked-label">
+            <span className="input-label">First Name</span>
+            <input type="text" placeholder="Saikat" />
+          </label>
+          <label className="item item-input item-stacked-label">
+            <span className="input-label">Last Name</span>
+            <input type="text" placeholder="Chakrabortty" />
+          </label>
+          <label className="item item-input item-stacked-label">
+            <span className="input-label">Email</span>
+            <input type="text" placeholder="e.g. john@suhr.com" />
+          </label>
+          <label className="item item-input item-stacked-label">
+            <span className="input-label">Phone</span>
+            <input type="text" placeholder="e.g. +918373886873" />
+          </label>
+          <label className="item item-input item-stacked-label">
+            <span className="input-label">Password</span>
+            <input type="password" placeholder="Password" />
+          </label>
+          <br />
+          <div style={{textAlign:"center"}}>
+          <button
+            className="button button-medium button-energized"
+            onClick={this.alert.bind(this)}
+          >
+            submit
+          </button>
+          </div>
+        </div>
       </div>
     );
   }
