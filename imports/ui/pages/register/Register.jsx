@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import './Register_client.scss';
-import '../Generic.scss';
 export default class Register extends Component {
   constructor(props) {
     super();
@@ -112,7 +111,7 @@ export default class Register extends Component {
             className="button button-medium button-energized"
             onClick={this.createAccount.bind(this)}
           >
-            submit
+            Register
           </button>
           </div>
         </div>
