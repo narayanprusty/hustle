@@ -1,7 +1,4 @@
-import { Mongo } from "meteor/mongo";
-
 const defaults = require("../local.config.js");
-const request = require('request-promise');
 
 
 
@@ -15,7 +12,7 @@ function getEnv() {
 }
 
 function getDatabase() {
-    const a  = process.env.MONGO_URL;
+    const a  = process.env.MONGO_URL || defaults.MONGO_URL;
     if(!a){
         return "admin";
     }
@@ -33,7 +30,7 @@ function getDatabase() {
 
 function getMongoConnectionString() {
 
-    return process.env.MONGO_URL;
+    return process.env.MONGO_URL || defaults.MONGO_URL;
 
     if(['production'].includes(process.env.NODE_ENV) || process.env.ENTERPRISE){
       return process.env.MONGO_URL;
@@ -48,9 +45,13 @@ function getMongoConnectionString() {
 }
 
 module.exports = {
-  sendgridAPIKey: process.env.SENDGRID_API_KEY || defaults.sendgridApi,
+  SMTP:{
+    host:  defaults.SMTP.host,
+    user:  defaults.SMTP.user,
+    pass: defaults.SMTP.pass
+  },
   database: getDatabase(),
   mongoConnectionString: getMongoConnectionString(),
-  
+  apiHost: defaults.apiHost,
   env: getEnv(),
 };

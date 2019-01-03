@@ -10,6 +10,15 @@ export default class Register extends Component {
       userType:'Driver'
     };
   }
+
+  componentDidMount(){
+    //if user logged in redirect him/her
+    const user = Meteor.userId();
+    if(user){
+      location.href = '/';
+    } 
+  }
+  
   createAccount = e => {
     e.preventDefault();
     this.setState(

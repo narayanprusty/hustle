@@ -14,7 +14,7 @@ export default class Main extends Component {
   render() {
     return (
       <div>
-       {Meteor.user()
+       {Meteor.userId()
           &&(<SlideMenu />)}
        
         <br />

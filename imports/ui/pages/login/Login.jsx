@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import {Meteor} from 'meteor/meteor';
 import './Login_client.scss';
 export default class Login extends Component {
   constructor(props) {
@@ -11,13 +12,20 @@ export default class Login extends Component {
       userType: "Driver"
     };
   }
+  componentDidMount(){
+    //if user logged in redirect him/her
+    const user = Meteor.userId();
+    if(user){
+      location.href = '/';
+    } 
+  }
 
   inputHandler = e => {
     this.setState({
       [e.target.name]: e.target.value
     });
   };
-
+  
   loginHandler = e => {
     e.preventDefault();
     this.setState({
@@ -36,13 +44,14 @@ export default class Login extends Component {
           formSubmitError: "An error occured.please try again.",
         });
       }else {
-        if (window.location.search.includes('action=join-network')) {
-          window.open('/', '_self');
-        }
         this.setState({
           login_formloading:false,
           formSubmitError: '',
         });
+
+          window.open('/', '_self');
+       
+       
       }
     });
   });
