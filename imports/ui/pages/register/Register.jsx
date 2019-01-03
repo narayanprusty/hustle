@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import './Register.scss'
+import './Register_client.scss';
+import '../Generic.scss';
 export default class Register extends Component {
   constructor(props) {
     super();
@@ -65,38 +66,24 @@ export default class Register extends Component {
   };
 
   inputHandler = e => {
-    debugger;
     this.setState({
       [e.target.name]: e.target.value
     });
   };
-  alert = () => {
-    alert("Onclick is working");
-  };
   render() {
-    const rounded = {
-      width: "100%",
-      height: "100px",
-      "-moz-border-radius": "50px",
-      "-webkit-border-radius": "50px",
-      "border-radius": "10px",
-      "margin-bottom": "10px"
-    };
     return (
       <div
-        style={{
-          maxWidth: "600px"
-        }}
+       className='root'
       >
-          <img src="/images/HUS5.png"/>
+          {/* <img src="/images/HUS5.png"/> */}
 
-          <div className="switch-field">
+         <div className="switch-field">
       <div className="switch-title">I am:</div>
       <input type="radio" id="switch_left" name="userType" value="Driver" onChange={this.inputHandler.bind(this)} checked={this.state.userType == 'Driver' ? true :false}/>
       <label for="switch_left">Driver</label>
       <input type="radio" id="switch_right" name="userType" value="Rider" onChange={this.inputHandler.bind(this)} checked={this.state.userType == 'Rider' ? true :false}/>
       <label for="switch_right">Rider</label>
-  </div>
+  </div> 
 
         <div className="list">
           <label className="item item-input item-stacked-label">
@@ -119,7 +106,7 @@ export default class Register extends Component {
             <span className="input-label">Password</span>
             <input type="password" placeholder="Password" name='password' onChange={this.inputHandler.bind(this)} />
           </label>
-          <br />
+          <br />&nbsp;
           <div style={{textAlign:"center"}}>
           <button
             className="button button-medium button-energized"

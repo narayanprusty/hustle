@@ -1,8 +1,7 @@
 import React, { Component } from "react";
+import {Meteor} from 'meteor/meteor'
 import { BrowserRouter, Route, Switch, Redirect, Link } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
-import Hello from "../../pages/Hello";
-import Register from "../../pages/register/Register";
 import Layout from "./Layout";
 import SlideMenu from "../../components/sideMenu/SideMenu";
 export default class Main extends Component {
@@ -11,11 +10,12 @@ export default class Main extends Component {
     this.state = {};
   }
 
+  // if user not loggedIn dont show sideMenu
   render() {
     return (
       <div>
-       
-          <SlideMenu />
+       {Meteor.user()
+          &&(<SlideMenu />)}
        
         <br />
         <Layout />

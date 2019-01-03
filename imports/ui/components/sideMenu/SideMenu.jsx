@@ -43,9 +43,6 @@ var styles = {
   }
 };
 
-var isMenuOpen = function(state) {
-  return state.isOpen;
-};
 
 export default class SlideMenu extends Component {
   state={
