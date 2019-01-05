@@ -1,5 +1,6 @@
-import React, { Component } from "react";
-
+import React, { Component,Fragment } from "react";
+import isEmpty from 'lodash.isempty';
+import SearchBox from './SearchBox';
 
 const config = {
   GAPIKEY: "AIzaSyAQfL-suU57febWtcN0tRarLZ07erPof_A"
@@ -26,7 +27,11 @@ export default class Home extends Component {
         lat:22,
         lng:88
     },
-    zoom: 18
+    zoom: 18,
+    mapApiLoaded: false,
+      mapInstance: null,
+      mapApi: null,
+      places: [],
   };
   componentDidMount = async () => {
     //if user logged in redirect 
@@ -70,7 +75,9 @@ export default class Home extends Component {
       lng: 0
     };
   }
-
+  addPlace = (place) => {
+    this.setState({ places: place });
+  };
   codeLatLng = t => {
     console.log(t);
     this.setState({
@@ -80,13 +87,34 @@ export default class Home extends Component {
         }
     });
   };
-
+  apiHasLoaded = (map, maps) => {
+    debugger;
+    this.setState({
+      mapApiLoaded: true,
+      mapInstance: map,
+      mapApi: maps,
+    });
+  };
+  createMapOptions= (maps)=> {
+    return {
+      gestureHandling: 'greedy',
+      panControl: false,
+      mapTypeControl: false,
+      scrollwheel: false,
+      styles: [{ stylers: [{ 'saturation': -100 }, { 'gamma': 0.8 }, { 'lightness': 4 }, { 'visibility': 'on' }] }]
+    }
+  }
   render() {
+    const {
+      places, mapApiLoaded, mapInstance, mapApi,
+    } = this.state;
     return (
-      
+      <Fragment>
+            {mapApiLoaded && <SearchBox map={mapInstance} mapApi={mapApi} addplace={this.addPlace} />}
         <div className='mapView'>
           
           <GoogleMapReact
+            options={this.createMapOptions}
             bootstrapURLKeys={{ key: config.GAPIKEY }}
             initialCenter={this.state.fields.location}
             center={this.state.fields.location}
@@ -95,11 +123,17 @@ export default class Home extends Component {
             heat={true}
             gestureHandling= "greedy"
             onClick={(t)=>this.codeLatLng(t)}
-          >
+            yesIWantToUseGoogleMapApiInternals
+            onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)}
+          > 
+          {!isEmpty(places) &&
+            places.map(place => (
              <Marker lat={this.state.currentLocation.lat ? this.state.currentLocation.lat : this.state.fields.lat} lng={this.state.currentLocation.lng ?  this.state.currentLocation.lng :this.state.fields.lng} metaData=''/>
+            ))}
           </GoogleMapReact> 
           
         </div>
+        </Fragment>
     );
   }
 }
