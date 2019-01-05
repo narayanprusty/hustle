@@ -14,10 +14,7 @@ class Layout extends Component {
   render() {
     return (
       <div
-        className="page-container"
         style={{
-          paddingLeft: "10%",
-          paddingTop: "4%",
           backgroundSize: "contain",
           backgroundImage: "url(" + "/images/6.png)"
         }}

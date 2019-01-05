@@ -60,7 +60,7 @@ export default class Login extends Component {
   render() {
     return (
        
-      <div className="root list">
+      <div className="root list" style={{paddingTop:'16%'}}>
         <label className="item item-input item-stacked-label">
           <span className="input-label">Email</span>
           <input type="text" placeholder="saikat@gmail.com" name='email' onChange={this.inputHandler.bind(this)} />
