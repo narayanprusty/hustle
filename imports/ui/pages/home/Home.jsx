@@ -1,7 +1,7 @@
 import React, { Component,Fragment } from "react";
 import isEmpty from 'lodash.isempty';
 import SearchBox from './SearchBox';
-import mapStyle from './MapStyle';
+import mapStyle from './MapStyle';//https://mapstyle.withgoogle.com/ you can build yours from 
 const config = {
   GAPIKEY: "AIzaSyAQfL-suU57febWtcN0tRarLZ07erPof_A"
 };
