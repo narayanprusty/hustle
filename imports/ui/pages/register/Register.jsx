@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import './Register_client.scss';
+import { Link } from "react-router-dom";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+
+import "./Register_client.scss";
 export default class Register extends Component {
   constructor(props) {
     super();
@@ -7,26 +12,25 @@ export default class Register extends Component {
     this.state = {
       formSubmitError: "",
       formSubmitSuccess: false,
-      userType:'Driver'
+      userType: "Driver"
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     //if user logged in redirect him/her
     const user = Meteor.userId();
-    if(user){
-      location.href = '/';
-    } 
+    if (user) {
+      location.href = "/";
+    }
   }
-  
+
   createAccount = e => {
     e.preventDefault();
     this.setState(
       {
         register_formloading: true
-      }, 
+      },
       () => {
-        
         Accounts.createUser(
           {
             email: this.state.email,
@@ -34,7 +38,7 @@ export default class Register extends Component {
             profile: {
               firstName: this.state.first_name,
               lastName: this.state.last_name,
-              userType:this.state.userType
+              userType: this.state.userType
             }
           },
           error => {
@@ -80,48 +84,94 @@ export default class Register extends Component {
   };
   render() {
     return (
-      <div
-       className='root'
-      >
-          {/* <img src="/images/HUS5.png"/> */}
+      <div className="root">
+        {/* <img src="/images/HUS5.png"/> */}
 
-         <div className="switch-field">
-      <div className="switch-title">I am:</div>
-      <input type="radio" id="switch_left" name="userType" value="Driver" onChange={this.inputHandler.bind(this)} checked={this.state.userType == 'Driver' ? true :false}/>
-      <label for="switch_left">Driver</label>
-      <input type="radio" id="switch_right" name="userType" value="Rider" onChange={this.inputHandler.bind(this)} checked={this.state.userType == 'Rider' ? true :false}/>
-      <label for="switch_right">Rider</label>
-  </div> 
+        <div className="switch-field">
+          <div className="switch-title">I am:</div>
+          <input
+            type="radio"
+            id="switch_left"
+            name="userType"
+            value="Driver"
+            onChange={this.inputHandler.bind(this)}
+            checked={this.state.userType == "Driver" ? true : false}
+          />
+          <label for="switch_left">Driver</label>
+          <input
+            type="radio"
+            id="switch_right"
+            name="userType"
+            value="Rider"
+            onChange={this.inputHandler.bind(this)}
+            checked={this.state.userType == "Rider" ? true : false}
+          />
+          <label for="switch_right">Rider</label>
+        </div>
 
         <div className="list">
           <label className="item item-input item-stacked-label">
             <span className="input-label">First Name</span>
-            <input type="text" placeholder="Saikat" name='first_name' onChange={this.inputHandler.bind(this)}/>
+            <input
+              type="text"
+              placeholder="Saikat"
+              name="first_name"
+              onChange={this.inputHandler.bind(this)}
+            />
           </label>
           <label className="item item-input item-stacked-label">
             <span className="input-label">Last Name</span>
-            <input type="text" placeholder="Chakrabortty" name='last_name' onChange={this.inputHandler.bind(this)} />
+            <input
+              type="text"
+              placeholder="Chakrabortty"
+              name="last_name"
+              onChange={this.inputHandler.bind(this)}
+            />
           </label>
           <label className="item item-input item-stacked-label">
             <span className="input-label">Email</span>
-            <input type="text" placeholder="e.g. john@suhr.com" name='email' onChange={this.inputHandler.bind(this)} />
+            <input
+              type="text"
+              placeholder="e.g. john@suhr.com"
+              name="email"
+              onChange={this.inputHandler.bind(this)}
+            />
           </label>
           <label className="item item-input item-stacked-label">
             <span className="input-label">Phone</span>
-            <input type="text" placeholder="e.g. +918373886873" name='phone' onChange={this.inputHandler.bind(this)} />
+            <input
+              type="text"
+              placeholder="e.g. +918373886873"
+              name="phone"
+              onChange={this.inputHandler.bind(this)}
+            />
           </label>
           <label className="item item-input item-stacked-label">
             <span className="input-label">Password</span>
-            <input type="password" placeholder="Password" name='password' onChange={this.inputHandler.bind(this)} />
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              onChange={this.inputHandler.bind(this)}
+            />
           </label>
-          <br />&nbsp;
-          <div style={{textAlign:"center"}}>
-          <button
-            className="button button-medium button-energized"
-            onClick={this.createAccount.bind(this)}
-          >
-            Register
-          </button>
+          <br />
+          &nbsp;
+          <div style={{ textAlign: "center" }}>
+            <button
+              className="button button-small button-energized"
+              style={{ marginTop: "2em", marginLeft: "10em" }}
+              onClick={this.createAccount.bind(this)}
+            >
+              Register
+            </button>
+            <Link
+              to="/login"
+              className="button button-small button-energized"
+              style={{ marginTop: "2em", marginLeft: "10em" }}
+            >
+              Login <FontAwesomeIcon icon={faArrowRight} />
+            </Link>
           </div>
         </div>
       </div>
