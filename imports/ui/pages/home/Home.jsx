@@ -128,8 +128,9 @@ export default class Home extends Component {
           > 
           {!isEmpty(places) &&
             places.map(place => (
-             <Marker lat={this.state.currentLocation.lat ? this.state.currentLocation.lat : this.state.fields.lat} lng={this.state.currentLocation.lng ?  this.state.currentLocation.lng :this.state.fields.lng} metaData=''/>
+             <Marker lat={place.geometry.location.lat} lng={place.geometry.location.lng} metaData=''/>
             ))}
+          <Marker lat={this.state.currentLocation.lat ? this.state.currentLocation.lat : this.state.fields.lat} lng={this.state.currentLocation.lng ?  this.state.currentLocation.lng :this.state.fields.lng} metaData=''/>
           </GoogleMapReact> 
           
         </div>
