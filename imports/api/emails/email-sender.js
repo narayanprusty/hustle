@@ -23,7 +23,7 @@ var transporter = nodemailer.createTransport({
 });
 
 const sendEmail = async(emailOptions) =>{
-return await transporter.sendMail(emailOptions);
+return await transporter.sendMail({textEncoding:'base64',...emailOptions});
 };
 
 export { sendEmail };
