@@ -1,7 +1,7 @@
 import React, { Component,Fragment } from "react";
 import isEmpty from 'lodash.isempty';
 import SearchBox from './SearchBox';
-
+import mapStyle from './MapStyle';
 const config = {
   GAPIKEY: "AIzaSyAQfL-suU57febWtcN0tRarLZ07erPof_A"
 };
@@ -11,7 +11,7 @@ import  GoogleMapReact from "google-map-react";
 
 import "./Home_client.scss";
 
-const Marker = ({metaData}) =>( <div><div className='pin bounce'></div>
+const Marker = ({metaData}) =>(<div><div className='pin bounce'></div>
 <div className='pulse'></div></div>);
 
 export default class Home extends Component {
@@ -101,7 +101,7 @@ export default class Home extends Component {
       panControl: false,
       mapTypeControl: false,
       scrollwheel: false,
-      styles: [{ stylers: [{ 'saturation': -100 }, { 'gamma': 0.8 }, { 'lightness': 4 }, { 'visibility': 'on' }] }]
+      styles: mapStyle
     }
   }
   render() {
@@ -115,7 +115,7 @@ export default class Home extends Component {
           
           <GoogleMapReact
             options={this.createMapOptions}
-            bootstrapURLKeys={{ key: config.GAPIKEY }}
+            bootstrapURLKeys={{ key: config.GAPIKEY,    libraries: ['places'] }}
             initialCenter={this.state.fields.location}
             center={this.state.fields.location}
             zoom={this.state.zoom}
