@@ -68,7 +68,7 @@ export default class Register extends Component {
                   register_formloading: false,
                   formSubmitSuccess: true
                 });
-                notify.show(error.error,'error');
+                notify.show((error.reason =='Email already exists.') ?  'Phone already exists.' :error.reason ,'error');
               }else {
                 this.setState({
                   register_formloading: false,
