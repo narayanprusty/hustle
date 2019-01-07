@@ -54,5 +54,9 @@ module.exports = {
   mongoConnectionString: getMongoConnectionString(),
   apiHost: defaults.apiHost,
   SMS:defaults.SMS,
+  BLOCKCLUSTER:defaults.BLOCKCLUSTER,
+  ASSET:{
+    Bookings:"Bookings"
+  },
   env: getEnv(),
 };

@@ -10,5 +10,9 @@ module.exports = {
     user:'Girishsms',
     apiKey:'C2DXs6ypoguArEOo1Cnk',
     SENDERID:'MYTEXT'
+  },
+  BLOCKCLUSTER:{
+    host:"app-ap-south-1b.blockcluster.io",
+    instanceId:"1234567890"
   }
 };
