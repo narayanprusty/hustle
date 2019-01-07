@@ -3,16 +3,17 @@ import { Link } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import {notify} from 'react-notify-toast';
+
 
 import "./Register_client.scss";
 export default class Register extends Component {
   constructor(props) {
-    super();
-
+    super(); 
     this.state = {
       formSubmitError: "",
       formSubmitSuccess: false,
-      userType: "Driver"
+      userType: "Rider",
     };
   }
 
@@ -33,12 +34,12 @@ export default class Register extends Component {
       () => {
         Accounts.createUser(
           {
-            email: this.state.email,
+            username:this.state.phone,
             password: this.state.password,
             profile: {
               firstName: this.state.first_name,
               lastName: this.state.last_name,
-              userType: this.state.userType
+              userType: this.state.userType 
             }
           },
           error => {
@@ -87,7 +88,7 @@ export default class Register extends Component {
       <div className="root">
         {/* <img src="/images/HUS5.png"/> */}
 
-        <div className="switch-field">
+        {/* <div className="switch-field">
           <div className="switch-title">I am:</div>
           <input
             type="radio"
@@ -107,7 +108,7 @@ export default class Register extends Component {
             checked={this.state.userType == "Rider" ? true : false}
           />
           <label for="switch_right">Rider</label>
-        </div>
+        </div> */}
 
         <div className="list">
           <label className="item item-input item-stacked-label">
@@ -129,22 +130,17 @@ export default class Register extends Component {
             />
           </label>
           <label className="item item-input item-stacked-label">
-            <span className="input-label">Email</span>
-            <input
-              type="text"
-              placeholder="e.g. john@suhr.com"
-              name="email"
-              onChange={this.inputHandler.bind(this)}
-            />
-          </label>
-          <label className="item item-input item-stacked-label">
             <span className="input-label">Phone</span>
             <input
               type="text"
-              placeholder="e.g. +918373886873"
+              placeholder="e.g. 8373886873"
               name="phone"
+              max='10'
               onChange={this.inputHandler.bind(this)}
             />
+           <button className="button button-small button-positive">
+             verify
+            </button>
           </label>
           <label className="item item-input item-stacked-label">
             <span className="input-label">Password</span>
@@ -162,6 +158,7 @@ export default class Register extends Component {
               className="button button-small button-energized"
               style={{ marginTop: "2em", marginLeft: "10em" }}
               onClick={this.createAccount.bind(this)}
+              disabled={true}
             >
               Register
             </button>

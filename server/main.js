@@ -13,12 +13,12 @@ Accounts.validateLoginAttempt(function(options) {
   if(options.user.userType == 'Driver' && user.profile.driver_verified){
     throw new Meteor.Error('Account not yet activated');
   }
-
-  if (options.user.emails[0].verified === true) {
-    return true;
-  } else {
-    throw new Meteor.Error('email-not-verified', 'Your email is not verified. Kindly check your mail.');
-  }
+return true;
+  // if (options.user.emails[0].verified === true) {
+  //   return true;
+  // } else {
+  //   throw new Meteor.Error('email-not-verified', 'Your email is not verified. Kindly check your mail.');
+  // }
 });
 
 Accounts.onCreateUser(function(options, user) {
@@ -28,13 +28,13 @@ Accounts.onCreateUser(function(options, user) {
   // Assigns first and last names to the newly created user object
   user.profile.firstName = options.profile.firstName;
   user.profile.lastName = options.profile.lastName;
-  if(options.profile.userType == 'Driver'){
-    user.profile.driver_verified = false
-  }
+  // if(options.profile.userType == 'Driver'){
+  //   user.profile.driver_verified = false
+  // }
 
-  if (!(!options.profile.firstName || options.profile.firstName === 'null' || options.profile.firstName === 'undefined')) {
-    Verifier.sendEmailVerification(user);
-  }
+  // if (!(!options.profile.firstName || options.profile.firstName === 'null' || options.profile.firstName === 'undefined')) {
+  //   Verifier.sendEmailVerification(user);
+  // }
 
   return user;
 });
