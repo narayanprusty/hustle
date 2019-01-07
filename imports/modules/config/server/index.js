@@ -53,5 +53,6 @@ module.exports = {
   database: getDatabase(),
   mongoConnectionString: getMongoConnectionString(),
   apiHost: defaults.apiHost,
+  SMS:defaults.SMS,
   env: getEnv(),
 };

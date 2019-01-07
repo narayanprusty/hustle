@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-
+import {Meteor} from 'meteor/meteor';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import {notify} from 'react-notify-toast';
@@ -24,9 +24,27 @@ export default class Register extends Component {
       location.href = "/";
     }
   }
-
+  sendMessage= (e)=>{
+    Meteor.call('verificationMessage',this.state.phone,(err,res)=>{
+      if(err){
+        console.log(err);
+        return notify.show('Failed sending code.','error');
+      }
+      notify.show('Verification code sent!','success');
+      this.setState({
+        token:res.token,
+        isSent:true,
+        sendable:true
+      });
+      setTimeout(()=>this.setState({sendable:false}),5000);
+    });
+  }
   createAccount = e => {
     e.preventDefault();
+    if(this.state.token != this.state.verification){
+      notify.show('Wrong Verification code!','error');
+      return;
+    }else{
     this.setState(
       {
         register_formloading: true
@@ -34,31 +52,25 @@ export default class Register extends Component {
       () => {
         Accounts.createUser(
           {
-            username:this.state.phone,
             password: this.state.password,
+            email:this.state.phone,
             profile: {
               firstName: this.state.first_name,
               lastName: this.state.last_name,
-              userType: this.state.userType 
+              userType: this.state.userType,
+              phone:this.state.phone
             }
           },
           error => {
             console.log(error);
             if (error) {
-              if (error.error && error.error === "unverified-account-created") {
+              if (error.error) {
                 this.setState({
                   register_formloading: false,
-                  formSubmitError: "",
                   formSubmitSuccess: true
                 });
-              } else if (error && !error.error) {
-                this.setState({
-                  register_formloading: false,
-                  formSubmitError:
-                    "An error occured during creating your account.",
-                  formSubmitSuccess: true
-                });
-              } else {
+                notify.show(error.error,'error');
+              }else {
                 this.setState({
                   register_formloading: false,
                   formSubmitError: error.reason,
@@ -66,16 +78,19 @@ export default class Register extends Component {
                 });
               }
             } else {
+              notify.show('Account created successfully!','success');
               this.setState({
                 register_formloading: false,
                 formSubmitError: "",
                 formSubmitSuccess: false
               });
+              location.href='/'
             }
           }
         );
       }
     );
+    }
   };
 
   inputHandler = e => {
@@ -84,6 +99,7 @@ export default class Register extends Component {
     });
   };
   render() {
+    const {phone,first_name,last_name,password,verification,isSent,sendable} =this.state;
     return (
       <div className="root">
         {/* <img src="/images/HUS5.png"/> */}
@@ -137,10 +153,20 @@ export default class Register extends Component {
               name="phone"
               max='10'
               onChange={this.inputHandler.bind(this)}
-            />
-           <button className="button button-small button-positive">
-             verify
+            /> 
+           
+          </label>
+          <button className="button button-small button-positive" onClick={this.sendMessage.bind(this)} disabled={phone ? (isSent ? sendable: false) : true}>
+             {isSent ? 'resend' : 'verify'}
             </button>
+          <label className="item item-input item-stacked-label">
+            <span className="input-label">Verification Code</span>
+            <input
+              type="text"
+              placeholder="verification code"
+              name="verification"
+              onChange={this.inputHandler.bind(this)}
+            />
           </label>
           <label className="item item-input item-stacked-label">
             <span className="input-label">Password</span>
@@ -158,7 +184,7 @@ export default class Register extends Component {
               className="button button-small button-energized"
               style={{ marginTop: "2em", marginLeft: "10em" }}
               onClick={this.createAccount.bind(this)}
-              disabled={true}
+              disabled={phone && first_name && last_name && password && verification  ? false : true}
             >
               Register
             </button>

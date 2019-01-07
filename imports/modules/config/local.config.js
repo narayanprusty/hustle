@@ -5,5 +5,10 @@ module.exports = {
     pass: "saikat95"
   },
   MONGO_URL: "mongodb://saikatharryc:saikat95@ds145303.mlab.com:45303/hustle",
-  apiHost: "localhost:3000"
+  apiHost: "localhost:3000",
+  SMS:{
+    user:'Girishsms',
+    apiKey:'C2DXs6ypoguArEOo1Cnk',
+    SENDERID:'MYTEXT'
+  }
 };

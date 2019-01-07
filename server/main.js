@@ -1,4 +1,6 @@
 import { Meteor } from 'meteor/meteor';
+require('../imports/startup/server');
+
 import Verifier from '../imports/api/emails/email-validator';
 
 Accounts.validateLoginAttempt(function(options) {
@@ -6,13 +8,13 @@ Accounts.validateLoginAttempt(function(options) {
     return false;
   }
 
-  if (options.methodName == 'createUser') {
-    throw new Meteor.Error('unverified-account-created');
-  }
+  // if (options.methodName == 'createUser') {
+  //   throw new Meteor.Error('unverified-account-created');
+  // }
   //If user is driver, check if its marked verified by admin
-  if(options.user.userType == 'Driver' && user.profile.driver_verified){
-    throw new Meteor.Error('Account not yet activated');
-  }
+  // if(options.user.userType == 'Driver' && user.profile.driver_verified){
+  //   throw new Meteor.Error('Account not yet activated');
+  // }
 return true;
   // if (options.user.emails[0].verified === true) {
   //   return true;

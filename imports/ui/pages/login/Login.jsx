@@ -4,6 +4,8 @@ import { Meteor } from "meteor/meteor";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import {notify} from 'react-notify-toast';
+
 
 import "./Login_client.scss";
 export default class Login extends Component {
@@ -13,7 +15,7 @@ export default class Login extends Component {
     this.state = {
       formSubmitError: "",
       formSubmitSuccess: false,
-      userType: "Driver"
+      userType: "Rider"
     };
   }
   componentDidMount() {
@@ -38,7 +40,7 @@ export default class Login extends Component {
       },
       () => {
         Meteor.loginWithPassword(
-          this.state.email,
+         {email: this.state.phone},
           this.state.password,
           error => {
             if (error && error.reason) {
@@ -52,6 +54,7 @@ export default class Login extends Component {
                 formSubmitError: "An error occured.please try again."
               });
             } else {
+              notify.show('Login successful!','success');
               this.setState({
                 login_formloading: false,
                 formSubmitError: ""
@@ -69,11 +72,11 @@ export default class Login extends Component {
     return (
       <div className="root list" style={{ paddingTop: "16%" }}>
         <label className="item item-input item-stacked-label">
-          <span className="input-label">Email</span>
+          <span className="input-label">Phone</span>
           <input
-            type="text"
-            placeholder="saikat@gmail.com"
-            name="email"
+            type="number"
+            placeholder="8918815688"
+            name="phone"
             onChange={this.inputHandler.bind(this)}
           />
         </label>
