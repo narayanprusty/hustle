@@ -55,8 +55,7 @@ export default class Register extends Component {
             password: this.state.password,
             email:this.state.phone,
             profile: {
-              firstName: this.state.first_name,
-              lastName: this.state.last_name,
+              name: this.state.first_name,
               userType: this.state.userType,
               phone:this.state.phone
             }
@@ -99,49 +98,17 @@ export default class Register extends Component {
     });
   };
   render() {
-    const {phone,first_name,last_name,password,verification,isSent,sendable} =this.state;
+    const {phone,first_name,password,verification,isSent,sendable} =this.state;
     return (
-      <div className="root">
-        {/* <img src="/images/HUS5.png"/> */}
-
-        {/* <div className="switch-field">
-          <div className="switch-title">I am:</div>
-          <input
-            type="radio"
-            id="switch_left"
-            name="userType"
-            value="Driver"
-            onChange={this.inputHandler.bind(this)}
-            checked={this.state.userType == "Driver" ? true : false}
-          />
-          <label for="switch_left">Driver</label>
-          <input
-            type="radio"
-            id="switch_right"
-            name="userType"
-            value="Rider"
-            onChange={this.inputHandler.bind(this)}
-            checked={this.state.userType == "Rider" ? true : false}
-          />
-          <label for="switch_right">Rider</label>
-        </div> */}
-
-        <div className="list">
+      <div className="padding">
+        <div className='list'>
+          <h3 className='padding-bottom'><i className="fa fa-user-plus" aria-hidden="true"></i> Create Account</h3>
           <label className="item item-input item-stacked-label">
-            <span className="input-label">First Name</span>
+            <span className="input-label">Name</span>
             <input
               type="text"
               placeholder="Saikat"
               name="first_name"
-              onChange={this.inputHandler.bind(this)}
-            />
-          </label>
-          <label className="item item-input item-stacked-label">
-            <span className="input-label">Last Name</span>
-            <input
-              type="text"
-              placeholder="Chakrabortty"
-              name="last_name"
               onChange={this.inputHandler.bind(this)}
             />
           </label>
@@ -154,16 +121,15 @@ export default class Register extends Component {
               max='10'
               onChange={this.inputHandler.bind(this)}
             /> 
-           
           </label>
-          <button className="button button-small button-positive" onClick={this.sendMessage.bind(this)} disabled={phone ? (isSent ? sendable: false) : true}>
-             {isSent ? 'resend' : 'verify'}
-            </button>
+          <button className="button button-block button-energized activated" onClick={this.sendMessage.bind(this)} disabled={phone ? (isSent ? sendable: false) : true}>
+             {isSent ? 'Resend' : 'Verify'}
+          </button>
           <label className="item item-input item-stacked-label">
             <span className="input-label">Verification Code</span>
             <input
               type="text"
-              placeholder="verification code"
+              placeholder="####"
               name="verification"
               onChange={this.inputHandler.bind(this)}
             />
@@ -177,24 +143,13 @@ export default class Register extends Component {
               onChange={this.inputHandler.bind(this)}
             />
           </label>
-          <br />
-          &nbsp;
-          <div style={{ textAlign: "center" }}>
-            <button
-              className="button button-small button-energized"
-              style={{ marginTop: "2em", marginLeft: "10em" }}
-              onClick={this.createAccount.bind(this)}
-              disabled={phone && first_name && last_name && password && verification  ? false : true}
-            >
-              Register
-            </button>
-            <Link
-              to="/login"
-              className="button button-small button-energized"
-              style={{ marginTop: "2em", marginLeft: "10em" }}
-            >
-              Login <FontAwesomeIcon icon={faArrowRight} />
-            </Link>
+          <button onClick={this.createAccount.bind(this)}
+              disabled={phone && first_name && password && verification  ? false : true} className="button button-block button-energized activated">Register</button>
+        </div>
+        <span className='seperator padding-left padding-right padding-bottom'>&nbsp;&nbsp;OR&nbsp;&nbsp;</span>
+        <div className='row'>
+          <div className='col col-100'>
+            <button onClick={() => {window.location = '/login'}} className="button button-block button-light activated"><i className="fa fa-sign-in" aria-hidden="true"></i> Login </button>
           </div>
         </div>
       </div>

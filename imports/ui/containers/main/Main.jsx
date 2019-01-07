@@ -13,11 +13,9 @@ export default class Main extends Component {
   // if user not loggedIn dont show sideMenu
   render() {
     return (
-      <div>
+      <div style={{height: '100%'}}>
        {Meteor.userId()
           &&(<SlideMenu />)}
-       
-        <br />
         <Layout />
       </div>
     );

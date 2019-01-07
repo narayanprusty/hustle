@@ -71,41 +71,48 @@ export default class Login extends Component {
 
   render() {
     return (
-      <div className="root list" style={{ paddingTop: "16%" }}>
-        <label className="item item-input item-stacked-label">
-          <span className="input-label">Phone</span>
-          <input
-            type="number"
-            placeholder="8918815688"
-            name="phone"
-            onChange={this.inputHandler.bind(this)}
-          />
-        </label>
-        <label className="item item-input item-stacked-label">
-          <span className="input-label">Password</span>
-          <input
-            type="password"
-            placeholder="password"
-            name="password"
-            onChange={this.inputHandler.bind(this)}
-          />
-        </label>
-        <div style={{ textAlign: "center" }}>
-          <button
-            className="button button-small button-energized"
-            style={{ marginTop: "2em" }}
-            onClick={this.loginHandler.bind(this)}
-            disabled={this.state.phone && this.state.password ? false : true}
-          >
-            Login
-          </button>
-          <Link
-            to="/signup"
-            className="button button-small button-energized"
-            style={{ marginTop: "2em", marginLeft: "10em" }}
-          >
-            Signup <FontAwesomeIcon icon={faArrowRight} />
-          </Link>
+      <div className="padding">
+        <div className='list'>
+          <div style={{
+            textAlign: 'center',
+            paddingBottom: '30px'
+          }} className='padding-bottom padding-top'> 
+            <img src='/images/logo.png' style={{
+              width: '40%'
+            }} />
+          </div>
+          <label className="item item-input item-stacked-label">
+            <span className="input-label">Phone</span>
+            <input
+              type="number"
+              placeholder="8918815688"
+              name="phone"
+              onChange={this.inputHandler.bind(this)}
+            />
+          </label>
+          <label className="item item-input item-stacked-label">
+            <span className="input-label">Password</span>
+            <input
+              type="password"
+              placeholder="password"
+              name="password"
+              onChange={this.inputHandler.bind(this)}
+            />
+          </label>
+          <div class="padding-top">
+            <button onClick={this.loginHandler.bind(this)}
+              disabled={this.state.phone && this.state.password ? false : true} className="button button-block button-energized activated">Login</button>
+          </div>
+          
+        </div>
+        <span className='seperator padding-left padding-right padding-bottom'>&nbsp;&nbsp;OR&nbsp;&nbsp;</span>
+        <div className='row'>
+          <div className='col col-60'>
+            <button onClick={() => {window.location = '/signup'}} className="button button-block button-light activated"><i className="fa fa-key" aria-hidden="true"></i> Forgot Password </button>
+          </div>
+          <div className='col col-40'>
+            <button onClick={() => {window.location = '/signup'}} className="button button-block button-dark activated"><i className="fa fa-user-plus" aria-hidden="true"></i> Sign Up</button>
+          </div>
         </div>
       </div>
     );

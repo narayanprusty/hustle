@@ -18,7 +18,11 @@ class Layout extends Component {
       <div
         style={{
           backgroundSize: "contain",
-          backgroundImage: "url(" + "/images/6.png)"
+          backgroundImage: "url(" + "/images/bg.png)",
+          height: '100%',
+          backgroundPositionY: 'bottom',
+          backgroundRepeat: 'no-repeat',
+          backgroundRepeatX: 'repeat'
         }}
       >   <Notifications />
         <Route exact path="/" component={Home} />

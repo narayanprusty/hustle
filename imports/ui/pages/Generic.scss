@@ -1,9 +1,18 @@
-.root {
-  padding-left: 10%;
-  padding-top: 4%;
-    width: 90%;
-    max-width: 600px;
+
+.seperator {
+  display: flex;
+  flex-direction: row;
+  opacity: 0.6;
 }
+.seperator:before, .seperator:after{
+  content: "";
+  flex: 1 1;
+  border-bottom: 1px solid #000;
+  margin: auto;
+  border-style: ridge;
+  opacity: 0.2;
+}
+
 .switch-field {
     font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
     padding: 40px;
