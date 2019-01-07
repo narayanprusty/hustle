@@ -1,10 +1,10 @@
+
 import React,{Component} from "react";
 import { BrowserRouter, Route, Switch, Redirect,Link } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
 import { slide as Menu } from "react-burger-menu";
 import { Meteor } from "meteor/meteor";
 import {notify} from 'react-notify-toast';
-
 
 var styles = {
   bmBurgerButton: {

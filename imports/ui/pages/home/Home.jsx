@@ -109,32 +109,11 @@ export default class Home extends Component {
       places, mapApiLoaded, mapInstance, mapApi,
     } = this.state;
     return (
-      <Fragment>
-            {mapApiLoaded && <SearchBox map={mapInstance} mapApi={mapApi} addplace={this.addPlace} />}
-        <div className='mapView'>
-          
-          <GoogleMapReact
-            options={this.createMapOptions}
-            bootstrapURLKeys={{ key: config.GAPIKEY,    libraries: ['places'] }}
-            initialCenter={this.state.fields.location}
-            center={this.state.fields.location}
-            zoom={this.state.zoom}
-            layerTypes={["TrafficLayer", "TransitLayer"]}
-            heat={true}
-            gestureHandling= "greedy"
-            onClick={(t)=>this.codeLatLng(t)}
-            yesIWantToUseGoogleMapApiInternals
-            onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)}
-          > 
-          {!isEmpty(places) &&
-            places.map(place => (
-             <Marker lat={place.geometry.location.lat} lng={place.geometry.location.lng} metaData=''/>
-            ))}
-          <Marker lat={this.state.currentLocation.lat ? this.state.currentLocation.lat : this.state.fields.lat} lng={this.state.currentLocation.lng ?  this.state.currentLocation.lng :this.state.fields.lng} metaData=''/>
-          </GoogleMapReact> 
-          
-        </div>
-        </Fragment>
+      <div class="bar bar-header">
+        <button class="button button-icon icon ion-navicon"></button>
+        <div class="h1 title">Header Buttons</div>
+        <button class="button button-clear button-positive">Edit</button>
+      </div>
     );
   }
 }
