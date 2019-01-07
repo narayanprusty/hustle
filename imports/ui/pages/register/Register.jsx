@@ -101,7 +101,7 @@ export default class Register extends Component {
     const {phone,first_name,password,verification,isSent,sendable} =this.state;
     return (
       <div className="padding">
-        <div className='list'>
+        <div className='list padding'>
           <h3 className='padding-bottom'><i className="fa fa-user-plus" aria-hidden="true"></i> Create Account</h3>
           <label className="item item-input item-stacked-label">
             <span className="input-label">Name</span>

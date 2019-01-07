@@ -9,10 +9,10 @@ import {notify} from 'react-notify-toast';
 var styles = {
   bmBurgerButton: {
     position: "fixed",
-    width: "36px",
-    height: "30px",
-    left: "36px",
-    top: "36px"
+    width: "24px",
+    height: "18px",
+    left: "14px",
+    top: "16px"
   },
   bmBurgerBars: {
     background: "#373a47"
@@ -49,7 +49,7 @@ var styles = {
 
 export default class SlideMenu extends Component {
   state={
-    isMenuOpen:false
+    isMenuOpen: false
   }
   logout = ()=>{
     Meteor.logout((err,done)=>{
@@ -66,7 +66,7 @@ export default class SlideMenu extends Component {
  
   render() {
     return (
-      <Menu styles={styles} isOpen={ this.state.isMenuOpen } >
+      <Menu customBurgerIcon={ false } styles={styles} isOpen={ this.props.openMenu } >
         <Link to='/'>
           Home
         </Link>
@@ -82,8 +82,6 @@ export default class SlideMenu extends Component {
             Logout
         </Link>
       </Menu>
-      
-      
     );
   }
 };

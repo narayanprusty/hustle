@@ -74,7 +74,7 @@ export default class Login extends Component {
   render() {
     return (
       <div className="padding">
-        <div className='list'>
+        <div className='list padding'>
           <div style={{
             textAlign: 'center',
             paddingBottom: '30px'

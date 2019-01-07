@@ -10,7 +10,17 @@ import Login from "../../pages/login/Login";
 class Layout extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      height: '0px'
+    };
+  }
+
+  componentDidMount() {
+    if(Meteor.userId()) {
+      this.setState({
+        height: (document.body.scrollHeight - document.getElementsByClassName('header-app')[0].offsetHeight).toString() + 'px'
+      })
+    }
   }
 
   render() {
@@ -19,9 +29,9 @@ class Layout extends Component {
         style={{
           backgroundSize: "contain",
           backgroundImage: "url(" + "/images/bg.png)",
-          height: '100%',
+          height: (Meteor.userId() ? (this.state.height) : '100%'),
           backgroundPositionY: 'bottom',
-          backgroundRepeat: 'no-repeat',
+          backgroundRepeat: 'repeat-x',
           backgroundRepeatX: 'repeat'
         }}
       >   <Notifications />
