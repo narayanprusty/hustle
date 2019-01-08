@@ -97,7 +97,7 @@ const newBookingReq = async (
 
 const onDriverAccept = async (bookingId, driverId) => {
   const txId = await node.callAPI("assets/updateAssetInfo", {
-    assetName: config.BLOCKCLUSTER.matchAssetName,
+    assetName: config.ASSET.Bookings,
     fromAccount: node.getWeb3().eth.accounts[0],
     identifier: bookingId,
     public: {
@@ -110,7 +110,7 @@ const onDriverAccept = async (bookingId, driverId) => {
 
 const onStartRide = async (bookingId, startingPoint) => {
   const txId = await node.callAPI("assets/updateAssetInfo", {
-    assetName: config.BLOCKCLUSTER.matchAssetName,
+    assetName: config.ASSET.Bookings,
     fromAccount: node.getWeb3().eth.accounts[0],
     identifier: bookingId,
     public: {
@@ -123,7 +123,7 @@ const onStartRide = async (bookingId, startingPoint) => {
 
 const onStopRide = async (bookingId, endingPoint) => {
   const txId = await node.callAPI("assets/updateAssetInfo", {
-    assetName: config.BLOCKCLUSTER.matchAssetName,
+    assetName: config.ASSET.Bookings,
     fromAccount: node.getWeb3().eth.accounts[0],
     identifier: bookingId,
     public: {
@@ -136,7 +136,7 @@ const onStopRide = async (bookingId, endingPoint) => {
 
 const onConfirmPayment = async (bookingId, txId = null, paymentAmount) => {
   const Id = await node.callAPI("assets/updateAssetInfo", {
-    assetName: config.BLOCKCLUSTER.matchAssetName,
+    assetName: config.ASSET.Bookings,
     fromAccount: node.getWeb3().eth.accounts[0],
     identifier: bookingId,
     public: {
@@ -148,11 +148,27 @@ const onConfirmPayment = async (bookingId, txId = null, paymentAmount) => {
   return { txId: Id };
 };
 
+const fetchUserBookings = async(userId,page)=>{
+  console.log(userId,page);
+  const data =  await node.callAPI("assets/search", {
+    $query: {
+        "assetName": config.ASSET.Bookings,
+        "userId":userId
+      },
+      $limit:page*10,
+      $skip: page*10-10,
+      $sort: {
+        _id: -1
+      }
+  });
+  return  {data:data}
+}
 
 export {
   newBookingReq,
   onDriverAccept,
   onStartRide,
   onStopRide,
-  onConfirmPayment
+  onConfirmPayment,
+  fetchUserBookings
 };

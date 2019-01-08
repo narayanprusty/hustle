@@ -53,11 +53,6 @@ export default class Bookings extends Component {
 
     };
   componentDidMount = async () => {
-    //if user logged in redirect 
-    const user = Meteor.userId();
-    if (!user) {
-      location.href = "/login";
-    } else {
       const { lat, lng } = await this.getcurrentLocation();
       Geocode.fromLatLng(lat, lng).then(
         response => {
@@ -85,7 +80,6 @@ export default class Bookings extends Component {
         }
       );
     
-    }
   };
 
   getcurrentLocation() {

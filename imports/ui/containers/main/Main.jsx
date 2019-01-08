@@ -6,6 +6,7 @@ import SlideMenu from "../../components/sideMenu/SideMenu";
 import Settings from "../../pages/settings/Settings";
 import Notifications from 'react-notify-toast';
 import Bookings from "../../pages/bookings/Bookings";
+import Rides from "../../pages/Rides/Rides";
 
 var menuColStyles = {
   padding: '0px' ,
@@ -42,19 +43,20 @@ export default class Main extends Component {
         }}>
           <Route path="/app/settings" component={Settings} />
           <Route path="/app/home" component={Bookings} />
+          <Route path="/app/rides" component={Rides} />
         </div>
         <div className="tabs tabs-icon-top footer" style={{
           backgroundColor: "rgb(232, 187, 10)",
           color: 'white'
         }}>
-          <a className="tab-item">
+          <Link to='/app/home' className="tab-item">
             <i className="icon ion-home"></i>
             Home
-          </a>
-          <a className="tab-item">
+          </Link>
+          <Link to='/app/rides' className="tab-item">
             <i className="icon ion-navicon-round"></i>
             Rides
-          </a>
+          </Link>
           <Link to="/app/settings" className="tab-item">
             <i className="icon ion-gear-a"></i>
             Settings
