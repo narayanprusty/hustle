@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import {Meteor} from 'meteor/meteor';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import {notify} from 'react-notify-toast';
 import PhoneInput from 'react-phone-number-input'
+import Notifications from 'react-notify-toast';
+import { BrowserRouter, Route, Switch, Redirect, Link } from "react-router-dom";
 
 import "./Register_client.scss";
 export default class Register extends Component {
@@ -61,7 +62,6 @@ export default class Register extends Component {
             }
           },
           error => {
-            console.log(error);
             if (error) {
               if (error.error) {
                 this.setState({
@@ -97,59 +97,78 @@ export default class Register extends Component {
       [e.target.name]: e.target.value
     });
   };
+
   render() {
     const {phone,first_name,password,verification,isSent,sendable} =this.state;
     return (
-      <div className="padding">
-        <div className='list padding'>
-          <h3 className='padding-bottom'><i className="fa fa-user-plus" aria-hidden="true"></i> Create Account</h3>
-          <label className="item item-input item-stacked-label">
-            <span className="input-label">Name</span>
-            <input
-              type="text"
-              placeholder="Saikat"
-              name="first_name"
-              onChange={this.inputHandler.bind(this)}
-            />
-          </label>
-          <label className="item item-input item-stacked-label">
-            <span className="input-label">Phone</span>
-            <PhoneInput
-              placeholder="Enter phone number"
-              value={ this.state.phone }
-              onChange={ phone => this.setState({ phone }) } />
-          </label>
-          <button className="button button-block button-energized activated" onClick={this.sendMessage.bind(this)} disabled={phone ? (isSent ? sendable: false) : true}>
-             {isSent ? 'Resend' : 'Verify'}
-          </button>
-          <label className="item item-input item-stacked-label">
-            <span className="input-label">Verification Code</span>
-            <input
-              type="text"
-              placeholder="####"
-              name="verification"
-              onChange={this.inputHandler.bind(this)}
-            />
-          </label>
-          <label className="item item-input item-stacked-label">
-            <span className="input-label">Password</span>
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              onChange={this.inputHandler.bind(this)}
-            />
-          </label>
-          <button onClick={this.createAccount.bind(this)}
-              disabled={phone && first_name && password && verification  ? false : true} className="button button-block button-energized activated">Register</button>
-        </div>
-        <span className='seperator padding-left padding-right padding-bottom'>&nbsp;&nbsp;OR&nbsp;&nbsp;</span>
-        <div className='row'>
-          <div className='col col-100'>
-            <button onClick={() => {this.props.history.push('/login')}} className="button button-block button-light activated"><i className="fa fa-sign-in" aria-hidden="true"></i> Login </button>
+      <div
+        style={{
+          backgroundSize: "contain",
+          backgroundImage: "url(" + "/images/bg.png)",
+          height: (Meteor.userId() ? (this.state.height) : '100%'),
+          backgroundPositionY: 'bottom',
+          backgroundRepeat: 'repeat-x',
+          backgroundRepeatX: 'repeat',
+          overflow:'scroll'
+        }}
+      >
+        <div className="padding">
+          <div className='list padding'>
+            <h3 className='padding-bottom'><i className="fa fa-user-plus" aria-hidden="true"></i> Create Account</h3>
+            <label className="item item-input item-stacked-label">
+              <span className="input-label">Name</span>
+              <input
+                type="text"
+                placeholder="Saikat"
+                name="first_name"
+                onChange={this.inputHandler.bind(this)}
+              />
+            </label>
+            <label className="item item-input item-stacked-label">
+              <span className="input-label">Phone</span>
+              <PhoneInput
+                placeholder="Enter phone number"
+                value={ this.state.phone }
+                onChange={ phone => this.setState({ phone }) } />
+            </label>
+            <button className="button button-block button-energized activated" onClick={this.sendMessage.bind(this)} disabled={phone ? (isSent ? sendable: false) : true}>
+              {isSent ? 'Resend' : 'Verify'}
+            </button>
+            <label className="item item-input item-stacked-label">
+              <span className="input-label">Verification Code</span>
+              <input
+                type="text"
+                placeholder="####"
+                name="verification"
+                onChange={this.inputHandler.bind(this)}
+              />
+            </label>
+            <label className="item item-input item-stacked-label">
+              <span className="input-label">Password</span>
+              <input
+                type="password"
+                placeholder="Password"
+                name="password"
+                onChange={this.inputHandler.bind(this)}
+              />
+            </label>
+            <button onClick={this.createAccount.bind(this)}
+                disabled={phone && first_name && password && verification  ? false : true} className="button button-block button-energized activated">Register</button>
+          </div>
+          <span className='seperator padding-left padding-right padding-bottom'>&nbsp;&nbsp;OR&nbsp;&nbsp;</span>
+          <div className='row'>
+            <div className='col col-100'>
+              <button onClick={() => {this.setState({toLogin: true})}} className="button button-block button-light activated"><i className="fa fa-sign-in" aria-hidden="true"></i> Login </button>
+            </div>
           </div>
         </div>
+
+        <Notifications />
+        {this.state.toLogin &&
+          <Redirect to="/login" />
+        }
       </div>
+      
     );
   }
 }
