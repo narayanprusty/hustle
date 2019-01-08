@@ -38,7 +38,7 @@ export default class Main extends Component {
                 })
               }} className="padding-left margin-left button button-icon icon ion-navicon" style={{marginTop: '2px'}}></button></div>
               <div style={{textAlign: 'center', fontSize: '17px', fontWeight: '500', lineHeight: '44px', ...menuColStyles}} className="col col-60"><h3 className="padding-top">Home</h3></div>
-              <div style={{textAlign: 'right', fontSize: '17px', fontWeight: '500', lineHeight: '44px', ...menuColStyles}}  className="col col-20"><span className="padding-right"><i style={{marginTop: '16px', marginLeft: '24px'}} className="fa fa-car" aria-hidden="true"></i></span></div>
+              <div style={{textAlign: 'right', fontSize: '17px', fontWeight: '500', lineHeight: '44px', ...menuColStyles}}  className="col col-20"><Link to='/bookings'><span className="padding-right"><i style={{marginTop: '16px', marginLeft: '24px'}} className="fa fa-car" aria-hidden="true"></i></span></Link></div>
             </div>
           </div>
         }

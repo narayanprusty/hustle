@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import './Home_client.scss'
+import './Bookings_client.scss'
 
 class SearchBox extends Component {
   constructor(props) {
     super(props);
-    this.clearSearchBox = this.clearSearchBox.bind(this);
+    this.clearSearchBox = this.clearSearchBox.bind(this,this.props.value);
   }
 
   componentDidMount({ map, mapApi } = this.props) {
@@ -32,8 +32,8 @@ class SearchBox extends Component {
     this.searchInput.blur();
   };
 
-  clearSearchBox() {
-    this.searchInput.value = '';
+  clearSearchBox(value) {
+    this.searchInput.value =value ? value : '';
   }
 
   render() {

@@ -7,6 +7,7 @@ import Home from "../../pages/home/Home";
 import Register from "../../pages/register/Register";
 import EmailVerification from "../../pages/EmailVerification/EmailVerification";
 import Login from "../../pages/login/Login";
+import Bookings from "../../pages/bookings/Bookings";
 class Layout extends Component {
   constructor(props) {
     super(props);
@@ -35,10 +36,11 @@ class Layout extends Component {
           backgroundRepeatX: 'repeat'
         }}
       >   <Notifications />
-        <Route exact path="/" component={Home} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/signup" component={Register} />
         <Route exact path="/email-verify" component={EmailVerification} />
+        <Route exact path="/" component={Home} />
+        <Route exact path="/bookings" component={Bookings} />
       </div>
     );
   }
