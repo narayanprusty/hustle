@@ -5,6 +5,7 @@ import { withTracker } from "meteor/react-meteor-data";
 import SlideMenu from "../../components/sideMenu/SideMenu";
 import Settings from "../../pages/settings/Settings";
 import Notifications from 'react-notify-toast';
+import Bookings from "../../pages/bookings/Bookings";
 
 var menuColStyles = {
   padding: '0px' ,
@@ -28,6 +29,8 @@ export default class Main extends Component {
   render() {
     return (
       <div style={{height: '100%', position: 'relative'}}>
+      <Notifications />
+
         <div className='content' style={{
           height: this.state.height,
           backgroundSize: "contain",
@@ -38,6 +41,7 @@ export default class Main extends Component {
           overflow:'scroll'
         }}>
           <Route path="/app/settings" component={Settings} />
+          <Route path="/app/home" component={Bookings} />
         </div>
         <div className="tabs tabs-icon-top footer" style={{
           backgroundColor: "rgb(232, 187, 10)",

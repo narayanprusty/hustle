@@ -4,8 +4,15 @@ import './Bookings_client.scss'
 class SearchBox extends Component {
   constructor(props) {
     super(props);
-    this.clearSearchBox = this.clearSearchBox.bind(this,this.props.value);
+    this.clearSearchBox = this.clearSearchBox.bind(this);
   }
+  
+  componentWillReceiveProps(nextProps){
+    if(nextProps.value != this.props.value) {
+      this.searchInput.value =this.props.value ? this.props.value : '';
+    }
+}
+
 
   componentDidMount({ map, mapApi } = this.props) {
     this.searchBox = new mapApi.places.SearchBox(this.searchInput);
@@ -33,8 +40,9 @@ class SearchBox extends Component {
   };
 
   clearSearchBox(value) {
-    this.searchInput.value =value ? value : '';
+    this.searchInput.value ='';
   }
+ 
 
   render() {
     return (
