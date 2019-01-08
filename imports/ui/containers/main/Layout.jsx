@@ -33,7 +33,8 @@ class Layout extends Component {
           height: (Meteor.userId() ? (this.state.height) : '100%'),
           backgroundPositionY: 'bottom',
           backgroundRepeat: 'repeat-x',
-          backgroundRepeatX: 'repeat'
+          backgroundRepeatX: 'repeat',
+          overflow:'scroll'
         }}
       >   <Notifications />
         <Route exact path="/login" component={Login} />
