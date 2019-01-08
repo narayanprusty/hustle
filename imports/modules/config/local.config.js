@@ -13,6 +13,6 @@ module.exports = {
   },
   BLOCKCLUSTER:{
     host:"app-ap-south-1b.blockcluster.io",
-    instanceId:"1234567890"
+    instanceId:"iqszlvac"
   }
 };

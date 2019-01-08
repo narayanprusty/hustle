@@ -1,13 +1,17 @@
 import React, { Component,Fragment } from "react";
 import isEmpty from 'lodash.isempty';
+import moment from 'moment';
 import SearchBox from './SearchBox';
 import mapStyle from './MapStyle';//https://mapstyle.withgoogle.com/ you can build yours from 
 const config = {
-  GAPIKEY: "AIzaSyB9q7TNa-vKxMEjWx-SF0Gx3n6L6tbQdaI"
+  GAPIKEY: "AIzaSyB9q7TNa-vKxMEjWx-SF0Gx3n6L6tbQdaI",
+  farePerMeter:4,
 };
 {/* <FontAwesomeIcon className ='font-awesome' icon={faMapMarker} /> */}
 import  GoogleMapReact from "google-map-react";
 import Geocode from "react-geocode";
+import { notify } from "react-notify-toast";
+
 
 Geocode.setApiKey(config.GAPIKEY);
 
@@ -29,7 +33,7 @@ const Marker = ({metaData}) =>(
 export default class Bookings extends Component {
   static defaultProps = {};
   state = {
-   
+    paymentMethod:'cash',
     fields: {
       location: {
         lat: 22,
@@ -91,7 +95,7 @@ export default class Bookings extends Component {
   getcurrentLocation() {
     if (navigator && navigator.geolocation) {
       return new Promise((resolve, reject) => {
-        navigator.geolocation.watchPosition(async(pos) => {
+        navigator.geolocation.getCurrentPosition(async(pos) => {
           const coords = pos.coords;
           resolve({
             lat: coords.latitude,
@@ -107,7 +111,11 @@ export default class Bookings extends Component {
       lng: 0
     };
   }
-
+  inputHandler = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
   changeRoute = ()=>{
     if(this.state.poly){
       this.state.poly.setMap(null);
@@ -147,8 +155,8 @@ export default class Bookings extends Component {
         distance:bookingDetails.distance.text ,
         reachAfterIfTraffic:bookingDetails.duration_in_traffic.text,
       };
-      console.log(dataObj);
       this.setState({
+        rideStatGen:true,
         distance_in_meter:bookingDetails.distance.value ,
         timeTaken_in_secoend:bookingDetails.duration.value ,
         timeTakenTraffic_in_secoend:bookingDetails.duration_in_traffic.value ,
@@ -166,7 +174,7 @@ export default class Bookings extends Component {
       });
       routePolyline.setMap(mapInstance);
     } else {
-      window.alert('Directions request failed due to ' + status);
+      notify.show('Directions request failed due to ' + status,'error');
       }
     });
   }
@@ -228,20 +236,91 @@ this.changeRoute();
       styles: mapStyle
     }
   }
-  checkPlace= (mapApi)=>{
-    console.log(mapApi.places.getPlaces()[0])
+  raiseBookingReq= (e)=>{
+    e.preventDefault()
+   const data={
+     userId:Meteor.userId(),
+    boardingPoint:this.state.boardingPoint,
+    droppingPoint:this.state.droppingPoint,
+    paymentMethod:this.state.paymentMethod,
+    distance:this.state.distance,
+    reachAfter:this.state.reachAfter,
+    currentLocation:this.state.currentLocation,
+    reachAfterIfTraffic:this.state.reachAfterIfTraffic,
+    timeTakenTraffic_in_secoend:this.state.timeTakenTraffic_in_secoend,
+    timeTaken_in_secoend:this.state.timeTaken_in_secoend,
+    end_address:this.state.end_address,
+    start_address:this.state.start_address,
+    distance_in_meter:this.state.distance_in_meter
+   }
+   Meteor.call('newBookingReq',data,(error,response)=>{
+     debugger;
+    if(error){
+      console.log(error);
+      notify.show(error.reason? error.reason : 'Unable to create request!', 'error')
+    }
+    console.log(response);
+    notify.show('Booking created Successfully!','success');
+   })
   }
+  
   render() {
     const {
-      places, mapApiLoaded, mapInstance, mapApi,
+     mapApiLoaded, mapInstance, mapApi,
     } = this.state;
     return (
       <div style={{height: '100%'}}>
         
           <Fragment>
+            <div className='list'>
+          <label className="item item-input item-stacked-label">
+            <span className="input-label"> Boarding Point: </span>
+           {mapApiLoaded && <SearchBox map={mapInstance} mapApi={mapApi} value={this.state.boardingPlace.formatted_address } addplace={this.addBoardingPlace} />}
+          </label>
+          <label className="item item-input item-stacked-label">
+            <span className="input-label">  Dropping Point:  </span>
+           {mapApiLoaded && <SearchBox map={mapInstance} mapApi={mapApi} addplace={this.addDroppingPlace} />}
+           </label>
+          {this.state.rideStatGen &&(
+           <div className="list card">
+          
+            <span>
+                <label>Time:</label> 
+                {this.state.reachAfter }
+            </span>
+            <br />
+            <span>
+                <label>You will Reach at:</label> 
+                {moment().add(this.state.timeTakenTraffic_in_secoend,"S").format("LT")}
+            </span>
+            <br />
+            <span>
+                <label>Total Distance:</label> 
+                {this.state.distance}
+            </span>
+            <br />
+            <span>
+                <label>Total Fare:</label> 
+                {(this.state.distance_in_meter*config.farePerMeter)/1000+' USD' } at 3 USD/KM
+            </span>
+            <br />
+            <label className="item item-input item-select">
+            <div className="input-label">
+              Select Payment Method
+            </div>
+            <select name="paymentMethod" value={this.state.paymentMethod} onChange={this.inputHandler}>
+              <option value={'cash'}>Cash</option>
+              <option value={'card 1'}>Card 1</option>
+            </select>
+          </label>
+            <button className="button button-block button-energized activated" onClick={this.raiseBookingReq} disabled={this.state.paymentMethod ? false :true}>
+                Book
+            </button> 
+         
+         </div>
+          )}
+           </div>
 
-            Boarding Point:  {mapApiLoaded && <SearchBox map={mapInstance} mapApi={mapApi} value={this.state.boardingPlace.formatted_address } addplace={this.addBoardingPlace} />}
-            Dropping Point: {mapApiLoaded && <SearchBox map={mapInstance} mapApi={mapApi} addplace={this.addDroppingPlace} />}
         <div className='mapView'>
           
           <GoogleMapReact

@@ -56,7 +56,10 @@ module.exports = {
   SMS:defaults.SMS,
   BLOCKCLUSTER:defaults.BLOCKCLUSTER,
   ASSET:{
-    Bookings:"Bookings"
+    Bookings:"Bookings",
+    BookingsInfo:'BookingsInfo'
   },
+  farePerMeter:0.04,
+  fareUnit:'USD',
   env: getEnv(),
 };
