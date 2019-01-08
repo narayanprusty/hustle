@@ -3,11 +3,7 @@ import isEmpty from 'lodash.isempty';
 import moment from 'moment';
 import SearchBox from './SearchBox';
 import mapStyle from './MapStyle';//https://mapstyle.withgoogle.com/ you can build yours from 
-const config = {
-  GAPIKEY: "AIzaSyB9q7TNa-vKxMEjWx-SF0Gx3n6L6tbQdaI",
-  farePerMeter:4,
-};
-{/* <FontAwesomeIcon className ='font-awesome' icon={faMapMarker} /> */}
+import config from '../../../modules/config/client'
 import  GoogleMapReact from "google-map-react";
 import Geocode from "react-geocode";
 import { notify } from "react-notify-toast";
@@ -285,23 +281,23 @@ this.changeRoute();
            <div className="list card">
           
             <span>
-                <label>Time:</label> 
+                <label>Time: </label> 
                 {this.state.reachAfter }
             </span>
             <br />
             <span>
-                <label>You will Reach at:</label> 
+                <label>You will Reach at: </label> 
                 {moment().add(this.state.timeTakenTraffic_in_secoend,"S").format("LT")}
             </span>
             <br />
             <span>
-                <label>Total Distance:</label> 
+                <label>Total Distance: </label> 
                 {this.state.distance}
             </span>
             <br />
             <span>
-                <label>Total Fare:</label> 
-                {(this.state.distance_in_meter*config.farePerMeter)/1000+' USD' } at 3 USD/KM
+                <label>Total Fare: </label> 
+                {Math.round(this.state.distance_in_meter*config.farePerMeter)+config.fareUnit } at {config.farePerMeter+config.fareUnit}/M
             </span>
             <br />
             <label className="item item-input item-select">
