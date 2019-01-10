@@ -23,7 +23,7 @@ export default class Bookingreq extends Component {
     location.href="http://maps.google.com/maps?q=loc:"+data.boardingPoint.lat+','+data.boardingPoint.lng
   }
   loadItems = page => {
-    navigator.geolocation.getCurrentPosition(async pos => {
+    navigator.geolocation.getCurrentPosition(pos => {
       const coords = pos.coords;
       Meteor.call(
         "fetchBookingReq",
