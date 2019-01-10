@@ -12,7 +12,7 @@ emailOptions
 
 import nodemailer from 'nodemailer';
 import config from '../../modules/config/server'
-var transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
 	host: config.SMTP.host,
 	port: 465,
 	secure: true, // true for 465, false for other ports

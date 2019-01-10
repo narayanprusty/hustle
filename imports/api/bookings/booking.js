@@ -187,19 +187,19 @@ const fetchUserBookings = async(userId,page)=>{
   return  {data:data}
 }
 
-var rad = function(x) {
+const rad = function(x) {
   return x * Math.PI / 180;
 };
 //you can use this function to reduce the api call, [Haversine formula]
-var getDistance = (driverLoc, boardingPoint) =>{
-  var R = 6378137; // Earth’s mean radius in meter
-  var dLat = rad(boardingPoint.lat - driverLoc.lat);
-  var dLong = rad(boardingPoint.lng - driverLoc.lng);
-  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+const getDistance = (driverLoc, boardingPoint) =>{
+  const R = 6378137; // Earth’s mean radius in meter
+  const dLat = rad(boardingPoint.lat - driverLoc.lat);
+  const dLong = rad(boardingPoint.lng - driverLoc.lng);
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(rad(driverLoc.lat())) * Math.cos(rad(boardingPoint.lat())) *
     Math.sin(dLong / 2) * Math.sin(dLong / 2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  var d = R * c;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c;
   return d; // d is the distance in meter
 };
 

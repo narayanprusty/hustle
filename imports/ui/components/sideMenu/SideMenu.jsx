@@ -6,7 +6,7 @@ import { slide as Menu } from "react-burger-menu";
 import { Meteor } from "meteor/meteor";
 import {notify} from 'react-notify-toast';
 
-var styles = {
+const styles = {
   bmBurgerButton: {
     position: "fixed",
     width: "24px",
