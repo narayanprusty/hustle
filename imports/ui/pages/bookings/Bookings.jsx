@@ -7,6 +7,8 @@ import config from '../../../modules/config/client'
 import  GoogleMapReact from "google-map-react";
 import Geocode from "react-geocode";
 import { notify } from "react-notify-toast";
+import PubNubReact from 'pubnub-react';
+
 
 
 Geocode.setApiKey(config.GAPIKEY);
@@ -27,8 +29,17 @@ const Marker = ({metaData}) =>(
 ;
 
 export default class Bookings extends Component {
-  static defaultProps = {};
+  constructor(props) {
+    super(props);
+    this.pubnub = new PubNubReact({
+        publishKey: config.PUBNUB.pubKey,
+        subscribeKey: config.PUBNUB.subKey,
+        secretKey:'sec-c-ODI1ZjY2MWUtMTIwNy00M2MxLWIzY2EtZDUwMjQ5MTlhNmY5'
+    });
+    this.pubnub.init(this);
+}
   state = {
+    listnToDriver:false,
     paymentMethod:'cash',
     fields: {
       location: {
@@ -52,6 +63,12 @@ export default class Bookings extends Component {
       boardingPlace: {},
 
     };
+    componentWillMount=()=>{
+      this.pubnub.subscribe({
+        channels: [Meteor.userId()],
+        withPresence: true
+        });
+    }
   componentDidMount = async () => {
       const { lat, lng } = await this.getcurrentLocation();
       Geocode.fromLatLng(lat, lng).then(
@@ -81,7 +98,11 @@ export default class Bookings extends Component {
       );
     
   };
-
+  componentWillUnmount() {
+    this.pubnub.unsubscribe({
+        channels: [Meteor.userId()]
+    });
+}
   getcurrentLocation() {
     if (navigator && navigator.geolocation) {
       return new Promise((resolve, reject) => {
@@ -155,7 +176,6 @@ export default class Bookings extends Component {
         ...dataObj,
       })
       directionsDisplay.setDirections(response);
-      console.log(response.routes[0], 'Ruta')
       const routePolyline = new mapApi.Polyline({
         path: response.routes[0].overview_path
       });
@@ -249,15 +269,34 @@ this.changeRoute();
       console.log(error);
       notify.show(error.reason? error.reason : 'Unable to create request!', 'error')
     }
-    console.log(response);
-    notify.show('Booking created Successfully!','success');
+   this.setState({
+     listnToDriver:true
+   });
+     //show a loader here
+      console.log(response);
    })
   }
   
   render() {
     const {
      mapApiLoaded, mapInstance, mapApi,
-    } = this.state;
+     listnToDriver, } = this.state;
+     
+    if(listnToDriver){
+    const messages = this.pubnub.getMessage(Meteor.userId());
+    const latestMsg = messages[messages.length -1];
+    console.log(latestMsg);
+//     {actualChannel: null
+// channel: "RRt8iYvYeSDDN8QaX"
+// message: {such: "luls"}
+// publisher: "pn-612e2f1f-fe27-4c72-a96a-064680f93b7a"
+// subscribedChannel: "RRt8iYvYeSDDN8QaX"
+// subscription: null
+// timetoken: "15471134919707428"
+// userMetadata: {cool: "meta"}}
+//check above for specific metadata or message item and take the steps accordingly
+    }
+
     return (
       <div style={{height: '100%'}}>
         
@@ -312,7 +351,6 @@ this.changeRoute();
            </div>
 
         <div className='mapView'>
-          
           <GoogleMapReact
             options={this.createMapOptions}
             bootstrapURLKeys={{ key: config.GAPIKEY,    libraries: ['places'] }}
