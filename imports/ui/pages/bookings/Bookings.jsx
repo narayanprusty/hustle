@@ -27,6 +27,7 @@ const Marker = ({ metaData }) => (
 export default class Bookings extends Component {
   constructor(props) {
     super(props);
+    this._isMounted = false;
     this.pubnub = new PubNubReact({
       publishKey: config.PUBNUB.pubKey,
       subscribeKey: config.PUBNUB.subKey,
@@ -61,6 +62,7 @@ export default class Bookings extends Component {
   
   componentDidMount = async () => {
     const { lat, lng } = await this.getcurrentLocation();
+    this._isMounted = true;
     Geocode.fromLatLng(lat, lng).then(
       response => {
         this.setState(prev => ({
@@ -92,9 +94,11 @@ export default class Bookings extends Component {
     });
   };
   componentWillUnmount() {
-    this.pubnub.unsubscribe({
-      channels: [Meteor.userId()]
-    });
+    if(this._isMounted ) {
+      this.pubnub.unsubscribe({
+        channels: [Meteor.userId()]
+      });
+    }
   }
   getcurrentLocation() {
     if (navigator && navigator.geolocation) {
@@ -332,50 +336,68 @@ export default class Bookings extends Component {
               )}
             </label>
             {this.state.rideStatGen && (
-              <div className="list card">
-                <span>
-                  <label>Time: </label>
-                  {this.state.reachAfter}
-                </span>
-                <br />
-                <span>
-                  <label>You will Reach at: </label>
-                  {moment()
-                    .add(this.state.timeTakenTraffic_in_secoend, "S")
-                    .format("LT")}
-                </span>
-                <br />
-                <span>
-                  <label>Total Distance: </label>
-                  {this.state.distance}
-                </span>
-                <br />
-                <span>
-                  <label>Total Fare: </label>
-                  {Math.round(
-                    this.state.distance_in_meter * config.farePerMeter
-                  ) + config.fareUnit}{" "}
-                  at {config.farePerMeter + config.fareUnit}/M
-                </span>
-                <br />
-                <label className="item item-input item-select">
-                  <div className="input-label">Select Payment Method</div>
-                  <select
-                    name="paymentMethod"
-                    value={this.state.paymentMethod}
-                    onChange={this.inputHandler}
+              <div>
+                <div class="list" style={{marginBottom: '0px'}}>
+                  <a class="item item-icon-left" href="#">
+                    <i class="icon fa fa-clock-o"></i>
+                    {this.state.reachAfter}
+                    <span class="item-note">
+                      Time
+                    </span>
+                  </a>
+
+                  <a class="item item-icon-left" href="#">
+                    <i class="icon fa fa-road"></i>
+                    {this.state.distance}
+                    <span class="item-note">
+                      Distance
+                    </span>
+                  </a>
+
+                  <a class="item item-icon-left" href="#">
+                    <i class="icon fa fa-money"></i>
+                    {Math.round(
+                      this.state.distance_in_meter * config.farePerMeter
+                    ) + config.fareUnit}{" "}
+                    at {config.farePerMeter + config.fareUnit}/M
+                    <span class="item-note">
+                      Fare
+                    </span>
+                  </a>
+                  <a class="item item-icon-left" href="#">
+                    <i class="icon fa fa-shopping-cart"></i>
+                    <select
+                      name="paymentMethod"
+                      value={this.state.paymentMethod}
+                      onChange={this.inputHandler}
+                      style={{
+                        fontSize: '16px'
+                      }}
+                    >
+                      <option value={"cash"}>Cash</option>
+                      <option value={"card 1"}>Card 1</option>
+                    </select>
+                    <i class="fa fa-sort-desc" style={{
+                      position: 'relative',
+                      top: '-2px',
+                      left: '-12px'
+                    }}></i>
+                    <span class="item-note">
+                      Payment Method
+                    </span>
+                  </a>
+                  
+                </div>
+
+                <div className="padding">
+                  <button
+                    className="button button-block button-energized activated"
+                    onClick={this.raiseBookingReq}
+                    disabled={this.state.paymentMethod ? false : true}
                   >
-                    <option value={"cash"}>Cash</option>
-                    <option value={"card 1"}>Card 1</option>
-                  </select>
-                </label>
-                <button
-                  className="button button-block button-energized activated"
-                  onClick={this.raiseBookingReq}
-                  disabled={this.state.paymentMethod ? false : true}
-                >
-                  Book
-                </button>
+                    Book
+                  </button>
+                </div>
               </div>
             )}
           </div>
