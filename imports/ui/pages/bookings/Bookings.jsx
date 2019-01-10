@@ -307,13 +307,19 @@ export default class Bookings extends Component {
       //check above for specific metadata or message item and take the steps accordingly
     }
 
+    let conatinerClass = 'list';
+
+    if(!this.state.rideStatGen) {
+      conatinerClass += " padding-bottom"
+    }
+
     return (
       <div style={{ height: "100%" }}>
         <Fragment>
           <div className='padding'>
             <h3 className='padding'><i className="fa fa-car" aria-hidden="true"></i> Book Ride</h3>
           </div>
-          <div className="list padding-bottom">
+          <div className={conatinerClass}>
             <label className="item item-input item-stacked-label">
               <span className="input-label"> Boarding Point: </span>
               {mapApiLoaded && (
@@ -337,35 +343,35 @@ export default class Bookings extends Component {
             </label>
             {this.state.rideStatGen && (
               <div>
-                <div class="list" style={{marginBottom: '0px'}}>
-                  <a class="item item-icon-left" href="#">
-                    <i class="icon fa fa-clock-o"></i>
+                <div className="list" style={{marginBottom: '0px'}}>
+                  <a className="item item-icon-left" href="#">
+                    <i className="icon fa fa-clock-o"></i>
                     {this.state.reachAfter}
-                    <span class="item-note">
+                    <span className="item-note">
                       Time
                     </span>
                   </a>
 
-                  <a class="item item-icon-left" href="#">
-                    <i class="icon fa fa-road"></i>
+                  <a className="item item-icon-left" href="#">
+                    <i className="icon fa fa-road"></i>
                     {this.state.distance}
-                    <span class="item-note">
+                    <span className="item-note">
                       Distance
                     </span>
                   </a>
 
-                  <a class="item item-icon-left" href="#">
-                    <i class="icon fa fa-money"></i>
+                  <a className="item item-icon-left" href="#">
+                    <i className="icon fa fa-money"></i>
                     {Math.round(
                       this.state.distance_in_meter * config.farePerMeter
                     ) + config.fareUnit}{" "}
                     at {config.farePerMeter + config.fareUnit}/M
-                    <span class="item-note">
+                    <span className="item-note">
                       Fare
                     </span>
                   </a>
-                  <a class="item item-icon-left" href="#">
-                    <i class="icon fa fa-shopping-cart"></i>
+                  <a className="item item-icon-left" href="#">
+                    <i className="icon fa fa-shopping-cart"></i>
                     <select
                       name="paymentMethod"
                       value={this.state.paymentMethod}
@@ -377,19 +383,19 @@ export default class Bookings extends Component {
                       <option value={"cash"}>Cash</option>
                       <option value={"card 1"}>Card 1</option>
                     </select>
-                    <i class="fa fa-sort-desc" style={{
+                    <i className="fa fa-sort-desc" style={{
                       position: 'relative',
                       top: '-2px',
                       left: '-12px'
                     }}></i>
-                    <span class="item-note">
+                    <span className="item-note">
                       Payment Method
                     </span>
                   </a>
                   
                 </div>
 
-                <div className="padding">
+                <div className="padding-left padding-right padding-top">
                   <button
                     className="button button-block button-energized activated"
                     onClick={this.raiseBookingReq}
