@@ -26,9 +26,11 @@ export default class Main extends Component {
         height: ((document.body.scrollHeight - document.getElementsByClassName('footer')[0].offsetHeight)) + 'px',
       })
   }
+  
 
   // if user not loggedIn dont show sideMenu
   render() {
+    const driverMode = localStorage.getItem("driverMode");
     return (
       <div style={{height: '100%', position: 'relative'}}>
       <Notifications />
@@ -49,6 +51,8 @@ export default class Main extends Component {
           <Route path="/app/driver/newreqs" component={Bookingreq} />
           
         </div>
+
+        {!driverMode &&(
         <div className="tabs tabs-icon-top footer" style={{
           backgroundColor: "rgb(232, 187, 10)",
           color: 'white'
@@ -65,7 +69,25 @@ export default class Main extends Component {
             <i className="icon ion-gear-a"></i>
             Settings
           </Link>
-        </div>
+        </div>)}
+        {driverMode &&(
+        <div className="tabs tabs-icon-top footer" style={{
+          backgroundColor: "black",
+          color: 'white'
+        }}>
+          <Link to='/app/driver/newreqs' className="tab-item">
+            <i className="icon ion-home"></i>
+            Home
+          </Link>
+          <a to='/app/driver/rides' className="tab-item">
+            <i className="icon ion-navicon-round"></i>
+            Rides
+          </a>
+          <Link to="/app/settings" className="tab-item">
+            <i className="icon ion-gear-a"></i>
+            Settings
+          </Link>
+        </div>)}
 
         <Notifications />
       </div>
