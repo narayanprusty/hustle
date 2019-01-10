@@ -39,17 +39,17 @@ export default class Bookings extends Component {
     paymentMethod: "cash",
     fields: {
       location: {
-        lat: 22,
-        lng: 88
+        lat: 0,
+        lng: 0
       }
     },
     currentLocation: {
-      lat: 22,
-      lng: 88
+      lat: 0,
+      lng: 0
     },
     boardingPoint: {
-      lat: 22,
-      lng: 18
+      lat: 0,
+      lng: 0
     },
     zoom: 18,
     mapApiLoaded: false,
@@ -153,7 +153,6 @@ export default class Bookings extends Component {
       },
       (response, status) => {
         if (status === "OK") {
-          debugger;
           const bookingDetails = response.routes[0].legs[0];
           const dataObj = {
             end_address: bookingDetails.end_address,
@@ -263,7 +262,6 @@ export default class Bookings extends Component {
       distance_in_meter: this.state.distance_in_meter
     };
     Meteor.call("newBookingReq", data, (error, response) => {
-      debugger;
       if (error) {
         console.log(error);
         notify.show(
