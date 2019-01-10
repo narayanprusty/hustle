@@ -1,4 +1,5 @@
 import Blockcluster from "blockcluster";
+import {BookingRecord} from '../../collections/booking-record'
 import config from "../../modules/config/server";
 const node = new Blockcluster.Dynamo({
   locationDomain: config.BLOCKCLUSTER.host,
@@ -32,7 +33,7 @@ const newBookingReq = async (
 }
 ) => {
   console.log(end_address,start_address);
-  const totalFare = (distance_in_meter*config.farePerMeter);
+  const totalFare = (distance_in_meter*config.farePerMeter).toFixed();
   const currentDate = Date.now();
   const identifier ='I'+
     Date.now() +
@@ -104,6 +105,17 @@ const newBookingReq = async (
     identifier: identifier2,
     public: infoData
   });
+
+  BookingRecord.insert({
+    bookingId:identifier,
+    userId:userId,
+    totalFare:totalFare,
+    totalDistance:distance,
+    totalDuration:reachAfter,
+    boardingPoint:boardingPoint,
+    creaatedAt:Date.now()
+  });
+
   return { data: data, txId: txId };
 };
 
@@ -188,50 +200,35 @@ var getDistance = (driverLoc, boardingPoint) =>{
     Math.sin(dLong / 2) * Math.sin(dLong / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var d = R * c;
-  return d/1000; // d is the distance in meter
+  return d; // d is the distance in meter
 };
 
 //for more exact u can pass mapApi obj from frontend only and do calculation
 //mapApi.geometry.spherical.computeDistanceBetween (latLngA, latLngB); //return values in Meter
+const fetchBookingReq = async({lat,lng,page})=>{
+  console.log(lat,lng);
+  const data = await BookingRecord.rawCollection().aggregate(  [
+    {
+        "$geoNear": {
+            "near": { "type": "Point", "coordinates": [ lat,
+                lng] },
+            "distanceField": "boardingPoint",
+            "maxDistance": 8000,
+            "distanceMultiplier": 0.000621371,
+            "includeLocs": "boardingPoint",
+            "spherical": true,
+            "num": 1000
+        },
+       
+    }, {$limit:page*10},
+   { $skip: page*10-10},],     { cursor: { batchSize: 0 } }
 
-const getRideReqs = async ({within=config.driversWithin,driversLatlng,minTotalFare=null,distance,mapApi})=>{
-  let sortObj ={
-    _id: 1
-  };
-  let matchObj ={ 
-    "rideStatus":'pending'
-    };
-  if(minTotalFare){
-    matchObj['totalFare']={$gte:minTotalFare}
-  }
-  let dist={};
-  if(distance && distance.min){
-   dist["$gte"] = distance.min
-  }
-  if(distance && distance.max){
-    dist["$lte"] = distance.max
-  }
-  if(dist.length){
-    matchObj['totalDistance']=dist
-  }
-  
-  
-  const data =  await node.callAPI("assets/search", {
-    $query: {
-        "assetName": config.ASSET.Bookings,
-        ...matchObj
-      },
-      $limit:page*10,
-      $skip: page*10-10,
-      $sort: sortObj
-  });
-  let withingDistanceData =[];
-  for(let i of data){
-    const distanceOfBoardingsKm = getDistance(driversLatlng,i.boardingPoint);
-    distanceOfBoardingsKm <= within ? withingDistanceData.push(i) : console.log("Skipping just because distance is "+distanceOfBoardingsKm);
-  }
-  return {data:withingDistanceData};
-};
+).toArray();
+return data;
+
+}
+
+
 
 export {
   newBookingReq,
@@ -240,5 +237,6 @@ export {
   onStopRide,
   onConfirmPayment,
   fetchUserBookings,
-  getRideReqs
+  getRideReqs,
+  fetchBookingReq
 };

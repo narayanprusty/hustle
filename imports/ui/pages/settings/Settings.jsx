@@ -47,9 +47,13 @@ export default class Settings extends Component {
             Call Support
             <i className="icon ion-ios-telephone-outline"></i>
           </a>
-          <div class="item item-divider">
+          <div className="item item-divider">
             Others
           </div>
+          <Link to="/app/driver/dash" className="item item-icon-left">
+            <i className="icon fa fa-car"></i>
+            Drivers Panel
+          </Link>
           <Link to="#" onClick={this.logout} className="item item-icon-left">
             <i className="icon fa fa-sign-out"></i>
             Logout

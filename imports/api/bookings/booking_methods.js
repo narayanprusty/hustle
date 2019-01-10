@@ -3,7 +3,7 @@ import {
   onDriverAccept,
   onStartRide,
   onStopRide,
-  onConfirmPayment,fetchUserBookings
+  onConfirmPayment,fetchUserBookings,fetchBookingReq
 } from "./booking.js";
 import { Meteor } from "meteor/meteor";
 
@@ -12,6 +12,6 @@ Meteor.methods({
   onDriverAccept,
   onStartRide,
   onStopRide,
-  onConfirmPayment,fetchUserBookings
+  onConfirmPayment,fetchUserBookings,fetchBookingReq
 });
 export {};

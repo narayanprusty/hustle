@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import {Meteor} from 'meteor/meteor'
 import { BrowserRouter, Route, Switch, Redirect, Link } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
-import SlideMenu from "../../components/sideMenu/SideMenu";
 import Settings from "../../pages/settings/Settings";
 import Notifications from 'react-notify-toast';
 import Bookings from "../../pages/bookings/Bookings";
 import Rides from "../../pages/Rides/Rides";
+import Bookingreq from "../../pages/driver/Bookingreq/Bookingreq";
+import Dashboard from "../../pages/driver/Dashboard/Dashboard";
 
 var menuColStyles = {
   padding: '0px' ,
@@ -44,6 +45,9 @@ export default class Main extends Component {
           <Route path="/app/settings" component={Settings} />
           <Route path="/app/home" component={Bookings} />
           <Route path="/app/rides" component={Rides} />
+          <Route path="/app/driver/dash" component={Dashboard} />
+          <Route path="/app/driver/newreqs" component={Bookingreq} />
+          
         </div>
         <div className="tabs tabs-icon-top footer" style={{
           backgroundColor: "rgb(232, 187, 10)",
