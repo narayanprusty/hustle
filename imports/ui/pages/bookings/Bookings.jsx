@@ -27,7 +27,6 @@ const Marker = ({ metaData }) => (
 export default class Bookings extends Component {
   constructor(props) {
     super(props);
-    this._isMounted = false;
     this.pubnub = new PubNubReact({
       publishKey: config.PUBNUB.pubKey,
       subscribeKey: config.PUBNUB.subKey,
@@ -61,7 +60,6 @@ export default class Bookings extends Component {
   };
   
   componentDidMount = async () => {
-    this._isMounted = true;
     const { lat, lng } = await this.getcurrentLocation();
     Geocode.fromLatLng(lat, lng).then(
       response => {
@@ -94,22 +92,30 @@ export default class Bookings extends Component {
     });
   };
   componentWillUnmount() {
-    if(this._isMounted ){
     this.pubnub.unsubscribe({
       channels: [Meteor.userId()]
     });
-    this._isMounted = false;
-  }
   }
   getcurrentLocation() {
     if (navigator && navigator.geolocation) {
       return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(async pos => {
+        navigator.geolocation.getCurrentPosition(async (pos, err) => {
           const coords = pos.coords;
+          console.log(coords, err)
           resolve({
             lat: coords.latitude,
             lng: coords.longitude
           });
+        }, (err) => {
+          notify.show("Unable to fetch your current location", "error");
+          resolve({
+            lat: 25.11102,
+            lng: 55.19514
+          });
+        }, {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0
         });
       });
     }
