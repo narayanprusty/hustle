@@ -111,34 +111,89 @@ export default class Rides extends Component {
       console.log(data);
       let status = "-";
       if (data.rideStatus == "pending") {
-        status = "Looking for driver";
+        status = "/images/pending.png";
       } else if (data.rideStatus == "accepted") {
-        status = "Driver is on the way.";
+        status = "/images/waiting.png";
       } else if (data.rideStatus == "started") {
-        status = "on going ride";
+        status = "/images/riding.png";
       } else if (data.rideStatus == "finished") {
-        status = "completed";
+        status = "/images/completed.png";
       }
       items.push(
-        <AccordionItem key={i}>
-          <AccordionItemTitle>
-            <p>BookingId: #{data.uniqueIdentifier}</p>
-            <p>Status: {status}</p>
-            <p>
-              Time:{" "}
-              {data.createdAt ? moment(data.createdAt).format("LLL") : "-"}
-            </p>
-            <p>Total Fare: {data.totalFare + " " + data.fareUnit}</p>
-          </AccordionItemTitle>
-          <AccordionItemBody>
-            <p>Boarding Point: {data.start_address}</p>
-            <p>Dropping Point: {data.end_address}</p>
-            <p>Duration: {data.time_shown}</p>
-            <p>Payment Method: {data.paymentMethod}</p>
-            <p>Payment Status: {data.paymentStatus}</p>
-            <p>Total Distance: {data.totalDistance / 1000}KM </p>
-          </AccordionItemBody>
-        </AccordionItem>
+        <div className="list card" key={data.uniqueIdentifier} style={{
+        }}>
+          <AccordionItem key={i}>
+            <AccordionItemTitle>
+              <div className="item item-avatar">
+                <img src={status} />
+                <h2>{data.totalFare + " " + data.fareUnit}</h2>
+                <p>{data.createdAt ? moment(data.createdAt).format("LLL") : "-"}</p>
+              </div>
+            </AccordionItemTitle>
+            <AccordionItemBody>
+              <div className="item item-body">
+                <ul className="list">
+                  <li className="item" style={{whiteSpace: 'normal'}}>
+                    <div style={{marginBottom: '10px'}}>
+                      <b>Booking ID:</b>
+                    </div>
+                    <div>
+                      #{data.uniqueIdentifier}
+                    </div>
+                  </li>
+                  <li className="item" style={{whiteSpace: 'normal'}}>
+                    <div style={{marginBottom: '10px'}}>
+                      <b>Boarding Point:</b>
+                    </div>
+                    <div>
+                      {data.start_address}
+                    </div>
+                  </li>
+                  <li className="item" style={{whiteSpace: 'normal'}}>
+                    <div style={{marginBottom: '10px'}}>
+                      <b>Dropping Point:</b>
+                    </div>
+                    <div>
+                      {data.end_address}
+                    </div>
+                  </li>
+                  <li className="item">
+                    <div style={{marginBottom: '10px'}}>
+                      <b>Duration:</b>
+                    </div>
+                    <div>
+                      {data.time_shown}
+                    </div>
+                  </li>
+                  <li className="item">
+                    <div style={{marginBottom: '10px'}}>
+                      <b>Payment Method:</b>
+                    </div>
+                    <div>
+                      {data.paymentMethod}
+                    </div>
+                  </li>
+                  <li className="item">
+                    <div style={{marginBottom: '10px'}}>
+                      <b>Payment Status:</b>
+                    </div>
+                    <div>
+                      {data.paymentStatus}
+                    </div>
+                  </li>
+                  <li className="item">
+                    <div style={{marginBottom: '10px'}}>
+                      <b>Total Distance: </b>
+                    </div>
+                    <div>
+                      {data.totalDistance / 1000}KM
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </AccordionItemBody>
+          </AccordionItem>
+        </div>
       );
     });
 
@@ -150,7 +205,14 @@ export default class Rides extends Component {
         loader={loader}
         useWindow={false}
       >
-        <Accordion>{items}</Accordion>
+        <div className="padding-top padding-right padding-left padding-bottom">
+          <h3 className="padding">
+            <i className="fa fa-road" aria-hidden="true" /> Your Rides
+          </h3>
+          <Accordion>
+            {items}
+          </Accordion>
+        </div>
       </InfiniteScroll>
     );
   }
