@@ -5,6 +5,15 @@ const node = new Blockcluster.Dynamo({
   instanceId: config.BLOCKCLUSTER.instanceId
 });
 
+/**
+ * rideStatus is 
+ *  pending //when no driver accepted
+ *  accepted //driver is allotted   
+ *  started //when driver starts the ride
+ *  finished //when driver ends the ride
+ *  cancelled // when user cancel the ride      
+ * 
+ */
 const newBookingReq = async (
   {
    userId,
@@ -149,7 +158,6 @@ const onConfirmPayment = async (bookingId, txId = null, paymentAmount) => {
 };
 
 const fetchUserBookings = async(userId,page)=>{
-  console.log(userId,page);
   const data =  await node.callAPI("assets/search", {
     $query: {
         "assetName": config.ASSET.Bookings,
@@ -164,11 +172,70 @@ const fetchUserBookings = async(userId,page)=>{
   return  {data:data}
 }
 
+var rad = function(x) {
+  return x * Math.PI / 180;
+};
+//you can use this function to reduce the api call, [Haversine formula]
+var getDistance = (driverLoc, boardingPoint) =>{
+  var R = 6378137; // Earth’s mean radius in meter
+  var dLat = rad(boardingPoint.lat - driverLoc.lat);
+  var dLong = rad(boardingPoint.lng - driverLoc.lng);
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(rad(driverLoc.lat())) * Math.cos(rad(boardingPoint.lat())) *
+    Math.sin(dLong / 2) * Math.sin(dLong / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c;
+  return d/1000; // d is the distance in meter
+};
+
+//for more exact u can pass mapApi obj from frontend only and do calculation
+//mapApi.geometry.spherical.computeDistanceBetween (latLngA, latLngB); //return values in Meter
+
+const getRideReqs = async ({within=config.driversWithin,driversLatlng,minTotalFare=null,distance,mapApi})=>{
+  let sortObj ={
+    _id: 1
+  };
+  let matchObj ={ 
+    "rideStatus":'pending'
+    };
+  if(minTotalFare){
+    matchObj['totalFare']={$gte:minTotalFare}
+  }
+  let dist={};
+  if(distance && distance.min){
+   dist["$gte"] = distance.min
+  }
+  if(distance && distance.max){
+    dist["$lte"] = distance.max
+  }
+  if(dist.length){
+    matchObj['totalDistance']=dist
+  }
+  
+  
+  const data =  await node.callAPI("assets/search", {
+    $query: {
+        "assetName": config.ASSET.Bookings,
+        ...matchObj
+      },
+      $limit:page*10,
+      $skip: page*10-10,
+      $sort: sortObj
+  });
+  let withingDistanceData =[];
+  for(let i of data){
+    const distanceOfBoardingsKm = getDistance(driversLatlng,i.boardingPoint);
+    distanceOfBoardingsKm <= within ? withingDistanceData.push(i) : console.log("Skipping just because distance is "+distanceOfBoardingsKm);
+  }
+  return {data:withingDistanceData};
+};
+
 export {
   newBookingReq,
   onDriverAccept,
   onStartRide,
   onStopRide,
   onConfirmPayment,
-  fetchUserBookings
+  fetchUserBookings,
+  getRideReqs
 };

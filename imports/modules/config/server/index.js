@@ -61,5 +61,6 @@ module.exports = {
   },
   farePerMeter:0.04,
   fareUnit:'USD',
+  driversWithin:defaults.driversWithin,
   env: getEnv(),
 };
