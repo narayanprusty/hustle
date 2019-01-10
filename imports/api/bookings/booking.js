@@ -28,8 +28,10 @@ const newBookingReq = async (
   timeTaken_in_secoend,
   end_address,
   start_address,
-  distance_in_meter}
+  distance_in_meter
+}
 ) => {
+  console.log(end_address,start_address);
   const totalFare = (distance_in_meter*config.farePerMeter);
   const currentDate = Date.now();
   const identifier ='I'+
@@ -51,7 +53,8 @@ const newBookingReq = async (
     boardingPoint: JSON.stringify(boardingPoint),
     droppingPoint: JSON.stringify(droppingPoint),
     start_address: start_address,
-    end_address: end_address
+    end_address: end_address,
+    time_shown: reachAfter,
   };
 
   const infoData = {
@@ -68,13 +71,13 @@ const newBookingReq = async (
 
   //create booking general assets
   await node.callAPI("assets/issueSoloAsset", {
-    assetName: config.ASSET.BookingsInfo,
+    assetName: config.ASSET.Bookings,
     fromAccount: node.getWeb3().eth.accounts[0],
     toAccount: node.getWeb3().eth.accounts[0],
     identifier: identifier
   });
   const txId = await node.callAPI("assets/updateAssetInfo", {
-    assetName: config.ASSET.BookingsInfo,
+    assetName: config.ASSET.Bookings,
     fromAccount: node.getWeb3().eth.accounts[0],
     identifier: identifier,
     public: data
@@ -89,14 +92,14 @@ const newBookingReq = async (
 
   //create booking info assets
   await node.callAPI("assets/issueSoloAsset", {
-    assetName: config.ASSET.Bookings,
+    assetName: config.ASSET.BookingsInfo,
     fromAccount: node.getWeb3().eth.accounts[0],
     toAccount: node.getWeb3().eth.accounts[0],
     identifier: identifier2
   });
 
    await node.callAPI("assets/updateAssetInfo", {
-    assetName: config.ASSET.Bookings,
+    assetName: config.ASSET.BookingsInfo,
     fromAccount: node.getWeb3().eth.accounts[0],
     identifier: identifier2,
     public: infoData
