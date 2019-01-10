@@ -40,7 +40,8 @@ export default class Main extends Component {
           backgroundPositionY: 'bottom',
           backgroundRepeat: 'repeat-x',
           backgroundRepeatX: 'repeat',
-          overflow:'scroll'
+          overflow:'scroll',
+          WebkitOverflowScrolling: 'touch'
         }}>
           <Route path="/app/settings" component={Settings} />
           <Route path="/app/home" component={Bookings} />
