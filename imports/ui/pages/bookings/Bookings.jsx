@@ -27,6 +27,7 @@ const Marker = ({ metaData }) => (
 export default class Bookings extends Component {
   constructor(props) {
     super(props);
+    this._isMounted = false;
     this.pubnub = new PubNubReact({
       publishKey: config.PUBNUB.pubKey,
       subscribeKey: config.PUBNUB.subKey,
@@ -58,11 +59,9 @@ export default class Bookings extends Component {
     droppingPlace: {},
     boardingPlace: {}
   };
-  componentWillMount = () => {
-   
-  };
+  
   componentDidMount = async () => {
-    
+    this._isMounted = true;
     const { lat, lng } = await this.getcurrentLocation();
     Geocode.fromLatLng(lat, lng).then(
       response => {
@@ -95,9 +94,12 @@ export default class Bookings extends Component {
     });
   };
   componentWillUnmount() {
+    if(this._isMounted ){
     this.pubnub.unsubscribe({
       channels: [Meteor.userId()]
     });
+    this._isMounted = false;
+  }
   }
   getcurrentLocation() {
     if (navigator && navigator.geolocation) {
