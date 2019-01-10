@@ -127,11 +127,11 @@ export default class Bookings extends Component {
     const { mapInstance, mapApi, droppingPoint, boardingPoint } = this.state;
 
     const latlng = [
-      new mapApi.LatLng(droppingPoint.lat, droppingPoint.lng),
-      new mapApi.LatLng(boardingPoint.lat, boardingPoint.lng)
-    ];
-    var latlngbounds = new mapApi.LatLngBounds();
-    for (let i = 0; i < latlng.length; i++) {
+      new mapApi.LatLng(droppingPoint.lat,droppingPoint.lng),
+      new mapApi.LatLng(boardingPoint.lat, boardingPoint.lng),
+  ]; 
+  let latlngbounds = new mapApi.LatLngBounds();
+  for (let i = 0; i < latlng.length; i++) {
       latlngbounds.extend(latlng[i]);
     }
     mapInstance.fitBounds(latlngbounds);

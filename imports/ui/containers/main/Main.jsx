@@ -9,7 +9,7 @@ import Rides from "../../pages/Rides/Rides";
 import Bookingreq from "../../pages/driver/Bookingreq/Bookingreq";
 import Dashboard from "../../pages/driver/Dashboard/Dashboard";
 
-var menuColStyles = {
+const menuColStyles = {
   padding: '0px' ,
 }
 
