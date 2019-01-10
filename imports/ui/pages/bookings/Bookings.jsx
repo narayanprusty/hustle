@@ -59,12 +59,10 @@ export default class Bookings extends Component {
     boardingPlace: {}
   };
   componentWillMount = () => {
-    this.pubnub.subscribe({
-      channels: [Meteor.userId()],
-      withPresence: true
-    });
+   
   };
   componentDidMount = async () => {
+    
     const { lat, lng } = await this.getcurrentLocation();
     Geocode.fromLatLng(lat, lng).then(
       response => {
@@ -91,6 +89,10 @@ export default class Bookings extends Component {
         console.error(error);
       }
     );
+    this.pubnub.subscribe({
+      channels: [Meteor.userId()],
+      withPresence: true
+    });
   };
   componentWillUnmount() {
     this.pubnub.unsubscribe({
