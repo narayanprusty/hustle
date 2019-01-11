@@ -409,6 +409,7 @@ export default class Bookings extends Component {
           </div>
 
           <div className="mapView padding-left padding-right padding-bottom">
+          {this._isMounted && (
             <GoogleMapReact
               options={this.createMapOptions}
               bootstrapURLKeys={{ key: config.GAPIKEY, libraries: ["places"] }}
@@ -457,7 +458,7 @@ export default class Bookings extends Component {
                 }
                 metaData="board"
               />
-            </GoogleMapReact>
+            </GoogleMapReact>)}
           </div>
         </Fragment>
       </div>
