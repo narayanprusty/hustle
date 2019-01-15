@@ -61,8 +61,8 @@ export default class Bookings extends Component {
   };
   
   componentDidMount = async () => {
-    this._isMounted = true;
     const { lat, lng } = await this.getcurrentLocation();
+    this._isMounted = true;
     Geocode.fromLatLng(lat, lng).then(
       response => {
         this.setState(prev => ({
@@ -94,22 +94,32 @@ export default class Bookings extends Component {
     });
   };
   componentWillUnmount() {
-    if(this._isMounted ){
-    this.pubnub.unsubscribe({
-      channels: [Meteor.userId()]
-    });
-    this._isMounted = false;
-  }
+    if(this._isMounted ) {
+      this.pubnub.unsubscribe({
+        channels: [Meteor.userId()]
+      });
+    }
   }
   getcurrentLocation() {
     if (navigator && navigator.geolocation) {
       return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(async pos => {
+        navigator.geolocation.getCurrentPosition(async (pos, err) => {
           const coords = pos.coords;
+          console.log(coords, err)
           resolve({
             lat: coords.latitude,
             lng: coords.longitude
           });
+        }, (err) => {
+          notify.show("Unable to fetch your current location", "error");
+          resolve({
+            lat: 25.11102,
+            lng: 55.19514
+          });
+        }, {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0
         });
       });
     }
@@ -297,13 +307,19 @@ export default class Bookings extends Component {
       //check above for specific metadata or message item and take the steps accordingly
     }
 
+    let conatinerClass = 'list';
+
+    if(!this.state.rideStatGen) {
+      conatinerClass += " padding-bottom"
+    }
+
     return (
       <div style={{ height: "100%" }}>
         <Fragment>
           <div className='padding'>
             <h3 className='padding'><i className="fa fa-car" aria-hidden="true"></i> Book Ride</h3>
           </div>
-          <div className="list padding-bottom">
+          <div className={conatinerClass}>
             <label className="item item-input item-stacked-label">
               <span className="input-label"> Boarding Point: </span>
               {mapApiLoaded && (
@@ -326,55 +342,74 @@ export default class Bookings extends Component {
               )}
             </label>
             {this.state.rideStatGen && (
-              <div className="list card">
-                <span>
-                  <label>Time: </label>
-                  {this.state.reachAfter}
-                </span>
-                <br />
-                <span>
-                  <label>You will Reach at: </label>
-                  {moment()
-                    .add(this.state.timeTakenTraffic_in_secoend, "S")
-                    .format("LT")}
-                </span>
-                <br />
-                <span>
-                  <label>Total Distance: </label>
-                  {this.state.distance}
-                </span>
-                <br />
-                <span>
-                  <label>Total Fare: </label>
-                  {Math.round(
-                    this.state.distance_in_meter * config.farePerMeter
-                  ) + config.fareUnit}{" "}
-                  at {config.farePerMeter + config.fareUnit}/M
-                </span>
-                <br />
-                <label className="item item-input item-select">
-                  <div className="input-label">Select Payment Method</div>
-                  <select
-                    name="paymentMethod"
-                    value={this.state.paymentMethod}
-                    onChange={this.inputHandler}
+              <div>
+                <div className="list" style={{marginBottom: '0px'}}>
+                  <a className="item item-icon-left" href="#">
+                    <i className="icon fa fa-clock-o"></i>
+                    {this.state.reachAfter}
+                    <span className="item-note">
+                      Time
+                    </span>
+                  </a>
+
+                  <a className="item item-icon-left" href="#">
+                    <i className="icon fa fa-road"></i>
+                    {this.state.distance}
+                    <span className="item-note">
+                      Distance
+                    </span>
+                  </a>
+
+                  <a className="item item-icon-left" href="#">
+                    <i className="icon fa fa-money"></i>
+                    {Math.round(
+                      this.state.distance_in_meter * config.farePerMeter
+                    ) + config.fareUnit}{" "}
+                    at {config.farePerMeter + config.fareUnit}/M
+                    <span className="item-note">
+                      Fare
+                    </span>
+                  </a>
+                  <a className="item item-icon-left" href="#">
+                    <i className="icon fa fa-shopping-cart"></i>
+                    <select
+                      name="paymentMethod"
+                      value={this.state.paymentMethod}
+                      onChange={this.inputHandler}
+                      style={{
+                        fontSize: '16px'
+                      }}
+                    >
+                      <option value={"cash"}>Cash</option>
+                      <option value={"card 1"}>Card 1</option>
+                    </select>
+                    <i className="fa fa-sort-desc" style={{
+                      position: 'relative',
+                      top: '-2px',
+                      left: '-12px'
+                    }}></i>
+                    <span className="item-note">
+                      Payment Method
+                    </span>
+                  </a>
+                  
+                </div>
+
+                <div className="padding-left padding-right padding-top">
+                  <button
+                    className="button button-block button-energized activated"
+                    onClick={this.raiseBookingReq}
+                    disabled={this.state.paymentMethod ? false : true}
                   >
-                    <option value={"cash"}>Cash</option>
-                    <option value={"card 1"}>Card 1</option>
-                  </select>
-                </label>
-                <button
-                  className="button button-block button-energized activated"
-                  onClick={this.raiseBookingReq}
-                  disabled={this.state.paymentMethod ? false : true}
-                >
-                  Book
-                </button>
+                    Book
+                  </button>
+                </div>
               </div>
             )}
           </div>
 
           <div className="mapView padding-left padding-right padding-bottom">
+          {this._isMounted && (
             <GoogleMapReact
               options={this.createMapOptions}
               bootstrapURLKeys={{ key: config.GAPIKEY, libraries: ["places"] }}
@@ -423,7 +458,7 @@ export default class Bookings extends Component {
                 }
                 metaData="board"
               />
-            </GoogleMapReact>
+            </GoogleMapReact>)}
           </div>
         </Fragment>
       </div>
