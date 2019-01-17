@@ -17,9 +17,10 @@ requireAuth = RouteComponent => {
 
 requireNotLoggedIn = RouteComponent => {
   return () => {
-    return Meteor.userId() ? <Redirect to="/app/home" /> : <RouteComponent />;
+    return Meteor.userId() ? <Redirect to={localStorage.getItem("driverMode") ? '/app/driver/newreqs': "/app/home"}/> : <RouteComponent />;
   };
 };
+
 
 const App = () => (
   <BrowserRouter>
@@ -27,7 +28,7 @@ const App = () => (
       <Route exact path="/" render={() => <Redirect to="/login" />} />
       <Route exact path="/login" render={this.requireNotLoggedIn(Login)} />
       <Route exact path="/signup" render={this.requireNotLoggedIn(Register)} />
-      <Route exact path="/app" render={() => <Redirect to="/app/home" />} />
+      <Route exact path="/app" render={() => <Redirect to={localStorage.getItem("driverMode") ? '/app/driver/newreqs': "/app/home"} />} />
       <Route exact path="/app/*" render={this.requireAuth(Main)} />
     </Switch>
   </BrowserRouter>
