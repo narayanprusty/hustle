@@ -14,12 +14,17 @@ class Bookingreq extends Component {
     };
   }
   handleClickAction=(data)=>{
-    console.log(data);
-   //accept ride here
-   
-
-   this.props.history.push("app/driver/currentBooking");
-
+    console.log("Accepting.....")
+    Meteor.call("onDriverAccept",data.bookingId,Meteor.userId(),(error, response) => {
+      if (error) {
+        console.log(error);
+        notify.show(
+        error.reason ? error.reason : "Unable to accept the ride!",
+        "error"
+        );
+      }
+      this.props.history.push("app/driver/currentBooking");
+      });
   }
   loadItems = page => {
     navigator.geolocation.getCurrentPosition(pos => {
