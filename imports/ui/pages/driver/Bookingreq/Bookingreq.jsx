@@ -1,13 +1,11 @@
 import React, { Component } from "react";
-import config from "../../../../modules/config/client";
-import { Link } from "react-router-dom";
+import { Link,withRouter } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import InfiniteScroll from "react-infinite-scroller";
-import { BookingRecord } from "../../../../collections/booking-record";
 import moment from "moment";
 import { Meteor } from "meteor/meteor";
 
-export default class Bookingreq extends Component {
+class Bookingreq extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,10 +15,11 @@ export default class Bookingreq extends Component {
   }
   handleClickAction=(data)=>{
     console.log(data);
-    //call function for accept, and delete the data from mongo
-    //call function from boooking.js
-    //setup socket here and publish the current location to user, in the data.userId channel
-    location.href="http://maps.google.com/maps?q=loc:"+data.boardingPoint.lat+','+data.boardingPoint.lng
+   //accept ride here
+   
+
+   this.props.history.push("app/driver/currentBooking");
+
   }
   loadItems = page => {
     navigator.geolocation.getCurrentPosition(pos => {
@@ -34,7 +33,7 @@ export default class Bookingreq extends Component {
             console.log(err);
             notify.show(err.reason, "error");
           }
-          if (withingDistanceData.length) {
+          if (withingDistanceData && withingDistanceData.length) {
             let datas = this.state.datas;
             datas = datas.concat(withingDistanceData);
             this.setState({
@@ -134,3 +133,6 @@ export default class Bookingreq extends Component {
     );
   }
 }
+
+
+export default withRouter(Bookingreq);

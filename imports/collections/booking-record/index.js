@@ -17,6 +17,9 @@ BookingRecordCollection.schema = new SimpleSchema({
     totalFare:{
         type:Number
     },
+    driverId:{
+        type:String
+    },
     totalDistance:{
         type:Number
     },
@@ -30,9 +33,19 @@ BookingRecordCollection.schema = new SimpleSchema({
     boardingPoint:{
         type:Object
     },
+    droppingPoint:{
+        type:Object
+    },
     createdAt:{
         type:new Date(),
         defaultValue:Date.now()
+    },
+    status:{
+        type:String
+        //accepted riding
+        //pending
+        // started
+        //finished
     }
 });
 if(Meteor.isServer){

@@ -113,6 +113,8 @@ const newBookingReq = async (
     totalDistance:distance,
     totalDuration:reachAfter,
     boardingPoint:boardingPoint,
+    droppingPoint:droppingPoint,
+    status:"pending",
     creaatedAt:Date.now()
   });
 
@@ -129,6 +131,7 @@ const onDriverAccept = async (bookingId, driverId) => {
       driverId: driverId
     }
   });
+  await BookingRecord.update({bookingId:bookingId},{$set:{driverId:driverId,status:"accepted"}}).exec();
   return { txId: txId };
 };
 
@@ -142,6 +145,7 @@ const onStartRide = async (bookingId, startingPoint) => {
       actualStartingPoint: startingPoint
     }
   });
+  await BookingRecord.update({bookingId:bookingId},{$set:{status:"started"}}).exec();
   return { txId: txId };
 };
 
@@ -155,6 +159,8 @@ const onStopRide = async (bookingId, endingPoint) => {
       actualEndingPoint: endingPoint
     }
   });
+  await BookingRecord.update({bookingId:bookingId},{$set:{status:"finished",active:false}}).exec();
+
   return { txId: txId };
 };
 
@@ -208,6 +214,10 @@ const getDistance = (driverLoc, boardingPoint) =>{
 const fetchBookingReq = async({lat,lng,page})=>{
   console.log(lat,lng);
   const data = await BookingRecord.rawCollection().aggregate(  [
+    {$match:{
+      active:true,
+      status:"pending"
+    }},
     {
         "$geoNear": {
             "near": { "type": "Point", "coordinates": [ lat,
@@ -221,7 +231,7 @@ const fetchBookingReq = async({lat,lng,page})=>{
         },
        
     }, {$limit:page*10},
-   { $skip: page*10-10},],     { cursor: { batchSize: 0 } }
+   { $skip: page*10-10},],{ cursor: { batchSize: 0 } }
 
 ).toArray();
 return data;
