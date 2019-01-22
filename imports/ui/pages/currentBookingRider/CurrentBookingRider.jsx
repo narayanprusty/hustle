@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import config from "../../../modules/config/client";
 import { Link, withRouter } from "react-router-dom";
-// import { BookingRecord } from "../../../../collections/booking-record";
+import { BookingRecord } from "../../../collections/booking-record";
 import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
@@ -31,7 +31,9 @@ class CurrentBookingRider extends Component {
       secretKey: config.PUBNUB.secret
     });
     this.state = {
-        showMap:false
+        showMap:false,
+        rideStarted:false,
+        rideFinished:false,
     };
     this.pubnub.init(this);
 
@@ -47,6 +49,7 @@ class CurrentBookingRider extends Component {
   }
 
   componentDidMount = async () => {
+    const currentRide =await this.fetchCurrentRide();
       console.log(Meteor.userId())
     this.pubnub.subscribe({
       channels: [Meteor.userId()],
@@ -64,6 +67,16 @@ class CurrentBookingRider extends Component {
     });
   };
 
+  fetchCurrentRide=async()=>{
+    const currentRide = await BookingRecord.find({userId:Meteor.userId(),status:{$ne:'pending'}}).fetch()[0];
+    if(!currentRide){
+      this.props.history.push("/app");
+      return;
+    }else{
+      return currentRide;
+    }
+  }
+
   createMapOptions = maps => {
     return {
       gestureHandling: "greedy",
@@ -80,16 +93,16 @@ class CurrentBookingRider extends Component {
       mapApi: maps
     });
   };
-  changeRoute = () => {
+  changeRoute = (destPoint,currentPoint) => {
     if (this.state.poly) {
       this.state.poly.setMap(null);
     }
 
-    const { mapInstance, mapApi, droppingPoint, boardingPoint } = this.state;
+    const { mapInstance, mapApi } = this.state;
 
     const latlng = [
-      new mapApi.LatLng(droppingPoint.lat,droppingPoint.lng),
-      new mapApi.LatLng(boardingPoint.lat, boardingPoint.lng),
+      new mapApi.LatLng(destPoint.lat,destPoint.lng),
+      new mapApi.LatLng(currentPoint.lat, currentPoint.lng),
   ]; 
   let latlngbounds = new mapApi.LatLngBounds();
   for (let i = 0; i < latlng.length; i++) {
@@ -102,8 +115,8 @@ class CurrentBookingRider extends Component {
 
     directionsService.route(
       {
-        origin: this.state.boardingPlace.geometry.location,
-        destination: this.state.droppingPlace.geometry.location,
+        origin: this.state.currentPoint.lat+','+this.state.currentPoint.lng,
+        destination: this.state.destPoint.lat+','+this.state.destPoint.lng,
         travelMode: "DRIVING",
         unitSystem: mapApi.UnitSystem.METRIC,
         drivingOptions: {
@@ -140,7 +153,7 @@ if(latestMsg.userMetadata.type=="driverLoc"){
 }
 if(latestMsg.userMetadata.type == 'status'){
     this.state(latestMsg.message);
-    //rideFinished ,rideStarted,paymentReceived
+    //rideFinished ,rideStarted,paymentReceived 
 }
 }
 

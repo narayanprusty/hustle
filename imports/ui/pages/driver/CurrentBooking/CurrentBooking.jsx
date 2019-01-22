@@ -66,7 +66,7 @@ class CurrentBooking extends Component {
   }
 
   fetchCurrentRide=async()=>{
-    const currentRide = await BookingRecord.find({driverId:Meteor.userId()}).fetch()[0];
+    const currentRide = await BookingRecord.find({driverId:Meteor.userId(),status:{$ne:'pending'},active:true}).fetch()[0]; //finished, started,accepted, pending are the status
     if(!currentRide){
       this.props.history.push("/app/driver/newreqs");
       return;
@@ -105,7 +105,7 @@ class CurrentBooking extends Component {
 	});
   }
   finishRide=()=>{
-    Meteor.call("onStopRide",this.state.bookingId,this.state.currentPosition,(error, response) => {
+    Meteor.call("onStopRide",this.state.bookingId,this.state.currentPosition,async(error, response) => {
       if (error) {
         console.log(error);
         notify.show(
