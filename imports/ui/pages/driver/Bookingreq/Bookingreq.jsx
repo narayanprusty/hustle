@@ -5,7 +5,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import moment from "moment";
 import { Meteor } from "meteor/meteor";
 import PubNubReact from "pubnub-react";
-
+import config from '../../../../modules/config/client'
 
 class Bookingreq extends Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class Bookingreq extends Component {
     this.pubnub = new PubNubReact({
       publishKey: config.PUBNUB.pubKey,
       subscribeKey: config.PUBNUB.subKey,
-      secretKey: "sec-c-ODI1ZjY2MWUtMTIwNy00M2MxLWIzY2EtZDUwMjQ5MTlhNmY5"
+      secretKey: config.PUBNUB.secret
     });
     this.pubnub.init(this);
   }

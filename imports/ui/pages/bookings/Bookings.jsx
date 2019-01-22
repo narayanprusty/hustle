@@ -31,7 +31,7 @@ class Bookings extends Component {
     this.pubnub = new PubNubReact({
       publishKey: config.PUBNUB.pubKey,
       subscribeKey: config.PUBNUB.subKey,
-      secretKey: "sec-c-ODI1ZjY2MWUtMTIwNy00M2MxLWIzY2EtZDUwMjQ5MTlhNmY5"
+      secretKey: config.PUBNUB.secret
     });
     this.state={};
     this.pubnub.init(this);
