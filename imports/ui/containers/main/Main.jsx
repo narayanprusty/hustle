@@ -9,6 +9,7 @@ import Rides from "../../pages/Rides/Rides";
 import Bookingreq from "../../pages/driver/Bookingreq/Bookingreq";
 import Dashboard from "../../pages/driver/Dashboard/Dashboard";
 import CurrentBooking from "../../pages/driver/CurrentBooking/CurrentBooking";
+import CurrentBookingRider from "../../pages/currentBookingRider/CurrentBookingRider";
 
 const menuColStyles = {
   padding: '0px' ,
@@ -49,6 +50,7 @@ export default class Main extends Component {
           <Route path="/app/settings" component={Settings} />
           <Route path="/app/home" component={Bookings} />
           <Route path="/app/rides" component={Rides} />
+          <Route path="/app/currentBooking" component={CurrentBookingRider} />
           <Route path="/app/driver/dash" component={Dashboard} />
           <Route path="/app/driver/newreqs" component={Bookingreq} />
           <Route path="/app/driver/currentBooking" component={CurrentBooking} />
