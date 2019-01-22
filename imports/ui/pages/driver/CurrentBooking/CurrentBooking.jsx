@@ -40,9 +40,9 @@ class CurrentBooking extends Component {
         withPresence: true
       });
       this._isMounted = true;
-      navigator.geolocation.watchPosition(pos => {
+      navigator.geolocation.watchPosition(async(pos) => {
         const coords = pos.coords;
-        this.pubnub.publish(
+       await this.pubnub.publish(
           {
               message: {
                   driverCoords: coords
@@ -78,15 +78,29 @@ class CurrentBooking extends Component {
   navigateToRider=()=>{
    location.href=  "http://maps.google.com/maps?q=loc:"+this.state.boardingPoint.lat+','+this.state.boardingPoint.lng
   }
+
   startRide=()=>{
-	Meteor.call("onStartRide",this.state.bookingId,this.state.currentPosition,(error, response) => {
+	Meteor.call("onStartRide",this.state.bookingId,this.state.currentPosition,async(error, response) => {
 	if (error) {
 		console.log(error);
 		notify.show(
 		error.reason ? error.reason : "Unable to start the ride!",
 		"error"
 		);
-	}
+  }
+  await this.pubnub.publish(
+    {
+        message: {
+           rideStarted: true
+        },
+        channel: this.state.userId,
+        sendByPost: false, // true to send via post
+        storeInHistory: false, //override default storage options
+        meta: {
+            "type": "status"
+        }
+    });
+  
 	location.href=  "http://maps.google.com/maps?q=loc:"+this.state.droppingPoint.lat+','+this.state.droppingPoint.lng
 	});
   }
@@ -99,18 +113,42 @@ class CurrentBooking extends Component {
           "error"
         );
       }
+      await this.pubnub.publish(
+        {
+            message: {
+               rideFinished: true
+            },
+            channel: this.state.userId,
+            sendByPost: false, // true to send via post
+            storeInHistory: false, //override default storage options
+            meta: {
+                "type": "status"
+            }
+        });
       notify.show("Ride completed","success");
     });
   }
   paymentReceived=()=>{
-	Meteor.call("onConfirmPayment",this.state.bookingId,null,this.state.totalFare,(error, response) => {
+	Meteor.call("onConfirmPayment",this.state.bookingId,null,this.state.totalFare,async(error, response) => {
 		if (error) {
 		  console.log(error);
 		  notify.show(
 			error.reason ? error.reason : "Unable to mark payment for the ride!",
 			"error"
 		  );
-		}
+    }
+    await this.pubnub.publish(
+      {
+          message: {
+             paymentReceived: true
+          },
+          channel: this.state.userId,
+          sendByPost: false, // true to send via post
+          storeInHistory: false, //override default storage options
+          meta: {
+              "type": "status"
+          }
+      });
 		notify.show("Payment Marked","success");
 	  });
   }
