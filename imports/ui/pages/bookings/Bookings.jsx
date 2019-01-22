@@ -5,11 +5,11 @@ import SearchBox from "./SearchBox";
 import mapStyle from "./MapStyle"; //https://mapstyle.withgoogle.com/ you can build yours from
 import config from "../../../modules/config/client";
 import GoogleMapReact from "google-map-react";
-import Geocode from "react-geocode";
+// import Geocode from "react-geocode";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
 
-Geocode.setApiKey(config.GAPIKEY);
+// Geocode.setApiKey(config.GAPIKEY);
 
 import "./Bookings_client.scss";
 
@@ -64,8 +64,8 @@ class Bookings extends Component {
   componentDidMount = async () => {
     const { lat, lng } = await this.getcurrentLocation();
     this._isMounted = true;
-    Geocode.fromLatLng(lat, lng).then(
-      response => {
+    // Geocode.fromLatLng(lat, lng).then(
+    //   response => {
         this.setState(prev => ({
           fields: {
             ...prev.fields,
@@ -82,13 +82,13 @@ class Bookings extends Component {
             lat: lat,
             lng: lng
           },
-          boardingPlace: response.results[0]
+          // boardingPlace: response.results[0]
         }));
-      },
-      error => {
-        console.error(error);
-      }
-    );
+    //   },
+    //   error => {
+    //     console.error(error);
+    //   }
+    // );
     this.pubnub.subscribe({
       channels: [Meteor.userId()],
       withPresence: true
@@ -156,8 +156,8 @@ class Bookings extends Component {
 
     directionsService.route(
       {
-        origin: this.state.boardingPlace.geometry.location,
-        destination: this.state.droppingPlace.geometry.location,
+        origin: this.state.boardingPoint.lat+','+this.state.boardingPoint.lng,
+        destination: this.state.droppingPoint.lat+','+this.state.droppingPoint.lng,
         travelMode: "DRIVING",
         unitSystem: mapApi.UnitSystem.METRIC,
         drivingOptions: {
@@ -242,6 +242,7 @@ class Bookings extends Component {
     });
   };
   apiHasLoaded = (map, maps) => {
+    debugger;
     this.setState({
       mapApiLoaded: true,
       mapInstance: map,
@@ -420,6 +421,7 @@ class Bookings extends Component {
               bootstrapURLKeys={{ key: config.GAPIKEY, libraries: ["places"] }}
               initialCenter={this.state.fields.location}
               center={this.state.fields.location}
+              defaultZoom={18}
               zoom={this.state.zoom}
               layerTypes={["TrafficLayer", "TransitLayer"]}
               heat={true}
