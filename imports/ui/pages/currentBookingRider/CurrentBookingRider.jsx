@@ -11,7 +11,12 @@ import "./CurrentBooking_client.scss"
 const Marker = ({ metaData }) => (
     <div>
       {metaData == "current" && <span className="pulse_current" />}
-      {metaData != "current" && (
+      {metaData == "car" && (<div class="car car-red" >
+      <div class="car-front"></div>
+      <div class="car-middle"></div>
+      <div class="car-back"></div>
+    </div>)}
+      {metaData != "current" && metaData != "car" && (
         <div>
           <div className={"pin bounce " + metaData} />
           <div className="pulse" />
@@ -192,6 +197,20 @@ if(latestMsg.userMetadata.type == 'status'){
                 }
                 metaData="board"
               />
+              {this.state.driverLoc &&(
+               <Marker
+                lat={
+                  this.state.driverLoc.latitude
+                    ? this.state.driverLoc.latitude
+                    : this.state.driverLoc.latitude
+                }
+                lng={
+                  this.state.driverLoc.longitude
+                    ? this.state.driverLoc.longitude
+                    : this.state.driverLoc.longitude
+                }
+                metaData="car"
+              />)}
           </GoogleMapReact>
         )}
       </div>
