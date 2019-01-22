@@ -155,11 +155,19 @@ if(latestMsg.userMetadata.type=="driverLoc"){
         showMap:true,
         driverLoc:latestMsg.message.driverCoords
     });
+    
 }
 if(latestMsg.userMetadata.type == 'status'){
-    this.state(latestMsg.message);
-    //rideFinished ,rideStarted,paymentReceived 
+  this.state(latestMsg.message);
+  //rideFinished ,rideStarted,paymentReceived 
 }
+
+if(this.state.rideStarted){
+  this.changeRoute(this.state.droppingPoint,this.state.driverLoc);
+}else{
+  this.changeRoute(this.state.boardingPoint,this.state.driverLoc);
+}
+
 }
 
   render() {
@@ -171,6 +179,16 @@ if(latestMsg.userMetadata.type == 'status'){
 }
     return (
       <div>
+        {this.state.rideStarted && (
+          <div>
+            You are on the ride
+            </div>
+        )}
+         {!this.state.rideStarted && (
+          <div>
+           Driver is on the way
+            </div>
+        )}
         {this._isMounted && this.state.showMap && (
           <GoogleMapReact
             options={this.createMapOptions}
