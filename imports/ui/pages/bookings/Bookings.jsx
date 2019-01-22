@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import isEmpty from "lodash.isempty";
-import moment from "moment";
+import { Link, withRouter } from "react-router-dom";
 import SearchBox from "./SearchBox";
 import mapStyle from "./MapStyle"; //https://mapstyle.withgoogle.com/ you can build yours from
 import config from "../../../modules/config/client";
@@ -24,7 +24,7 @@ const Marker = ({ metaData }) => (
     )}
   </div>
 );
-export default class Bookings extends Component {
+class Bookings extends Component {
   constructor(props) {
     super(props);
     this._isMounted = false;
@@ -33,6 +33,7 @@ export default class Bookings extends Component {
       subscribeKey: config.PUBNUB.subKey,
       secretKey: "sec-c-ODI1ZjY2MWUtMTIwNy00M2MxLWIzY2EtZDUwMjQ5MTlhNmY5"
     });
+    this.state={};
     this.pubnub.init(this);
   }
   state = {
@@ -295,7 +296,11 @@ export default class Bookings extends Component {
     if (listnToDriver) {
       const messages = this.pubnub.getMessage(Meteor.userId());
       const latestMsg = messages[messages.length - 1];
-      console.log(latestMsg);
+      if(latestMsg.userMetadata.type=="driverAccept"){
+        notify.show("Driver assigned",'success');
+        this.props.history.push("/app/currentBooking");
+      }
+      
       //     {actualChannel: null
       // channel: "RRt8iYvYeSDDN8QaX"
       // message: {such: "luls"}
@@ -465,3 +470,6 @@ export default class Bookings extends Component {
     );
   }
 }
+
+
+export default withRouter(Bookings);
