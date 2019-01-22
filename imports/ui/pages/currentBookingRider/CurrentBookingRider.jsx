@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import config from "../../../modules/config/client";
 import { Link, withRouter } from "react-router-dom";
-import { BookingRecord } from "../../../../collections/booking-record";
+// import { BookingRecord } from "../../../../collections/booking-record";
 import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
@@ -30,9 +30,12 @@ class CurrentBookingRider extends Component {
       subscribeKey: config.PUBNUB.subKey,
       secretKey: "sec-c-ODI1ZjY2MWUtMTIwNy00M2MxLWIzY2EtZDUwMjQ5MTlhNmY5"
     });
+    this.state = {
+        showMap:false
+    };
     this.pubnub.init(this);
 
-    this.state = {};
+   
     this._mounted = false;
   }
   componentWillUnmount() {
@@ -42,7 +45,9 @@ class CurrentBookingRider extends Component {
       });
     }
   }
+
   componentDidMount = async () => {
+      console.log(Meteor.userId())
     this.pubnub.subscribe({
       channels: [Meteor.userId()],
       withPresence: true
@@ -123,10 +128,32 @@ class CurrentBookingRider extends Component {
     );
   }
   
+handleSocket =(message)=>{
+console.log(message);
+//on driver connect make showmMap to true
+
+if(latestMsg.userMetadata.type=="driverLoc"){
+    this.state({
+        showMap:true,
+        driverLoc:latestMsg.message.driverCoords
+    });
+}
+if(latestMsg.userMetadata.type == 'status'){
+    this.state(latestMsg.message);
+    //rideFinished ,rideStarted,paymentReceived
+}
+}
+
   render() {
+   if( this._isMounted){
+    const messages = this.pubnub.getMessage(Meteor.userId());
+    if(messages && messages.length){
+        this.handleSocket(messages[messages.length-1])
+    }
+}
     return (
       <div>
-        {this._isMounted && (
+        {this._isMounted && this.state.showMap && (
           <GoogleMapReact
             options={this.createMapOptions}
             bootstrapURLKeys={{ key: config.GAPIKEY, libraries: ["places"] }}
