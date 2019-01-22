@@ -121,6 +121,21 @@ const newBookingReq = async (
   return { data: data, txId: txId };
 };
 
+const onCancellation = async (bookingId,cancel_reason="DRIVER_NOT_FOUND") => {
+  const txId = await node.callAPI("assets/updateAssetInfo", {
+    assetName: config.ASSET.Bookings,
+    fromAccount: node.getWeb3().eth.accounts[0],
+    identifier: bookingId,
+    public: {
+      rideStatus: "cancelled",
+      cancel_reason:cancel_reason
+    }
+  });
+  await BookingRecord.update({bookingId:bookingId},{$set:{active:false,status:"cancelled"}}).exec();
+  return { txId: txId };
+};
+
+
 const onDriverAccept = async (bookingId, driverId) => {
   const txId = await node.callAPI("assets/updateAssetInfo", {
     assetName: config.ASSET.Bookings,
@@ -214,7 +229,8 @@ const getDistance = (driverLoc, boardingPoint) =>{
 const fetchBookingReq = async({lat,lng,page})=>{
   console.log(lat,lng);
   const data = await BookingRecord.rawCollection().aggregate(  [
-    {$match:{
+    {
+      $match:{
       active:true,
       status:"pending"
     }},
@@ -248,5 +264,6 @@ export {
   onConfirmPayment,
   fetchUserBookings,
   getRideReqs,
-  fetchBookingReq
+  fetchBookingReq,
+  onCancellation
 };
