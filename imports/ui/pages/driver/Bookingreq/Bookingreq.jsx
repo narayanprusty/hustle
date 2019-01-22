@@ -4,6 +4,8 @@ import { notify } from "react-notify-toast";
 import InfiniteScroll from "react-infinite-scroller";
 import moment from "moment";
 import { Meteor } from "meteor/meteor";
+import PubNubReact from "pubnub-react";
+
 
 class Bookingreq extends Component {
   constructor(props) {
@@ -12,10 +14,22 @@ class Bookingreq extends Component {
       datas: [],
       hasMoreItems: true
     };
+    this._isMounted = false;
+    this.pubnub = new PubNubReact({
+      publishKey: config.PUBNUB.pubKey,
+      subscribeKey: config.PUBNUB.subKey,
+      secretKey: "sec-c-ODI1ZjY2MWUtMTIwNy00M2MxLWIzY2EtZDUwMjQ5MTlhNmY5"
+    });
+    this.pubnub.init(this);
   }
+
+  componentDidMount=()=>{
+    this._isMounted = true;
+  }
+ 
   handleClickAction=(data)=>{
     console.log("Accepting.....")
-    Meteor.call("onDriverAccept",data.bookingId,Meteor.userId(),(error, response) => {
+    Meteor.call("onDriverAccept",data.bookingId,Meteor.userId(),async(error, response) => {
       if (error) {
         console.log(error);
         notify.show(
@@ -23,6 +37,13 @@ class Bookingreq extends Component {
         "error"
         );
       }
+      await pubnub.publish({
+        message: 'Accepting',
+        channel: data.userId,
+        meta:{
+          type:"driverAccept"
+        }
+        });
       this.props.history.push("app/driver/currentBooking");
       });
   }
