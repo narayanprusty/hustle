@@ -107,7 +107,6 @@ class CurrentBookingRider extends Component {
       scrollwheel: false,
       fullscreenControl:false,
       draggable:true,
-      streetView:false,
       zoomControl:false,
       styles: mapStyle
     };
