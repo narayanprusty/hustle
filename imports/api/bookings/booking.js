@@ -115,7 +115,8 @@ const newBookingReq = async (
     boardingPoint:boardingPoint,
     droppingPoint:droppingPoint,
     status:"pending",
-    creaatedAt:Date.now()
+    active:true,
+    createdAt:Date.now()
   });
 
   return { data: data, txId: txId };
@@ -131,7 +132,7 @@ const onCancellation = async (bookingId,cancel_reason="DRIVER_NOT_FOUND") => {
       cancel_reason:cancel_reason
     }
   });
-  await BookingRecord.update({bookingId:bookingId},{$set:{active:false,status:"cancelled"}}).exec();
+  await BookingRecord.update({bookingId:bookingId},{$set:{active:false,status:"cancelled"}});
   return { txId: txId };
 };
 
@@ -146,7 +147,7 @@ const onDriverAccept = async (bookingId, driverId) => {
       driverId: driverId
     }
   });
-  await BookingRecord.update({bookingId:bookingId},{$set:{driverId:driverId,status:"accepted"}}).exec();
+  await BookingRecord.update({bookingId:bookingId},{$set:{driverId:driverId,status:"accepted"}});
   return { txId: txId };
 };
 
@@ -160,7 +161,7 @@ const onStartRide = async (bookingId, startingPoint) => {
       actualStartingPoint: startingPoint
     }
   });
-  await BookingRecord.update({bookingId:bookingId},{$set:{status:"started"}}).exec();
+  await BookingRecord.update({bookingId:bookingId},{$set:{status:"started"}});
   return { txId: txId };
 };
 
@@ -174,7 +175,7 @@ const onStopRide = async (bookingId, endingPoint) => {
       actualEndingPoint: endingPoint
     }
   });
-  await BookingRecord.update({bookingId:bookingId},{$set:{status:"finished",active:false}}).exec();
+  await BookingRecord.update({bookingId:bookingId},{$set:{status:"finished",active:false}});
 
   return { txId: txId };
 };
@@ -230,11 +231,6 @@ const fetchBookingReq = async({lat,lng,page})=>{
   console.log(lat,lng);
   const data = await BookingRecord.rawCollection().aggregate(  [
     {
-      $match:{
-      active:true,
-      status:"pending"
-    }},
-    {
         "$geoNear": {
             "near": { "type": "Point", "coordinates": [ lat,
                 lng] },
@@ -245,13 +241,26 @@ const fetchBookingReq = async({lat,lng,page})=>{
             "spherical": true,
             "num": 1000
         },
+      },{
+          $match:{
+          active:true,
+          status:"pending"
+        }
        
     }, {$limit:page*10},
    { $skip: page*10-10},],{ cursor: { batchSize: 0 } }
 
 ).toArray();
 return data;
+}
 
+
+const currentBookingDriver =(userId)=>{
+  return BookingRecord.find({driverId:userId,status:{$ne:'pending'},active:true}).fetch()[0]
+}
+
+const currentBookingRider =(userId)=>{
+  return BookingRecord.find({userId:userId,status:{$ne:'pending'},active:true}).fetch()[0]
 }
 
 
@@ -265,5 +274,7 @@ export {
   fetchUserBookings,
   getRideReqs,
   fetchBookingReq,
-  onCancellation
+  onCancellation,
+  currentBookingDriver,
+  currentBookingRider
 };
