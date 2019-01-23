@@ -251,10 +251,19 @@ class Bookings extends Component {
   };
   createMapOptions = maps => {
     return {
+      keyboardShortcuts:false,
+      panControl:false,
+      scaleControl:false,
+      clickableIcons:false,
+      disableDefaultUI:false,
       gestureHandling: "greedy",
       panControl: false,
       mapTypeControl: false,
       scrollwheel: false,
+      fullscreenControl:false,
+      draggable:true,
+      streetView:false,
+      zoomControl:false,
       styles: mapStyle
     };
   };

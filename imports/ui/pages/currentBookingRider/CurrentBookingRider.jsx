@@ -96,10 +96,19 @@ class CurrentBookingRider extends Component {
 
   createMapOptions = maps => {
     return {
+      keyboardShortcuts:false,
+      panControl:false,
+      scaleControl:false,
+      clickableIcons:false,
+      disableDefaultUI:false,
       gestureHandling: "greedy",
       panControl: false,
       mapTypeControl: false,
       scrollwheel: false,
+      fullscreenControl:false,
+      draggable:true,
+      streetView:false,
+      zoomControl:false,
       styles: mapStyle
     };
   };
@@ -217,7 +226,7 @@ callInsideRender = ()=>{
           <GoogleMapReact
             options={this.createMapOptions}
             bootstrapURLKeys={{ key: config.GAPIKEY, libraries: ["places"] }}
-            initialCenter={this.state.boardingPoint}
+            initialCenter={this.state.driverLoc}
             center={this.state.driverLoc }
             zoom={this.state.zoom}
             defaultZoom={18}
