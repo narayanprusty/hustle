@@ -369,7 +369,6 @@ export {
   onStopRide,
   onConfirmPayment,
   fetchUserBookings,
-  getRideReqs,
   fetchBookingReq,
   onCancellation,
   currentBookingDriver,
