@@ -332,7 +332,7 @@ class Bookings extends Component {
                 <SearchBox
                   map={mapInstance}
                   mapApi={mapApi}
-                  value={this.state.boardingPlace.formatted_address}
+                  value={this.state.boardingPlace ? this.state.boardingPlace.formatted_address : ""}
                   addplace={this.addBoardingPlace}
                 />
               )}

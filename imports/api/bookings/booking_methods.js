@@ -6,7 +6,9 @@ import {
   onConfirmPayment,
   fetchUserBookings,
   fetchBookingReq,
-  onCancellation
+  onCancellation,
+  getBookingById,
+  paymentReceived
 } from "./booking.js";
 import { Meteor } from "meteor/meteor";
 
@@ -18,6 +20,8 @@ Meteor.methods({
   onConfirmPayment,
   fetchUserBookings,
   fetchBookingReq,
-  onCancellation
+  onCancellation,
+  getBookingById,
+  paymentReceived
 });
 export {};
