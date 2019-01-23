@@ -1,20 +1,20 @@
-import React, { Component } from "react";
+import React, { Component,Fragment } from "react";
 import config from "../../../modules/config/client";
 import { Link, withRouter } from "react-router-dom";
-import { BookingRecord } from "../../../collections/booking-record";
+import GoogleMapReact from "google-map-react";
 import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
-
+import mapStyle from '../bookings/MapStyle.json'; 
 import "./CurrentBooking_client.scss"
 
 const Marker = ({ metaData }) => (
     <div>
       {metaData == "current" && <span className="pulse_current" />}
-      {metaData == "car" && (<div class="car car-red" >
-      <div class="car-front"></div>
-      <div class="car-middle"></div>
-      <div class="car-back"></div>
+      {metaData == "car" && (<div className="car car-red" >
+      <div className="car-front"></div>
+      <div className="car-middle"></div>
+      <div className="car-back"></div>
     </div>)}
       {metaData != "current" && metaData != "car" && (
         <div>
@@ -39,11 +39,17 @@ class CurrentBookingRider extends Component {
         showMap:false,
         rideStarted:false,
         rideFinished:false,
+        zoom:18,
+        boardingPoint:{lat:0,lng:0},
+        driverLoc:{
+          lat:0,
+          lng:0
+        }
     };
     this.pubnub.init(this);
 
    
-    this._mounted = false;
+    
   }
   componentWillUnmount() {
     if (this._isMounted) {
@@ -54,7 +60,7 @@ class CurrentBookingRider extends Component {
   }
 
   componentDidMount = async () => {
-    const currentRide =await this.fetchCurrentRide();
+    this.fetchCurrentRide();
       console.log(Meteor.userId())
     this.pubnub.subscribe({
       channels: [Meteor.userId()],
@@ -69,17 +75,23 @@ class CurrentBookingRider extends Component {
           lng: coords.longitude
         }
       });
+    
     });
+    this.callInsideRender();
+
   };
 
   fetchCurrentRide=async()=>{
-    const currentRide = await BookingRecord.find({userId:Meteor.userId(),status:{$ne:'pending'}}).fetch()[0];
+    return Meteor.call('currentBookingRider',Meteor.userId(),(err,currentRide)=>{
+   
     if(!currentRide){
       this.props.history.push("/app");
       return;
     }else{
+      this.setState(currentRide);
       return currentRide;
     }
+  });
   }
 
   createMapOptions = maps => {
@@ -99,6 +111,7 @@ class CurrentBookingRider extends Component {
     });
   };
   changeRoute = (destPoint,currentPoint) => {
+    debugger;
     if (this.state.poly) {
       this.state.poly.setMap(null);
     }
@@ -117,11 +130,10 @@ class CurrentBookingRider extends Component {
 
     const directionsService = new mapApi.DirectionsService();
     const directionsDisplay = new mapApi.DirectionsRenderer();
-
     directionsService.route(
       {
-        origin: this.state.currentPoint.lat+','+this.state.currentPoint.lng,
-        destination: this.state.destPoint.lat+','+this.state.destPoint.lng,
+        origin: currentPoint.lat+','+currentPoint.lng,
+        destination: destPoint.lat+','+destPoint.lng,
         travelMode: "DRIVING",
         unitSystem: mapApi.UnitSystem.METRIC,
         drivingOptions: {
@@ -149,34 +161,44 @@ class CurrentBookingRider extends Component {
 handleSocket =(message)=>{
 console.log(message);
 //on driver connect make showmMap to true
-
-if(latestMsg.userMetadata.type=="driverLoc"){
-    this.state({
+if(message.userMetadata.type=="driverAccept"){
+  this.setState({
+    showMap:true,
+    driverLoc:message.message.driverCoords
+});
+}
+if(message.userMetadata.type=="driverLoc"){
+    this.setState({
         showMap:true,
-        driverLoc:latestMsg.message.driverCoords
+        driverLoc:message.message.driverCoords
     });
     
 }
-if(latestMsg.userMetadata.type == 'status'){
-  this.state(latestMsg.message);
+if(message.userMetadata.type == 'status'){
+  this.setState(message.message);
   //rideFinished ,rideStarted,paymentReceived 
 }
 
 if(this.state.rideStarted){
-  this.changeRoute(this.state.droppingPoint,this.state.driverLoc);
+    this.changeRoute(this.state.droppingPoint,message.message.driverCoords);
 }else{
-  this.changeRoute(this.state.boardingPoint,this.state.driverLoc);
+  this.changeRoute(this.state.boardingPoint,message.message.driverCoords);
 }
 
 }
 
-  render() {
-   if( this._isMounted){
+callInsideRender = ()=>{
+
+  if( this._isMounted){
     const messages = this.pubnub.getMessage(Meteor.userId());
     if(messages && messages.length){
         this.handleSocket(messages[messages.length-1])
     }
 }
+}
+
+  render() {
+    
     return (
       <div>
         {this.state.rideStarted && (
@@ -189,19 +211,23 @@ if(this.state.rideStarted){
            Driver is on the way
             </div>
         )}
-        {this._isMounted && this.state.showMap && (
+        {this._isMounted  && (
+              
+
           <GoogleMapReact
             options={this.createMapOptions}
             bootstrapURLKeys={{ key: config.GAPIKEY, libraries: ["places"] }}
-            initialCenter={this.state.fields.location}
-            center={this.state.fields.location}
+            initialCenter={this.state.boardingPoint}
+            center={this.state.driverLoc }
             zoom={this.state.zoom}
+            defaultZoom={18}
             layerTypes={["TrafficLayer", "TransitLayer"]}
             heat={true}
             gestureHandling="greedy"
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)}
           >
+          {this.state.currentPosition && (
            <Marker
                 lat={
                   this.state.currentPosition.lat
@@ -214,22 +240,23 @@ if(this.state.rideStarted){
                     : this.state.currentPosition.lng
                 }
                 metaData="board"
-              />
+              />)}
               {this.state.driverLoc &&(
                <Marker
                 lat={
-                  this.state.driverLoc.latitude
-                    ? this.state.driverLoc.latitude
-                    : this.state.driverLoc.latitude
+                  this.state.driverLoc.lat
+                    ? this.state.driverLoc.lat
+                    : this.state.driverLoc.lat
                 }
                 lng={
-                  this.state.driverLoc.longitude
-                    ? this.state.driverLoc.longitude
-                    : this.state.driverLoc.longitude
+                  this.state.driverLoc.lng
+                    ? this.state.driverLoc.lng
+                    : this.state.driverLoc.lng
                 }
                 metaData="car"
               />)}
           </GoogleMapReact>
+
         )}
       </div>
     );

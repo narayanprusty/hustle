@@ -5,11 +5,11 @@ import SearchBox from "./SearchBox";
 import mapStyle from "./MapStyle"; //https://mapstyle.withgoogle.com/ you can build yours from
 import config from "../../../modules/config/client";
 import GoogleMapReact from "google-map-react";
-// import Geocode from "react-geocode";
+import Geocode from "react-geocode";
 import { notify } from "react-notify-toast";
-import PubNubReact from "pubnub-react";
+// import PubNubReact from "pubnub-react";
 
-// Geocode.setApiKey(config.GAPIKEY);
+Geocode.setApiKey(config.GAPIKEY);
 
 import "./Bookings_client.scss";
 
@@ -28,13 +28,13 @@ class Bookings extends Component {
   constructor(props) {
     super(props);
     this._isMounted = false;
-    this.pubnub = new PubNubReact({
-      publishKey: config.PUBNUB.pubKey,
-      subscribeKey: config.PUBNUB.subKey,
-      secretKey: config.PUBNUB.secret
-    });
+    // this.pubnub = new PubNubReact({
+    //   publishKey: config.PUBNUB.pubKey,
+    //   subscribeKey: config.PUBNUB.subKey,
+    //   secretKey: config.PUBNUB.secret
+    // });
     this.state={};
-    this.pubnub.init(this);
+    // this.pubnub.init(this);
   }
   state = {
     listnToDriver: false,
@@ -64,8 +64,8 @@ class Bookings extends Component {
   componentDidMount = async () => {
     const { lat, lng } = await this.getcurrentLocation();
     this._isMounted = true;
-    // Geocode.fromLatLng(lat, lng).then(
-    //   response => {
+    Geocode.fromLatLng(lat, lng).then(
+      response => {
         this.setState(prev => ({
           fields: {
             ...prev.fields,
@@ -82,25 +82,25 @@ class Bookings extends Component {
             lat: lat,
             lng: lng
           },
-          // boardingPlace: response.results[0]
+          boardingPlace: response.results[0]
         }));
-    //   },
-    //   error => {
-    //     console.error(error);
-    //   }
-    // );
-    this.pubnub.subscribe({
-      channels: [Meteor.userId()],
-      withPresence: true
-    });
+      },
+      error => {
+        console.error(error);
+      }
+    );
+    // this.pubnub.subscribe({
+    //   channels: [Meteor.userId()],
+    //   withPresence: true
+    // });
   };
-  componentWillUnmount() {
-    if(this._isMounted ) {
-      this.pubnub.unsubscribe({
-        channels: [Meteor.userId()]
-      });
-    }
-  }
+  // componentWillUnmount() {
+  //   if(this._isMounted ) {
+  //     this.pubnub.unsubscribe({
+  //       channels: [Meteor.userId()]
+  //     });
+  //   }
+  // }
   getcurrentLocation() {
     if (navigator && navigator.geolocation) {
       return new Promise((resolve, reject) => {
@@ -259,6 +259,10 @@ class Bookings extends Component {
     };
   };
   raiseBookingReq = e => {
+    this.setState({
+      submitted:true
+    })
+    
     e.preventDefault();
     const data = {
       userId: Meteor.userId(),
@@ -277,6 +281,9 @@ class Bookings extends Component {
     };
     Meteor.call("newBookingReq", data, (error, response) => {
       if (error) {
+        this.setState({
+          submitted:false
+        });
         console.log(error);
         notify.show(
           error.reason ? error.reason : "Unable to create request!",
@@ -284,23 +291,25 @@ class Bookings extends Component {
         );
       }
       this.setState({
-        listnToDriver: true
+        listnToDriver: true,
+        submitted:false
       });
       //show a loader here
       console.log(response);
+      this.props.history.push("/app/currentBooking");
     });
   };
 
   render() {
     const { mapApiLoaded, mapInstance, mapApi, listnToDriver } = this.state;
 
-    if (listnToDriver) {
-      const messages = this.pubnub.getMessage(Meteor.userId());
-      const latestMsg = messages[messages.length - 1];
-      if(latestMsg.userMetadata.type=="driverAccept"){
-        notify.show("Driver assigned",'success');
-        this.props.history.push("/app/currentBooking");
-      }
+    // if (listnToDriver) {
+    //   const messages = this.pubnub.getMessage(Meteor.userId());
+    //   const latestMsg = messages[messages.length - 1];
+    //   if(latestMsg.userMetadata.type=="driverAccept"){
+    //     notify.show("Driver assigned",'success');
+    //     this.props.history.push("/app/currentBooking");
+    //   }
       
       //     {actualChannel: null
       // channel: "RRt8iYvYeSDDN8QaX"
@@ -311,7 +320,7 @@ class Bookings extends Component {
       // timetoken: "15471134919707428"
       // userMetadata: {cool: "meta"}}
       //check above for specific metadata or message item and take the steps accordingly
-    }
+    // }
 
     let conatinerClass = 'list';
 
@@ -332,7 +341,7 @@ class Bookings extends Component {
                 <SearchBox
                   map={mapInstance}
                   mapApi={mapApi}
-                  value={this.state.boardingPlace.formatted_address}
+                  value={this.state.boardingPlace ? this.state.boardingPlace.formatted_address: ''}
                   addplace={this.addBoardingPlace}
                 />
               )}
@@ -407,7 +416,8 @@ class Bookings extends Component {
                     onClick={this.raiseBookingReq}
                     disabled={this.state.paymentMethod ? false : true}
                   >
-                    Book
+                    {this.state.submitted? <div id="loading"></div>: "Book"}
+                    
                   </button>
                 </div>
               </div>

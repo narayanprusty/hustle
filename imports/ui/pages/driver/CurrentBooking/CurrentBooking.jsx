@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import config from '../../../../modules/config/client'
 import { Link,withRouter } from "react-router-dom";
-import { BookingRecord } from "../../../../collections/booking-record";
+import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
@@ -32,20 +32,22 @@ class CurrentBooking extends Component {
   }
 
   componentDidMount=async()=>{
-      const currentRide =await this.fetchCurrentRide();
-      if(currentRide){
-      this.setState(currentRide);
-      this.pubnub.subscribe({
-        channels: [this.state.userId],
-        withPresence: true
-      });
+  this.fetchCurrentRide();
+  debugger;
       this._isMounted = true;
-      navigator.geolocation.watchPosition(async(pos) => {
+      navigator.geolocation.watchPosition((pos) => {
         const coords = pos.coords;
-       await this.pubnub.publish(
+        console.log(coords);
+        this.setState({
+          currentPosition:{
+            lat:coords.latitude,
+            lng:coords.longitude
+          }
+        });
+       this.pubnub.publish(
           {
               message: {
-                  driverCoords: coords
+                  driverCoords: this.state.currentPosition
               },
               channel: this.state.userId,
               sendByPost: false, // true to send via post
@@ -53,26 +55,29 @@ class CurrentBooking extends Component {
               meta: {
                   "type": "driverLoc"
               }
-          });
-          this.setState({
-            currentPosition:{
-              lat:coords.latitude,
-              lng:coords.longitude
-            }
-          })
+          }).then(data=>{
+           console.log(data);
+          }).catch(error=>{
+            console.log(error)
+          });     
       });
-    }
    
   }
 
-  fetchCurrentRide=async()=>{
-    const currentRide = await BookingRecord.find({driverId:Meteor.userId(),status:{$ne:'pending'},active:true}).fetch()[0]; //finished, started,accepted, pending are the status
-    if(!currentRide){
-      this.props.history.push("/app/driver/newreqs");
-      return;
-    }else{
-      return currentRide;
-    }
+  fetchCurrentRide=()=>{
+ return Meteor.call('currentBookingDriver',Meteor.userId(),(err,currentRide)=>{
+   if(err){
+     console.log(err);
+   }
+  if(!currentRide){
+    this.props.history.push("/app/driver/newreqs");
+    return;
+  }else{
+    this.setState(currentRide);
+    return currentRide;
+  }
+ })
+    
   }
 
   navigateToRider=()=>{

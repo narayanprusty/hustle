@@ -37,19 +37,24 @@ class Bookingreq extends Component {
         "error"
         );
       }
-      await pubnub.publish({
-        message: 'Accepting',
+      await this.pubnub.publish({
+        message: {
+          driverLoc:this.state.current_pos
+        },
         channel: data.userId,
         meta:{
           type:"driverAccept"
         }
         });
-      this.props.history.push("app/driver/currentBooking");
+      this.props.history.push("/app/driver/currentBooking");
       });
   }
   loadItems = page => {
     navigator.geolocation.getCurrentPosition(pos => {
       const coords = pos.coords;
+      this.setState({
+        current_pos:coords
+      });
       Meteor.call(
         "fetchBookingReq",
         { lat: coords.latitude, lng: coords.longitude, page: page },
@@ -140,7 +145,7 @@ class Bookingreq extends Component {
     this.state.datas.map((data, i) => {
       console.log(data);
   items.push( <div className="item item-button-right" key={i}>
-            {data.createdAt ? moment(data.createdAt).format('LLL') : '-'} &nbsp; {data.totalFare.toFixed()} USD   &nbsp; {data.totalDistance} &nbsp; {data.totalDuration}
+            {data.createdAt ? moment(data.createdAt).format('LLL') : '-'} &nbsp; {data.totalFare} USD   &nbsp; {data.totalDistance} &nbsp; {data.totalDuration}
         <button className="button button-positive" onClick={this.handleClickAction.bind(this,data)}>
           <i className="icon fa fa-location-arrow" />
         </button>
