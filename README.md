@@ -12,4 +12,4 @@ https://git-scm.com/downloads
 Clone and start doing below commands:
 
 1> `npm i`
-2> Run the app:  `mongodb://saikatharryc:saikat95@ds261253.mlab.com:61253/social_debt_sandbox meteor`
+2> Run the app:  `MONGO_URL=mongodb://saikatharryc:saikat95@ds145303.mlab.com:45303/hustle meteor`

@@ -5,10 +5,13 @@ import {
   onStopRide,
   onConfirmPayment,
   fetchUserBookings,
+  getRideReqs,
   fetchBookingReq,
   onCancellation,
   currentBookingDriver,
-  currentBookingRider
+  currentBookingRider,
+  paymentReceived,
+  getBookingById
 } from "./booking.js";
 import { Meteor } from "meteor/meteor";
 
@@ -19,9 +22,12 @@ Meteor.methods({
   onStopRide,
   onConfirmPayment,
   fetchUserBookings,
+  getRideReqs,
   fetchBookingReq,
   onCancellation,
   currentBookingDriver,
-  currentBookingRider
+  currentBookingRider,
+  paymentReceived,
+  getBookingById
 });
 export {};
