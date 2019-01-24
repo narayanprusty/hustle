@@ -62,23 +62,27 @@ class CurrentBookingRider extends Component {
   componentDidMount = async () => {
     this.fetchCurrentRide();
       console.log(Meteor.userId())
+    
     this.pubnub.subscribe({
       channels: [Meteor.userId()],
       withPresence: true
     });
+    await this.pubnub.deleteMessages(
+      {
+          channel: Meteor.userId()
+      });
     this._isMounted = true;
     navigator.geolocation.watchPosition(pos => {
       const coords = pos.coords;
+      this.callInsideRender();
       this.setState({
         currentPosition: {
           lat: coords.latitude,
           lng: coords.longitude
         }
       });
-    
     });
-    this.callInsideRender();
-
+    
   };
 
   fetchCurrentRide=async()=>{
@@ -88,6 +92,15 @@ class CurrentBookingRider extends Component {
       this.props.history.push("/app");
       return;
     }else{
+      if(currentRide.status=="started"){
+        this.setState({
+          rideStarted:true
+        })
+      }else if(currentRide.status=="finished"){
+        this.setState({
+          rideFinished:true
+        })
+      }
       this.setState(currentRide);
       return currentRide;
     }
@@ -119,7 +132,6 @@ class CurrentBookingRider extends Component {
     });
   };
   changeRoute = (destPoint,currentPoint) => {
-    debugger;
     if (this.state.poly) {
       this.state.poly.setMap(null);
     }
@@ -165,8 +177,10 @@ class CurrentBookingRider extends Component {
       }
     );
   }
-  
+ 
 handleSocket =(message)=>{
+
+  
 console.log(message);
 //on driver connect make showmMap to true
 if(message.userMetadata.type=="driverAccept"){
@@ -187,13 +201,13 @@ if(message.userMetadata.type == 'status'){
   //rideFinished ,rideStarted,paymentReceived 
 }
 
-if(this.state.rideStarted){
+if(this.state.rideStarted && this.state.mapApiLoaded){
     this.changeRoute(this.state.droppingPoint,message.message.driverCoords);
-}else{
+}else if(this.state.mapApiLoaded){
   this.changeRoute(this.state.boardingPoint,message.message.driverCoords);
 }
-
 }
+
 
 callInsideRender = ()=>{
 
@@ -219,22 +233,25 @@ callInsideRender = ()=>{
            Driver is on the way
             </div>
         )}
-        {this._isMounted  && (
-              
+        <div style={{ height: '100vh', width: '100%' }}>
 
-          <GoogleMapReact
-            options={this.createMapOptions}
-            bootstrapURLKeys={{ key: config.GAPIKEY, libraries: ["places"] }}
-            initialCenter={this.state.driverLoc}
-            center={this.state.driverLoc }
-            zoom={this.state.zoom}
-            defaultZoom={18}
-            layerTypes={["TrafficLayer", "TransitLayer"]}
-            heat={true}
-            gestureHandling="greedy"
-            yesIWantToUseGoogleMapApiInternals
-            onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)}
-          >
+        {this._isMounted  && this.state.rideStarted &&  this.state.showMap && (
+
+              <GoogleMapReact
+              options={this.createMapOptions}
+              bootstrapURLKeys={{ key: config.GAPIKEY, libraries: ["places"] }}
+              initialCenter={this.state.driverLoc}
+              center={this.state.driverLoc}
+              defaultZoom={18}
+              zoom={this.state.zoom}
+              layerTypes={["TrafficLayer", "TransitLayer"]}
+              heat={true}
+              gestureHandling="greedy"
+              yesIWantToUseGoogleMapApiInternals
+              onGoogleApiLoaded={({ map, maps }) =>
+                this.apiHasLoaded(map, maps)
+              }
+            >
           {this.state.currentPosition && (
            <Marker
                 lat={
@@ -247,7 +264,35 @@ callInsideRender = ()=>{
                     ? this.state.currentPosition.lng
                     : this.state.currentPosition.lng
                 }
+                metaData="current"
+              />)}
+               {this.state.boardingPoint && (
+           <Marker
+                lat={
+                  this.state.boardingPoint.lat
+                    ? this.state.boardingPoint.lat
+                    : this.state.boardingPoint.lat
+                }
+                lng={
+                  this.state.boardingPoint.lng
+                    ? this.state.boardingPoint.lng
+                    : this.state.boardingPoint.lng
+                }
                 metaData="board"
+              />)}
+               {this.state.droppingPoint && (
+           <Marker
+                lat={
+                  this.state.droppingPoint.lat
+                    ? this.state.droppingPoint.lat
+                    : this.state.droppingPoint.lat
+                }
+                lng={
+                  this.state.droppingPoint.lng
+                    ? this.state.droppingPoint.lng
+                    : this.state.droppingPoint.lng
+                }
+                metaData="drop"
               />)}
               {this.state.driverLoc &&(
                <Marker
@@ -266,6 +311,7 @@ callInsideRender = ()=>{
           </GoogleMapReact>
 
         )}
+        </div>
       </div>
     );
   }

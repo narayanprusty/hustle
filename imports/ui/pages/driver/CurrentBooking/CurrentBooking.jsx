@@ -47,7 +47,8 @@ class CurrentBooking extends Component {
        this.pubnub.publish(
           {
               message: {
-                  driverCoords: this.state.currentPosition
+                  driverCoords: this.state.currentPosition,
+                  time:Date.now()
               },
               channel: this.state.userId,
               sendByPost: false, // true to send via post
