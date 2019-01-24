@@ -1,16 +1,9 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { notify } from "react-notify-toast";
-import {
-    Accordion,
-    AccordionItem,
-    AccordionItemTitle,
-    AccordionItemBody
-} from "react-accessible-accordion";
 import "../../../../../node_modules/react-accessible-accordion/dist/fancy-example.css";
 import { Meteor } from "meteor/meteor";
 import moment from 'moment';
-import config from '../../../../modules/config/client'
 
 import "./RidePayment_client.scss";
 
@@ -168,91 +161,85 @@ class RidePayment extends Component {
         return (
             <div>
                 {this.state.booking ? (
-                    <Accordion>
-                        <AccordionItem key={0} expanded={true}>
-                            <AccordionItemTitle>
-                                <div className="item item-avatar">
-                                    <img src='/images/completed.png' />
-                                    <h2>{this.state.booking.totalFare + " " + this.state.booking.fareUnit}</h2>
-                                    <p>{this.state.booking.createdAt ? moment(this.state.booking.createdAt).format("LLL") : "-"}</p>
-                                </div>
-                            </AccordionItemTitle>
-                            <AccordionItemBody>
-                                <div className="item item-body">
-                                    <ul className="list">
-                                        <li className="item" style={{ whiteSpace: 'normal' }}>
-                                            <div style={{ marginBottom: '10px' }}>
-                                                <b>Booking ID:</b>
-                                            </div>
-                                            <div>
-                                                #{this.state.booking.uniqueIdentifier}
-                                            </div>
-                                        </li>
-                                        <li className="item" style={{ whiteSpace: 'normal' }}>
-                                            <div style={{ marginBottom: '10px' }}>
-                                                <b>Boarding Point:</b>
-                                            </div>
-                                            <div>
-                                                {this.state.booking.start_address}
-                                            </div>
-                                        </li>
-                                        <li className="item" style={{ whiteSpace: 'normal' }}>
-                                            <div style={{ marginBottom: '10px' }}>
-                                                <b>Dropping Point:</b>
-                                            </div>
-                                            <div>
-                                                {this.state.booking.end_address}
-                                            </div>
-                                        </li>
-                                        <li className="item">
-                                            <div style={{ marginBottom: '10px' }}>
-                                                <b>Duration:</b>
-                                            </div>
-                                            <div>
-                                                {this.state.booking.time_shown}
-                                            </div>
-                                        </li>
-                                        <li className="item">
-                                            <div style={{ marginBottom: '10px' }}>
-                                                <b>Payment Method:</b>
-                                            </div>
-                                            <div>
-                                                {this.state.booking.paymentMethod}
-                                            </div>
-                                        </li>
-                                        <li className="item">
-                                            <div style={{ marginBottom: '10px' }}>
-                                                <b>Payment Status:</b>
-                                            </div>
-                                            <div>
-                                                {this.state.booking.paymentStatus}
-                                            </div>
-                                        </li>
-                                        <li className="item">
-                                            <div style={{ marginBottom: '10px' }}>
-                                                <b>Total Distance: </b>
-                                            </div>
-                                            <div>
-                                                {this.state.booking.totalDistance / 1000}KM
+                    <div>
+                        <div className="item item-avatar">
+                            <img src='/images/completed.png' />
+                            <h2>{this.state.booking.totalFare + " " + this.state.booking.fareUnit}</h2>
+                            <p>{this.state.booking.createdAt ? moment(this.state.booking.createdAt).format("LLL") : "-"}</p>
+                        </div>
+                        <div className="item item-body">
+                            <ul className="list">
+                                <li className="item" style={{ whiteSpace: 'normal' }}>
+                                    <div style={{ marginBottom: '10px' }}>
+                                        <b>Booking ID:</b>
+                                    </div>
+                                    <div>
+                                        #{this.state.booking.uniqueIdentifier}
+                                    </div>
+                                </li>
+                                <li className="item" style={{ whiteSpace: 'normal' }}>
+                                    <div style={{ marginBottom: '10px' }}>
+                                        <b>Boarding Point:</b>
+                                    </div>
+                                    <div>
+                                        {this.state.booking.start_address}
+                                    </div>
+                                </li>
+                                <li className="item" style={{ whiteSpace: 'normal' }}>
+                                    <div style={{ marginBottom: '10px' }}>
+                                        <b>Dropping Point:</b>
+                                    </div>
+                                    <div>
+                                        {this.state.booking.end_address}
+                                    </div>
+                                </li>
+                                <li className="item">
+                                    <div style={{ marginBottom: '10px' }}>
+                                        <b>Duration:</b>
+                                    </div>
+                                    <div>
+                                        {this.state.booking.time_shown}
+                                    </div>
+                                </li>
+                                <li className="item">
+                                    <div style={{ marginBottom: '10px' }}>
+                                        <b>Payment Method:</b>
+                                    </div>
+                                    <div>
+                                        {this.state.booking.paymentMethod}
+                                    </div>
+                                </li>
+                                <li className="item">
+                                    <div style={{ marginBottom: '10px' }}>
+                                        <b>Payment Status:</b>
+                                    </div>
+                                    <div>
+                                        {this.state.booking.paymentStatus}
+                                    </div>
+                                </li>
+                                <li className="item">
+                                    <div style={{ marginBottom: '10px' }}>
+                                        <b>Total Distance: </b>
+                                    </div>
+                                    <div>
+                                        {this.state.booking.totalDistance / 1000}KM
                                         </div>
-                                        </li>
-                                        {this.state.booking.paymentMethod == "cash" ? (<li className="item">
-                                            <div>
-                                                <div className="padding-left padding-right padding-top">
-                                                    <button
-                                                        className="button button-block button-energized activated"
-                                                        onClick={this.paymentReceived}
-                                                        disabled={this.state.booking.paymentStatus == "pending" && !this.state.loading ? false : true} >
-                                                        Payment Received
+                                </li>
+                                {this.state.booking.paymentMethod == "cash" ? (<li className="item">
+                                    <div>
+                                        <div className="padding-left padding-right padding-top">
+                                            <button
+                                                className="button button-block button-energized activated"
+                                                onClick={this.paymentReceived}
+                                                disabled={this.state.booking.paymentStatus == "pending" && !this.state.loading ? false : true} >
+                                                Payment Received
                                                     </button>
-                                                </div>
-                                            </div>
-                                        </li>) : ""}
-                                    </ul>
-                                </div>
-                            </AccordionItemBody>
-                        </AccordionItem>
-                    </Accordion>) : loader}
+                                        </div>
+                                    </div>
+                                </li>) : ""}
+                            </ul>
+                        </div>
+                    </div>) : loader}
             </div>
         );
     }

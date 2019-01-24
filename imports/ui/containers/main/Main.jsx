@@ -11,6 +11,7 @@ import Dashboard from "../../pages/driver/Dashboard/Dashboard";
 import CurrentBooking from "../../pages/driver/CurrentBooking/CurrentBooking";
 import CurrentBookingRider from "../../pages/currentBookingRider/CurrentBookingRider";
 import RidePayment from '../../pages/driver/RidePayment/RidePayment';
+import Subscriptions from '../../pages/Subscriptions/Subscriptions';
 
 const menuColStyles = {
   padding: '0px' ,
@@ -49,6 +50,7 @@ export default class Main extends Component {
           WebkitOverflowScrolling: 'touch'
         }}>
           <Route path="/app/settings" component={Settings} />
+          <Route path="/app/subscriptions" component={Subscriptions} />
           <Route path="/app/home" component={Bookings} />
           <Route path="/app/rides" component={Rides} />
           <Route path="/app/currentBooking" component={CurrentBookingRider} />
