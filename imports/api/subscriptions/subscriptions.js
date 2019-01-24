@@ -41,17 +41,10 @@ const getUserSubscriptions = async (userId) => {
                 active: true,
             }
         });
-
-        if (res.length > 0) {
-            return {
-                success: true,
-                data: res
-            };
-        } else {
-            throw {
-                message: "No plans found!"
-            };
-        }
+        return {
+            success: true,
+            data: res
+        };
 
     } catch (ex) {
         console.log(ex);
@@ -59,9 +52,13 @@ const getUserSubscriptions = async (userId) => {
     }
 }
 
-const subscribePlan = async (planId, userId) => {
+const subscribePlan = async ({
+    planId,
+    userId
+}) => {
     try {
-
+        console.log(planId);
+        console.log(userId);
         const plan = await node.callAPI('assets/search', {
             $query: {
                 assetName: config.ASSET.SubscriptionPlans,
