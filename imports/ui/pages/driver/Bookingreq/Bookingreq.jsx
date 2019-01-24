@@ -26,6 +26,21 @@ class Bookingreq extends Component {
   componentDidMount=()=>{
     this._isMounted = true;
   }
+  componentWillMount =async()=>{
+    await this.fetchCurrentRide();
+  }
+  fetchCurrentRide=()=>{
+    return Meteor.call('currentBookingDriver',Meteor.userId(),(err,currentRide)=>{
+      if(err){
+        console.log(err);
+      }
+     if(currentRide){
+       this.props.history.push("/app/driver/currentBooking");
+       return;
+     }
+    })
+       
+     }
  
   handleClickAction=(data)=>{
     console.log("Accepting.....")

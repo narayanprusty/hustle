@@ -61,6 +61,9 @@ class Bookings extends Component {
     boardingPlace: {}
   };
   
+  componentWillMount= async()=>{
+   await this.fetchCurrentRide();
+  }
   componentDidMount = async () => {
     const { lat, lng } = await this.getcurrentLocation();
     this._isMounted = true;
@@ -94,6 +97,18 @@ class Bookings extends Component {
     //   withPresence: true
     // });
   };
+
+
+  fetchCurrentRide=async()=>{
+    return Meteor.call('currentBookingRider',Meteor.userId(),(err,currentRide)=>{
+      console.log(currentRide);
+    if(currentRide){
+      this.props.history.push("/app/currentBooking");
+      return;
+    }
+  });
+  }
+
   // componentWillUnmount() {
   //   if(this._isMounted ) {
   //     this.pubnub.unsubscribe({
