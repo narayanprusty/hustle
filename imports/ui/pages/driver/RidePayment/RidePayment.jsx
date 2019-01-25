@@ -49,9 +49,9 @@ class RidePayment extends Component {
             } else {
                 if (response.data && !response.message) {
                     this.setState({ booking: response.data });
-                    if (response.data.rideStatus != "completed") {
+                    if (response.data.rideStatus != "finished") {
                         notify.show(
-                            "Ride not completed yet!",
+                            "Ride not finished yet!",
                             "error"
                         );
                         this.props.history.push('/app/driver/newreqs');
