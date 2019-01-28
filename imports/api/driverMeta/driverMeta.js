@@ -42,6 +42,34 @@ const markUnavailable = driverId => {
     ).toArray();
 };
 
+const updateDriverLocation = ({ driverId, lat, lng }) => {
+    return await DriverMeta.update(
+        {
+            driverId: driverId
+        },
+        {
+            $setOnInsert: {
+                driverId: driverId,
+                available: true,
+                onRide: false,
+                currentLocation: {
+                    lat: lat,
+                    lng: lng
+                }
+            },
+            $set: {
+                currentLocation: {
+                    lat: lat,
+                    lng: lng
+                }
+            }
+        },
+        {
+            upsert: true
+        }
+    ).toArray();
+};
+
 const getDriversWithin = ({ lat, lng }) => {
     const data = await DriverMeta.rawCollection()
         .aggregate(
@@ -85,4 +113,10 @@ const getDriversWithin = ({ lat, lng }) => {
 const getDriver = () => {
     return await DriverMeta.find({ driverId: driverId }).fetch()[0];
 };
-export { markAvailable, markUnavailable, getDriversWithin, getDriver };
+export {
+    markAvailable,
+    markUnavailable,
+    getDriversWithin,
+    getDriver,
+    updateDriverLocation
+};

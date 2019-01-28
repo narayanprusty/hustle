@@ -2,7 +2,8 @@ import {
     markAvailable,
     markUnavailable,
     getDriversWithin,
-    getDriver
+    getDriver,
+    updateDriverLocation
 } from "./driverMeta";
 import { Meteor } from "meteor/meteor";
 
@@ -10,6 +11,7 @@ Meteor.methods({
     markAvailable,
     markUnavailable,
     getDriversWithin,
-    getDriver
+    getDriver,
+    updateDriverLocation
 });
 export {};
