@@ -7,7 +7,6 @@ import config from "../../../modules/config/local.config";
 import GoogleMapReact from "google-map-react";
 import Geocode from "react-geocode";
 import { notify } from "react-notify-toast";
-import pubnub from '../../notifications/index';
 
 Geocode.setApiKey(config.GAPIKEY);
 
@@ -16,7 +15,14 @@ import "./Bookings_client.scss";
 const Marker = ({ metaData }) => (
     <div>
         {metaData == "current" && <span className="pulse_current" />}
-        {metaData != "current" && (
+        {metaData == "car" && (
+            <div className="car car-red">
+                <div className="car-front" />
+                <div className="car-middle" />
+                <div className="car-back" />
+            </div>
+        )}
+        {metaData != "current" && metaData != "car" && (
             <div>
                 <div className={"pin bounce " + metaData} />
                 <div className="pulse" />
@@ -56,7 +62,7 @@ class Bookings extends Component {
 
     componentWillMount = async () => {
         await this.fetchCurrentRide();
-    }
+    };
 
     componentDidMount = async () => {
         const { lat, lng } = await this.getcurrentLocation();
@@ -89,6 +95,20 @@ class Bookings extends Component {
                 console.error(error);
             }
         );
+
+        Meteor.call(
+            "getDriversWithin",
+            { lat: lat, lng: lng },
+            (err, result) => {
+                if (err) {
+                    notify.show("unable to fetch drivers nearby", "warning");
+                }
+                this.setState({
+                    allDrivers: result
+                });
+            }
+        );
+
         // this.pubnub.subscribe({
         //   channels: [Meteor.userId()],
         //   withPresence: true
@@ -96,14 +116,18 @@ class Bookings extends Component {
     };
 
     fetchCurrentRide = async () => {
-        return Meteor.call('currentBookingRider', Meteor.userId(), (err, currentRide) => {
-            console.log(currentRide);
-            if (currentRide) {
-                this.props.history.push("/app/currentBooking");
-                return;
+        return Meteor.call(
+            "currentBookingRider",
+            Meteor.userId(),
+            (err, currentRide) => {
+                console.log(currentRide);
+                if (currentRide) {
+                    this.props.history.push("/app/currentBooking");
+                    return;
+                }
             }
-        });
-    }
+        );
+    };
 
     // componentWillUnmount() {
     //     if (this._isMounted) {
@@ -113,24 +137,31 @@ class Bookings extends Component {
     getcurrentLocation() {
         if (navigator && navigator.geolocation) {
             return new Promise((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(async (pos, err) => {
-                    const coords = pos.coords;
-                    console.log(coords, err)
-                    resolve({
-                        lat: coords.latitude,
-                        lng: coords.longitude
-                    });
-                }, (err) => {
-                    notify.show("Unable to fetch your current location", "error");
-                    resolve({
-                        lat: 25.11102,
-                        lng: 55.19514
-                    });
-                }, {
+                navigator.geolocation.getCurrentPosition(
+                    async (pos, err) => {
+                        const coords = pos.coords;
+                        console.log(coords, err);
+                        resolve({
+                            lat: coords.latitude,
+                            lng: coords.longitude
+                        });
+                    },
+                    err => {
+                        notify.show(
+                            "Unable to fetch your current location",
+                            "error"
+                        );
+                        resolve({
+                            lat: 25.11102,
+                            lng: 55.19514
+                        });
+                    },
+                    {
                         enableHighAccuracy: true,
                         timeout: 5000,
                         maximumAge: 0
-                    });
+                    }
+                );
             });
         }
         return {
@@ -150,11 +181,16 @@ class Bookings extends Component {
             this.state.poly.setMap(null);
         }
 
-        const { mapInstance, mapApi, droppingPoint, boardingPoint } = this.state;
+        const {
+            mapInstance,
+            mapApi,
+            droppingPoint,
+            boardingPoint
+        } = this.state;
 
         const latlng = [
             new mapApi.LatLng(droppingPoint.lat, droppingPoint.lng),
-            new mapApi.LatLng(boardingPoint.lat, boardingPoint.lng),
+            new mapApi.LatLng(boardingPoint.lat, boardingPoint.lng)
         ];
         let latlngbounds = new mapApi.LatLngBounds();
         for (let i = 0; i < latlng.length; i++) {
@@ -167,8 +203,14 @@ class Bookings extends Component {
 
         directionsService.route(
             {
-                origin: this.state.boardingPoint.lat + ',' + this.state.boardingPoint.lng,
-                destination: this.state.droppingPoint.lat + ',' + this.state.droppingPoint.lng,
+                origin:
+                    this.state.boardingPoint.lat +
+                    "," +
+                    this.state.boardingPoint.lng,
+                destination:
+                    this.state.droppingPoint.lat +
+                    "," +
+                    this.state.droppingPoint.lng,
                 travelMode: "DRIVING",
                 unitSystem: mapApi.UnitSystem.METRIC,
                 drivingOptions: {
@@ -183,7 +225,8 @@ class Bookings extends Component {
                         start_address: bookingDetails.start_address,
                         reachAfter: bookingDetails.duration.text,
                         distance: bookingDetails.distance.text,
-                        reachAfterIfTraffic: bookingDetails.duration_in_traffic.text
+                        reachAfterIfTraffic:
+                            bookingDetails.duration_in_traffic.text
                     };
                     this.setState({
                         rideStatGen: true,
@@ -210,7 +253,10 @@ class Bookings extends Component {
                     });
                     routePolyline.setMap(mapInstance);
                 } else {
-                    notify.show("Directions request failed due to " + status, "error");
+                    notify.show(
+                        "Directions request failed due to " + status,
+                        "error"
+                    );
                 }
             }
         );
@@ -286,7 +332,7 @@ class Bookings extends Component {
     raiseBookingReq = e => {
         this.setState({
             submitted: true
-        })
+        });
 
         e.preventDefault();
         const data = {
@@ -347,32 +393,46 @@ class Bookings extends Component {
         //check above for specific metadata or message item and take the steps accordingly
         // }
 
-        let conatinerClass = 'list';
+        let conatinerClass = "list";
 
         if (!this.state.rideStatGen) {
-            conatinerClass += " padding-bottom"
+            conatinerClass += " padding-bottom";
         }
 
         return (
             <div style={{ height: "100%" }}>
                 <Fragment>
-                    <div className='padding'>
-                        <h3 className='padding'><i className="fa fa-car" aria-hidden="true"></i> Book Ride</h3>
+                    <div className="padding">
+                        <h3 className="padding">
+                            <i className="fa fa-car" aria-hidden="true" /> Book
+                            Ride
+                        </h3>
                     </div>
                     <div className={conatinerClass}>
                         <label className="item item-input item-stacked-label">
-                            <span className="input-label"> Boarding Point: </span>
+                            <span className="input-label">
+                                {" "}
+                                Boarding Point:{" "}
+                            </span>
                             {mapApiLoaded && (
                                 <SearchBox
                                     map={mapInstance}
                                     mapApi={mapApi}
-                                    value={this.state.boardingPlace ? this.state.boardingPlace.formatted_address : ''}
+                                    value={
+                                        this.state.boardingPlace
+                                            ? this.state.boardingPlace
+                                                  .formatted_address
+                                            : ""
+                                    }
                                     addplace={this.addBoardingPlace}
                                 />
                             )}
                         </label>
                         <label className="item item-input item-stacked-label">
-                            <span className="input-label"> Dropping Point: </span>
+                            <span className="input-label">
+                                {" "}
+                                Dropping Point:{" "}
+                            </span>
                             {mapApiLoaded && (
                                 <SearchBox
                                     map={mapInstance}
@@ -383,66 +443,79 @@ class Bookings extends Component {
                         </label>
                         {this.state.rideStatGen && (
                             <div>
-                                <div className="list" style={{ marginBottom: '0px' }}>
+                                <div
+                                    className="list"
+                                    style={{ marginBottom: "0px" }}
+                                >
                                     <a className="item item-icon-left" href="#">
-                                        <i className="icon fa fa-clock-o"></i>
+                                        <i className="icon fa fa-clock-o" />
                                         {this.state.reachAfter}
-                                        <span className="item-note">
-                                            Time
-                    </span>
+                                        <span className="item-note">Time</span>
                                     </a>
 
                                     <a className="item item-icon-left" href="#">
-                                        <i className="icon fa fa-road"></i>
+                                        <i className="icon fa fa-road" />
                                         {this.state.distance}
                                         <span className="item-note">
                                             Distance
-                    </span>
+                                        </span>
                                     </a>
 
                                     <a className="item item-icon-left" href="#">
-                                        <i className="icon fa fa-money"></i>
+                                        <i className="icon fa fa-money" />
                                         {Math.round(
-                                            this.state.distance_in_meter * config.farePerMeter
+                                            this.state.distance_in_meter *
+                                                config.farePerMeter
                                         ) + config.fareUnit}{" "}
-                                        at {config.farePerMeter + config.fareUnit}/M
-                    <span className="item-note">
-                                            Fare
-                    </span>
+                                        at{" "}
+                                        {config.farePerMeter + config.fareUnit}
+                                        /M
+                                        <span className="item-note">Fare</span>
                                     </a>
                                     <a className="item item-icon-left" href="#">
-                                        <i className="icon fa fa-shopping-cart"></i>
+                                        <i className="icon fa fa-shopping-cart" />
                                         <select
                                             name="paymentMethod"
                                             value={this.state.paymentMethod}
                                             onChange={this.inputHandler}
                                             style={{
-                                                fontSize: '16px'
+                                                fontSize: "16px"
                                             }}
                                         >
                                             <option value={"cash"}>Cash</option>
-                                            <option value={"card 1"}>Card 1</option>
+                                            <option value={"card 1"}>
+                                                Card 1
+                                            </option>
                                         </select>
-                                        <i className="fa fa-sort-desc" style={{
-                                            position: 'relative',
-                                            top: '-2px',
-                                            left: '-12px'
-                                        }}></i>
+                                        <i
+                                            className="fa fa-sort-desc"
+                                            style={{
+                                                position: "relative",
+                                                top: "-2px",
+                                                left: "-12px"
+                                            }}
+                                        />
                                         <span className="item-note">
                                             Payment Method
-                    </span>
+                                        </span>
                                     </a>
-
                                 </div>
 
                                 <div className="padding-left padding-right padding-top">
                                     <button
                                         className="button button-block button-energized activated"
                                         onClick={this.raiseBookingReq}
-                                        disabled={this.state.paymentMethod ? false : true}
+                                        disabled={
+                                            this.state.paymentMethod
+                                                ? false
+                                                : true
+                                        }
                                     >
-                                        {this.state.submitted ? <div id="loading"></div> : "Book"}
-
+                                        {this.state.submitted ? (
+                                            <div id="loading" />
+                                        ) : (
+                                            "Book"
+                                        )}
                                     </button>
                                 </div>
                             </div>
@@ -453,7 +526,10 @@ class Bookings extends Component {
                         {this._isMounted && (
                             <GoogleMapReact
                                 options={this.createMapOptions}
-                                bootstrapURLKeys={{ key: config.GAPIKEY, libraries: ["places"] }}
+                                bootstrapURLKeys={{
+                                    key: config.GAPIKEY,
+                                    libraries: ["places"]
+                                }}
                                 initialCenter={this.state.fields.location}
                                 center={this.state.fields.location}
                                 defaultZoom={18}
@@ -500,13 +576,23 @@ class Bookings extends Component {
                                     }
                                     metaData="board"
                                 />
-                            </GoogleMapReact>)}
+
+                                {this.state.allDrivers &&
+                                    this.state.allDrivers.length &&
+                                    this.state.allDrivers.map(e => {
+                                        <Marker
+                                            lat={e.currentLocation.lat}
+                                            lng={e.currentLocation.lng}
+                                            metaData="car"
+                                        />;
+                                    })}
+                            </GoogleMapReact>
+                        )}
                     </div>
                 </Fragment>
             </div>
         );
     }
 }
-
 
 export default withRouter(Bookings);

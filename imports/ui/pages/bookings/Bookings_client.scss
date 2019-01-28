@@ -1,174 +1,351 @@
-@import '../Generic.scss';
+@import "../Generic.scss";
 
 .wrapper {
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
 .mapView {
-  height: 50%;
-  width: 100%;
+    height: 50%;
+    width: 100%;
 }
 .pin {
-  width: 30px;
-  height: 30px;
-  border-radius: 50% 50% 50% 0;
-  background: #89849b;
-  position: absolute;
-  transform: rotate(-45deg);
-  left: 50%;
-  top: 50%;
-  margin: -20px 0 0 -20px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50% 50% 50% 0;
+    background: #89849b;
+    position: absolute;
+    transform: rotate(-45deg);
+    left: 50%;
+    top: 50%;
+    margin: -20px 0 0 -20px;
 }
 .pin:after {
-  content: "";
-  width: 14px;
-  height: 14px;
-  margin: 8px 0 0 8px;
-  background: #2e353f;
-  position: absolute;
-  border-radius: 50%;
-  box-shadow: inset 0px 2px 0px #252A32;
+    content: "";
+    width: 14px;
+    height: 14px;
+    margin: 8px 0 0 8px;
+    background: #2e353f;
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: inset 0px 2px 0px #252a32;
 }
 
 .bounce {
-  animation-name: bounce;
-  animation-fill-mode: both;
-  animation-duration: 1s;
+    animation-name: bounce;
+    animation-fill-mode: both;
+    animation-duration: 1s;
 }
 
 .pulse {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 50%;
-  height: 14px;
-  width: 14px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  margin: 11px 0px 0px -12px;
-  transform: rotateX(55deg);
-  z-index: -2;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    height: 14px;
+    width: 14px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: 11px 0px 0px -12px;
+    transform: rotateX(55deg);
+    z-index: -2;
 }
 .pulse:after {
-  content: "";
-  border-radius: 50%;
-  height: 40px;
-  width: 40px;
-  position: absolute;
-  margin: -13px 0 0 -13px;
-  animation: pulsate 1s ease-out;
-  animation-iteration-count: infinite;
-  opacity: 0;
-  box-shadow: 0 0 1px 2px #89849b;
-  animation-delay: 1.1s;
+    content: "";
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    margin: -13px 0 0 -13px;
+    animation: pulsate 1s ease-out;
+    animation-iteration-count: infinite;
+    opacity: 0;
+    box-shadow: 0 0 1px 2px #89849b;
+    animation-delay: 1.1s;
 }
 
 @keyframes pulsate {
-  0% {
-    transform: scale(0.1, 0.1);
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.2, 1.2);
-    opacity: 0;
-  }
+    0% {
+        transform: scale(0.1, 0.1);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.2, 1.2);
+        opacity: 0;
+    }
 }
 @keyframes bounce {
-  0% {
-    opacity: 0;
-    transform: translateY(-2000px) rotate(-45deg);
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(30px) rotate(-45deg);
-  }
-  80% {
-    transform: translateY(-10px) rotate(-45deg);
-  }
-  100% {
-    transform: translateY(0) rotate(-45deg);
-  }
+    0% {
+        opacity: 0;
+        transform: translateY(-2000px) rotate(-45deg);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(30px) rotate(-45deg);
+    }
+    80% {
+        transform: translateY(-10px) rotate(-45deg);
+    }
+    100% {
+        transform: translateY(0) rotate(-45deg);
+    }
 }
 
-.drop{
-    background-color: #f95757;            
+.drop {
+    background-color: #f95757;
 }
-.drop:after{
+.drop:after {
     background: #c13434;
     box-shadow: inset 0px 2px 0px #841d1d;
 }
 
-.board{
-    background-color: #46a040;            
+.board {
+    background-color: #46a040;
 }
-.board:after{
+.board:after {
     background: #17580f;
     box-shadow: inset 0px 2px 0px #0f3a0c;
 }
 
-
-
 .pulse_current {
-  position: absolute;
-  display: block;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #0581ea;
-  cursor: pointer;
-  box-shadow: 0 0 0 rgba(204,169,44, 0.4);
-  animation: pulse_current 1s infinite;top: 50%;
-  left: 60%
+    position: absolute;
+    display: block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #0581ea;
+    cursor: pointer;
+    box-shadow: 0 0 0 rgba(204, 169, 44, 0.4);
+    animation: pulse_current 1s infinite;
+    top: 50%;
+    left: 60%;
 }
 .pulse_current:hover {
-  animation: none;
+    animation: none;
 }
 
 @-webkit-keyframes pulse_current {
-  0% {
-    -webkit-box-shadow: 0 0 0 0 rgba(0,0,0, 0.4);
-  }
-  70% {
-      -webkit-box-shadow: 0 0 0 10px rgba(0,0,0, 0);
-  }
-  100% {
-      -webkit-box-shadow: 0 0 0 0 rgba(0,0,0, 0);
-  }
+    0% {
+        -webkit-box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
+    }
+    70% {
+        -webkit-box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
+    100% {
+        -webkit-box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
 }
 @keyframes pulse_current {
-  0% {
-    -moz-box-shadow: 0 0 0 0 rgba(0,0,0, 0.4);
-    box-shadow: 0 0 0 0 rgba(0,0,0, 0.4);
-  }
-  70% {
-      -moz-box-shadow: 0 0 0 10px rgba(0,0,0, 0);
-      box-shadow: 0 0 0 10px rgba(0,0,0, 0);
-  }
-  100% {
-      -moz-box-shadow: 0 0 0 0 rgba(0,0,0, 0);
-      box-shadow: 0 0 0 0 rgba(0,0,0, 0);
-  }
+    0% {
+        -moz-box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
+    }
+    70% {
+        -moz-box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
+    100% {
+        -moz-box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
 }
 
 #loading {
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  border: 3px solid rgba(255,255,255,.3);
-  border-radius: 50%;
-  border-top-color: #fff;
-  animation: spin 1s ease-in-out infinite;
-  -webkit-animation: spin 1s ease-in-out infinite;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
 }
 
 @keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
 }
 @-webkit-keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+.car:after,
+.car:before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    background-color: inherit;
+    right: 80px;
+    position: absolute;
+}
+
+.car .car-front:after,
+.car .car-front:before {
+    content: "";
+    width: 20px;
+    height: 10px;
+    background-color: yellow;
+    position: absolute;
+    top: 70px;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.car .car-middle:before,
+.car .car-middle:after {
+    content: "";
+    display: block;
+    border-bottom: 10px solid #495d65;
+    border-left: 30px solid transparent;
+    border-right: 40px solid transparent;
+    height: 10px;
+    width: 130px;
+    position: absolute;
+    right: 52px;
+}
+
+.car .car-back:before,
+.car .car-back:after {
+    content: "";
+    width: 23px;
+    height: 12px;
+    background-color: #d92626;
+    position: absolute;
+    bottom: -62px;
+}
+
+.car-line + .car-line {
+    margin-top: 40px;
+}
+
+.car {
+    width: 285px;
+    height: 125px;
+    zoom: 20%;
+    background: #b6bec3;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    *zoom: 1;
+    *display: inline;
+    -moz-border-radius-topright: 40px 50%;
+    -webkit-border-top-right-radius: 40px 50%;
+    border-top-right-radius: 40px 50%;
+    -moz-border-radius-bottomright: 40px 50%;
+    -webkit-border-bottom-right-radius: 40px 50%;
+    border-bottom-right-radius: 40px 50%;
+    -moz-border-radius-bottomleft: 20px 30px;
+    -webkit-border-bottom-left-radius: 20px 30px;
+    border-bottom-left-radius: 20px 30px;
+    -moz-border-radius-topleft: 20px 30px;
+    -webkit-border-top-left-radius: 20px 30px;
+    border-top-left-radius: 20px 30px;
+}
+.car:after {
+    top: -12px;
+    -moz-border-radius: 3px 100% 0 0;
+    -webkit-border-radius: 3px;
+    border-radius: 3px 100% 0 0;
+}
+.car:before {
+    bottom: -12px;
+    -moz-border-radius: 0 0 100% 3px;
+    -webkit-border-radius: 0;
+    border-radius: 0 0 100% 3px;
+}
+.car .car-front {
+    border-bottom: 40px solid #495d65;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    top: 42px;
+    height: 0;
+    width: 70px;
+    right: 30px;
+    position: absolute;
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+    -moz-box-shadow: 0px 3px 0 #fff;
+    -webkit-box-shadow: 0px 3px 0 #fff;
+    box-shadow: 0px 3px 0 #fff;
+}
+.car .car-front:after {
+    -moz-transform: rotate(22deg);
+    -ms-transform: rotate(22deg);
+    -webkit-transform: rotate(22deg);
+    transform: rotate(22deg);
+    left: -5px;
+}
+.car .car-front:before {
+    -moz-transform: rotate(-22deg);
+    -ms-transform: rotate(-22deg);
+    -webkit-transform: rotate(-22deg);
+    transform: rotate(-22deg);
+    right: -5px;
+}
+
+.car.car-red {
+    background-color: #e74c3c;
+}
+
+.car + .car,
+.car + .vacancy {
+    margin-left: 40px;
+}
+.car .car-middle:before {
+    bottom: 8px;
+}
+.car .car-middle:after {
+    top: 8px;
+    -moz-transform: scale(1, -1);
+    -ms-transform: scale(1, -1);
+    -webkit-transform: scale(1, -1);
+    transform: scale(1, -1);
+}
+.car .car-back {
+    content: "";
+    border-bottom: 35px solid #495d65;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    height: 0;
+    top: 44px;
+    width: 60px;
+    left: -5px;
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    position: absolute;
+}
+.car .car-back:before {
+    left: -30px;
+    -moz-border-radius-bottomleft: 40px 22px;
+    -webkit-border-bottom-left-radius: 40px 22px;
+    border-bottom-left-radius: 40px 22px;
+}
+.car .car-back:after {
+    right: -30px;
+    -moz-border-radius-bottomright: 40px 22px;
+    -webkit-border-bottom-right-radius: 40px 22px;
+    border-bottom-right-radius: 40px 22px;
+}
+
+.passo1:checked + .passo2:not(:checked) ~ .car {
+    -moz-animation: animacao-passo1 3s ease-in-out;
+    -webkit-animation: animacao-passo1 3s ease-in-out;
+    animation: animacao-passo1 3s ease-in-out;
+}
+
+.passo1:checked + .passo2 ~ .car {
+    left: 680px;
 }
