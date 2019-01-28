@@ -1,12 +1,8 @@
 import Blockcluster from "blockcluster";
-import {
-    BookingRecord
-} from "../../collections/booking-record";
+import { BookingRecord } from "../../collections/booking-record";
+import { DriverMeta } from "../../collections/driver-meta";
 import config from "../../modules/config/server";
-import {
-    sendMessage
-} from '../../notifications/index';
-
+import { sendMessage } from "../../notifications/index";
 
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
@@ -45,8 +41,8 @@ const newBookingReq = async ({
         Date.now() +
         "" +
         Math.random()
-        .toString()
-        .split(".")[1]; //this is the Booking Id
+            .toString()
+            .split(".")[1]; //this is the Booking Id
     const data = {
         createdAt: currentDate,
         userId: userId,
@@ -95,8 +91,8 @@ const newBookingReq = async ({
         Date.now() +
         "" +
         Math.random()
-        .toString()
-        .split(".")[1];
+            .toString()
+            .split(".")[1];
 
     //create booking info assets
     await node.callAPI("assets/issueSoloAsset", {
@@ -145,14 +141,17 @@ const onCancellation = async (
             cancel_reason: cancel_reason
         }
     });
-    await BookingRecord.update({
-        bookingId: bookingId
-    }, {
-        $set: {
-            active: false,
-            status: "cancelled"
+    await BookingRecord.update(
+        {
+            bookingId: bookingId
+        },
+        {
+            $set: {
+                active: false,
+                status: "cancelled"
+            }
         }
-    });
+    );
     return {
         txId: txId
     };
@@ -168,14 +167,26 @@ const onDriverAccept = async (bookingId, driverId) => {
             driverId: driverId
         }
     });
-    await BookingRecord.update({
-        bookingId: bookingId
-    }, {
-        $set: {
-            driverId: driverId,
-            status: "accepted"
+    await BookingRecord.update(
+        {
+            bookingId: bookingId
+        },
+        {
+            $set: {
+                driverId: driverId,
+                status: "accepted"
+            }
         }
-    });
+    );
+    await DriverMeta.update(
+        { driverId: driverId },
+        {
+            $set: {
+                onRide: true
+            }
+        }
+    );
+
     return {
         txId: txId
     };
@@ -191,13 +202,16 @@ const onStartRide = async (bookingId, startingPoint) => {
             actualStartingPoint: startingPoint
         }
     });
-    await BookingRecord.update({
-        bookingId: bookingId
-    }, {
-        $set: {
-            status: "started"
+    await BookingRecord.update(
+        {
+            bookingId: bookingId
+        },
+        {
+            $set: {
+                status: "started"
+            }
         }
-    });
+    );
     return {
         txId: txId
     };
@@ -213,15 +227,25 @@ const onStopRide = async (bookingId, endingPoint) => {
             actualEndingPoint: endingPoint
         }
     });
-    await BookingRecord.update({
-        bookingId: bookingId
-    }, {
-        $set: {
-            status: "finished",
-            active: false
+    await BookingRecord.update(
+        {
+            bookingId: bookingId
+        },
+        {
+            $set: {
+                status: "finished",
+                active: false
+            }
         }
-    });
-
+    );
+    await DriverMeta.update(
+        { driverId: driverId },
+        {
+            $set: {
+                onRide: false
+            }
+        }
+    );
     return {
         txId: txId
     };
@@ -230,7 +254,6 @@ const onStopRide = async (bookingId, endingPoint) => {
 //For online payment after confirmation call this
 const onConfirmPayment = async (bookingId, txId = null, paymentAmount) => {
     try {
-
         let bookings = await node.callAPI("assets/search", {
             $query: {
                 assetName: config.ASSET.Bookings,
@@ -239,7 +262,6 @@ const onConfirmPayment = async (bookingId, txId = null, paymentAmount) => {
         });
 
         if (bookings.length > 0) {
-
             const Id = await node.callAPI("assets/updateAssetInfo", {
                 assetName: config.ASSET.Bookings,
                 fromAccount: node.getWeb3().eth.accounts[0],
@@ -257,7 +279,7 @@ const onConfirmPayment = async (bookingId, txId = null, paymentAmount) => {
         }
         throw {
             message: "BBooking not found!"
-        }
+        };
     } catch (ex) {
         console.log(ex);
         return ex;
@@ -327,7 +349,7 @@ const paymentReceived = async bookingId => {
                 });
 
                 console.log("Payment received -> status updated->", txId);
-                sendMessage(bookings[0].userId.toString(), "Payment Received!")
+                sendMessage(bookings[0].userId.toString(), "Payment Received!");
                 return {
                     success: true
                 };
@@ -347,7 +369,7 @@ const paymentReceived = async bookingId => {
     }
 };
 
-const rad = function (x) {
+const rad = function(x) {
     return (x * Math.PI) / 180;
 };
 
@@ -359,9 +381,9 @@ const getDistance = (driverLoc, boardingPoint) => {
     const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(rad(driverLoc.lat())) *
-        Math.cos(rad(boardingPoint.lat())) *
-        Math.sin(dLong / 2) *
-        Math.sin(dLong / 2);
+            Math.cos(rad(boardingPoint.lat())) *
+            Math.sin(dLong / 2) *
+            Math.sin(dLong / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c;
     return d; // d is the distance in meter
@@ -369,22 +391,18 @@ const getDistance = (driverLoc, boardingPoint) => {
 
 //for more exact u can pass mapApi obj from frontend only and do calculation
 //mapApi.geometry.spherical.computeDistanceBetween (latLngA, latLngB); //return values in Meter
-const fetchBookingReq = async ({
-    lat,
-    lng,
-    page
-}) => {
-    console.log(lat, lng);
+const fetchBookingReq = async ({ lat, lng, page }) => {
     const data = await BookingRecord.rawCollection()
         .aggregate(
-            [{
+            [
+                {
                     $geoNear: {
                         near: {
                             type: "Point",
                             coordinates: [lat, lng]
                         },
                         distanceField: "boardingPoint",
-                        maxDistance: 8000,
+                        maxDistance: 5000, //in meter
                         distanceMultiplier: 0.000621371,
                         includeLocs: "boardingPoint",
                         spherical: true,
@@ -403,7 +421,8 @@ const fetchBookingReq = async ({
                 {
                     $skip: page * 10 - 10
                 }
-            ], {
+            ],
+            {
                 cursor: {
                     batchSize: 0
                 }
