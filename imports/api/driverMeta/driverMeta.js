@@ -1,6 +1,6 @@
 import { DriverMeta } from "../../collections/driver-meta";
 
-const markAvailable = driverId => {
+const markAvailable = async driverId => {
     return await DriverMeta.update(
         {
             driverId: driverId
@@ -21,7 +21,7 @@ const markAvailable = driverId => {
     ).toArray();
 };
 
-const markUnavailable = driverId => {
+const markUnavailable = async driverId => {
     return await DriverMeta.update(
         {
             driverId: driverId
@@ -42,7 +42,7 @@ const markUnavailable = driverId => {
     ).toArray();
 };
 
-const updateDriverLocation = ({ driverId, lat, lng }) => {
+const updateDriverLocation = async ({ driverId, lat, lng }) => {
     return await DriverMeta.update(
         {
             driverId: driverId
@@ -70,7 +70,7 @@ const updateDriverLocation = ({ driverId, lat, lng }) => {
     ).toArray();
 };
 
-const getDriversWithin = ({ lat, lng }) => {
+const getDriversWithin = async ({ lat, lng }) => {
     const data = await DriverMeta.rawCollection()
         .aggregate(
             [
@@ -110,7 +110,7 @@ const getDriversWithin = ({ lat, lng }) => {
     return data;
 };
 
-const getDriver = () => {
+const getDriver = async () => {
     return await DriverMeta.find({ driverId: driverId }).fetch()[0];
 };
 export {
