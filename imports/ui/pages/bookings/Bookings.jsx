@@ -120,7 +120,7 @@ class Bookings extends Component {
             "currentBookingRider",
             Meteor.userId(),
             (err, currentRide) => {
-                console.log(currentRide);
+                console.log(err, currentRide);
                 if (currentRide) {
                     this.props.history.push("/app/currentBooking");
                     return;
