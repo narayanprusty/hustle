@@ -323,7 +323,7 @@ class Bookings extends Component {
             scrollwheel: false,
             fullscreenControl: false,
             draggable: true,
-            zoomControl: false,
+            zoomControl: true,
             styles: mapStyle
         };
     };
@@ -504,6 +504,11 @@ class Bookings extends Component {
                                     <button
                                         className="button button-block button-energized activated"
                                         onClick={this.raiseBookingReq}
+                                        style={
+                                            {
+                                                paddingTop: (this.state.submitted ? '14px' : '0px')
+                                            }
+                                        }
                                         disabled={
                                             this.state.paymentMethod
                                                 ? false
