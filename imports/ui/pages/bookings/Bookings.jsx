@@ -3,7 +3,7 @@ import isEmpty from "lodash.isempty";
 import { Link, withRouter } from "react-router-dom";
 import SearchBox from "./SearchBox";
 import mapStyle from "./MapStyle"; //https://mapstyle.withgoogle.com/ you can build yours from
-import config from "../../../modules/config/local.config";
+import config from "../../../modules/config/client/";
 import GoogleMapReact from "google-map-react";
 import Geocode from "react-geocode";
 import { notify } from "react-notify-toast";
@@ -303,7 +303,6 @@ class Bookings extends Component {
     };
 
     apiHasLoaded = (map, maps) => {
-        debugger;
         this.setState({
             mapApiLoaded: true,
             mapInstance: map,
