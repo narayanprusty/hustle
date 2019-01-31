@@ -62,10 +62,17 @@ class Bookingreq extends Component {
                         "error"
                     );
                 }
-
+                const driverDoc = {
+                    name: Meteor.user().profile.name,
+                    phone: Meteor.user().profile.phone
+                };
                 await this.pubnub.publish({
                     message: {
-                        driverLoc: this.state.current_pos
+                        driverLoc: this.state.current_pos,
+                        driverName: driverDoc.name,
+                        driverPhone: driverDoc.phone,
+                        carModel: "indica",
+                        carNumber: "8978"
                     },
                     channel: data.userId,
                     meta: {

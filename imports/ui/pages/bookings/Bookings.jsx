@@ -67,7 +67,6 @@ class Bookings extends Component {
     componentDidMount = async () => {
         const { lat, lng } = await this.getcurrentLocation();
         this._isMounted = true;
-
         this.state = {};
 
         Geocode.fromLatLng(lat, lng).then(
@@ -524,11 +523,11 @@ class Bookings extends Component {
                                     <button
                                         className="button button-block button-energized activated"
                                         onClick={this.raiseBookingReq}
-                                        style={
-                                            {
-                                                paddingTop: (this.state.submitted ? '14px' : '0px')
-                                            }
-                                        }
+                                        style={{
+                                            paddingTop: this.state.submitted
+                                                ? "14px"
+                                                : "0px"
+                                        }}
                                         disabled={
                                             this.state.paymentMethod
                                                 ? false

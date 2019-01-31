@@ -28,11 +28,29 @@ class CurrentBooking extends Component {
             });
         }
     }
-
+    callInsideRender = () => {
+        if (this._isMounted) {
+            const messages = this.pubnub.getMessage(this.state.userId);
+            if (messages && messages.length) {
+                this.handleSocket(messages[messages.length - 1]);
+            }
+        }
+    };
+    handleSocket = message => {
+        console.log(message);
+        //on driver connect make showmMap to true
+        if (message.userMetadata.type == "riderDetails") {
+            this.setState(message.message);
+        }
+    };
     componentDidMount = async () => {
         this.fetchCurrentRide();
         debugger;
         this._isMounted = true;
+        this.pubnub.subscribe({
+            channels: [this.state.userId],
+            withPresence: true
+        });
         navigator.geolocation.watchPosition(pos => {
             const coords = pos.coords;
             console.log(coords);
@@ -57,11 +75,19 @@ class CurrentBooking extends Component {
                     }
                 }
             );
+            const driverDoc = {
+                name: Meteor.user().profile.name,
+                phone: Meteor.user().profile.phone
+            };
             this.pubnub
                 .publish({
                     message: {
                         driverCoords: this.state.currentPosition,
-                        time: Date.now()
+                        time: Date.now(),
+                        driverName: driverDoc.name,
+                        driverPhone: driverDoc.phone,
+                        carModel: "indica",
+                        carNumber: "8978"
                     },
                     channel: this.state.userId,
                     sendByPost: false, // true to send via post
@@ -93,6 +119,7 @@ class CurrentBooking extends Component {
                 }
             );
         });
+        this.callInsideRender();
     };
 
     fetchCurrentRide = () => {
@@ -228,6 +255,16 @@ class CurrentBooking extends Component {
         return (
             <div>
                 <div className="list" style={{ marginBottom: "0px" }}>
+                    <a className="item item-icon-left" href="#">
+                        {/* <i className="icon fa fa-clock-o" /> */}
+                        {this.state.riderName}
+                        <span className="item-note">Name</span>
+                    </a>
+                    <a className="item item-icon-left" href="#">
+                        {/* <i className="icon fa fa-clock-o" /> */}
+                        {this.state.riderPhone}
+                        <span className="item-note">Phone</span>
+                    </a>
                     <a className="item item-icon-left" href="#">
                         <i className="icon fa fa-clock-o" />
                         {this.state.totalDuration}

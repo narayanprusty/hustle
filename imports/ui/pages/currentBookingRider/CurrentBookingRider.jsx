@@ -70,13 +70,31 @@ class CurrentBookingRider extends Component {
             channel: Meteor.userId()
         });
         this._isMounted = true;
-        navigator.geolocation.watchPosition(pos => {
+        navigator.geolocation.watchPosition(async pos => {
             const coords = pos.coords;
             this.callInsideRender();
             this.setState({
                 currentPosition: {
                     lat: coords.latitude,
                     lng: coords.longitude
+                }
+            });
+            const riderDoc = {
+                userId: Meteor.userId(),
+                name: Meteor.user().profile.name,
+                phone: Meteor.user().profile.phone
+            };
+            await this.pubnub.publish({
+                message: {
+                    time: Date.now(),
+                    riderName: riderDoc.name,
+                    riderPhone: riderDoc.phone
+                },
+                channel: riderDoc.userId,
+                sendByPost: false, // true to send via post
+                storeInHistory: false, //override default storage options
+                meta: {
+                    type: "riderDetails"
                 }
             });
         });
@@ -135,6 +153,9 @@ class CurrentBookingRider extends Component {
         });
     };
     changeRoute = (destPoint, currentPoint) => {
+        if (!currentPoint || !currentPoint.lat || !currentPoint.lng) {
+            return false;
+        }
         if (this.state.poly) {
             this.state.poly.setMap(null);
         }
@@ -191,14 +212,22 @@ class CurrentBookingRider extends Component {
             this.setState({
                 showMap: true,
                 accepted: true,
-                driverLoc: message.message.driverCoords
+                driverLoc: message.message.driverCoords,
+                driverName: message.message.driverName,
+                driverPhone: message.message.driverPhone,
+                carModel: message.message.carModel,
+                carNumber: message.message.carNumber
             });
         }
         if (message.userMetadata.type == "driverLoc") {
             this.setState({
                 showMap: true,
                 accepted: true,
-                driverLoc: message.message.driverCoords
+                driverLoc: message.message.driverCoords,
+                driverName: message.message.driverName,
+                driverPhone: message.message.driverPhone,
+                carModel: message.message.carModel,
+                carNumber: message.message.carNumber
             });
         }
         if (message.userMetadata.type == "status") {
@@ -279,6 +308,14 @@ class CurrentBookingRider extends Component {
                                     : "Driver accepted your ride request"}
                             </div>
                         </div>
+                    </div>
+                )}
+                {this.state.accepted && !this.state.rideFinished && (
+                    <div className="card">
+                        Driver Name: {this.state.driverName || "-"} <br />
+                        Driver Phone:{this.state.driverPhone || "-"} <br />
+                        Car Model:{this.state.carModel || "-"} <br />
+                        Car Number:{this.state.carNumber || "-"} <br />
                     </div>
                 )}
                 {!this.state.accepted && (
@@ -379,7 +416,7 @@ class CurrentBookingRider extends Component {
                                         metaData="drop"
                                     />
                                 )}
-                                {this.state.driverLoc && (
+                                {/* {this.state.driverLoc && (
                                     <Marker
                                         lat={
                                             this.state.driverLoc.lat
@@ -393,7 +430,7 @@ class CurrentBookingRider extends Component {
                                         }
                                         metaData="car"
                                     />
-                                )}
+                                )} */}
                             </GoogleMapReact>
                         )}
                     {this.state.rideFinished && (
