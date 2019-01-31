@@ -1,11 +1,9 @@
 const defaults = require("../local.config.js");
 
-
-
-
-
 function getEnv() {
-    if (['production', 'staging', 'test', 'dev'].includes(process.env.NODE_ENV)) {
+    if (
+        ["production", "staging", "test", "dev"].includes(process.env.NODE_ENV)
+    ) {
         return process.env.NODE_ENV;
     }
     return "dev";
@@ -18,7 +16,7 @@ function getDatabase() {
     }
 
     if (a.indexOf("?replica") === -1) {
-        return "admin"
+        return "admin";
     }
 
     const db = a.substring(a.lastIndexOf("/") + 1, a.lastIndexOf("?replica"));
@@ -29,10 +27,12 @@ function getDatabase() {
 }
 
 function getMongoConnectionString() {
-
     return process.env.MONGO_URL || defaults.MONGO_URL;
 
-    if (['production'].includes(process.env.NODE_ENV) || process.env.ENTERPRISE) {
+    if (
+        ["production"].includes(process.env.NODE_ENV) ||
+        process.env.ENTERPRISE
+    ) {
         return process.env.MONGO_URL;
     }
 
@@ -57,13 +57,14 @@ module.exports = {
     BLOCKCLUSTER: defaults.BLOCKCLUSTER,
     ASSET: {
         Bookings: "Bookings",
-        BookingsInfo: 'BookingsInfo',
-        SubscriptionPlans: 'SubscriptionPlans',
-        Subscriptions: 'Subscriptions',
+        BookingsInfo: "BookingsInfo",
+        SubscriptionPlans: "SubscriptionPlans",
+        Subscriptions: "Subscriptions",
+        Reviews: "Reviews"
     },
     farePerMeter: 0.04,
-    fareUnit: 'USD',
+    fareUnit: "USD",
     driversWithin: defaults.driversWithin,
     PUBNUB: defaults.PUBNUB,
-    env: getEnv(),
+    env: getEnv()
 };
