@@ -68,6 +68,7 @@ class Bookingreq extends Component {
                 };
                 await this.pubnub.publish({
                     message: {
+                        bookingId:data.bookingId,
                         driverLoc: this.state.current_pos,
                         driverName: driverDoc.name,
                         driverPhone: driverDoc.phone,

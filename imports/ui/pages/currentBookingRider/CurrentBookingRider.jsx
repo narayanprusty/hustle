@@ -153,9 +153,6 @@ class CurrentBookingRider extends Component {
         });
     };
     changeRoute = (destPoint, currentPoint) => {
-        if (!currentPoint || !currentPoint.lat || !currentPoint.lng) {
-            return false;
-        }
         if (this.state.poly) {
             this.state.poly.setMap(null);
         }
@@ -208,7 +205,10 @@ class CurrentBookingRider extends Component {
     handleSocket = message => {
         console.log(message);
         //on driver connect make showmMap to true
-        if (message.userMetadata.type == "driverAccept") {
+        if (
+            message.userMetadata.type == "driverAccept" &&
+            this.state.bookingId == message.message.bookingId
+        ) {
             this.setState({
                 showMap: true,
                 accepted: true,
@@ -219,7 +219,10 @@ class CurrentBookingRider extends Component {
                 carNumber: message.message.carNumber
             });
         }
-        if (message.userMetadata.type == "driverLoc") {
+        if (
+            message.userMetadata.type == "driverLoc" &&
+            this.state.bookingId == message.message.bookingId
+        ) {
             this.setState({
                 showMap: true,
                 accepted: true,
@@ -230,12 +233,20 @@ class CurrentBookingRider extends Component {
                 carNumber: message.message.carNumber
             });
         }
-        if (message.userMetadata.type == "status") {
+        if (
+            message.userMetadata.type == "status" &&
+            this.state.bookingId == message.message.bookingId
+        ) {
             this.setState(message.message);
             //rideFinished ,rideStarted,paymentReceived
         }
 
-        if (this.state.rideStarted && this.state.mapApiLoaded) {
+        if (
+            this.state.rideStarted &&
+            this.state.mapApiLoaded &&
+            (message.userMetadata.type == "driverLoc" ||
+                message.userMetadata.type == "driverAccept")
+        ) {
             this.changeRoute(
                 this.state.droppingPoint,
                 message.message.driverCoords
@@ -243,7 +254,9 @@ class CurrentBookingRider extends Component {
         } else if (
             this.state.accepted &&
             !this.state.rideStarted &&
-            this.state.mapApiLoaded
+            this.state.mapApiLoaded &&
+            (message.userMetadata.type == "driverLoc" ||
+                message.userMetadata.type == "driverAccept")
         ) {
             this.changeRoute(
                 this.state.boardingPoint,

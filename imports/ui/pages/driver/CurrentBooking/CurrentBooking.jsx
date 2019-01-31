@@ -45,12 +45,15 @@ class CurrentBooking extends Component {
     };
     componentDidMount = async () => {
         this.fetchCurrentRide();
-        debugger;
         this._isMounted = true;
         this.pubnub.subscribe({
             channels: [this.state.userId],
             withPresence: true
         });
+        const driverDoc = {
+            name: Meteor.user().profile.name,
+            phone: Meteor.user().profile.phone
+        };
         navigator.geolocation.watchPosition(pos => {
             const coords = pos.coords;
             console.log(coords);
@@ -75,13 +78,11 @@ class CurrentBooking extends Component {
                     }
                 }
             );
-            const driverDoc = {
-                name: Meteor.user().profile.name,
-                phone: Meteor.user().profile.phone
-            };
+
             this.pubnub
                 .publish({
                     message: {
+                        bookingId: this.state.bookingId,
                         driverCoords: this.state.currentPosition,
                         time: Date.now(),
                         driverName: driverDoc.name,
@@ -167,6 +168,7 @@ class CurrentBooking extends Component {
                 }
                 await this.pubnub.publish({
                     message: {
+                        bookingId: this.state.bookingId,
                         rideStarted: true
                     },
                     channel: this.state.userId,
@@ -205,6 +207,7 @@ class CurrentBooking extends Component {
                 }
                 await this.pubnub.publish({
                     message: {
+                        bookingId: this.state.bookingId,
                         rideFinished: true
                     },
                     channel: this.state.userId,
@@ -237,6 +240,7 @@ class CurrentBooking extends Component {
                 }
                 await this.pubnub.publish({
                     message: {
+                        bookingId: this.state.bookingId,
                         paymentReceived: true
                     },
                     channel: this.state.userId,
