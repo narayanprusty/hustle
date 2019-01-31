@@ -468,14 +468,14 @@ class Bookings extends Component {
                                     <a className="item item-icon-left" href="#">
                                         <i className="icon fa fa-clock-o" />
                                         {this.state.reachAfter}
-                                        <span className="item-note">Time</span>
+                                        <span className="item-note">{localizationManager.strings.Time}</span>
                                     </a>
 
                                     <a className="item item-icon-left" href="#">
                                         <i className="icon fa fa-road" />
                                         {this.state.distance}
                                         <span className="item-note">
-                                            Distance
+                                        {localizationManager.strings.distance}
                                         </span>
                                     </a>
 
@@ -485,7 +485,7 @@ class Bookings extends Component {
                                             this.state.distance_in_meter *
                                                 config.farePerMeter
                                         ) + config.fareUnit}{" "}
-                                        at{" "}
+                                        {localizationManager.strings.at}{" "}
                                         {config.farePerMeter + config.fareUnit}
                                         /M
                                         <span className="item-note">Fare</span>
@@ -500,9 +500,9 @@ class Bookings extends Component {
                                                 fontSize: "16px"
                                             }}
                                         >
-                                            <option value={"cash"}>Cash</option>
+                                            <option value={"cash"}>{localizationManager.strings.cash}</option>
                                             <option value={"card 1"}>
-                                                Card 1
+                                            {localizationManager.strings.Card} 1
                                             </option>
                                         </select>
                                         <i
@@ -514,7 +514,7 @@ class Bookings extends Component {
                                             }}
                                         />
                                         <span className="item-note">
-                                            Payment Method
+                                        {localizationManager.strings.paymentMethod}
                                         </span>
                                     </a>
                                 </div>
