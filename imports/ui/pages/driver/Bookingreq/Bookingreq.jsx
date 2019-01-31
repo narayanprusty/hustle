@@ -54,6 +54,7 @@ class Bookingreq extends Component {
             async (error, response) => {
                 if (error) {
                     console.log(error);
+                    //Add localization support
                     notify.show(
                         error.reason
                             ? error.reason
@@ -92,6 +93,7 @@ class Bookingreq extends Component {
                 (err, done) => {
                     if (err) {
                         console.log(err);
+                        //Add localization support
                         notify.show(err.reason, "error");
                     }
                 }
@@ -104,6 +106,7 @@ class Bookingreq extends Component {
                     console.log(withingDistanceData);
                     if (err) {
                         console.log(err);
+                        //Add localization support
                         notify.show(err.reason, "error");
                     }
                     if (withingDistanceData && withingDistanceData.length) {

@@ -52,6 +52,7 @@ class CurrentBooking extends Component {
                 (err, done) => {
                     if (err) {
                         console.log(err);
+                        //Add localization support
                         notify.show(err.reason, "error");
                     }
                 }
@@ -86,6 +87,7 @@ class CurrentBooking extends Component {
                 (err, done) => {
                     if (err) {
                         console.log(err);
+                        //Add localization support
                         notify.show(err.reason, "error");
                     }
                 }
@@ -128,6 +130,7 @@ class CurrentBooking extends Component {
             async (error, response) => {
                 if (error) {
                     console.log(error);
+                    //Add localization support
                     notify.show(
                         error.reason
                             ? error.reason
@@ -165,6 +168,7 @@ class CurrentBooking extends Component {
             async (error, response) => {
                 if (error) {
                     console.log(error);
+                    //Add localization support
                     notify.show(
                         error.reason
                             ? error.reason
@@ -196,6 +200,7 @@ class CurrentBooking extends Component {
             async (error, response) => {
                 if (error) {
                     console.log(error);
+                    //Add localization support
                     notify.show(
                         error.reason
                             ? error.reason

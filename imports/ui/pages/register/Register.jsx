@@ -68,6 +68,7 @@ export default class Register extends Component {
                   register_formloading: false,
                   formSubmitSuccess: true
                 });
+                //Add localization support
                 notify.show((error.reason =='Email already exists.') ?  'Phone already exists.' :error.reason ,'error');
               }else {
                 this.setState({
@@ -119,7 +120,7 @@ export default class Register extends Component {
               <span className="input-label">Name</span>
               <input
                 type="text"
-                placeholder="Saikat"
+                placeholder="first name"
                 name="first_name"
                 onChange={this.inputHandler.bind(this)}
               />

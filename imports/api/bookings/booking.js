@@ -278,7 +278,7 @@ const onConfirmPayment = async (bookingId, txId = null, paymentAmount) => {
             };
         }
         throw {
-            message: "BBooking not found!"
+            message: "Booking not found!"
         };
     } catch (ex) {
         console.log(ex);

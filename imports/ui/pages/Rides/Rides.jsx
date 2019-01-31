@@ -26,6 +26,7 @@ export default class Rides extends Component {
       page,
       (error, response) => {
         if (error) {
+        //Add localization support
           notify.show(
             error.reason ? error.reason : "Unable to fetch!",
             "error"
