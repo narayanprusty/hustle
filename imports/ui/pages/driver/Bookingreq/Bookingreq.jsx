@@ -205,7 +205,7 @@ class Bookingreq extends Component {
         return (
             <InfiniteScroll
                 pageStart={0}
-                loadMore={this.loadItems.bind(this)}
+                loadMore={this.loadItems}
                 hasMore={this.state.hasMoreItems}
                 loader={loader}
                 useWindow={false}

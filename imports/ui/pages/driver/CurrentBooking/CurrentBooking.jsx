@@ -75,10 +75,11 @@ class CurrentBooking extends Component {
                 .catch(error => {
                     console.log(error);
                 });
+            const userId = Meteor.userId();
             Meteor.call(
                 "updateDriverLocation",
                 {
-                    driverId: Meteor.userId(),
+                    driverId: userId,
                     lat: coords.latitude,
                     lng: coords.longitude
                 },
