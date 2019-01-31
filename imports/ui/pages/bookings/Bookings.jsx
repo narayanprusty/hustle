@@ -92,6 +92,24 @@ class Bookings extends Component {
                 }));
             },
             error => {
+                this.setState(prev => ({
+                    fields: {
+                        ...prev.fields,
+                        location: {
+                            lat,
+                            lng
+                        }
+                    },
+                    currentLocation: {
+                        lat,
+                        lng
+                    },
+                    boardingPoint: {
+                        lat: lat,
+                        lng: lng
+                    },
+                    boardingPlace: "" //unable to get because api call fails here
+                }));
                 console.error(error);
             }
         );
