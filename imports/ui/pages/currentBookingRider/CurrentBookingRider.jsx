@@ -206,12 +206,16 @@ class CurrentBookingRider extends Component {
             //rideFinished ,rideStarted,paymentReceived
         }
 
-        if (this.state.accepted && this.state.mapApiLoaded) {
+        if (this.state.rideStarted && this.state.mapApiLoaded) {
             this.changeRoute(
                 this.state.droppingPoint,
                 message.message.driverCoords
             );
-        } else if (this.state.mapApiLoaded) {
+        } else if (
+            this.state.accepted &&
+            !this.state.rideStarted &&
+            this.state.mapApiLoaded
+        ) {
             this.changeRoute(
                 this.state.boardingPoint,
                 message.message.driverCoords
@@ -279,87 +283,89 @@ class CurrentBookingRider extends Component {
                     </div>
                 )}
                 <div className="mapView padding-left padding-right padding-bottom">
-                    {this._isMounted && this.state.showMap && (
-                        <GoogleMapReact
-                            options={this.createMapOptions}
-                            bootstrapURLKeys={{
-                                key: config.GAPIKEY,
-                                libraries: ["places"]
-                            }}
-                            initialCenter={this.state.driverLoc}
-                            center={this.state.driverLoc}
-                            defaultZoom={18}
-                            zoom={this.state.zoom}
-                            layerTypes={["TrafficLayer", "TransitLayer"]}
-                            heat={true}
-                            gestureHandling="greedy"
-                            yesIWantToUseGoogleMapApiInternals
-                            onGoogleApiLoaded={({ map, maps }) =>
-                                this.apiHasLoaded(map, maps)
-                            }
-                        >
-                            {this.state.currentPosition && (
-                                <Marker
-                                    lat={
-                                        this.state.currentPosition.lat
-                                            ? this.state.currentPosition.lat
-                                            : this.state.currentPosition.lat
-                                    }
-                                    lng={
-                                        this.state.currentPosition.lng
-                                            ? this.state.currentPosition.lng
-                                            : this.state.currentPosition.lng
-                                    }
-                                    metaData="current"
-                                />
-                            )}
-                            {this.state.boardingPoint && (
-                                <Marker
-                                    lat={
-                                        this.state.boardingPoint.lat
-                                            ? this.state.boardingPoint.lat
-                                            : this.state.boardingPoint.lat
-                                    }
-                                    lng={
-                                        this.state.boardingPoint.lng
-                                            ? this.state.boardingPoint.lng
-                                            : this.state.boardingPoint.lng
-                                    }
-                                    metaData="board"
-                                />
-                            )}
-                            {this.state.droppingPoint && (
-                                <Marker
-                                    lat={
-                                        this.state.droppingPoint.lat
-                                            ? this.state.droppingPoint.lat
-                                            : this.state.droppingPoint.lat
-                                    }
-                                    lng={
-                                        this.state.droppingPoint.lng
-                                            ? this.state.droppingPoint.lng
-                                            : this.state.droppingPoint.lng
-                                    }
-                                    metaData="drop"
-                                />
-                            )}
-                            {this.state.driverLoc && (
-                                <Marker
-                                    lat={
-                                        this.state.driverLoc.lat
-                                            ? this.state.driverLoc.lat
-                                            : this.state.driverLoc.lat
-                                    }
-                                    lng={
-                                        this.state.driverLoc.lng
-                                            ? this.state.driverLoc.lng
-                                            : this.state.driverLoc.lng
-                                    }
-                                    metaData="car"
-                                />
-                            )}
-                        </GoogleMapReact>
-                    )}
+                    {this._isMounted &&
+                        this.state.showMap &&
+                        !this.state.rideFinished && (
+                            <GoogleMapReact
+                                options={this.createMapOptions}
+                                bootstrapURLKeys={{
+                                    key: config.GAPIKEY,
+                                    libraries: ["places"]
+                                }}
+                                initialCenter={this.state.driverLoc}
+                                center={this.state.driverLoc}
+                                defaultZoom={18}
+                                zoom={this.state.zoom}
+                                layerTypes={["TrafficLayer", "TransitLayer"]}
+                                heat={true}
+                                gestureHandling="greedy"
+                                yesIWantToUseGoogleMapApiInternals
+                                onGoogleApiLoaded={({ map, maps }) =>
+                                    this.apiHasLoaded(map, maps)
+                                }
+                            >
+                                {this.state.currentPosition && (
+                                    <Marker
+                                        lat={
+                                            this.state.currentPosition.lat
+                                                ? this.state.currentPosition.lat
+                                                : this.state.currentPosition.lat
+                                        }
+                                        lng={
+                                            this.state.currentPosition.lng
+                                                ? this.state.currentPosition.lng
+                                                : this.state.currentPosition.lng
+                                        }
+                                        metaData="current"
+                                    />
+                                )}
+                                {this.state.boardingPoint && (
+                                    <Marker
+                                        lat={
+                                            this.state.boardingPoint.lat
+                                                ? this.state.boardingPoint.lat
+                                                : this.state.boardingPoint.lat
+                                        }
+                                        lng={
+                                            this.state.boardingPoint.lng
+                                                ? this.state.boardingPoint.lng
+                                                : this.state.boardingPoint.lng
+                                        }
+                                        metaData="board"
+                                    />
+                                )}
+                                {this.state.droppingPoint && (
+                                    <Marker
+                                        lat={
+                                            this.state.droppingPoint.lat
+                                                ? this.state.droppingPoint.lat
+                                                : this.state.droppingPoint.lat
+                                        }
+                                        lng={
+                                            this.state.droppingPoint.lng
+                                                ? this.state.droppingPoint.lng
+                                                : this.state.droppingPoint.lng
+                                        }
+                                        metaData="drop"
+                                    />
+                                )}
+                                {this.state.driverLoc && (
+                                    <Marker
+                                        lat={
+                                            this.state.driverLoc.lat
+                                                ? this.state.driverLoc.lat
+                                                : this.state.driverLoc.lat
+                                        }
+                                        lng={
+                                            this.state.driverLoc.lng
+                                                ? this.state.driverLoc.lng
+                                                : this.state.driverLoc.lng
+                                        }
+                                        metaData="car"
+                                    />
+                                )}
+                            </GoogleMapReact>
+                        )}
                 </div>
             </div>
         );
