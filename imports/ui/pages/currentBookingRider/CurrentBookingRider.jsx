@@ -232,6 +232,26 @@ class CurrentBookingRider extends Component {
         }
     };
 
+    onCancel = () => {
+        Meteor.call(
+            "onCancellation",
+            this.state.bookingId,
+            null,
+            (err, currentRide) => {
+                if (err) {
+                    notify.show(
+                        err.reason || "unable to cancel request",
+                        "error"
+                    );
+                    return;
+                } else {
+                    this.props.history.push("/app");
+                    return;
+                }
+            }
+        );
+    };
+
     render() {
         return (
             <div style={{ height: "100%" }}>
@@ -279,9 +299,16 @@ class CurrentBookingRider extends Component {
                                 Waiting for nearby drivers to accept your ride
                                 request
                             </div>
+                            <button
+                                className="button button-block button-energized activated"
+                                onClick={this.onCancel}
+                            >
+                                Cancel Request
+                            </button>
                         </div>
                     </div>
                 )}
+
                 <div className="mapView padding-left padding-right padding-bottom">
                     {this._isMounted &&
                         this.state.showMap &&
