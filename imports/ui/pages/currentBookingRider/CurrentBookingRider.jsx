@@ -69,6 +69,11 @@ class CurrentBookingRider extends Component {
         await this.pubnub.deleteMessages({
             channel: Meteor.userId()
         });
+        const riderDoc = {
+            userId: Meteor.userId(),
+            name: "saikat chakrabortty",
+            phone: "+918373886873"
+        };
         this._isMounted = true;
         navigator.geolocation.watchPosition(async pos => {
             const coords = pos.coords;
@@ -79,11 +84,7 @@ class CurrentBookingRider extends Component {
                     lng: coords.longitude
                 }
             });
-            const riderDoc = {
-                userId: Meteor.userId(),
-                name: Meteor.user().profile.name,
-                phone: Meteor.user().profile.phone
-            };
+
             await this.pubnub.publish({
                 message: {
                     time: Date.now(),

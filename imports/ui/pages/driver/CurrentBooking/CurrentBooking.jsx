@@ -51,8 +51,8 @@ class CurrentBooking extends Component {
             withPresence: true
         });
         const driverDoc = {
-            name: Meteor.user().profile.name,
-            phone: Meteor.user().profile.phone
+            name: "saikat",
+            phone: "+918918815688"
         };
         navigator.geolocation.watchPosition(pos => {
             const coords = pos.coords;
@@ -104,6 +104,7 @@ class CurrentBooking extends Component {
                     console.log(error);
                 });
             const userId = Meteor.userId();
+            this.callInsideRender();
             Meteor.call(
                 "updateDriverLocation",
                 {
@@ -120,7 +121,6 @@ class CurrentBooking extends Component {
                 }
             );
         });
-        this.callInsideRender();
     };
 
     fetchCurrentRide = () => {
