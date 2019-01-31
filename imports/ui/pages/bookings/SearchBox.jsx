@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './Bookings_client.scss'
+import localizationManager from '../../localization/index';
 
 class SearchBox extends Component {
   constructor(props) {
@@ -53,7 +54,7 @@ class SearchBox extends Component {
           }}
           type="text"
           onFocus={this.clearSearchBox}
-          placeholder="Enter a location"
+          placeholder={localizationManager.strings.enterLocation}
         />
       </div>
     );
