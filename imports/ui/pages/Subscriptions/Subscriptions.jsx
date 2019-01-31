@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Meteor } from 'meteor/meteor'
+import { Meteor } from "meteor/meteor";
 import { withRouter, Link } from "react-router-dom";
 import { notify } from "react-notify-toast";
 
@@ -8,11 +8,11 @@ class Subscriptions extends Component {
         super(props);
         this.state = {
             user: Meteor.userId(),
-            showloader: true,
+            showloader: true
         };
         const driverMode = localStorage.getItem("driverMode");
         if (driverMode) {
-            this.props.history.push('/app/driver/newreqs');
+            this.props.history.push("/app/driver/newreqs");
         }
         this.getAllPlans = this.getAllPlans.bind(this);
         this.getUserSubscriptions = this.getUserSubscriptions.bind(this);
@@ -24,38 +24,40 @@ class Subscriptions extends Component {
     }
 
     getUserSubscriptions = async () => {
-        Meteor.call('getUserSubscriptions', Meteor.userId(), (error, response) => {
-            if (error) {
-                console.log(error);
-                notify.show(
-                    error.reason ? error.reason : "Unable to get subscriptions!",
-                    "error"
-                );
-            } else {
-                if (response.success && !response.message) {
-                    this.setState({
-                        userPlans: response.data ? response.data : []
-                    });
-                    if (this.state.userPlans.length > 0) {
-                        this.setState({ userAlreadySubscribed: true });
+        Meteor.call(
+            "getUserSubscriptions",
+            Meteor.userId(),
+            (error, response) => {
+                if (error) {
+                    console.log(error);
+                    notify.show(
+                        error.reason
+                            ? error.reason
+                            : "Unable to get subscriptions!",
+                        "error"
+                    );
+                } else {
+                    if (response.success && !response.message) {
+                        this.setState({
+                            userPlans: response.data ? response.data : []
+                        });
+                        if (this.state.userPlans.length > 0) {
+                            this.setState({ userAlreadySubscribed: true });
+                        }
+                    } else {
+                        if (response.message) {
+                            notify.show(response.message, "error");
+                        }
                     }
                 }
-                else {
-                    if (response.message) {
-                        notify.show(
-                            response.message,
-                            "error"
-                        );
-                    }
-                }
+                this.setState({ showloader: false });
             }
-            this.setState({ showloader: false });
-        });
-    }
+        );
+    };
 
     getAllPlans = async () => {
         this.setState({ gettingPlans: true });
-        Meteor.call('getSubscriptionPlans', {}, (error, response) => {
+        Meteor.call("getSubscriptionPlans", {}, (error, response) => {
             if (error) {
                 console.log(error);
                 notify.show(
@@ -65,52 +67,51 @@ class Subscriptions extends Component {
             } else {
                 if (response.success && !response.message) {
                     this.setState({ subscriptionPlan: response.data[0] });
-                }
-                else {
+                } else {
                     if (response.message) {
-                        notify.show(
-                            response.message,
-                            "error"
-                        );
+                        notify.show(response.message, "error");
                     }
                 }
             }
             this.setState({ gettingPlans: false });
         });
-    }
+    };
 
-    subscribe = async (planId) => {
+    subscribe = async planId => {
         try {
             this.setState({ userAlreadySubscribed: true, showloader: true });
-            Meteor.call('subscribePlan', { planId: planId, userId: Meteor.userId() }, (error, response) => {
-                if (error) {
-                    console.log(error);
-                    notify.show(
-                        error.reason ? error.reason : "Unable to subscribe!",
-                        "error"
-                    );
-                } else {
-                    if (!response.success) {
-                        if (response.message) {
-                            notify.show(
-                                response.message,
-                                "error"
-                            );
-                        }
-                    } else {
+            Meteor.call(
+                "subscribePlan",
+                { planId: planId, userId: Meteor.userId() },
+                (error, response) => {
+                    if (error) {
+                        console.log(error);
                         notify.show(
-                            "Plan Subscribed!!",
-                            "success"
+                            error.reason
+                                ? error.reason
+                                : "Unable to subscribe!",
+                            "error"
                         );
+                    } else {
+                        if (!response.success) {
+                            if (response.message) {
+                                notify.show(response.message, "error");
+                            }
+                        } else {
+                            notify.show("Plan Subscribed!!", "success");
+                        }
                     }
+                    this.setState({
+                        userAlreadySubscribed: false,
+                        showloader: false
+                    });
                 }
-                this.setState({ userAlreadySubscribed: false, showloader: false });
-            });
+            );
         } catch (ex) {
             console.log(ex);
             this.setState({ loading: false });
         }
-    }
+    };
 
     render() {
         const loader = (
@@ -173,55 +174,75 @@ class Subscriptions extends Component {
         );
 
         return (
-            <div>
+            <div className="" style={{ height: "100%" }}>
                 {!this.state.showloader && !this.state.gettingPlans ? (
                     <div>
-                        <div className="item item-avatar">
-                            <i className="icon fa fa-diamond" style={{ float: 'left', fontSize: '3em', marginLeft: "-1em" }} />
-                            <div style={{ marginLeft: "20px" }}>
-                                <h2>Subscription Plans</h2>
-                                <p>{this.state.subscriptionPlan.name}</p>
-                            </div>
+                        <div className="padding">
+                            <h3 className="padding">
+                                <i className="fa fa-cog" aria-hidden="true" />{" "}
+                                Subscription
+                            </h3>
                         </div>
-                        <div className="item item-body">
+                        <div className="item item-body" style={{border: "none"}}>
                             <ul className="list">
-                                <li className="item" style={{ whiteSpace: 'normal' }}>
-                                    <div style={{ marginBottom: '10px' }}>
+                                <li
+                                    className="item"
+                                    style={{ whiteSpace: "normal" }}
+                                >
+                                    <div style={{ marginBottom: "10px" }}>
                                         <b>Price</b>
                                     </div>
                                     <div>
                                         ${this.state.subscriptionPlan.price}
                                     </div>
                                 </li>
-                                <li className="item" style={{ whiteSpace: 'normal' }}>
-                                    <div style={{ marginBottom: '10px' }}>
-                                        <b>Validity</b>
+                                <li
+                                    className="item"
+                                    style={{ whiteSpace: "normal" }}
+                                >
+                                    <div style={{ marginBottom: "10px" }}>
+                                        <b>Renewable</b>
                                     </div>
                                     <div>
-                                        {this.state.subscriptionPlan.validity} days
-                                            </div>
+                                        After {this.state.subscriptionPlan.validity}{" "}
+                                        days
+                                    </div>
                                 </li>
-                                <li className="item" style={{ whiteSpace: 'normal' }}>
-                                    <div style={{ marginBottom: '10px' }}>
+                                <li
+                                    className="item"
+                                    style={{ whiteSpace: "normal" }}
+                                >
+                                    <div style={{ marginBottom: "10px" }}>
                                         <b>Description</b>
                                     </div>
                                     <div>
-                                        {this.state.subscriptionPlan.description}
-                                    </div>
-                                </li>
-                                <li className="item" style={{ whiteSpace: 'normal' }}>
-                                    <div className="padding-left padding-right padding-top">
-                                        <button
-                                            className="button button-block button-energized activated"
-                                            onClick={this.subscribe.bind(this, this.state.subscriptionPlan.uniqueIdentifier)}
-                                            disabled={this.state.userAlreadySubscribed ? true : false} >
-                                            Subscribe
-                                        </button>
+                                        {
+                                            this.state.subscriptionPlan
+                                                .description
+                                        }
                                     </div>
                                 </li>
                             </ul>
+                            <button
+                                className="button button-block button-energized activated"
+                                onClick={this.subscribe.bind(
+                                    this,
+                                    this.state.subscriptionPlan
+                                        .uniqueIdentifier
+                                )}
+                                disabled={
+                                    this.state.userAlreadySubscribed
+                                        ? true
+                                        : false
+                                }
+                            >
+                                Subscribe
+                            </button>
                         </div>
-                    </div>) : loader}
+                    </div>
+                ) : (
+                    loader
+                )}
             </div>
         );
     }

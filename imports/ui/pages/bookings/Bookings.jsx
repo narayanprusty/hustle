@@ -3,7 +3,7 @@ import isEmpty from "lodash.isempty";
 import { Link, withRouter } from "react-router-dom";
 import SearchBox from "./SearchBox";
 import mapStyle from "./MapStyle"; //https://mapstyle.withgoogle.com/ you can build yours from
-import config from "../../../modules/config/local.config";
+import config from "../../../modules/config/client/";
 import GoogleMapReact from "google-map-react";
 import Geocode from "react-geocode";
 import { notify } from "react-notify-toast";
@@ -138,7 +138,7 @@ class Bookings extends Component {
             "currentBookingRider",
             Meteor.userId(),
             (err, currentRide) => {
-                console.log(currentRide);
+                console.log(err, currentRide);
                 if (currentRide) {
                     this.props.history.push("/app/currentBooking");
                     return;
@@ -321,7 +321,6 @@ class Bookings extends Component {
     };
 
     apiHasLoaded = (map, maps) => {
-        debugger;
         this.setState({
             mapApiLoaded: true,
             mapInstance: map,
@@ -342,7 +341,7 @@ class Bookings extends Component {
             scrollwheel: false,
             fullscreenControl: false,
             draggable: true,
-            zoomControl: false,
+            zoomControl: true,
             styles: mapStyle
         };
     };
@@ -523,6 +522,11 @@ class Bookings extends Component {
                                     <button
                                         className="button button-block button-energized activated"
                                         onClick={this.raiseBookingReq}
+                                        style={
+                                            {
+                                                paddingTop: (this.state.submitted ? '14px' : '0px')
+                                            }
+                                        }
                                         disabled={
                                             this.state.paymentMethod
                                                 ? false

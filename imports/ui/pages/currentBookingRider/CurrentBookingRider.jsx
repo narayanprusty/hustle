@@ -6,10 +6,7 @@ import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
 import mapStyle from "../bookings/MapStyle.json";
-import { Widget } from "react-chat-widget";
-
 import "./CurrentBooking_client.scss";
-import "react-chat-widget/lib/styles.css";
 
 const Marker = ({ metaData }) => (
     <div>
@@ -29,6 +26,7 @@ const Marker = ({ metaData }) => (
         )}
     </div>
 );
+
 class CurrentBookingRider extends Component {
     constructor(props) {
         super(props);
@@ -121,7 +119,7 @@ class CurrentBookingRider extends Component {
             scrollwheel: false,
             fullscreenControl: false,
             draggable: true,
-            zoomControl: false,
+            zoomControl: true,
             styles: mapStyle
         };
     };
@@ -224,20 +222,53 @@ class CurrentBookingRider extends Component {
         }
     };
 
-    handleNewUserMessage = newMessage => {
-        console.log(`New message incomig! ${newMessage}`);
-        // Now send the message throught the backend API
-    };
-
     render() {
         return (
-            <div>
-                {this.state.rideStarted && <div>You are on the ride</div>}
-                {!this.state.rideStarted && <div>Driver is on the way</div>}
-                <div className="App">
-                    <Widget handleNewUserMessage={this.handleNewUserMessage} />
+            <div style={{ height: "100%" }}>
+                <div className="padding">
+                    <h3 className="padding">
+                        <i className="fa fa-car" aria-hidden="true" />
+                        &nbsp; Ride Booked
+                    </h3>
                 </div>
-                <div style={{ height: "100vh", width: "100%" }}>
+                {this.state.rideStarted && (
+                    <div className="card">
+                        <div
+                            className="item item-text-wrap"
+                            style={{ textAlign: "center" }}
+                        >
+                            <div>
+                                <img
+                                    src={"/images/riding.png"}
+                                    style={{ width: "40px" }}
+                                />
+                            </div>
+                            <div className="padding-top">
+                                Driver accepted your ride request
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {!this.state.rideStarted && (
+                    <div className="card">
+                        <div
+                            className="item item-text-wrap"
+                            style={{ textAlign: "center" }}
+                        >
+                            <div>
+                                <img
+                                    src={"/images/pending.png"}
+                                    style={{ width: "40px" }}
+                                />
+                            </div>
+                            <div className="padding-top">
+                                Waiting for nearby drivers to accept your ride
+                                request
+                            </div>
+                        </div>
+                    </div>
+                )}
+                <div className="mapView padding-left padding-right padding-bottom">
                     {this._isMounted &&
                         this.state.rideStarted &&
                         this.state.showMap && (
