@@ -488,7 +488,7 @@ class Bookings extends Component {
                                         {localizationManager.strings.at}{" "}
                                         {config.farePerMeter + config.fareUnit}
                                         /M
-                                        <span className="item-note">Fare</span>
+                                        <span className="item-note">{localizationManager.strings.fare}</span>
                                     </a>
                                     <a className="item item-icon-left" href="#">
                                         <i className="icon fa fa-shopping-cart" />
@@ -537,7 +537,7 @@ class Bookings extends Component {
                                         {this.state.submitted ? (
                                             <div id="loading" />
                                         ) : (
-                                            "Book"
+                                            localizationManager.strings.book
                                         )}
                                     </button>
                                 </div>
