@@ -132,6 +132,7 @@ class Bookingreq extends Component {
                 }
             );
         });
+
     };
 
     render() {
@@ -198,18 +199,45 @@ class Bookingreq extends Component {
         this.state.datas.map((data, i) => {
             console.log(data);
             items.push(
-                <div className="item item-button-right" key={i}>
-                    {data.createdAt
+                <div className="list card">
+
+                <div className="item item-avatar">
+                    <img src="/images/profile.png" />
+                    <h2>Marty McFly</h2>
+                    <p>{data.createdAt
                         ? moment(data.createdAt).format("LLL")
-                        : "-"}{" "}
-                    &nbsp; {data.totalFare} USD &nbsp; {data.totalDistance}{" "}
-                    &nbsp; {data.totalDuration}
+                        : "-"}{" "}</p>
+                </div>
+
+                <div className="item item-body">
+                    <p>
+                        <div class="list">
+                            <a class="item item-icon-right" href="#">
+                            {data.totalFare} USD
+                            <i class="icon fa fa-money"></i>
+                            </a>
+
+                            <a class="item item-icon-right" href="#">
+                            {data.totalDistance}
+                            <i class="icon fa fa-road"></i>
+                            </a>
+
+                            <a class="item item-icon-right" href="#">
+                            {data.totalDuration}
+                            <i class="icon fa fa-clock-o"></i>
+                            </a>
+                        </div>
+                    </p>
+                    <p>
                     <button
-                        className="button button-positive"
+                        className="button button-block button-balanced"
                         onClick={this.handleClickAction.bind(this, data)}
                     >
-                        <i className="icon fa fa-location-arrow" />
+                        <i className="icon fa fa-check" /> Accept
                     </button>
+                    </p>
+                </div>
+
                 </div>
             );
         });
@@ -221,7 +249,13 @@ class Bookingreq extends Component {
                 loader={loader}
                 useWindow={false}
             >
-                <div className="list">{items}</div>
+                <div className="padding">
+                    <h3 className="padding">
+                        <i className="fa fa-car" aria-hidden="true" /> Ride
+                        Requests
+                    </h3>
+                </div>
+                <div className="padding-left padding-right">{items}</div>
             </InfiniteScroll>
         );
     }
