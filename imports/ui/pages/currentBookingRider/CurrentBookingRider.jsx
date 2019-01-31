@@ -284,29 +284,35 @@ class CurrentBookingRider extends Component {
                         </div>
                     )}
                 {!this.state.accepted && (
-                    <div className="card">
-                        <div
-                            className="item item-text-wrap"
-                            style={{ textAlign: "center" }}
-                        >
-                            <div>
-                                <img
-                                    src={"/images/pending.png"}
-                                    style={{ width: "40px" }}
-                                />
+                    <div>
+                        <div className="card">
+                            <div
+                                className="item item-text-wrap"
+                                style={{ textAlign: "center" }}
+                            >
+                                <div>
+                                    <img
+                                        src={"/images/pending.png"}
+                                        style={{ width: "40px" }}
+                                    />
+                                </div>
+                                <div className="padding-top">
+                                    Waiting for nearby drivers to accept your ride
+                                    request
+                                </div>
                             </div>
-                            <div className="padding-top">
-                                Waiting for nearby drivers to accept your ride
-                                request
-                            </div>
+                        </div>
+                        <div className="padding-left padding-right">
                             <button
-                                className="button button-block button-energized activated"
+                                className="button button-block button-assertive activated"
                                 onClick={this.onCancel}
                             >
-                                Cancel Request
+                                <i className="fa fa-times" aria-hidden="true"></i> Cancel Request
                             </button>
                         </div>
+                        
                     </div>
+
                 )}
 
                 <div className="mapView padding-left padding-right padding-bottom">
