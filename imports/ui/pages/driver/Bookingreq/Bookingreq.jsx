@@ -76,7 +76,12 @@ class Bookingreq extends Component {
         );
     };
     loadItems = page => {
-        navigator.geolocation.getCurrentPosition(pos => {
+        console.log("#1");
+        navigator.geolocation.getCurrentPosition((pos, err) => {
+            console.log("#2");
+            if (err) {
+                notify.show("Unable to fetch your current location", "error");
+            }
             const coords = pos.coords;
             this.setState({
                 current_pos: coords
@@ -90,12 +95,15 @@ class Bookingreq extends Component {
                     lng: coords.longitude
                 },
                 (err, done) => {
+                    console.log("#3");
+
                     if (err) {
                         console.log(err);
                         notify.show(err.reason, "error");
                     }
                 }
             );
+            console.log("#4");
 
             Meteor.call(
                 "fetchBookingReq",
