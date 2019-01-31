@@ -6,7 +6,7 @@ let strings = new LocalizedStrings({
         Home: "Home",
         Hello: "Hello",
         Register: "Register",
-        Logout: "Logout",
+        logout: "Logout",
         Rides: "Rides",
         Ride: "Ride",
         Settings: "Settings",
@@ -35,7 +35,8 @@ let strings = new LocalizedStrings({
         fare: "Fare",
         cash: "Cash",
         Card: "Card",
-        Book: "Book",
+        book: "Book",
+        bookRide:"Book Ride",
         Time: "Time",
         paymentMethod: "Payment Method",
         rideBooked: "Ride Booked",
@@ -102,42 +103,46 @@ let strings = new LocalizedStrings({
         verificationCode: "Verification Code",
         unableToFetch: "Unable to fetch!",
         phoneVerificationCode: "Hi, Your phone verification code is",
+        changeLanguage: "Switch to ",
+        english: "English",
+        arabic: "Arabic",
     },
     ar: {
         loggingOut: "تسجيل الخروج",
         Home: "الصفحة الرئيسية",
         Hello: "مرحبا",
         Register: "Register",
-        Logout: "Logout",
-        Rides: "Rides",
+        logout: "الخروج",
+        Rides: "ركوب الخيل",
         Ride: "Ride",
         Settings: "Settings",
         paymentStatus: "Payment Status",
         totalDistance: "Total Distance",
-        boardingPoint: "Boarding Point",
-        droppingPoint: "Dropping Point",
+        boardingPoint: "نقطة الصعود",
+        droppingPoint: "نقطة اسقاط",
         yourRides: "Your Rides",
         distance: "Distance",
         duration: "Duration",
-        editEmail: "Edit E-Mail",
-        subscriptions: "Subscriptions",
+        editEmail: "اديث ايميل",
+        subscriptions: "الاشتراكات",
         subscription: "Subscription",
         price: "Price",
         renewable: "Renewable",
         after: "After",
         days: "days",
         description: "Description",
-        callSupport: "Call Support",
-        others: "Others",
-        driverMode: "Driver Mode",
-        userMode: "User Mode",
+        callSupport: "دعم الاتصال",
+        others: "الآخرين",
+        driverMode: "وضع السائق",
+        userMode: "وضع المستخدم",
         at: "at",
         meterShort: "M",
         kilimeterShort: "KM",
         fare: "Fare",
         cash: "Cash",
         Card: "Card",
-        Book: "Book",
+        book: "Book",
+        bookRide:"Book Ride",
         Time: "Time",
         paymentMethod: "Payment Method",
         rideBooked: "Ride Booked",
@@ -204,7 +209,47 @@ let strings = new LocalizedStrings({
         verificationCode: "Verification Code",
         unableToFetch: "Unable to fetch!",
         phoneVerificationCode: "Hi, Your phone verification code is",
+        changeLanguage: "التبديل إلى ",
+        english: "الإنجليزية",
+        arabic: "عربى",
     }
 });
 
-export default strings;
+class LocalizationManager {
+    constructor(lang) {
+        this.strings = strings;
+        this.language = lang;
+        this.strings.setLanguage(lang);
+        //this.getUser();
+    }
+
+    async getUser() {
+        // var user = await Meteor.users.find({
+        //     _id: Meteor.userId()
+        // }, {
+        //     fields: {
+        //         emails: 1,
+        //         profile: 1,
+        //         admin: 1,
+        //         demoUser: 1,
+        //         _id: 1,
+        //         createdAt: 1,
+        //     },
+        // });
+        // console.log(user);
+    }
+
+    getLanguage() {
+        return this.language;
+    }
+
+    toggle() {
+        console.log(this.language == "en" ? "en=>ar" : "ar=>en");
+        this.strings.setLanguage(this.language == "en" ? "ar" : "en");
+        this.language = this.language == "en" ? "ar" : "en";
+    }
+}
+
+var localizationManager = new LocalizationManager("ar");
+
+export default localizationManager;

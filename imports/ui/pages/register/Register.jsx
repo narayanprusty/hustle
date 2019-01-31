@@ -58,7 +58,8 @@ export default class Register extends Component {
             profile: {
               name: this.state.first_name,
               userType: this.state.userType,
-              phone:this.state.phone
+              phone:this.state.phone,
+              langPref:"ar",
             }
           },
           error => {

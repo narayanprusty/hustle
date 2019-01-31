@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { Meteor } from 'meteor/meteor'
 import { BrowserRouter, Route, Switch, Redirect, Link } from "react-router-dom";
-import { withTracker } from "meteor/react-meteor-data";
-import SlideMenu from "../../components/sideMenu/SideMenu";
-import Notifications from 'react-notify-toast';
+import localizationManager from '../../localization/index';
 import { notify } from 'react-notify-toast';
 
 export default class Settings extends Component {
@@ -14,6 +12,7 @@ export default class Settings extends Component {
     }
 
     componentDidMount() {
+        console.log(localizationManager.getLanguage());
     }
 
     logout = () => {
@@ -22,12 +21,17 @@ export default class Settings extends Component {
                 notify.show(err.error, 'error');
                 return false;
             } else {
-                notify.show('Logging you out', 'success');
+                notify.show(localizationManager.strings.loggingOut, 'success');
                 this.setState({
                     toLogin: true
                 })
             }
         })
+    }
+
+    toggleLanguage = () => {
+        localizationManager.toggle();
+        this.setState({ localization: localizationManager.getLanguage() == "en" ? "ar" : "en" });
     }
 
     setDriverMode = () => {
@@ -42,39 +46,45 @@ export default class Settings extends Component {
         return (
             <div className='' style={{ height: '100%' }}>
                 <div className='padding'>
-                    <h3 className='padding'><i className="fa fa-cog" aria-hidden="true"></i> Settings</h3>
+                    <h3 className='padding'><i className="fa fa-cog" aria-hidden="true"></i> {localizationManager.strings.Settings}</h3>
                 </div>
                 <div className="list">
                     <a className="item item-icon-left" href="#">
                         <i className="icon ion-email"></i>
-                        Edit E-Mail
+                        {localizationManager.strings.editEmail}
                     </a>
                     {!driverMode && (
                         <Link to="/app/subscriptions" className="item item-icon-left">
                             <i className="icon fa fa-diamond"></i>
-                            Subscriptions
+                            {localizationManager.strings.subscriptions}
                         </Link>)}
                     <a className="item item-icon-left item-icon-right" href="#">
                         <i className="icon ion-chatbubble-working"></i>
-                        Call Support
+                        {localizationManager.strings.callSupport}
                         <i className="icon ion-ios-telephone-outline"></i>
                     </a>
                     <div className="item item-divider">
-                        Others
+                        {localizationManager.strings.others}
                     </div>
                     {!driverMode && (
                         <Link to="/app/driver/newreqs" className="item item-icon-left" onClick={this.setDriverMode}>
                             <i className="icon fa fa-car"></i>
-                            Driver Mode
+                            {localizationManager.strings.driverMode}
                         </Link>)}
                     {driverMode && (
                         <Link to="/app/home" className="item item-icon-left" onClick={this.setUserMode}>
                             <i className="icon fa fa-user"></i>
-                            User Mode
+                            {localizationManager.strings.userMode}
                         </Link>)}
+
+                    <Link to="#" className="item item-icon-left" onClick={this.toggleLanguage}>
+                        <i className="icon fa fa-language"></i>
+                        {localizationManager.strings.changeLanguage} {this.state.localization == "en" ? localizationManager.strings.arabic : localizationManager.strings.english}
+                    </Link>
+
                     <Link to="#" onClick={this.logout} className="item item-icon-left">
                         <i className="icon fa fa-sign-out"></i>
-                        Logout
+                        {localizationManager.strings.logout}
                     </Link>
                 </div>
 
