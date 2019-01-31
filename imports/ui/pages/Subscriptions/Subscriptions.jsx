@@ -30,6 +30,7 @@ class Subscriptions extends Component {
             (error, response) => {
                 if (error) {
                     console.log(error);
+                    //Add localization support
                     notify.show(
                         error.reason
                             ? error.reason
@@ -46,6 +47,7 @@ class Subscriptions extends Component {
                         }
                     } else {
                         if (response.message) {
+                            //Add localization support
                             notify.show(response.message, "error");
                         }
                     }
@@ -60,6 +62,7 @@ class Subscriptions extends Component {
         Meteor.call("getSubscriptionPlans", {}, (error, response) => {
             if (error) {
                 console.log(error);
+                //Add localization support
                 notify.show(
                     error.reason ? error.reason : "Unable to get plans!",
                     "error"
@@ -69,6 +72,7 @@ class Subscriptions extends Component {
                     this.setState({ subscriptionPlan: response.data[0] });
                 } else {
                     if (response.message) {
+                        //Add localization support
                         notify.show(response.message, "error");
                     }
                 }
@@ -86,6 +90,7 @@ class Subscriptions extends Component {
                 (error, response) => {
                     if (error) {
                         console.log(error);
+                        //Add localization support
                         notify.show(
                             error.reason
                                 ? error.reason
@@ -95,10 +100,11 @@ class Subscriptions extends Component {
                     } else {
                         if (!response.success) {
                             if (response.message) {
+                                //Add localization support
                                 notify.show(response.message, "error");
                             }
                         } else {
-                            notify.show("Plan Subscribed!!", "success");
+                            notify.show("Plan Subscribed!", "success");
                         }
                     }
                     this.setState({

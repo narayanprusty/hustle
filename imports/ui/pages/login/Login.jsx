@@ -46,6 +46,7 @@ export default class Login extends Component {
           this.state.password,
           error => {
             if (error && error.reason) {
+                //Add localization support
               notify.show(error.reason, "error");
               this.setState({
                 login_formloading: false,

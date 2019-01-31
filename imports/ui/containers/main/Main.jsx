@@ -48,6 +48,7 @@ export default class Main extends Component {
             autoload: 100,
             message: msg => {
                 console.log("got msg", msg);
+                //Add localization support
                 notify.show(msg.data, msg.type);
             }
         });

@@ -271,6 +271,7 @@ class Bookings extends Component {
                     });
                     routePolyline.setMap(mapInstance);
                 } else {
+                    //Add localization support
                     notify.show(
                         "Directions request failed due to " + status,
                         "error"
@@ -373,6 +374,7 @@ class Bookings extends Component {
                     submitted: false
                 });
                 console.log(error);
+                //Add localization support
                 notify.show(
                     error.reason ? error.reason : "Unable to create request!",
                     "error"
