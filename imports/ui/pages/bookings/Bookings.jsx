@@ -7,6 +7,7 @@ import config from "../../../modules/config/client/";
 import GoogleMapReact from "google-map-react";
 import Geocode from "react-geocode";
 import { notify } from "react-notify-toast";
+import localizationManager from '../../localization/index';
 
 Geocode.setApiKey(config.GAPIKEY);
 
@@ -422,15 +423,14 @@ class Bookings extends Component {
                 <Fragment>
                     <div className="padding">
                         <h3 className="padding">
-                            <i className="fa fa-car" aria-hidden="true" /> Book
-                            Ride
+                            <i className="fa fa-car" aria-hidden="true" /> {localizationManager.strings.bookRide}
                         </h3>
                     </div>
                     <div className={conatinerClass}>
                         <label className="item item-input item-stacked-label">
                             <span className="input-label">
                                 {" "}
-                                Boarding Point:{" "}
+                                {localizationManager.strings.boardingPoint}:{" "}
                             </span>
                             {mapApiLoaded && (
                                 <SearchBox
@@ -449,7 +449,7 @@ class Bookings extends Component {
                         <label className="item item-input item-stacked-label">
                             <span className="input-label">
                                 {" "}
-                                Dropping Point:{" "}
+                                {localizationManager.strings.droppingPoint}:{" "}
                             </span>
                             {mapApiLoaded && (
                                 <SearchBox
