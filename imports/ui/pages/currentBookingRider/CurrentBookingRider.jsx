@@ -261,28 +261,26 @@ class CurrentBookingRider extends Component {
                         &nbsp; Ride Booked
                     </h3>
                 </div>
-                {this.state.accepted &&
-                    !this.state.rideStarted &&
-                    !this.state.rideFinished && (
-                        <div className="card">
-                            <div
-                                className="item item-text-wrap"
-                                style={{ textAlign: "center" }}
-                            >
-                                <div>
-                                    <img
-                                        src={"/images/riding.png"}
-                                        style={{ width: "40px" }}
-                                    />
-                                </div>
-                                <div className="padding-top">
-                                    Driver accepted your ride request
-                                    <br />
-                                    On the way
-                                </div>
+                {this.state.accepted && !this.state.rideFinished && (
+                    <div className="card">
+                        <div
+                            className="item item-text-wrap"
+                            style={{ textAlign: "center" }}
+                        >
+                            <div>
+                                <img
+                                    src={"/images/riding.png"}
+                                    style={{ width: "40px" }}
+                                />
+                            </div>
+                            <div className="padding-top">
+                                {this.state.rideStarted
+                                    ? "You are on the ride"
+                                    : "Driver accepted your ride request"}
                             </div>
                         </div>
-                    )}
+                    </div>
+                )}
                 {!this.state.accepted && (
                     <div>
                         <div className="card">
@@ -297,8 +295,8 @@ class CurrentBookingRider extends Component {
                                     />
                                 </div>
                                 <div className="padding-top">
-                                    Waiting for nearby drivers to accept your ride
-                                    request
+                                    Waiting for nearby drivers to accept your
+                                    ride request
                                 </div>
                             </div>
                         </div>
@@ -307,12 +305,11 @@ class CurrentBookingRider extends Component {
                                 className="button button-block button-assertive activated"
                                 onClick={this.onCancel}
                             >
-                                <i className="fa fa-times" aria-hidden="true"></i> Cancel Request
+                                <i className="fa fa-times" aria-hidden="true" />{" "}
+                                Cancel Request
                             </button>
                         </div>
-                        
                     </div>
-
                 )}
 
                 <div className="mapView padding-left padding-right padding-bottom">
