@@ -69,11 +69,7 @@ class CurrentBookingRider extends Component {
         await this.pubnub.deleteMessages({
             channel: Meteor.userId()
         });
-        const riderDoc = {
-            userId: Meteor.userId(),
-            name: "saikat chakrabortty",
-            phone: "+918373886873"
-        };
+
         this._isMounted = true;
         navigator.geolocation.watchPosition(async pos => {
             const coords = pos.coords;
@@ -82,20 +78,6 @@ class CurrentBookingRider extends Component {
                 currentPosition: {
                     lat: coords.latitude,
                     lng: coords.longitude
-                }
-            });
-
-            await this.pubnub.publish({
-                message: {
-                    time: Date.now(),
-                    riderName: riderDoc.name,
-                    riderPhone: riderDoc.phone
-                },
-                channel: riderDoc.userId,
-                sendByPost: false, // true to send via post
-                storeInHistory: false, //override default storage options
-                meta: {
-                    type: "riderDetails"
                 }
             });
         });
@@ -245,8 +227,7 @@ class CurrentBookingRider extends Component {
         if (
             this.state.rideStarted &&
             this.state.mapApiLoaded &&
-            (message.userMetadata.type == "driverLoc" ||
-                message.userMetadata.type == "driverAccept")
+            this.state.bookingId == message.message.bookingId
         ) {
             this.changeRoute(
                 this.state.droppingPoint,
@@ -256,8 +237,7 @@ class CurrentBookingRider extends Component {
             this.state.accepted &&
             !this.state.rideStarted &&
             this.state.mapApiLoaded &&
-            (message.userMetadata.type == "driverLoc" ||
-                message.userMetadata.type == "driverAccept")
+            this.state.bookingId == message.message.bookingId
         ) {
             this.changeRoute(
                 this.state.boardingPoint,
@@ -326,10 +306,13 @@ class CurrentBookingRider extends Component {
                 )}
                 {this.state.accepted && !this.state.rideFinished && (
                     <div className="card">
-                        Driver Name: {this.state.driverName || "-"} <br />
-                        Driver Phone:{this.state.driverPhone || "-"} <br />
-                        Car Model:{this.state.carModel || "-"} <br />
-                        Car Number:{this.state.carNumber || "-"} <br />
+                        Driver Name: {this.state.driverName || "saikat Ch"}{" "}
+                        <br />
+                        Driver Phone:{this.state.driverPhone ||
+                            "+918918815688"}{" "}
+                        <br />
+                        Car Model:{this.state.carModel || "Indica"} <br />
+                        Car Number:{this.state.carNumber || "8999"} <br />
                     </div>
                 )}
                 {!this.state.accepted && (

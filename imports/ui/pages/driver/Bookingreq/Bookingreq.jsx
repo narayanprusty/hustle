@@ -62,16 +62,11 @@ class Bookingreq extends Component {
                         "error"
                     );
                 }
-                const driverDoc = {
-                    name: Meteor.user().profile.name,
-                    phone: Meteor.user().profile.phone
-                };
+
                 await this.pubnub.publish({
                     message: {
-                        bookingId:data.bookingId,
+                        bookingId: data.bookingId,
                         driverLoc: this.state.current_pos,
-                        driverName: driverDoc.name,
-                        driverPhone: driverDoc.phone,
                         carModel: "indica",
                         carNumber: "8978"
                     },
@@ -140,7 +135,6 @@ class Bookingreq extends Component {
                 }
             );
         });
-
     };
 
     render() {
@@ -208,44 +202,47 @@ class Bookingreq extends Component {
             console.log(data);
             items.push(
                 <div className="list card">
+                    <div className="item item-avatar">
+                        <img src="/images/profile.png" />
+                        <h2>Marty McFly</h2>
+                        <p>
+                            {data.createdAt
+                                ? moment(data.createdAt).format("LLL")
+                                : "-"}{" "}
+                        </p>
+                    </div>
 
-                <div className="item item-avatar">
-                    <img src="/images/profile.png" />
-                    <h2>Marty McFly</h2>
-                    <p>{data.createdAt
-                        ? moment(data.createdAt).format("LLL")
-                        : "-"}{" "}</p>
-                </div>
+                    <div className="item item-body">
+                        <p>
+                            <div class="list">
+                                <a class="item item-icon-right" href="#">
+                                    {data.totalFare} USD
+                                    <i class="icon fa fa-money" />
+                                </a>
 
-                <div className="item item-body">
-                    <p>
-                        <div class="list">
-                            <a class="item item-icon-right" href="#">
-                            {data.totalFare} USD
-                            <i class="icon fa fa-money"></i>
-                            </a>
+                                <a class="item item-icon-right" href="#">
+                                    {data.totalDistance}
+                                    <i class="icon fa fa-road" />
+                                </a>
 
-                            <a class="item item-icon-right" href="#">
-                            {data.totalDistance}
-                            <i class="icon fa fa-road"></i>
-                            </a>
-
-                            <a class="item item-icon-right" href="#">
-                            {data.totalDuration}
-                            <i class="icon fa fa-clock-o"></i>
-                            </a>
-                        </div>
-                    </p>
-                    <p>
-                    <button
-                        className="button button-block button-balanced"
-                        onClick={this.handleClickAction.bind(this, data)}
-                    >
-                        <i className="icon fa fa-check" /> Accept
-                    </button>
-                    </p>
-                </div>
-
+                                <a class="item item-icon-right" href="#">
+                                    {data.totalDuration}
+                                    <i class="icon fa fa-clock-o" />
+                                </a>
+                            </div>
+                        </p>
+                        <p>
+                            <button
+                                className="button button-block button-balanced"
+                                onClick={this.handleClickAction.bind(
+                                    this,
+                                    data
+                                )}
+                            >
+                                <i className="icon fa fa-check" /> Accept
+                            </button>
+                        </p>
+                    </div>
                 </div>
             );
         });

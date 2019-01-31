@@ -28,21 +28,7 @@ class CurrentBooking extends Component {
             });
         }
     }
-    callInsideRender = () => {
-        if (this._isMounted) {
-            const messages = this.pubnub.getMessage(this.state.userId);
-            if (messages && messages.length) {
-                this.handleSocket(messages[messages.length - 1]);
-            }
-        }
-    };
-    handleSocket = message => {
-        console.log(message);
-        //on driver connect make showmMap to true
-        if (message.userMetadata.type == "riderDetails") {
-            this.setState(message.message);
-        }
-    };
+
     componentDidMount = async () => {
         this.fetchCurrentRide();
         this._isMounted = true;
@@ -85,8 +71,6 @@ class CurrentBooking extends Component {
                         bookingId: this.state.bookingId,
                         driverCoords: this.state.currentPosition,
                         time: Date.now(),
-                        driverName: driverDoc.name,
-                        driverPhone: driverDoc.phone,
                         carModel: "indica",
                         carNumber: "8978"
                     },
@@ -104,7 +88,6 @@ class CurrentBooking extends Component {
                     console.log(error);
                 });
             const userId = Meteor.userId();
-            this.callInsideRender();
             Meteor.call(
                 "updateDriverLocation",
                 {
@@ -143,11 +126,13 @@ class CurrentBooking extends Component {
     };
 
     navigateToRider = () => {
-        location.href =
+        open(
             "http://maps.google.com/maps?q=loc:" +
-            this.state.boardingPoint.lat +
-            "," +
-            this.state.boardingPoint.lng;
+                this.state.boardingPoint.lat +
+                "," +
+                this.state.boardingPoint.lng,
+            "_blank"
+        );
     };
 
     startRide = () => {
@@ -179,11 +164,11 @@ class CurrentBooking extends Component {
                     }
                 });
 
-                location.href =
-                    "http://maps.google.com/maps?q=loc:" +
+                open = ("http://maps.google.com/maps?q=loc:" +
                     this.state.droppingPoint.lat +
                     "," +
-                    this.state.droppingPoint.lng;
+                    this.state.droppingPoint.lng,
+                "_blank");
             }
         );
     };
@@ -261,12 +246,12 @@ class CurrentBooking extends Component {
                 <div className="list" style={{ marginBottom: "0px" }}>
                     <a className="item item-icon-left" href="#">
                         {/* <i className="icon fa fa-clock-o" /> */}
-                        {this.state.riderName}
+                        Saikat Ch.
                         <span className="item-note">Name</span>
                     </a>
                     <a className="item item-icon-left" href="#">
                         {/* <i className="icon fa fa-clock-o" /> */}
-                        {this.state.riderPhone}
+                        +918918815688
                         <span className="item-note">Phone</span>
                     </a>
                     <a className="item item-icon-left" href="#">
