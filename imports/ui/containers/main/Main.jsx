@@ -1,24 +1,24 @@
 import React, { Component } from "react";
-import { Meteor } from 'meteor/meteor'
+import { Meteor } from "meteor/meteor";
 import { BrowserRouter, Route, Switch, Redirect, Link } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
 import Settings from "../../pages/settings/Settings";
-import Notifications from 'react-notify-toast';
+import Notifications from "react-notify-toast";
 import Bookings from "../../pages/bookings/Bookings";
 import Rides from "../../pages/Rides/Rides";
 import Bookingreq from "../../pages/driver/Bookingreq/Bookingreq";
 import Dashboard from "../../pages/driver/Dashboard/Dashboard";
 import CurrentBooking from "../../pages/driver/CurrentBooking/CurrentBooking";
 import CurrentBookingRider from "../../pages/currentBookingRider/CurrentBookingRider";
-import RidePayment from '../../pages/driver/RidePayment/RidePayment';
-import Subscriptions from '../../pages/Subscriptions/Subscriptions';
+import RidePayment from "../../pages/driver/RidePayment/RidePayment";
+import Subscriptions from "../../pages/Subscriptions/Subscriptions";
 
 import { notify } from "react-notify-toast";
-import pubnub from '../../notifications/index';
+import pubnub from "../../notifications/index";
 
 const menuColStyles = {
-    padding: '0px',
-}
+    padding: "0px"
+};
 
 export default class Main extends Component {
     constructor(props) {
@@ -28,12 +28,15 @@ export default class Main extends Component {
         };
         this.pubnub = pubnub;
 
-        this.pubnub.init(this);
+        // this.pubnub.init(this);
     }
 
     componentDidMount() {
         this.setState({
-            height: ((document.body.scrollHeight - document.getElementsByClassName('footer')[0].offsetHeight)) + 'px',
+            height:
+                document.body.scrollHeight -
+                document.getElementsByClassName("footer")[0].offsetHeight +
+                "px"
         });
 
         this._isMounted = true;
@@ -43,7 +46,7 @@ export default class Main extends Component {
             triggerEvents: true,
             withPresence: true,
             autoload: 100,
-            message: (msg) => {
+            message: msg => {
                 console.log("got msg", msg);
                 notify.show(msg.data, msg.type);
             }
@@ -52,8 +55,9 @@ export default class Main extends Component {
 
     componentWillUnmount() {
         if (this._isMounted == true) {
+            const userId = Meteor.userId();
             this.pubnub.unsubscribe({
-                channels: [Meteor.userId().toString()]
+                channels: [userId]
             });
             this._isMounted = false;
         }
@@ -63,67 +67,89 @@ export default class Main extends Component {
     render() {
         const driverMode = localStorage.getItem("driverMode");
         return (
-            <div style={{ height: '100%', position: 'relative' }}>
+            <div style={{ height: "100%", position: "relative" }}>
                 <Notifications />
 
-                <div className='content' style={{
-                    height: this.state.height,
-                    backgroundSize: "contain",
-                    backgroundImage: "url(" + "/images/bg.png)",
-                    backgroundPositionY: 'bottom',
-                    backgroundRepeat: 'repeat-x',
-                    backgroundRepeatX: 'repeat',
-                    overflow: 'scroll',
-                    WebkitOverflowScrolling: 'touch'
-                }}>
+                <div
+                    className="content"
+                    style={{
+                        height: this.state.height,
+                        backgroundSize: "contain",
+                        backgroundImage: "url(" + "/images/bg.png)",
+                        backgroundPositionY: "bottom",
+                        backgroundRepeat: "repeat-x",
+                        backgroundRepeatX: "repeat",
+                        overflow: "scroll",
+                        WebkitOverflowScrolling: "touch"
+                    }}
+                >
                     <Route path="/app/settings" component={Settings} />
-                    <Route path="/app/subscriptions" component={Subscriptions} />
+                    <Route
+                        path="/app/subscriptions"
+                        component={Subscriptions}
+                    />
                     <Route path="/app/home" component={Bookings} />
                     <Route path="/app/rides" component={Rides} />
-                    <Route path="/app/currentBooking" component={CurrentBookingRider} />
+                    <Route
+                        path="/app/currentBooking"
+                        component={CurrentBookingRider}
+                    />
                     <Route path="/app/driver/dash" component={Dashboard} />
                     <Route path="/app/driver/newreqs" component={Bookingreq} />
-                    <Route path="/app/driver/currentBooking" component={CurrentBooking} />
-                    <Route path="/app/driver/ride/payment/:id" component={RidePayment} />
-
+                    <Route
+                        path="/app/driver/currentBooking"
+                        component={CurrentBooking}
+                    />
+                    <Route
+                        path="/app/driver/ride/payment/:id"
+                        component={RidePayment}
+                    />
                 </div>
 
                 {!driverMode && (
-                    <div className="tabs tabs-icon-top footer" style={{
-                        backgroundColor: "rgb(232, 187, 10)",
-                        color: 'white'
-                    }}>
-                        <Link to='/app/home' className="tab-item">
-                            <i className="icon ion-home"></i>
+                    <div
+                        className="tabs tabs-icon-top footer"
+                        style={{
+                            backgroundColor: "rgb(232, 187, 10)",
+                            color: "white"
+                        }}
+                    >
+                        <Link to="/app/home" className="tab-item">
+                            <i className="icon ion-home" />
                             Home
-          </Link>
-                        <Link to='/app/rides' className="tab-item">
-                            <i className="icon ion-navicon-round"></i>
+                        </Link>
+                        <Link to="/app/rides" className="tab-item">
+                            <i className="icon ion-navicon-round" />
                             Rides
-          </Link>
+                        </Link>
                         <Link to="/app/settings" className="tab-item">
-                            <i className="icon ion-gear-a"></i>
+                            <i className="icon ion-gear-a" />
                             Settings
-          </Link>
-                    </div>)}
+                        </Link>
+                    </div>
+                )}
                 {driverMode && (
-                    <div className="tabs tabs-icon-top footer" style={{
-                        backgroundColor: "black",
-                        color: 'white'
-                    }}>
-                        <Link to='/app/driver/newreqs' className="tab-item">
-                            <i className="icon ion-home"></i>
+                    <div
+                        className="tabs tabs-icon-top footer"
+                        style={{
+                            backgroundColor: "black",
+                            color: "white"
+                        }}
+                    >
+                        <Link to="/app/driver/newreqs" className="tab-item">
+                            <i className="icon ion-home" />
                             Home
-          </Link>
-                        <a to='/app/driver/rides' className="tab-item">
-                            <i className="icon ion-navicon-round"></i>
+                        </Link>
+                        <a to="/app/driver/rides" className="tab-item">
+                            <i className="icon ion-navicon-round" />
                             Rides
-          </a>
+                        </a>
                         <Link to="/app/settings" className="tab-item">
-                            <i className="icon ion-gear-a"></i>
+                            <i className="icon ion-gear-a" />
                             Settings
-          </Link>
-                    </div>)}
+                        </Link>
+                    </div>
+                )}
 
                 <Notifications />
             </div>
