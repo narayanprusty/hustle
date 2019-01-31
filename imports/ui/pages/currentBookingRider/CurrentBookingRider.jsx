@@ -38,6 +38,7 @@ class CurrentBookingRider extends Component {
         });
         this.state = {
             showMap: false,
+            accepted: false,
             rideStarted: false,
             rideFinished: false,
             zoom: 18,
@@ -92,12 +93,15 @@ class CurrentBookingRider extends Component {
                 } else {
                     if (currentRide.status == "started") {
                         this.setState({
-                            rideStarted: true
+                            showMap: true,
+                            rideStarted: true,
+                            accepted: true
                         });
                     } else if (currentRide.status == "finished") {
                         this.setState({
                             rideFinished: true
                         });
+                        this.props.history.push("/app/home");
                     }
                     this.setState(currentRide);
                     return currentRide;
@@ -186,12 +190,14 @@ class CurrentBookingRider extends Component {
         if (message.userMetadata.type == "driverAccept") {
             this.setState({
                 showMap: true,
+                accepted: true,
                 driverLoc: message.message.driverCoords
             });
         }
         if (message.userMetadata.type == "driverLoc") {
             this.setState({
                 showMap: true,
+                accepted: true,
                 driverLoc: message.message.driverCoords
             });
         }
@@ -200,7 +206,7 @@ class CurrentBookingRider extends Component {
             //rideFinished ,rideStarted,paymentReceived
         }
 
-        if (this.state.rideStarted && this.state.mapApiLoaded) {
+        if (this.state.accepted && this.state.mapApiLoaded) {
             this.changeRoute(
                 this.state.droppingPoint,
                 message.message.driverCoords
@@ -231,25 +237,29 @@ class CurrentBookingRider extends Component {
                         &nbsp; Ride Booked
                     </h3>
                 </div>
-                {this.state.rideStarted && (
-                    <div className="card">
-                        <div
-                            className="item item-text-wrap"
-                            style={{ textAlign: "center" }}
-                        >
-                            <div>
-                                <img
-                                    src={"/images/riding.png"}
-                                    style={{ width: "40px" }}
-                                />
-                            </div>
-                            <div className="padding-top">
-                                Driver accepted your ride request
+                {this.state.accepted &&
+                    !this.state.rideStarted &&
+                    !this.state.rideFinished && (
+                        <div className="card">
+                            <div
+                                className="item item-text-wrap"
+                                style={{ textAlign: "center" }}
+                            >
+                                <div>
+                                    <img
+                                        src={"/images/riding.png"}
+                                        style={{ width: "40px" }}
+                                    />
+                                </div>
+                                <div className="padding-top">
+                                    Driver accepted your ride request
+                                    <br />
+                                    On the way
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
-                {!this.state.rideStarted && (
+                    )}
+                {!this.state.accepted && (
                     <div className="card">
                         <div
                             className="item item-text-wrap"
@@ -269,89 +279,87 @@ class CurrentBookingRider extends Component {
                     </div>
                 )}
                 <div className="mapView padding-left padding-right padding-bottom">
-                    {this._isMounted &&
-                        this.state.rideStarted &&
-                        this.state.showMap && (
-                            <GoogleMapReact
-                                options={this.createMapOptions}
-                                bootstrapURLKeys={{
-                                    key: config.GAPIKEY,
-                                    libraries: ["places"]
-                                }}
-                                initialCenter={this.state.driverLoc}
-                                center={this.state.driverLoc}
-                                defaultZoom={18}
-                                zoom={this.state.zoom}
-                                layerTypes={["TrafficLayer", "TransitLayer"]}
-                                heat={true}
-                                gestureHandling="greedy"
-                                yesIWantToUseGoogleMapApiInternals
-                                onGoogleApiLoaded={({ map, maps }) =>
-                                    this.apiHasLoaded(map, maps)
-                                }
-                            >
-                                {this.state.currentPosition && (
-                                    <Marker
-                                        lat={
-                                            this.state.currentPosition.lat
-                                                ? this.state.currentPosition.lat
-                                                : this.state.currentPosition.lat
-                                        }
-                                        lng={
-                                            this.state.currentPosition.lng
-                                                ? this.state.currentPosition.lng
-                                                : this.state.currentPosition.lng
-                                        }
-                                        metaData="current"
-                                    />
-                                )}
-                                {this.state.boardingPoint && (
-                                    <Marker
-                                        lat={
-                                            this.state.boardingPoint.lat
-                                                ? this.state.boardingPoint.lat
-                                                : this.state.boardingPoint.lat
-                                        }
-                                        lng={
-                                            this.state.boardingPoint.lng
-                                                ? this.state.boardingPoint.lng
-                                                : this.state.boardingPoint.lng
-                                        }
-                                        metaData="board"
-                                    />
-                                )}
-                                {this.state.droppingPoint && (
-                                    <Marker
-                                        lat={
-                                            this.state.droppingPoint.lat
-                                                ? this.state.droppingPoint.lat
-                                                : this.state.droppingPoint.lat
-                                        }
-                                        lng={
-                                            this.state.droppingPoint.lng
-                                                ? this.state.droppingPoint.lng
-                                                : this.state.droppingPoint.lng
-                                        }
-                                        metaData="drop"
-                                    />
-                                )}
-                                {this.state.driverLoc && (
-                                    <Marker
-                                        lat={
-                                            this.state.driverLoc.lat
-                                                ? this.state.driverLoc.lat
-                                                : this.state.driverLoc.lat
-                                        }
-                                        lng={
-                                            this.state.driverLoc.lng
-                                                ? this.state.driverLoc.lng
-                                                : this.state.driverLoc.lng
-                                        }
-                                        metaData="car"
-                                    />
-                                )}
-                            </GoogleMapReact>
-                        )}
+                    {this._isMounted && this.state.showMap && (
+                        <GoogleMapReact
+                            options={this.createMapOptions}
+                            bootstrapURLKeys={{
+                                key: config.GAPIKEY,
+                                libraries: ["places"]
+                            }}
+                            initialCenter={this.state.driverLoc}
+                            center={this.state.driverLoc}
+                            defaultZoom={18}
+                            zoom={this.state.zoom}
+                            layerTypes={["TrafficLayer", "TransitLayer"]}
+                            heat={true}
+                            gestureHandling="greedy"
+                            yesIWantToUseGoogleMapApiInternals
+                            onGoogleApiLoaded={({ map, maps }) =>
+                                this.apiHasLoaded(map, maps)
+                            }
+                        >
+                            {this.state.currentPosition && (
+                                <Marker
+                                    lat={
+                                        this.state.currentPosition.lat
+                                            ? this.state.currentPosition.lat
+                                            : this.state.currentPosition.lat
+                                    }
+                                    lng={
+                                        this.state.currentPosition.lng
+                                            ? this.state.currentPosition.lng
+                                            : this.state.currentPosition.lng
+                                    }
+                                    metaData="current"
+                                />
+                            )}
+                            {this.state.boardingPoint && (
+                                <Marker
+                                    lat={
+                                        this.state.boardingPoint.lat
+                                            ? this.state.boardingPoint.lat
+                                            : this.state.boardingPoint.lat
+                                    }
+                                    lng={
+                                        this.state.boardingPoint.lng
+                                            ? this.state.boardingPoint.lng
+                                            : this.state.boardingPoint.lng
+                                    }
+                                    metaData="board"
+                                />
+                            )}
+                            {this.state.droppingPoint && (
+                                <Marker
+                                    lat={
+                                        this.state.droppingPoint.lat
+                                            ? this.state.droppingPoint.lat
+                                            : this.state.droppingPoint.lat
+                                    }
+                                    lng={
+                                        this.state.droppingPoint.lng
+                                            ? this.state.droppingPoint.lng
+                                            : this.state.droppingPoint.lng
+                                    }
+                                    metaData="drop"
+                                />
+                            )}
+                            {this.state.driverLoc && (
+                                <Marker
+                                    lat={
+                                        this.state.driverLoc.lat
+                                            ? this.state.driverLoc.lat
+                                            : this.state.driverLoc.lat
+                                    }
+                                    lng={
+                                        this.state.driverLoc.lng
+                                            ? this.state.driverLoc.lng
+                                            : this.state.driverLoc.lng
+                                    }
+                                    metaData="car"
+                                />
+                            )}
+                        </GoogleMapReact>
+                    )}
                 </div>
             </div>
         );

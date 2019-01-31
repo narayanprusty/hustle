@@ -217,7 +217,7 @@ const onStartRide = async (bookingId, startingPoint) => {
     };
 };
 
-const onStopRide = async (bookingId, endingPoint) => {
+const onStopRide = async (driverId, bookingId, endingPoint) => {
     const txId = await node.callAPI("assets/updateAssetInfo", {
         assetName: config.ASSET.Bookings,
         fromAccount: node.getWeb3().eth.accounts[0],
@@ -433,13 +433,15 @@ const fetchBookingReq = async ({ lat, lng, page }) => {
 };
 
 const currentBookingDriver = userId => {
-    return BookingRecord.find({
+    const data = BookingRecord.find({
         driverId: userId,
         status: {
-            $ne: "pending"
+            $ne: ["finished", "pending"]
         },
         active: true
     }).fetch()[0];
+    console.log(data);
+    return data;
 };
 
 const currentBookingRider = userId => {

@@ -156,8 +156,10 @@ class CurrentBooking extends Component {
         );
     };
     finishRide = () => {
+        const userId = Meteor.userId();
         Meteor.call(
             "onStopRide",
+            userId,
             this.state.bookingId,
             this.state.currentPosition,
             async (error, response) => {
