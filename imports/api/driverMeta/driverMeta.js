@@ -1,16 +1,11 @@
 import { DriverMeta } from "../../collections/driver-meta";
 
-const markAvailable = async driverId => {
-    return await DriverMeta.update(
+const markAvailable = driverId => {
+    return DriverMeta.update(
         {
             driverId: driverId
         },
         {
-            $setOnInsert: {
-                driverId: driverId,
-                available: true,
-                onRide: false
-            },
             $set: {
                 available: true
             }
@@ -18,20 +13,15 @@ const markAvailable = async driverId => {
         {
             upsert: true
         }
-    ).toArray();
+    );
 };
 
-const markUnavailable = async driverId => {
-    return await DriverMeta.update(
+const markUnavailable = driverId => {
+    return DriverMeta.update(
         {
             driverId: driverId
         },
         {
-            $setOnInsert: {
-                driverId: driverId,
-                available: false,
-                onRide: false
-            },
             $set: {
                 available: false
             }
@@ -39,35 +29,24 @@ const markUnavailable = async driverId => {
         {
             upsert: true
         }
-    ).toArray();
+    );
 };
 
-const updateDriverLocation = async ({ driverId, lat, lng }) => {
-    return await DriverMeta.update(
+const updateDriverLocation = ({ driverId, lat, lng }) => {
+    return DriverMeta.update(
         {
             driverId: driverId
         },
         {
-            $setOnInsert: {
-                driverId: driverId,
-                available: true,
-                onRide: false,
-                currentLocation: {
-                    lat: lat,
-                    lng: lng
-                }
-            },
             $set: {
-                currentLocation: {
-                    lat: lat,
-                    lng: lng
-                }
+                "currentLocation.lat": lat,
+                "currentLocation.lng": lng
             }
         },
         {
             upsert: true
         }
-    ).toArray();
+    );
 };
 
 const getDriversWithin = async ({ lat, lng }) => {

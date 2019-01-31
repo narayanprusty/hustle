@@ -443,13 +443,11 @@ const currentBookingDriver = userId => {
 };
 
 const currentBookingRider = userId => {
-    return BookingRecord.find({
+    const data = BookingRecord.find({
         userId: userId,
-        status: {
-            $ne: "pending"
-        },
         active: true
     }).fetch()[0];
+    return data;
 };
 
 export {
