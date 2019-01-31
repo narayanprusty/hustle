@@ -101,7 +101,7 @@ class CurrentBookingRider extends Component {
                         this.setState({
                             rideFinished: true
                         });
-                        this.props.history.push("/app/home");
+                        // this.props.history.push("/app/home");
                     }
                     this.setState(currentRide);
                     return currentRide;
@@ -396,6 +396,19 @@ class CurrentBookingRider extends Component {
                                 )}
                             </GoogleMapReact>
                         )}
+                    {this.state.rideFinished && (
+                        <div className="card">
+                            <div
+                                className="item item-text-wrap"
+                                style={{ textAlign: "center" }}
+                            >
+                                Total Fare: {this.state.totalFare}
+                                <br />
+                                Payment Method:
+                                {this.state.paymentMethod || "cash"}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         );

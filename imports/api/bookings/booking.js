@@ -110,6 +110,7 @@ const newBookingReq = async ({
     });
 
     BookingRecord.insert({
+        paymentMethod: paymentMethod,
         bookingId: identifier,
         userId: userId,
         totalFare: totalFare,
