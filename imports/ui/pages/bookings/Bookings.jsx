@@ -7,6 +7,7 @@ import config from "../../../modules/config/client/";
 import GoogleMapReact from "google-map-react";
 import Geocode from "react-geocode";
 import { notify } from "react-notify-toast";
+import { Meteor } from 'meteor/meteor'
 import localizationManager from '../../localization/index';
 
 Geocode.setApiKey(config.GAPIKEY);
@@ -66,6 +67,16 @@ class Bookings extends Component {
     };
 
     componentDidMount = async () => {
+        console.log(Meteor.userId());
+        Meteor.call("getLangPref", {
+            id: Meteor.userId()
+        },
+            (err, result) => {
+                console.log(err, result);
+                if (result)
+                    localizationManager.setLanguage(result);
+            }
+        );
         const { lat, lng } = await this.getcurrentLocation();
         this._isMounted = true;
         this.state = {};
@@ -439,7 +450,7 @@ class Bookings extends Component {
                                     value={
                                         this.state.boardingPlace
                                             ? this.state.boardingPlace
-                                                  .formatted_address
+                                                .formatted_address
                                             : ""
                                     }
                                     addplace={this.addBoardingPlace}
@@ -475,7 +486,7 @@ class Bookings extends Component {
                                         <i className="icon fa fa-road" />
                                         {this.state.distance}
                                         <span className="item-note">
-                                        {localizationManager.strings.distance}
+                                            {localizationManager.strings.distance}
                                         </span>
                                     </a>
 
@@ -483,7 +494,7 @@ class Bookings extends Component {
                                         <i className="icon fa fa-money" />
                                         {Math.round(
                                             this.state.distance_in_meter *
-                                                config.farePerMeter
+                                            config.farePerMeter
                                         ) + config.fareUnit}{" "}
                                         {localizationManager.strings.at}{" "}
                                         {config.farePerMeter + config.fareUnit}
@@ -502,7 +513,7 @@ class Bookings extends Component {
                                         >
                                             <option value={"cash"}>{localizationManager.strings.cash}</option>
                                             <option value={"card 1"}>
-                                            {localizationManager.strings.Card} 1
+                                                {localizationManager.strings.Card} 1
                                             </option>
                                         </select>
                                         <i
@@ -514,7 +525,7 @@ class Bookings extends Component {
                                             }}
                                         />
                                         <span className="item-note">
-                                        {localizationManager.strings.paymentMethod}
+                                            {localizationManager.strings.paymentMethod}
                                         </span>
                                     </a>
                                 </div>
@@ -537,8 +548,8 @@ class Bookings extends Component {
                                         {this.state.submitted ? (
                                             <div id="loading" />
                                         ) : (
-                                            localizationManager.strings.book
-                                        )}
+                                                localizationManager.strings.book
+                                            )}
                                     </button>
                                 </div>
                             </div>

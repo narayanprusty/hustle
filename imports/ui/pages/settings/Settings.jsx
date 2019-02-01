@@ -9,10 +9,20 @@ export default class Settings extends Component {
         super(props);
         this.state = {
         };
+        Meteor.call("getLangPref", {
+            id: Meteor.userId()
+        },
+            (err, result) => {
+                console.log(err, result);
+                if (result)
+                    localizationManager.setLanguage(result);
+                    this.forceUpdate();
+            }
+        );
+        console.log(localizationManager.getLanguage());
     }
 
     componentDidMount() {
-        console.log(localizationManager.getLanguage());
     }
 
     logout = () => {
@@ -30,8 +40,9 @@ export default class Settings extends Component {
     }
 
     toggleLanguage = () => {
-        localizationManager.toggle();
         this.setState({ localization: localizationManager.getLanguage() == "en" ? "ar" : "en" });
+        localizationManager.toggle();
+        this.forceUpdate();
     }
 
     setDriverMode = () => {
@@ -79,7 +90,7 @@ export default class Settings extends Component {
 
                     <Link to="#" className="item item-icon-left" onClick={this.toggleLanguage}>
                         <i className="icon fa fa-language"></i>
-                        {localizationManager.strings.changeLanguage} {this.state.localization == "en" ? localizationManager.strings.arabic : localizationManager.strings.english}
+                        {localizationManager.strings.changeLanguage} {localizationManager.getLanguage() == "en" ? localizationManager.strings.arabic : localizationManager.strings.english}
                     </Link>
 
                     <Link to="#" onClick={this.logout} className="item item-icon-left">
