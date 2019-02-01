@@ -25,14 +25,20 @@ class Bookingreq extends Component {
         });
         this.pubnub.init(this);
     }
+    componentWillUnmount = () => {
+        if (this.state.invl) {
+            clearInterval(this.state.invl);
+        }
+    };
 
     componentDidMount = () => {
-        clearInterval();
-        setInterval(this.loadItems(1), 3000);
+        const intRecord = setInterval(this.loadItems(1), 3000);
+        this.setState({
+            invl: intRecord
+        });
         this._isMounted = true;
     };
     componentWillMount = async () => {
-        clearInterval();
         await this.fetchCurrentRide();
     };
     fetchCurrentRide = () => {
@@ -101,7 +107,10 @@ class Bookingreq extends Component {
             }
             const coords = pos.coords;
             this.setState({
-                current_pos: coords
+                current_pos: {
+                    lat: coords.latitude,
+                    lng: coords.longitude
+                }
             });
 
             Meteor.call(
@@ -136,7 +145,7 @@ class Bookingreq extends Component {
                     if (withingDistanceData && withingDistanceData.length) {
                         let datas = this.state.datas;
                         datas = datas.concat(withingDistanceData);
-                        // datas = lodash.uniq(data, "bookingId");
+                        datas = lodash.uniqBy(datas, "_id");
                         this.setState({
                             datas: datas
                         });

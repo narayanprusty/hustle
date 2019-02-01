@@ -19,14 +19,14 @@ import "./Bookings_client.scss";
 const Marker = ({ metaData }) => (
     <div>
         {metaData == "current" && <span className="pulse_current" />}
-        {metaData == "car" && (
-            <div className="car car-red">
-                <div className="car-front" />
-                <div className="car-middle" />
-                <div className="car-back" />
+        {metaData == "cartop" && (
+            <div className="cartop cartop-red">
+                <div className="cartop-front" />
+                <div className="cartop-middle" />
+                <div className="cartop-back" />
             </div>
         )}
-        {metaData != "current" && metaData != "car" && (
+        {metaData != "current" && metaData != "cartop" && (
             <div>
                 <div className={"pin bounce " + metaData} />
                 <div className="pulse" />
@@ -69,7 +69,7 @@ class Bookings extends Component {
     };
 
     componentDidMount = async () => {
-        clearInterval();
+       
         console.log(Meteor.userId());
         Meteor.call(
             "getLangPref",
@@ -637,7 +637,7 @@ class Bookings extends Component {
                                         <Marker
                                             lat={e.currentLocation.lat}
                                             lng={e.currentLocation.lng}
-                                            metaData="car"
+                                            metaData="cartop"
                                         />;
                                     })}
                             </GoogleMapReact>

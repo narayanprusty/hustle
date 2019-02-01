@@ -13,14 +13,14 @@ import "./CurrentBooking_client.scss";
 const Marker = ({ metaData }) => (
     <div>
         {metaData == "current" && <span className="pulse_current" />}
-        {metaData == "car" && (
-            <div className="car car-red">
-                <div className="car-front" />
-                <div className="car-middle" />
-                <div className="car-back" />
+        {metaData == "cartop" && (
+            <div className="cartop cartop-red">
+                <div className="cartop-front" />
+                <div className="cartop-middle" />
+                <div className="cartop-back" />
             </div>
         )}
-        {metaData != "current" && metaData != "car" && (
+        {metaData != "current" && metaData != "cartop" && (
             <div>
                 <div className={"pin bounce " + metaData} />
                 <div className="pulse" />
@@ -55,7 +55,7 @@ class CurrentBookingRider extends Component {
     }
     componentWillUnmount() {
         if (this._isMounted) {
-            clearInterval();
+            clearInterval(this.state.intvl);
             this.pubnub.unsubscribe({
                 channels: [Meteor.userId()]
             });
@@ -63,7 +63,6 @@ class CurrentBookingRider extends Component {
     }
 
     componentDidMount = async () => {
-        clearInterval();
         this.fetchCurrentRide();
         console.log(Meteor.userId());
 
@@ -84,7 +83,7 @@ class CurrentBookingRider extends Component {
             }
             this.setState(data);
         });
-        navigator.geolocation.watchPosition(async pos => {
+        navigator.geolocation.watchPosition(pos => {
             const coords = pos.coords;
             this.callInsideRender();
             this.setState({
@@ -94,7 +93,10 @@ class CurrentBookingRider extends Component {
                 }
             });
         });
-        setInterval(this.watchRideStatus, 5000);
+        const intRecord =setInterval(this.watchRideStatus, 5000);
+        this.setState({
+            intvl:intRecord
+        });
     };
     watchRideStatus = () => {
         Meteor.call(
@@ -104,19 +106,22 @@ class CurrentBookingRider extends Component {
                 if (error) {
                     return false;
                 }
-                if (bookingData && bookingData.rideStatus == "accepted") {
+                if (bookingData && bookingData.data.rideStatus == "accepted") {
                     this.setState({
                         showMap: true,
                         accepted: true
                     });
-                } else if (bookingData && bookingData.rideStatus == "started") {
+                } else if (
+                    bookingData &&
+                    bookingData.data.rideStatus == "started"
+                ) {
                     this.setState({
                         showMap: true,
                         rideStarted: true
                     });
                 } else if (
                     bookingData &&
-                    bookingData.rideStatus == "finished"
+                    bookingData.data.rideStatus == "finished"
                 ) {
                     this.setState({
                         showMap: false,
@@ -455,7 +460,7 @@ class CurrentBookingRider extends Component {
                                         metaData="drop"
                                     />
                                 )}
-                                {/* {this.state.driverLoc && (
+                                {this.state.driverLoc && (
                                     <Marker
                                         lat={
                                             this.state.driverLoc.lat
@@ -467,9 +472,9 @@ class CurrentBookingRider extends Component {
                                                 ? this.state.driverLoc.lng
                                                 : this.state.driverLoc.lng
                                         }
-                                        metaData="car"
+                                        metaData="cartop"
                                     />
-                                )} */}
+                                )}
                             </GoogleMapReact>
                         )}
                     {this.state.rideFinished && (

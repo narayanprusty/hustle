@@ -305,6 +305,9 @@ const fetchUserBookings = async (userId, page) => {
 };
 
 const getBookingById = async bookingId => {
+    if (!bookingId) {
+        return false;
+    }
     try {
         console.log("Searaching: ", bookingId);
         var records = await node.callAPI("assets/search", {

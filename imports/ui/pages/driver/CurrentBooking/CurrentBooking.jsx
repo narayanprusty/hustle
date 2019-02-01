@@ -24,7 +24,6 @@ class CurrentBooking extends Component {
 
     componentWillUnmount() {
         if (this._isMounted) {
-            clearInterval();
             this.pubnub.unsubscribe({
                 channels: [this.state.userId]
             });
@@ -43,7 +42,7 @@ class CurrentBooking extends Component {
             }
             this.setState(data);
         });
-        navigator.geolocation.watchPosition(pos => {
+        navigator.geolocation.watchPosition(async pos => {
             const coords = pos.coords;
             console.log(coords);
             this.setState({
@@ -68,26 +67,19 @@ class CurrentBooking extends Component {
                 }
             );
 
-            this.pubnub
-                .publish({
-                    message: {
-                        bookingId: this.state.bookingId,
-                        driverCoords: this.state.currentPosition,
-                        time: Date.now()
-                    },
-                    channel: this.state.userId,
-                    sendByPost: false, // true to send via post
-                    storeInHistory: false, //override default storage options
-                    meta: {
-                        type: "driverLoc"
-                    }
-                })
-                .then(data => {
-                    console.log(data);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+            await this.pubnub.publish({
+                message: {
+                    bookingId: this.state.bookingId,
+                    driverCoords: this.state.currentPosition,
+                    time: Date.now()
+                },
+                channel: this.state.userId,
+                sendByPost: false, // true to send via post
+                storeInHistory: false, //override default storage options
+                meta: {
+                    type: "driverLoc"
+                }
+            });
             const userId = Meteor.userId();
             Meteor.call(
                 "updateDriverLocation",
@@ -127,6 +119,9 @@ class CurrentBooking extends Component {
     };
 
     navigateToRider = () => {
+        this.setState({
+            navigateToRider_loader: true
+        });
         open(
             "http://maps.google.com/maps?q=loc:" +
                 this.state.boardingPoint.lat +
@@ -134,9 +129,15 @@ class CurrentBooking extends Component {
                 this.state.boardingPoint.lng,
             "_blank"
         );
+        this.setState({
+            navigateToRider_loader: false
+        });
     };
 
     startRide = () => {
+        this.setState({
+            startRide_loader: true
+        });
         Meteor.call(
             "onStartRide",
             this.state.bookingId,
@@ -144,6 +145,9 @@ class CurrentBooking extends Component {
             async (error, response) => {
                 if (error) {
                     console.log(error);
+                    this.setState({
+                        startRide_loader: false
+                    });
                     //Add localization support
                     notify.show(
                         error.reason
@@ -152,6 +156,10 @@ class CurrentBooking extends Component {
                         "error"
                     );
                 }
+                this.setState({
+                    status: "started",
+                    startRide_loader: false
+                });
 
                 open = ("http://maps.google.com/maps?q=loc:" +
                     this.state.droppingPoint.lat +
@@ -162,6 +170,9 @@ class CurrentBooking extends Component {
         );
     };
     finishRide = () => {
+        this.setState({
+            finishRide_loader: true
+        });
         const userId = Meteor.userId();
         Meteor.call(
             "onStopRide",
@@ -171,7 +182,11 @@ class CurrentBooking extends Component {
             async (error, response) => {
                 if (error) {
                     console.log(error);
+                    this.setState({
+                        finishRide_loader: false
+                    });
                     //Add localization support
+
                     notify.show(
                         error.reason
                             ? error.reason
@@ -179,11 +194,18 @@ class CurrentBooking extends Component {
                         "error"
                     );
                 }
+                this.setState({
+                    status: "finished",
+                    finishRide_loader: false
+                });
                 notify.show("Ride completed", "success");
             }
         );
     };
     paymentReceived = () => {
+        this.setState({
+            paymentReceived_loader: true
+        });
         Meteor.call(
             "onConfirmPayment",
             this.state.bookingId,
@@ -192,6 +214,9 @@ class CurrentBooking extends Component {
             async (error, response) => {
                 if (error) {
                     console.log(error);
+                    this.setState({
+                        paymentReceived_loader: false
+                    });
                     //Add localization support
                     notify.show(
                         error.reason
@@ -200,7 +225,9 @@ class CurrentBooking extends Component {
                         "error"
                     );
                 }
-
+                this.setState({
+                    paymentReceived_loader: false
+                });
                 notify.show("Payment Marked", "success");
             }
         );
@@ -241,7 +268,7 @@ class CurrentBooking extends Component {
                     <a className="item item-icon-left" href="#">
                         <i className="icon fa fa-shopping-cart" />
 
-                        {this.state.payementMethod}
+                        {this.state.paymentMethod}
                         <span className="item-note">Payment Method</span>
                     </a>
                     {this.state.status == "accepted" && (
@@ -289,7 +316,7 @@ class CurrentBooking extends Component {
                             Finish Ride
                         </LaddaButton>
                     )}
-                    {this.state.payementMethod == "cash" && (
+                    {this.state.paymentMethod == "cash" && (
                         <LaddaButton
                             className="button button-block button-energized activated"
                             loading={this.state.paymentReceived_loader}

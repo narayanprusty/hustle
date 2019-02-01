@@ -176,8 +176,8 @@
     }
 }
 
-.car:after,
-.car:before {
+.cartop:after,
+.cartop:before {
     content: "";
     width: 12px;
     height: 12px;
@@ -186,8 +186,8 @@
     position: absolute;
 }
 
-.car .car-front:after,
-.car .car-front:before {
+.cartop .cartop-front:after,
+.cartop .cartop-front:before {
     content: "";
     width: 20px;
     height: 10px;
@@ -199,8 +199,8 @@
     border-radius: 50%;
 }
 
-.car .car-middle:before,
-.car .car-middle:after {
+.cartop .cartop-middle:before,
+.cartop .cartop-middle:after {
     content: "";
     display: block;
     border-bottom: 10px solid #495d65;
@@ -212,8 +212,8 @@
     right: 52px;
 }
 
-.car .car-back:before,
-.car .car-back:after {
+.cartop .cartop-back:before,
+.cartop .cartop-back:after {
     content: "";
     width: 23px;
     height: 12px;
@@ -222,11 +222,11 @@
     bottom: -62px;
 }
 
-.car-line + .car-line {
+.cartop-line + .cartop-line {
     margin-top: 40px;
 }
 
-.car {
+.cartop {
     zoom: 100%;
     position: relative;
     display: inline-block;
@@ -247,19 +247,19 @@
     -webkit-border-top-left-radius: 20px 30px;
     border-top-left-radius: 20px 30px;
 }
-.car:after {
+.cartop:after {
     top: -12px;
     -moz-border-radius: 3px 100% 0 0;
     -webkit-border-radius: 3px;
     border-radius: 3px 100% 0 0;
 }
-.car:before {
+.cartop:before {
     bottom: -12px;
     -moz-border-radius: 0 0 100% 3px;
     -webkit-border-radius: 0;
     border-radius: 0 0 100% 3px;
 }
-.car .car-front {
+.cartop .cartop-front {
     border-bottom: 40px solid #495d65;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
@@ -276,14 +276,14 @@
     -webkit-box-shadow: 0px 3px 0 #fff;
     box-shadow: 0px 3px 0 #fff;
 }
-.car .car-front:after {
+.cartop .cartop-front:after {
     -moz-transform: rotate(22deg);
     -ms-transform: rotate(22deg);
     -webkit-transform: rotate(22deg);
     transform: rotate(22deg);
     left: -5px;
 }
-.car .car-front:before {
+.cartop .cartop-front:before {
     -moz-transform: rotate(-22deg);
     -ms-transform: rotate(-22deg);
     -webkit-transform: rotate(-22deg);
@@ -291,25 +291,25 @@
     right: -5px;
 }
 
-.car.car-red {
+.cartop.cartop-red {
     background-color: #e74c3c;
 }
 
-.car + .car,
-.car + .vacancy {
+.cartop + .cartop,
+.cartop + .vacancy {
     margin-left: 40px;
 }
-.car .car-middle:before {
+.cartop .cartop-middle:before {
     bottom: 8px;
 }
-.car .car-middle:after {
+.cartop .cartop-middle:after {
     top: 8px;
     -moz-transform: scale(1, -1);
     -ms-transform: scale(1, -1);
     -webkit-transform: scale(1, -1);
     transform: scale(1, -1);
 }
-.car .car-back {
+.cartop .cartop-back {
     content: "";
     border-bottom: 35px solid #495d65;
     border-left: 20px solid transparent;
@@ -324,25 +324,25 @@
     transform: rotate(90deg);
     position: absolute;
 }
-.car .car-back:before {
+.cartop .cartop-back:before {
     left: -30px;
     -moz-border-radius-bottomleft: 40px 22px;
     -webkit-border-bottom-left-radius: 40px 22px;
     border-bottom-left-radius: 40px 22px;
 }
-.car .car-back:after {
+.cartop .cartop-back:after {
     right: -30px;
     -moz-border-radius-bottomright: 40px 22px;
     -webkit-border-bottom-right-radius: 40px 22px;
     border-bottom-right-radius: 40px 22px;
 }
 
-.passo1:checked + .passo2:not(:checked) ~ .car {
+.passo1:checked + .passo2:not(:checked) ~ .cartop {
     -moz-animation: animacao-passo1 3s ease-in-out;
     -webkit-animation: animacao-passo1 3s ease-in-out;
     animation: animacao-passo1 3s ease-in-out;
 }
 
-.passo1:checked + .passo2 ~ .car {
+.passo1:checked + .passo2 ~ .cartop {
     left: 680px;
 }
