@@ -27,10 +27,12 @@ class Bookingreq extends Component {
     }
 
     componentDidMount = () => {
+        clearInterval();
         setInterval(this.loadItems(1), 3000);
         this._isMounted = true;
     };
     componentWillMount = async () => {
+        clearInterval();
         await this.fetchCurrentRide();
     };
     fetchCurrentRide = () => {
@@ -134,7 +136,7 @@ class Bookingreq extends Component {
                     if (withingDistanceData && withingDistanceData.length) {
                         let datas = this.state.datas;
                         datas = datas.concat(withingDistanceData);
-                        datas = lodash.uniq(data, "id");
+                        // datas = lodash.uniq(data, "bookingId");
                         this.setState({
                             datas: datas
                         });

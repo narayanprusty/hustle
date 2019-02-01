@@ -24,6 +24,7 @@ class CurrentBooking extends Component {
 
     componentWillUnmount() {
         if (this._isMounted) {
+            clearInterval();
             this.pubnub.unsubscribe({
                 channels: [this.state.userId]
             });

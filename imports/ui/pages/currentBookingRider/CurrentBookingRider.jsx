@@ -55,6 +55,7 @@ class CurrentBookingRider extends Component {
     }
     componentWillUnmount() {
         if (this._isMounted) {
+            clearInterval();
             this.pubnub.unsubscribe({
                 channels: [Meteor.userId()]
             });
@@ -62,6 +63,7 @@ class CurrentBookingRider extends Component {
     }
 
     componentDidMount = async () => {
+        clearInterval();
         this.fetchCurrentRide();
         console.log(Meteor.userId());
 

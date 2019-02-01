@@ -69,6 +69,7 @@ class Bookings extends Component {
     };
 
     componentDidMount = async () => {
+        clearInterval();
         console.log(Meteor.userId());
         Meteor.call(
             "getLangPref",
