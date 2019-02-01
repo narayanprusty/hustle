@@ -5,6 +5,8 @@ import GoogleMapReact from "google-map-react";
 import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
+import LaddaButton, { L, SLIDE_UP } from "react-ladda";
+
 import mapStyle from "../bookings/MapStyle.json";
 import "./CurrentBooking_client.scss";
 
@@ -46,7 +48,8 @@ class CurrentBookingRider extends Component {
             driverLoc: {
                 lat: 0,
                 lng: 0
-            }
+            },
+            loader: false
         };
         this.pubnub.init(this);
     }
@@ -89,8 +92,38 @@ class CurrentBookingRider extends Component {
                 }
             });
         });
+        setInterval(this.watchRideStatus, 5000);
     };
-
+    watchRideStatus = () => {
+        Meteor.call(
+            "getBookingById",
+            this.state.bookingId,
+            (error, bookingData) => {
+                if (error) {
+                    return false;
+                }
+                if (bookingData && bookingData.rideStatus == "accepted") {
+                    this.setState({
+                        showMap: true,
+                        accepted: true
+                    });
+                } else if (bookingData && bookingData.rideStatus == "started") {
+                    this.setState({
+                        showMap: true,
+                        rideStarted: true
+                    });
+                } else if (
+                    bookingData &&
+                    bookingData.rideStatus == "finished"
+                ) {
+                    this.setState({
+                        showMap: false,
+                        rideFinished: true
+                    });
+                }
+            }
+        );
+    };
     fetchCurrentRide = async () => {
         return Meteor.call(
             "currentBookingRider",
@@ -253,12 +286,18 @@ class CurrentBookingRider extends Component {
     };
 
     onCancel = () => {
+        this.setState({
+            loader: true
+        });
         Meteor.call(
             "onCancellation",
             this.state.bookingId,
             null,
             (err, currentRide) => {
                 if (err) {
+                    this.setState({
+                        loader: false
+                    });
                     notify.show(
                         err.reason || "unable to cancel request",
                         "error"
@@ -329,13 +368,20 @@ class CurrentBookingRider extends Component {
                             </div>
                         </div>
                         <div className="padding-left padding-right">
-                            <button
+                            <LaddaButton
                                 className="button button-block button-assertive activated"
+                                loading={this.state.loader}
                                 onClick={this.onCancel}
+                                data-color="##FFFF00"
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
                             >
                                 <i className="fa fa-times" aria-hidden="true" />{" "}
                                 Cancel Request
-                            </button>
+                            </LaddaButton>
                         </div>
                     </div>
                 )}

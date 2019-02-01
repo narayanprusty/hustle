@@ -7,8 +7,10 @@ import config from "../../../modules/config/client/";
 import GoogleMapReact from "google-map-react";
 import Geocode from "react-geocode";
 import { notify } from "react-notify-toast";
-import { Meteor } from 'meteor/meteor'
-import localizationManager from '../../localization/index';
+import { Meteor } from "meteor/meteor";
+import LaddaButton, { L, SLIDE_UP } from "react-ladda";
+
+import localizationManager from "../../localization/index";
 
 Geocode.setApiKey(config.GAPIKEY);
 
@@ -68,13 +70,14 @@ class Bookings extends Component {
 
     componentDidMount = async () => {
         console.log(Meteor.userId());
-        Meteor.call("getLangPref", {
-            id: Meteor.userId()
-        },
+        Meteor.call(
+            "getLangPref",
+            {
+                id: Meteor.userId()
+            },
             (err, result) => {
                 console.log(err, result);
-                if (result)
-                    localizationManager.setLanguage(result);
+                if (result) localizationManager.setLanguage(result);
             }
         );
         const { lat, lng } = await this.getcurrentLocation();
@@ -434,14 +437,17 @@ class Bookings extends Component {
                 <Fragment>
                     <div className="padding">
                         <h3 className="padding">
-                            <i className="fa fa-car" aria-hidden="true" /> {localizationManager.strings.bookRide}
+                            <i className="fa fa-car" aria-hidden="true" />{" "}
+                            {localizationManager.strings.bookRide}
                         </h3>
                     </div>
                     <div className={conatinerClass}>
                         <label className="item item-input item-stacked-label">
                             <span className="input-label">
                                 {" "}
-                                {localizationManager.strings.boardingPoint}:{" "}
+                                {
+                                    localizationManager.strings.boardingPoint
+                                }:{" "}
                             </span>
                             {mapApiLoaded && (
                                 <SearchBox
@@ -450,7 +456,7 @@ class Bookings extends Component {
                                     value={
                                         this.state.boardingPlace
                                             ? this.state.boardingPlace
-                                                .formatted_address
+                                                  .formatted_address
                                             : ""
                                     }
                                     addplace={this.addBoardingPlace}
@@ -460,7 +466,9 @@ class Bookings extends Component {
                         <label className="item item-input item-stacked-label">
                             <span className="input-label">
                                 {" "}
-                                {localizationManager.strings.droppingPoint}:{" "}
+                                {
+                                    localizationManager.strings.droppingPoint
+                                }:{" "}
                             </span>
                             {mapApiLoaded && (
                                 <SearchBox
@@ -479,14 +487,19 @@ class Bookings extends Component {
                                     <a className="item item-icon-left" href="#">
                                         <i className="icon fa fa-clock-o" />
                                         {this.state.reachAfter}
-                                        <span className="item-note">{localizationManager.strings.Time}</span>
+                                        <span className="item-note">
+                                            {localizationManager.strings.Time}
+                                        </span>
                                     </a>
 
                                     <a className="item item-icon-left" href="#">
                                         <i className="icon fa fa-road" />
                                         {this.state.distance}
                                         <span className="item-note">
-                                            {localizationManager.strings.distance}
+                                            {
+                                                localizationManager.strings
+                                                    .distance
+                                            }
                                         </span>
                                     </a>
 
@@ -494,12 +507,14 @@ class Bookings extends Component {
                                         <i className="icon fa fa-money" />
                                         {Math.round(
                                             this.state.distance_in_meter *
-                                            config.farePerMeter
+                                                config.farePerMeter
                                         ) + config.fareUnit}{" "}
                                         {localizationManager.strings.at}{" "}
                                         {config.farePerMeter + config.fareUnit}
                                         /M
-                                        <span className="item-note">{localizationManager.strings.fare}</span>
+                                        <span className="item-note">
+                                            {localizationManager.strings.fare}
+                                        </span>
                                     </a>
                                     <a className="item item-icon-left" href="#">
                                         <i className="icon fa fa-shopping-cart" />
@@ -511,9 +526,18 @@ class Bookings extends Component {
                                                 fontSize: "16px"
                                             }}
                                         >
-                                            <option value={"cash"}>{localizationManager.strings.cash}</option>
+                                            <option value={"cash"}>
+                                                {
+                                                    localizationManager.strings
+                                                        .cash
+                                                }
+                                            </option>
                                             <option value={"card 1"}>
-                                                {localizationManager.strings.Card} 1
+                                                {
+                                                    localizationManager.strings
+                                                        .Card
+                                                }{" "}
+                                                1
                                             </option>
                                         </select>
                                         <i
@@ -525,32 +549,27 @@ class Bookings extends Component {
                                             }}
                                         />
                                         <span className="item-note">
-                                            {localizationManager.strings.paymentMethod}
+                                            {
+                                                localizationManager.strings
+                                                    .paymentMethod
+                                            }
                                         </span>
                                     </a>
                                 </div>
 
                                 <div className="padding-left padding-right padding-top">
-                                    <button
-                                        className="button button-block button-energized activated"
+                                    <LaddaButton
+                                        loading={this.state.submitted}
                                         onClick={this.raiseBookingReq}
-                                        style={{
-                                            paddingTop: this.state.submitted
-                                                ? "14px"
-                                                : "0px"
-                                        }}
-                                        disabled={
-                                            this.state.paymentMethod
-                                                ? false
-                                                : true
-                                        }
+                                        data-color="##FFFF00"
+                                        data-size={L}
+                                        data-style={SLIDE_UP}
+                                        data-spinner-size={30}
+                                        data-spinner-color="#ddd"
+                                        data-spinner-lines={12}
                                     >
-                                        {this.state.submitted ? (
-                                            <div id="loading" />
-                                        ) : (
-                                                localizationManager.strings.book
-                                            )}
-                                    </button>
+                                        {localizationManager.strings.book}{" "}
+                                    </LaddaButton>
                                 </div>
                             </div>
                         )}

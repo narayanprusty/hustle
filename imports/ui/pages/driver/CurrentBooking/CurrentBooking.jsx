@@ -5,6 +5,7 @@ import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
+import LaddaButton, { S, M, L, SLIDE_UP } from "react-ladda";
 
 class CurrentBooking extends Component {
     constructor(props) {
@@ -242,41 +243,66 @@ class CurrentBooking extends Component {
                         {this.state.payementMethod}
                         <span className="item-note">Payment Method</span>
                     </a>
-                    <button
-                        className="button button-block button-energized activated"
-                        onClick={this.navigateToRider}
-                        disabled={
-                            this.state.status == "accepted" ? false : true
-                        }
-                    >
-                        Navigate to Rider
-                    </button>
-                    <button
-                        className="button button-block button-energized activated"
-                        onClick={this.startRide}
-                        disabled={
-                            this.state.status == "accepted" ? false : true
-                        }
-                    >
-                        Start Ride
-                    </button>
-
-                    <button
-                        className="button button-block button-energized activated"
-                        onClick={this.finishRide}
-                        disabled={this.state.status == "started" ? false : true}
-                    >
-                        Finish Ride
-                    </button>
-                    <button
-                        className="button button-block button-energized activated"
-                        onClick={this.paymentReceived}
-                        disabled={
-                            this.state.payementMetho == "cash" ? false : true
-                        }
-                    >
-                        Payment Received
-                    </button>
+                    {this.state.status == "accepted" && (
+                        <LaddaButton
+                            className="button button-block button-energized activated"
+                            loading={this.state.navigateToRider_loader}
+                            onClick={this.navigateToRider}
+                            data-color="##FFFF00"
+                            data-size={S}
+                            data-style={SLIDE_UP}
+                            data-spinner-size={30}
+                            data-spinner-color="#ddd"
+                            data-spinner-lines={12}
+                        >
+                            Navigate to Rider
+                        </LaddaButton>
+                    )}
+                    {this.state.status == "accepted" && (
+                        <LaddaButton
+                            className="button button-block button-energized activated"
+                            loading={this.state.startRide_loader}
+                            onClick={this.startRide}
+                            data-color="##FFFF00"
+                            data-size={S}
+                            data-style={SLIDE_UP}
+                            data-spinner-size={30}
+                            data-spinner-color="#ddd"
+                            data-spinner-lines={12}
+                        >
+                            Start Ride
+                        </LaddaButton>
+                    )}
+                    {this.state.status == "started" && (
+                        <LaddaButton
+                            className="button button-block button-energized activated"
+                            loading={this.state.finishRide_loader}
+                            onClick={this.finishRide}
+                            data-color="##FFFF00"
+                            data-size={S}
+                            data-style={SLIDE_UP}
+                            data-spinner-size={30}
+                            data-spinner-color="#ddd"
+                            data-spinner-lines={12}
+                        >
+                            Finish Ride
+                        </LaddaButton>
+                    )}
+                    {this.state.payementMethod == "cash" && (
+                        <LaddaButton
+                            className="button button-block button-energized activated"
+                            loading={this.state.paymentReceived_loader}
+                            onClick={this.paymentReceived}
+                            data-color="##FFFF00"
+                            data-size={S}
+                            data-style={SLIDE_UP}
+                            data-spinner-size={30}
+                            data-spinner-color="#ddd"
+                            data-spinner-lines={12}
+                        >
+                            Payment Received
+                        </LaddaButton>
+                    )}
                 </div>
             </div>
         );

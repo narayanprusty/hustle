@@ -1,10 +1,13 @@
 import React, { Component } from "react";
+import lodash from "lodash";
 import { Link, withRouter } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import InfiniteScroll from "react-infinite-scroller";
 import moment from "moment";
 import { Meteor } from "meteor/meteor";
 import PubNubReact from "pubnub-react";
+import LaddaButton, { L, SLIDE_UP } from "react-ladda";
+
 import config from "../../../../modules/config/client";
 
 class Bookingreq extends Component {
@@ -24,7 +27,7 @@ class Bookingreq extends Component {
     }
 
     componentDidMount = () => {
-        this.loadItems();
+        setInterval(this.loadItems(1), 3000);
         this._isMounted = true;
     };
     componentWillMount = async () => {
@@ -47,6 +50,9 @@ class Bookingreq extends Component {
     };
 
     handleClickAction = data => {
+        this.setState({
+            accept_loader: true
+        });
         console.log("Accepting.....");
         Meteor.call(
             "onDriverAccept",
@@ -55,6 +61,9 @@ class Bookingreq extends Component {
             async (error, response) => {
                 if (error) {
                     console.log(error);
+                    this.setState({
+                        accept_loader: false
+                    });
                     //Add localization support
                     notify.show(
                         error.reason
@@ -125,6 +134,7 @@ class Bookingreq extends Component {
                     if (withingDistanceData && withingDistanceData.length) {
                         let datas = this.state.datas;
                         datas = datas.concat(withingDistanceData);
+                        datas = lodash.uniq(data, "id");
                         this.setState({
                             datas: datas
                         });
@@ -234,15 +244,22 @@ class Bookingreq extends Component {
                             </div>
                         </p>
                         <p>
-                            <button
+                            <LaddaButton
                                 className="button button-block button-balanced"
+                                loading={this.state.accept_loader}
                                 onClick={this.handleClickAction.bind(
                                     this,
                                     data
                                 )}
+                                data-color="##FFFF00"
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
                             >
                                 <i className="icon fa fa-check" /> Accept
-                            </button>
+                            </LaddaButton>
                         </p>
                     </div>
                 </div>
