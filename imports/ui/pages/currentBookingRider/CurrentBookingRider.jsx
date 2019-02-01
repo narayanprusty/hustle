@@ -93,9 +93,9 @@ class CurrentBookingRider extends Component {
                 }
             });
         });
-        const intRecord =setInterval(this.watchRideStatus, 5000);
+        const intRecord = setInterval(this.watchRideStatus, 5000);
         this.setState({
-            intvl:intRecord
+            intvl: intRecord
         });
     };
     watchRideStatus = () => {
@@ -327,26 +327,28 @@ class CurrentBookingRider extends Component {
                         &nbsp; Ride Booked
                     </h3>
                 </div>
-                {this.state.accepted && !this.state.rideFinished && (
-                    <div className="card">
-                        <div
-                            className="item item-text-wrap"
-                            style={{ textAlign: "center" }}
-                        >
-                            <div>
-                                <img
-                                    src={"/images/riding.png"}
-                                    style={{ width: "40px" }}
-                                />
-                            </div>
-                            <div className="padding-top">
-                                {this.state.rideStarted
-                                    ? "You are on the ride"
-                                    : "Driver accepted your ride request"}
+                {this.state.accepted &&
+                    !this.state.rideFinished &&
+                    this.state.bookingId && (
+                        <div className="card">
+                            <div
+                                className="item item-text-wrap"
+                                style={{ textAlign: "center" }}
+                            >
+                                <div>
+                                    <img
+                                        src={"/images/riding.png"}
+                                        style={{ width: "40px" }}
+                                    />
+                                </div>
+                                <div className="padding-top">
+                                    {this.state.rideStarted
+                                        ? "You are on the ride"
+                                        : "Driver accepted your ride request"}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
                 {this.state.accepted && !this.state.rideFinished && (
                     <div className="card">
                         Driver Name: {this.state.name || "-"} <br />
@@ -355,7 +357,7 @@ class CurrentBookingRider extends Component {
                         Car Number:{this.state.carNumber || "-"} <br />
                     </div>
                 )}
-                {!this.state.accepted && (
+                {!this.state.accepted && this.state.bookingId && (
                     <div>
                         <div className="card">
                             <div
