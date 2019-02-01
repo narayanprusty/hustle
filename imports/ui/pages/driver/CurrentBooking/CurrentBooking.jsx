@@ -230,6 +230,7 @@ class CurrentBooking extends Component {
                 this.setState({
                     paymentReceived_loader: false
                 });
+                this.props.history.push("/app/driver/newreqs");
                 notify.show("Payment Marked", "success");
             }
         );
@@ -237,42 +238,50 @@ class CurrentBooking extends Component {
 
     render() {
         return (
-            <div>
-                <div className="list" style={{ marginBottom: "0px" }}>
-                    <a className="item item-icon-left" href="#">
-                        {/* <i className="icon fa fa-clock-o" /> */}
-                        {this.state.name || "-"}
-                        <span className="item-note">Name</span>
-                    </a>
-                    <a className="item item-icon-left" href="#">
-                        {/* <i className="icon fa fa-clock-o" /> */}
-                        {this.state.phone || "-"}
-                        <span className="item-note">Phone</span>
-                    </a>
-                    <a className="item item-icon-left" href="#">
-                        <i className="icon fa fa-clock-o" />
-                        {this.state.totalDuration}
-                        <span className="item-note">Time</span>
-                    </a>
+            <div style={{ height: "100%" }}>
+                <div className="padding">
+                    <h3 className="padding">
+                        <i className="fa fa-car" aria-hidden="true" /> Ongoing
+                        Booking
+                    </h3>
+                </div>
+                <div className="padding-left padding-right padding-bottom">
+                    <div className="list" style={{ marginBottom: "0px" }}>
+                        <a className="item item-icon-left" href="#">
+                            <i className="icon fa fa-user-o" />
+                            {this.state.name || "-"}
+                            <span className="item-note">Name</span>
+                        </a>
+                        <a className="item item-icon-left" href="#">
+                            <i className="icon fa fa-phone" />
+                            {this.state.phone || "-"}
+                            <span className="item-note">Phone</span>
+                        </a>
+                        <a className="item item-icon-left" href="#">
+                            <i className="icon fa fa-clock-o" />
+                            {this.state.totalDuration}
+                            <span className="item-note">Time</span>
+                        </a>
 
-                    <a className="item item-icon-left" href="#">
-                        <i className="icon fa fa-road" />
-                        {this.state.totalDistance}
-                        <span className="item-note">Distance</span>
-                    </a>
+                        <a className="item item-icon-left" href="#">
+                            <i className="icon fa fa-road" />
+                            {this.state.totalDistance}
+                            <span className="item-note">Distance</span>
+                        </a>
 
-                    <a className="item item-icon-left" href="#">
-                        <i className="icon fa fa-money" />
-                        {Math.round(this.state.totalFare) +
-                            config.fareUnit}{" "}
-                        <span className="item-note">Fare</span>
-                    </a>
-                    <a className="item item-icon-left" href="#">
-                        <i className="icon fa fa-shopping-cart" />
+                        <a className="item item-icon-left" href="#">
+                            <i className="icon fa fa-money" />
+                            {Math.round(this.state.totalFare) +
+                                config.fareUnit}{" "}
+                            <span className="item-note">Fare</span>
+                        </a>
+                        <a className="item item-icon-left" href="#">
+                            <i className="icon fa fa-shopping-cart" />
 
-                        {this.state.paymentMethod}
-                        <span className="item-note">Payment Method</span>
-                    </a>
+                            {this.state.paymentMethod}
+                            <span className="item-note">Payment Method</span>
+                        </a>
+                    </div>
                     {this.state.status == "accepted" && (
                         <LaddaButton
                             className="button button-block button-energized activated"

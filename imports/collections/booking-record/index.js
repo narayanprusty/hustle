@@ -7,6 +7,9 @@ BookingRecordCollection.schema = new SimpleSchema({
     bookingId: {
         type: String
     },
+    username: {
+        type: String
+    },
     userId: {
         type: String
     },

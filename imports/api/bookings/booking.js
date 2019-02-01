@@ -19,6 +19,7 @@ const node = new Blockcluster.Dynamo({
  *
  */
 const newBookingReq = async ({
+    username,
     userId,
     boardingPoint,
     droppingPoint,
@@ -110,6 +111,7 @@ const newBookingReq = async ({
     });
 
     BookingRecord.insert({
+        username: username,
         paymentMethod: paymentMethod,
         bookingId: identifier,
         userId: userId,

@@ -324,7 +324,7 @@ class CurrentBookingRider extends Component {
                 <div className="padding">
                     <h3 className="padding">
                         <i className="fa fa-car" aria-hidden="true" />
-                        &nbsp; Ride Booked
+                        &nbsp; Ongoing Ride
                     </h3>
                 </div>
                 {this.state.accepted &&
@@ -351,10 +351,28 @@ class CurrentBookingRider extends Component {
                     )}
                 {this.state.accepted && !this.state.rideFinished && (
                     <div className="card">
-                        Driver Name: {this.state.name || "-"} <br />
-                        Driver Phone:{this.state.phone || "-"} <br />
-                        Car Model:{this.state.carModel || "-"} <br />
-                        Car Number:{this.state.carNumber || "-"} <br />
+                        <div className="list" style={{ marginBottom: "0px" }}>
+                            <a className="item item-icon-left" href="#">
+                                <i className="icon fa fa-user-o" />
+                                {this.state.name || "-"}
+                                <span className="item-note">Name</span>
+                            </a>
+                            <a className="item item-icon-left" href="#">
+                                <i className="icon fa fa-phone" />
+                                {this.state.phone || "-"}
+                                <span className="item-note">Phone</span>
+                            </a>
+                            <a className="item item-icon-left" href="#">
+                                <i className="icon fa fa-car" />
+                                {this.state.carModel || "-"}
+                                <span className="item-note">Car Model</span>
+                            </a>
+                            <a className="item item-icon-left" href="#">
+                                <i className="icon fa fa-text-width" />
+                                {this.state.carNumber || "-"}
+                                <span className="item-note">Car Number</span>
+                            </a>
+                        </div>
                     </div>
                 )}
                 {!this.state.accepted && this.state.bookingId && (

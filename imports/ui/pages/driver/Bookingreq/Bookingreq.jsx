@@ -227,7 +227,7 @@ class Bookingreq extends Component {
                 <div className="list card">
                     <div className="item item-avatar">
                         <img src="/images/profile.png" />
-                        <h2>Marty McFly</h2>
+                        <h2>{data.username || "unnamed"}</h2>
                         <p>
                             {data.createdAt
                                 ? moment(data.createdAt).format("LLL")
