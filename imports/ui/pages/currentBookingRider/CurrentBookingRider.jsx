@@ -203,11 +203,7 @@ class CurrentBookingRider extends Component {
             this.setState({
                 showMap: true,
                 accepted: true,
-                driverLoc: message.message.driverCoords,
-                driverName: message.message.driverName,
-                driverPhone: message.message.driverPhone,
-                carModel: message.message.carModel,
-                carNumber: message.message.carNumber
+                driverLoc: message.message.driverCoords
             });
         }
         if (
@@ -223,13 +219,6 @@ class CurrentBookingRider extends Component {
                 carModel: message.message.carModel,
                 carNumber: message.message.carNumber
             });
-        }
-        if (
-            message.userMetadata.type == "status" &&
-            this.state.bookingId == message.message.bookingId
-        ) {
-            this.setState(message.message);
-            //rideFinished ,rideStarted,paymentReceived
         }
 
         if (

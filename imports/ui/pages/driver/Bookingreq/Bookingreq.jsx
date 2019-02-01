@@ -66,9 +66,7 @@ class Bookingreq extends Component {
                 await this.pubnub.publish({
                     message: {
                         bookingId: data.bookingId,
-                        driverLoc: this.state.current_pos,
-                        carModel: "indica",
-                        carNumber: "8978"
+                        driverLoc: this.state.current_pos
                     },
                     channel: data.userId,
                     meta: {

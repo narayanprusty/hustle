@@ -32,10 +32,7 @@ class CurrentBooking extends Component {
     componentDidMount = async () => {
         this.fetchCurrentRide();
         this._isMounted = true;
-        this.pubnub.subscribe({
-            channels: [this.state.userId],
-            withPresence: true
-        });
+
         const driverId = Meteor.userId();
         Meteor.call("riderDetails", driverId, (err, data) => {
             if (err) {
@@ -74,9 +71,7 @@ class CurrentBooking extends Component {
                     message: {
                         bookingId: this.state.bookingId,
                         driverCoords: this.state.currentPosition,
-                        time: Date.now(),
-                        carModel: "indica",
-                        carNumber: "8978"
+                        time: Date.now()
                     },
                     channel: this.state.userId,
                     sendByPost: false, // true to send via post
@@ -155,18 +150,6 @@ class CurrentBooking extends Component {
                         "error"
                     );
                 }
-                await this.pubnub.publish({
-                    message: {
-                        bookingId: this.state.bookingId,
-                        rideStarted: true
-                    },
-                    channel: this.state.userId,
-                    sendByPost: false, // true to send via post
-                    storeInHistory: false, //override default storage options
-                    meta: {
-                        type: "status"
-                    }
-                });
 
                 open = ("http://maps.google.com/maps?q=loc:" +
                     this.state.droppingPoint.lat +
@@ -194,18 +177,6 @@ class CurrentBooking extends Component {
                         "error"
                     );
                 }
-                await this.pubnub.publish({
-                    message: {
-                        bookingId: this.state.bookingId,
-                        rideFinished: true
-                    },
-                    channel: this.state.userId,
-                    sendByPost: false, // true to send via post
-                    storeInHistory: false, //override default storage options
-                    meta: {
-                        type: "status"
-                    }
-                });
                 notify.show("Ride completed", "success");
             }
         );
@@ -227,18 +198,7 @@ class CurrentBooking extends Component {
                         "error"
                     );
                 }
-                await this.pubnub.publish({
-                    message: {
-                        bookingId: this.state.bookingId,
-                        paymentReceived: true
-                    },
-                    channel: this.state.userId,
-                    sendByPost: false, // true to send via post
-                    storeInHistory: false, //override default storage options
-                    meta: {
-                        type: "status"
-                    }
-                });
+
                 notify.show("Payment Marked", "success");
             }
         );
