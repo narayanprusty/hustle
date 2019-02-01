@@ -462,7 +462,7 @@ class CurrentBookingRider extends Component {
                                         metaData="drop"
                                     />
                                 )}
-                                {this.state.driverLoc && (
+                                {/* {this.state.driverLoc && (
                                     <Marker
                                         lat={
                                             this.state.driverLoc.lat
@@ -476,7 +476,7 @@ class CurrentBookingRider extends Component {
                                         }
                                         metaData="cartop"
                                     />
-                                )}
+                                )} */}
                             </GoogleMapReact>
                         )}
                     {this.state.rideFinished && (

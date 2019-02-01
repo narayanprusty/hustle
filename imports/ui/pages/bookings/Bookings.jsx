@@ -69,7 +69,6 @@ class Bookings extends Component {
     };
 
     componentDidMount = async () => {
-       
         console.log(Meteor.userId());
         Meteor.call(
             "getLangPref",
@@ -631,7 +630,7 @@ class Bookings extends Component {
                                     metaData="board"
                                 />
 
-                                {this.state.allDrivers &&
+                                {/* {this.state.allDrivers &&
                                     this.state.allDrivers.length &&
                                     this.state.allDrivers.map(e => {
                                         <Marker
@@ -639,7 +638,7 @@ class Bookings extends Component {
                                             lng={e.currentLocation.lng}
                                             metaData="cartop"
                                         />;
-                                    })}
+                                    })} */}
                             </GoogleMapReact>
                         )}
                     </div>
