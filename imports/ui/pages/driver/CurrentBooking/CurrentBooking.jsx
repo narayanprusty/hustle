@@ -161,11 +161,13 @@ class CurrentBooking extends Component {
                     startRide_loader: false
                 });
 
-                open = ("http://maps.google.com/maps?q=loc:" +
-                    this.state.droppingPoint.lat +
-                    "," +
-                    this.state.droppingPoint.lng,
-                "_blank");
+                open(
+                    "http://maps.google.com/maps?q=loc:" +
+                        this.state.droppingPoint.lat +
+                        "," +
+                        this.state.droppingPoint.lng,
+                    "_blank"
+                );
             }
         );
     };
@@ -316,21 +318,22 @@ class CurrentBooking extends Component {
                             Finish Ride
                         </LaddaButton>
                     )}
-                    {this.state.paymentMethod == "cash" && (
-                        <LaddaButton
-                            className="button button-block button-energized activated"
-                            loading={this.state.paymentReceived_loader}
-                            onClick={this.paymentReceived}
-                            data-color="##FFFF00"
-                            data-size={S}
-                            data-style={SLIDE_UP}
-                            data-spinner-size={30}
-                            data-spinner-color="#ddd"
-                            data-spinner-lines={12}
-                        >
-                            Payment Received
-                        </LaddaButton>
-                    )}
+                    {this.state.paymentMethod == "cash" &&
+                        this.state.status == "finished" && (
+                            <LaddaButton
+                                className="button button-block button-energized activated"
+                                loading={this.state.paymentReceived_loader}
+                                onClick={this.paymentReceived}
+                                data-color="##FFFF00"
+                                data-size={S}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                            >
+                                Payment Received
+                            </LaddaButton>
+                        )}
                 </div>
             </div>
         );
