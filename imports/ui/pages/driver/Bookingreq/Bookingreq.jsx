@@ -24,6 +24,7 @@ class Bookingreq extends Component {
     }
 
     componentDidMount = () => {
+        this.loadItems();
         this._isMounted = true;
     };
     componentWillMount = async () => {
@@ -78,6 +79,9 @@ class Bookingreq extends Component {
         );
     };
     loadItems = page => {
+        if (!page) {
+            return false;
+        }
         console.log("#1");
         navigator.geolocation.getCurrentPosition((pos, err) => {
             console.log("#2");
@@ -107,7 +111,7 @@ class Bookingreq extends Component {
                 }
             );
             console.log("#4");
-
+            console.log(page);
             Meteor.call(
                 "fetchBookingReq",
                 { lat: coords.latitude, lng: coords.longitude, page: page },
