@@ -71,6 +71,14 @@ class CurrentBookingRider extends Component {
         });
 
         this._isMounted = true;
+        const userId = Meteor.userId();
+        Meteor.call("driverDetails", userId, (err, data) => {
+            if (err) {
+                notify.show(err.reason || "Unknown error occurred", "error");
+                return;
+            }
+            this.setState(data);
+        });
         navigator.geolocation.watchPosition(async pos => {
             const coords = pos.coords;
             this.callInsideRender();
@@ -306,13 +314,10 @@ class CurrentBookingRider extends Component {
                 )}
                 {this.state.accepted && !this.state.rideFinished && (
                     <div className="card">
-                        Driver Name: {this.state.driverName || "saikat Ch"}{" "}
-                        <br />
-                        Driver Phone:{this.state.driverPhone ||
-                            "+918918815688"}{" "}
-                        <br />
-                        Car Model:{this.state.carModel || "Indica"} <br />
-                        Car Number:{this.state.carNumber || "8999"} <br />
+                        Driver Name: {this.state.name || "-"} <br />
+                        Driver Phone:{this.state.phone || "-"} <br />
+                        Car Model:{this.state.carModel || "-"} <br />
+                        Car Number:{this.state.carNumber || "-"} <br />
                     </div>
                 )}
                 {!this.state.accepted && (

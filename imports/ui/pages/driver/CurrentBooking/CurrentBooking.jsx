@@ -36,10 +36,14 @@ class CurrentBooking extends Component {
             channels: [this.state.userId],
             withPresence: true
         });
-        const driverDoc = {
-            name: "saikat",
-            phone: "+918918815688"
-        };
+        const driverId = Meteor.userId();
+        Meteor.call("riderDetails", driverId, (err, data) => {
+            if (err) {
+                notify.show(err.reason || "Unknown error occurred", "error");
+                return;
+            }
+            this.setState(data);
+        });
         navigator.geolocation.watchPosition(pos => {
             const coords = pos.coords;
             console.log(coords);
@@ -246,12 +250,12 @@ class CurrentBooking extends Component {
                 <div className="list" style={{ marginBottom: "0px" }}>
                     <a className="item item-icon-left" href="#">
                         {/* <i className="icon fa fa-clock-o" /> */}
-                        Saikat Ch.
+                        {this.state.name || "-"}
                         <span className="item-note">Name</span>
                     </a>
                     <a className="item item-icon-left" href="#">
                         {/* <i className="icon fa fa-clock-o" /> */}
-                        +918918815688
+                        {this.state.phone || "-"}
                         <span className="item-note">Phone</span>
                     </a>
                     <a className="item item-icon-left" href="#">
