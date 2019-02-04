@@ -1,5 +1,5 @@
 import React from "react";
-import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
 import Main from "../main/Main";
 import { Meteor } from "meteor/meteor";
@@ -32,7 +32,7 @@ requireNotLoggedIn = RouteComponent => {
 };
 
 const App = () => (
-    <Router>
+    <BrowserRouter>
         <Switch>
             <Route exact path="/" render={() => <Redirect to="/login" />} />
             <Route
@@ -60,7 +60,7 @@ const App = () => (
             />
             <Route exact path="/app/*" render={this.requireAuth(Main)} />
         </Switch>
-    </Router>
+    </BrowserRouter>
 );
 
 export default App;
