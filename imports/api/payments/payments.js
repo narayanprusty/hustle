@@ -1,5 +1,6 @@
 import Blockcluster from "blockcluster";
 import config from "../../modules/config/server";
+import Payment from 'payment';
 import {
     Meteor
 } from 'meteor/meteor';
@@ -35,16 +36,39 @@ const addCard = async (data) => {
     data["expiryYear"] = expiryYear;
     data["expiryMonth"] = expiryMonth;
     data["number"] = data.number.toString().replace(/ /g, '');
-    console.log("saving", data);
+
+    var cards = await node.callAPI("assets/search", {
+        $query: {
+            assetName: config.ASSET.Card,
+            cardNumber: parseInt(data.number.toString()),
+            status: "open",
+        }
+    });
+
+    console.log("found:",cards.length > 0);
+
+    if(cards.length > 0){
+        return {
+            success: false,
+            message: "Card already exists!",
+        }
+    }
+
     var op = await saveCardToHyperPay(data);
     console.log("output", op);
-    if (op.id) {
+
+    if (op.id && !op.result.description.indexOf("successfully") != -1) {
         data["hyperPayId"] = op.id;
         op = await saveCardToBlockcluster(data);
-        if(op.success)
+        if (op.success)
+            return {
+                success: true,
+                data: data
+            };
+    } else {
         return {
-            success: true,
-            data: data
+            success: false,
+            message: op.result.description
         };
     }
 }
@@ -62,9 +86,9 @@ const saveCardToBlockcluster = async (data) => {
             nameOnCard: data.name,
             expiry: data.expiry,
             cvv: data.cvc,
-            cardNumber: data.number,
+            cardNumber: data.number.toString(),
             hyperPayId: data.hyperPayId,
-            owner: Meteor.userId()
+            userId: Meteor.userId()
         });
         await node.callAPI("assets/issueSoloAsset", {
             assetName: config.ASSET.Card,
@@ -80,9 +104,9 @@ const saveCardToBlockcluster = async (data) => {
                 nameOnCard: data.name,
                 expiry: data.expiry,
                 cvv: data.cvc,
-                cardNumber: data.number,
+                cardNumber: ""+data.number.toString(),
                 hyperPayId: data.hyperPayId,
-                owner: Meteor.userId()
+                userId: Meteor.userId().toString()
             }
         });
         console.log(txId);
@@ -100,19 +124,18 @@ const saveCardToBlockcluster = async (data) => {
 
 const saveCardToHyperPay = (data) => {
     var path = '/v1/registrations';
-
+    let cardBrand = Payment.fns.cardType(data.number);
     var cardData = querystring.stringify({
         'authentication.userId': config.HYPERPAY.UserId,
         'authentication.password': config.HYPERPAY.Password,
         'authentication.entityId': config.HYPERPAY.EntityId,
-        'paymentBrand': config.HYPERPAY.PaymentMethods.VISA,
+        'paymentBrand': cardBrand == "visa" ? config.HYPERPAY.PaymentMethods.VISA : config.HYPERPAY.PaymentMethods.MASTERCARD,
         'card.number': data.number || "",
         'card.holder': data.name || "",
         'card.expiryMonth': data.expiryMonth || "",
         'card.expiryYear': data.expiryYear || "",
         'card.cvv': data.cvc || "",
     });
-    console.log(cardData);
     var options = {
         port: 443,
         host: 'test.oppwa.com',
@@ -141,6 +164,26 @@ const saveCardToHyperPay = (data) => {
     });
 }
 
+const getCards = async () => {
+    try {
+        let cards = await node.callAPI("assets/search", {
+            $query: {
+                assetName: config.ASSET.Card,
+                userId: Meteor.userId().toString(),
+                status: "open",
+            }
+        });
+        return {
+            success: true,
+            cards: cards.length > 0 ? cards : []
+        }
+    } catch (ex) {
+        console.log(ex);
+        return ex;
+    }
+}
+
 export {
     addCard,
+    getCards,
 }

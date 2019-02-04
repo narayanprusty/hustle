@@ -10,7 +10,6 @@ export function formatCreditCardNumber(value) {
     }
 
     const issuer = Payment.fns.cardType(value);
-    console.log("card issuer", issuer);
     const clearValue = clearNumber(value);
     let nextValue;
 
@@ -36,7 +35,6 @@ export function formatCreditCardNumber(value) {
     }
 
     let val = nextValue.trim().length > 19 ? nextValue.trim().slice(0, 19) : nextValue.trim();
-    console.log("card no:", nextValue.trim().length, val);
     return val.trim()
 }
 
@@ -49,7 +47,6 @@ export function formatCVC(value, prevValue, allValues = {}) {
         maxLength = issuer === 'amex' ? 4 : 3
     }
     let cvc = clearValue.slice(0, maxLength);
-    console.log(cvc.length);
     return cvc;
 }
 

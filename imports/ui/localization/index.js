@@ -239,7 +239,6 @@ class LocalizationManager {
 
     setLanguageByUserPref(user) {
         try {
-            console.log("user: ", user);
             this.user = user ? user : "";
             if (this.user && this.user.profile.langPref) {
                 this.language = this.user.profile.langPref;

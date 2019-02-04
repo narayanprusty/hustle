@@ -71,7 +71,7 @@ module.exports = {
         PaymentType: "DB",
         PaymentMethods: {
             VISA: "VISA",
-            MASTER: "MASTER"
+            MASTERCARD: "MASTER"
         },
     },
     farePerMeter: 0.04,

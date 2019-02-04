@@ -2,8 +2,8 @@ import React, { Component, Fragment } from "react";
 import Card from './Card'
 import localizationManager from '../../localization/index';
 import { notify } from "react-notify-toast";
-import InfiniteScroll from "react-infinite-scroller";
 import { Link } from "react-router-dom";
+import ScrollArea from 'react-scrollbar';
 import {
     Accordion,
     AccordionItem,
@@ -18,7 +18,6 @@ import { Meteor } from "meteor/meteor";
 export default class MyCards extends Component {
     state = {
         hasMoreItems: false,
-        cards:[],
     };
 
     componentDidMount() {
@@ -26,7 +25,28 @@ export default class MyCards extends Component {
     }
 
     loadCards = () => {
-
+        Meteor.call(
+            "getCards",
+            (err, res) => {
+                if (err) {
+                    console.log(err);
+                    return notify.show("Failed adding card.", "error");
+                }
+                console.log("info:",res, err);
+                if (res.message || !res.cards) { 
+                    notify.show(ex.message ? ex.message : "Unable to load cards!", "error");
+                } else {
+                    this.setState(
+                        {
+                            cards: res.cards
+                        }
+                    );
+                }
+                this.setState({
+                    processing: false
+                });
+            }
+        );
     }
 
     render() {
@@ -91,21 +111,39 @@ export default class MyCards extends Component {
 
         return (
             <div className="padding-top padding-right padding-left padding-bottom">
-                <h3 className="padding">
-                    <i className="fa fa-credit-card-alt" aria-hidden="true" /> Your MyCards
+                <h3 className="padding" style={{borderBottomWidth: 1, borderBottomStyle: "solid"}}>
+                    <i className="fa fa-credit-card-alt" aria-hidden="true" /> Your Cards
+                    <Link to="/app/addCards" className="" style={{float: 'right'}} >
+                                <i className="icon fa fa-plus-square"></i>
+                    </Link>
                 </h3>
+                
                 <div>
                     {
-                        this.state.cards ? (
-                            <div>
-
-                            </div>
+                        this.state.cards ? ( this.state.cards.length > 0 ?
+                            (
+                                <div style={{paddingBottom: 90}}>
+                                    {
+                                        this.state.cards.map((data, i) => {
+                                            return (
+                                                <div key={i} style={{marginBottom: 10}}>
+                                                    <Card
+                                                        number={data.cardNumber || ''}
+                                                        name={data.nameOnCard || ''}
+                                                        expiry={data.expiry || ''}
+                                                        cvc={data.cvv  || ''}
+                                                    />
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            ) : 
+                            <center>
+                                <h4>No cards available</h4>
+                            </center>
                         ) : loader
                     }
-                    <Link to="/app/addCards" className="item item-icon-left button button-block button-energized activated">
-                            <i className="icon fa fa-plus-square"></i>
-                            {localizationManager.strings.addCards}
-                    </Link>
                 </div>
             </div>
         );
