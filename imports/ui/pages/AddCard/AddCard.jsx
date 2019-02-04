@@ -166,7 +166,7 @@ export default class AddCard extends Component {
                                     component="input"
                                     type="text"
                                     pattern="\d{3,4}"
-                                    placeholder="CVC"
+                                    placeholder="CVV"
                                     maxLength="4"
                                     style={{width:'10'}}
                                     format={formatCVC}

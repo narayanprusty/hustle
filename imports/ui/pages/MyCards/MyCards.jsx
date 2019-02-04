@@ -3,7 +3,6 @@ import Card from './Card'
 import localizationManager from '../../localization/index';
 import { notify } from "react-notify-toast";
 import { Link } from "react-router-dom";
-import ScrollArea from 'react-scrollbar';
 import {
     Accordion,
     AccordionItem,

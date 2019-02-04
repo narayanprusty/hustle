@@ -23,6 +23,27 @@ const node = new Blockcluster.Dynamo({
 const addCard = async (data) => {
     console.log("Card info:", data);
     var expiryMonth = data.expiry && data.expiry.indexOf('/') != -1 ? data.expiry.split('/')[0] : "";
+    if(expiryMonth <= 0 || expiryMonth >= 13) {
+        return {
+            success: false,
+            message: "Invalid expiry month!",
+        }
+    } else if(data.number <= 0 || data.number.length <= 18){
+        return {
+            success: false,
+            message: "Invalid card number!",
+        }
+    } else if(!isNaN(parseInt(data.name.toString()))){
+        return {
+            success: false,
+            message: "Invalid name!",
+        }
+    } else if(data.cvc <= 0){
+        return {
+            success: false,
+            message: "Invalid cvv!",
+        }
+    }
     var currentYear = (new Date().getFullYear()).toString();
 
     var expiryYear = data.expiry && data.expiry.indexOf('/') != -1 ?
@@ -55,9 +76,9 @@ const addCard = async (data) => {
     }
 
     var op = await saveCardToHyperPay(data);
-    console.log("output", op);
+    console.log("output", op, op.result.description.indexOf("successfully") == -1);
 
-    if (op.id && !op.result.description.indexOf("successfully") != -1) {
+    if (op.id && op.result.description.indexOf("successfully") != -1) {
         data["hyperPayId"] = op.id;
         op = await saveCardToBlockcluster(data);
         if (op.success)
