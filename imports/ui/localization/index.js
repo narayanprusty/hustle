@@ -5,6 +5,9 @@ import {
 
 let strings = new LocalizedStrings({
     en: {
+        myCards: "My Cards",
+        addCards: "Add Card",
+        //Already submitted for translation
         loggingOut: "Logging you out",
         Home: "Home",
         Hello: "Hello",
@@ -112,6 +115,9 @@ let strings = new LocalizedStrings({
         redirectionToLogin: "If not redirected in 5 seconds, <Link to='/login'>Click here to login</Link>",
     },
     ar: {
+        myCards: "My Cards",
+        addCards: "Add Card",
+        //Already submitted for translation
         loggingOut: "تسجيل الخروج",
         Home: "الصفحة الرئيسية",
         Hello: "مرحبا",
@@ -236,7 +242,7 @@ class LocalizationManager {
             console.log("user: ", user);
             this.user = user ? user : "";
             if (this.user && this.user.profile.langPref) {
-                this.language=this.user.profile.langPref;
+                this.language = this.user.profile.langPref;
                 this.strings.setLanguage(this.user.profile.langPref);
             }
         } catch (ex) {

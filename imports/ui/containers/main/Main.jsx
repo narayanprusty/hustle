@@ -12,6 +12,8 @@ import CurrentBooking from "../../pages/driver/CurrentBooking/CurrentBooking";
 import CurrentBookingRider from "../../pages/currentBookingRider/CurrentBookingRider";
 import RidePayment from "../../pages/driver/RidePayment/RidePayment";
 import Subscriptions from "../../pages/Subscriptions/Subscriptions";
+import MyCards from "../../pages/MyCards/MyCards";
+import AddCard from "../../pages/AddCard/AddCard";
 
 import { notify } from "react-notify-toast";
 import pubnub from "../../notifications/index";
@@ -88,6 +90,14 @@ export default class Main extends Component {
                     <Route
                         path="/app/subscriptions"
                         component={Subscriptions}
+                    />
+                    <Route
+                        path="/app/myCards"
+                        component={MyCards}
+                    />
+                    <Route
+                        path="/app/addCards"
+                        component={AddCard}
                     />
                     <Route path="/app/home" component={Bookings} />
                     <Route path="/app/rides" component={Rides} />

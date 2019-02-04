@@ -56,11 +56,23 @@ module.exports = {
     SMS: defaults.SMS,
     BLOCKCLUSTER: defaults.BLOCKCLUSTER,
     ASSET: {
+        Card: "Card",
         Bookings: "Bookings",
         BookingsInfo: "BookingsInfo",
         SubscriptionPlans: "SubscriptionPlans",
         Subscriptions: "Subscriptions",
         Reviews: "Reviews"
+    },
+    HYPERPAY: {
+        UserId: "8ac7a4c86783997f0167971a1b65109d",
+        Password: "9ZJzxaHtPc",
+        EntityId: "8ac7a4c86783997f0167971bc49010a1",
+        Currency: "SAR",
+        PaymentType: "DB",
+        PaymentMethods: {
+            VISA: "VISA",
+            MASTER: "MASTER"
+        },
     },
     farePerMeter: 0.04,
     fareUnit: "USD",

@@ -17,6 +17,7 @@
         "bcrypt": "^3.0.3",
         "blockcluster": "^1.1.4",
         "ejs": "^2.6.1",
+        "final-form": "^4.11.0",
         "generate-sms-verification-code": "^1.0.5",
         "google-map-react": "^1.1.2",
         "libphonenumber-js": "^1.7.8",
@@ -24,12 +25,15 @@
         "meteor-node-stubs": "^0.4.1",
         "moment": "^2.23.0",
         "nodemailer": "^5.0.0",
+        "payment": "^2.3.0",
         "pubnub": "^4.21.6",
         "pubnub-react": "^1.2.0",
         "react": "^16.5.0",
         "react-accessible-accordion": "^2.4.5",
         "react-burger-menu": "^2.6.0",
+        "react-credit-cards": "^0.7.0",
         "react-dom": "^16.5.0",
+        "react-final-form": "^4.0.2",
         "react-geocode": "^0.1.2",
         "react-infinite-scroller": "^1.2.1",
         "react-ladda": "^6.0.0",
@@ -38,8 +42,10 @@
         "react-phone-number-input": "^2.3.0",
         "react-router-dom": "^4.3.1",
         "request-promise": "^4.2.2",
+        "shortid": "^2.2.14",
         "simpl-schema": "^1.5.3",
-        "stringquery": "^1.0.8"
+        "stringquery": "^1.0.8",
+        "styled-components": "^4.1.3"
     },
     "meteor": {
         "mainModule": {
