@@ -140,7 +140,7 @@ class CurrentBooking extends Component {
         this.setState({
             navigateToRider_loader: true
         });
-        if (isIphone()) {
+        if (this.isIphone()) {
             open(
                 "maps://?ll=" +
                     +this.state.boardingPoint.lat +
@@ -148,7 +148,7 @@ class CurrentBooking extends Component {
                     this.state.boardingPoint.lng +
                     "_system"
             );
-        } else if (isAndroid()) {
+        } else if (this.isAndroid()) {
             open(
                 "geo:0,0?q=" +
                     this.state.boardingPoint.lat +
@@ -195,7 +195,7 @@ class CurrentBooking extends Component {
                     status: "started",
                     startRide_loader: false
                 });
-                if (isIphone()) {
+                if (this.isIphone()) {
                     // incase not working try making it `q` instead of ll
                     open(
                         "maps://?ll=" +
@@ -204,7 +204,7 @@ class CurrentBooking extends Component {
                             this.state.droppingPoint.lng +
                             "_system"
                     );
-                } else if (isAndroid()) {
+                } else if (this.isAndroid()) {
                     open(
                         "geo:0,0?q=" +
                             this.state.droppingPoint.lat +
