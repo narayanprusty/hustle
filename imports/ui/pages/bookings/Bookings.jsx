@@ -83,10 +83,10 @@ class Bookings extends Component {
         );
         const { lat, lng } = await this.getcurrentLocation();
         this._isMounted = true;
-        const username = Meteor.user().profile.name;
-        this.setState({
-            username: username
-        });
+        // const username = Meteor.user().profile.name;
+        // this.setState({
+        //     username: username
+        // });
         Geocode.fromLatLng(lat, lng).then(
             response => {
                 this.setState(prev => ({
@@ -371,7 +371,7 @@ class Bookings extends Component {
 
         e.preventDefault();
         const data = {
-            username: this.state.username,
+            // username: this.state.username,
             userId: Meteor.userId(),
             boardingPoint: this.state.boardingPoint,
             droppingPoint: this.state.droppingPoint,

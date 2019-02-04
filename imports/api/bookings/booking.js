@@ -19,7 +19,7 @@ const node = new Blockcluster.Dynamo({
  *
  */
 const newBookingReq = async ({
-    username,
+    // username,
     userId,
     boardingPoint,
     droppingPoint,
@@ -34,6 +34,7 @@ const newBookingReq = async ({
     start_address,
     distance_in_meter
 }) => {
+    const username = Meteor.user().profile.name;
     console.log(end_address, start_address);
     const totalFare = (distance_in_meter * config.farePerMeter).toFixed();
     const currentDate = Date.now();
