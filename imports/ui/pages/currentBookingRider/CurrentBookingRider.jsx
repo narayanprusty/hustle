@@ -36,7 +36,8 @@ class CurrentBookingRider extends Component {
         this.pubnub = new PubNubReact({
             publishKey: config.PUBNUB.pubKey,
             subscribeKey: config.PUBNUB.subKey,
-            secretKey: config.PUBNUB.secret
+            secretKey: config.PUBNUB.secret,
+            ssl: true
         });
         this.state = {
             showMap: false,
