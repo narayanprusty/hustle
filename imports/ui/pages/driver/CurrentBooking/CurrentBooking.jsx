@@ -140,6 +140,7 @@ class CurrentBooking extends Component {
         this.setState({
             navigateToRider_loader: true
         });
+        console.log(this.isIphone(), this.isAndroid());
         if (this.isIphone()) {
             open(
                 "maps://?ll=" +
