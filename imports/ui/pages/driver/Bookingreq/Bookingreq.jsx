@@ -165,10 +165,6 @@ class Bookingreq extends Component {
             },
             err => {
                 notify.show("Unable to fetch your current location", "error");
-                resolve({
-                    lat: 25.11102,
-                    lng: 55.19514
-                });
             },
             {
                 enableHighAccuracy: true,
