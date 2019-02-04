@@ -2,7 +2,6 @@ import { Meteor } from "meteor/meteor";
 require("../imports/startup/server");
 
 import Verifier from "../imports/api/emails/email-validator";
-var connectHandler = WebApp.connectHandlers;
 Accounts.validateLoginAttempt(function(options) {
     if (!options.allowed) {
         return false;
@@ -43,11 +42,8 @@ Accounts.onCreateUser(function(options, user) {
 
 Meteor.startup(() => {
     console.log(">>>> Server Started <<<<");
-    connectHandler.use(function(req, res, next) {
-        res.setHeader(
-            "Strict-Transport-Security",
-            "max-age=2592000; includeSubDomains"
-        ); // 2592000s / 30 days
+    WebApp.rawConnectHandlers.use(function(req, res, next) {
+        res.setHeader("Access-Control-Allow-Origin", "*");
         return next();
     });
 });
