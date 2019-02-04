@@ -23,6 +23,20 @@ class CurrentBooking extends Component {
         this._mounted = false;
     }
 
+    isIphone = () => {
+        return (
+            (window.cordova || window.PhoneGap || window.phonegap) &&
+            /^file:\/{3}[^\/]/i.test(window.location.href) &&
+            /ios|iphone|ipod|ipad|/i.test(navigator.userAgent)
+        );
+    };
+    isAndroid = () => {
+        return (
+            (window.cordova || window.PhoneGap || window.phonegap) &&
+            /^file:\/{3}[^\/]/i.test(window.location.href) &&
+            /android|/i.test(navigator.userAgent)
+        );
+    };
     componentWillUnmount() {
         if (this._isMounted) {
             this.pubnub.unsubscribe({
@@ -126,13 +140,30 @@ class CurrentBooking extends Component {
         this.setState({
             navigateToRider_loader: true
         });
-        open(
-            "http://maps.google.com/maps?q=loc:" +
-                this.state.boardingPoint.lat +
-                "," +
-                this.state.boardingPoint.lng,
-            "_blank"
-        );
+        if (isIphone()) {
+            open(
+                "maps://?ll=" +
+                    +this.state.boardingPoint.lat +
+                    "," +
+                    this.state.boardingPoint.lng +
+                    "_system"
+            );
+        } else if (isAndroid()) {
+            open(
+                "geo:0,0?q=" +
+                    this.state.boardingPoint.lat +
+                    "," +
+                    this.state.boardingPoint.lng
+            );
+        } else {
+            open(
+                "http://maps.google.com/maps?q=loc:" +
+                    this.state.boardingPoint.lat +
+                    "," +
+                    this.state.boardingPoint.lng,
+                "_blank"
+            );
+        }
         this.setState({
             navigateToRider_loader: false
         });
@@ -164,14 +195,31 @@ class CurrentBooking extends Component {
                     status: "started",
                     startRide_loader: false
                 });
-
-                open(
-                    "http://maps.google.com/maps?q=loc:" +
-                        this.state.droppingPoint.lat +
-                        "," +
-                        this.state.droppingPoint.lng,
-                    "_blank"
-                );
+                if (isIphone()) {
+                    // incase not working try making it `q` instead of ll
+                    open(
+                        "maps://?ll=" +
+                            +this.state.droppingPoint.lat +
+                            "," +
+                            this.state.droppingPoint.lng +
+                            "_system"
+                    );
+                } else if (isAndroid()) {
+                    open(
+                        "geo:0,0?q=" +
+                            this.state.droppingPoint.lat +
+                            "," +
+                            this.state.droppingPoint.lng
+                    );
+                } else {
+                    open(
+                        "http://maps.google.com/maps?q=loc:" +
+                            this.state.droppingPoint.lat +
+                            "," +
+                            this.state.droppingPoint.lng,
+                        "_blank"
+                    );
+                }
             }
         );
     };
