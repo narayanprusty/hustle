@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import config from "../../../../modules/config/client";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, Redirect } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
@@ -109,8 +109,11 @@ class CurrentBooking extends Component {
                     console.log(err);
                 }
                 if (!currentRide) {
-                    this.props.history.push("/app/driver/newreqs");
-                    return;
+                    // this.props.history.push("/app/driver/newreqs");
+                    // return;
+                    this.setState({
+                        sendToNewReqs: true
+                    });
                 } else {
                     this.setState(currentRide);
                     return currentRide;
@@ -231,7 +234,10 @@ class CurrentBooking extends Component {
                 this.setState({
                     paymentReceived_loader: false
                 });
-                this.props.history.push("/app/driver/newreqs");
+                // this.props.history.push("/app/driver/newreqs");
+                this.setState({
+                    sendToNewReqs: true
+                });
                 notify.show("Payment Marked", "success");
             }
         );
@@ -345,6 +351,9 @@ class CurrentBooking extends Component {
                             </LaddaButton>
                         )}
                 </div>
+                {this.state.sendToNewReqs && (
+                    <Redirect to="/app/driver/newreqs" />
+                )}
             </div>
         );
     }
