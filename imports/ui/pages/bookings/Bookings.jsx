@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import isEmpty from "lodash.isempty";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, Redirect } from "react-router-dom";
 import SearchBox from "./SearchBox";
 import mapStyle from "./MapStyle"; //https://mapstyle.withgoogle.com/ you can build yours from
 import config from "../../../modules/config/client/";
@@ -157,7 +157,10 @@ class Bookings extends Component {
             (err, currentRide) => {
                 console.log(err, currentRide);
                 if (currentRide) {
-                    this.props.history.push("/app/currentBooking");
+                    // this.props.history.push("/app/currentBooking");
+                    this.setState({
+                        redirectToCurrentBooking: true
+                    });
                     return;
                 }
             }
@@ -404,7 +407,10 @@ class Bookings extends Component {
             });
             //show a loader here
             console.log(response);
-            this.props.history.push("/app/currentBooking");
+            // this.props.history.push("/app/currentBooking");
+            this.setState({
+                redirectToCurrentBooking: true
+            });
         });
     };
 
@@ -648,6 +654,9 @@ class Bookings extends Component {
                         )}
                     </div>
                 </Fragment>
+                {this.state.redirectToCurrentBooking && (
+                    <Redirect to="/app/currentBooking" />
+                )}
             </div>
         );
     }

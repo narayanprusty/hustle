@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import lodash from "lodash";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, Redirect } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import InfiniteScroll from "react-infinite-scroller";
 import moment from "moment";
@@ -51,8 +51,11 @@ class Bookingreq extends Component {
                     console.log(err);
                 }
                 if (currentRide) {
-                    this.props.history.push("/app/driver/currentBooking");
-                    return;
+                    // this.props.history.push("/app/driver/currentBooking");
+                    // return;
+                    this.setState({
+                        redirectTocurrentBooking: true
+                    });
                 }
             }
         );
@@ -92,7 +95,10 @@ class Bookingreq extends Component {
                         type: "driverAccept"
                     }
                 });
-                this.props.history.push("/app/driver/currentBooking");
+                // this.props.history.push("/app/driver/currentBooking");
+                this.setState({
+                    redirectTocurrentBooking: true
+                });
             }
         );
     };
@@ -291,21 +297,26 @@ class Bookingreq extends Component {
             );
         });
         return (
-            <InfiniteScroll
-                pageStart={0}
-                loadMore={this.loadItems}
-                hasMore={this.state.hasMoreItems}
-                loader={loader}
-                useWindow={false}
-            >
-                <div className="padding">
-                    <h3 className="padding">
-                        <i className="fa fa-car" aria-hidden="true" /> Ride
-                        Requests
-                    </h3>
-                </div>
-                <div className="padding-left padding-right">{items}</div>
-            </InfiniteScroll>
+            <div>
+                <InfiniteScroll
+                    pageStart={0}
+                    loadMore={this.loadItems}
+                    hasMore={this.state.hasMoreItems}
+                    loader={loader}
+                    useWindow={false}
+                >
+                    <div className="padding">
+                        <h3 className="padding">
+                            <i className="fa fa-car" aria-hidden="true" /> Ride
+                            Requests
+                        </h3>
+                    </div>
+                    <div className="padding-left padding-right">{items}</div>
+                </InfiniteScroll>
+                {this.state.redirectTocurrentBooking && (
+                    <Redirect to="/app/driver/currentBooking" />
+                )}
+            </div>
         );
     }
 }

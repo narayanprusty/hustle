@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
-import { Link, withRouter } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect, Link } from "react-router-dom";
 import localizationManager from "../../localization/index";
 import { notify } from "react-notify-toast";
 
-class Settings extends Component {
+export default class Settings extends Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -26,13 +26,14 @@ class Settings extends Component {
 
     logout = () => {
         Meteor.logout((err, done) => {
-            console.log("trying to logoout");
             if (err) {
                 notify.show(err.error, "error");
                 return false;
             } else {
-                this.props.history.push("/app/currentBooking");
-                // notify.show(localizationManager.strings.loggingOut, "success");
+                notify.show(localizationManager.strings.loggingOut, "success");
+                this.setState({
+                    toLogin: true
+                });
             }
         });
     };
@@ -127,9 +128,9 @@ class Settings extends Component {
                         {localizationManager.strings.logout}
                     </Link>
                 </div>
+
+                {this.state.toLogin && <Redirect to="/login" />}
             </div>
         );
     }
 }
-
-export default withRouter(Settings);
