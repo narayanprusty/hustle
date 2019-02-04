@@ -101,64 +101,81 @@ class Bookingreq extends Component {
             return false;
         }
         console.log("#1");
-        navigator.geolocation.getCurrentPosition((pos, err) => {
-            console.log("#2");
-            if (err) {
+        navigator.geolocation.getCurrentPosition(
+            (pos, err) => {
+                console.log("#2");
+                if (err) {
+                    notify.show(
+                        "Unable to fetch your current location",
+                        "error"
+                    );
+                }
+                const coords = pos.coords;
+                this.setState({
+                    current_pos: {
+                        lat: coords.latitude,
+                        lng: coords.longitude
+                    }
+                });
+
+                Meteor.call(
+                    "updateDriverLocation",
+                    {
+                        driverId: Meteor.userId(),
+                        lat: coords.latitude,
+                        lng: coords.longitude
+                    },
+                    (err, done) => {
+                        console.log("#3");
+
+                        if (err) {
+                            console.log(err);
+                            //Add localization support
+                            notify.show(err.reason, "error");
+                        }
+                    }
+                );
+                console.log("#4");
+                console.log(page);
+                Meteor.call(
+                    "fetchBookingReq",
+                    { lat: coords.latitude, lng: coords.longitude, page: page },
+                    (err, withingDistanceData) => {
+                        console.log(withingDistanceData);
+                        if (err) {
+                            console.log(err);
+                            //Add localization support
+                            notify.show(err.reason, "error");
+                        }
+                        if (withingDistanceData && withingDistanceData.length) {
+                            let datas = this.state.datas;
+                            datas = datas.concat(withingDistanceData);
+                            datas = lodash.uniqBy(datas, "_id");
+                            this.setState({
+                                datas: datas
+                            });
+                        } else {
+                            this.setState({
+                                hasMoreItems: false
+                            });
+                        }
+                        return { data: withingDistanceData };
+                    }
+                );
+            },
+            err => {
                 notify.show("Unable to fetch your current location", "error");
+                resolve({
+                    lat: 25.11102,
+                    lng: 55.19514
+                });
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 30000,
+                maximumAge: 0
             }
-            const coords = pos.coords;
-            this.setState({
-                current_pos: {
-                    lat: coords.latitude,
-                    lng: coords.longitude
-                }
-            });
-
-            Meteor.call(
-                "updateDriverLocation",
-                {
-                    driverId: Meteor.userId(),
-                    lat: coords.latitude,
-                    lng: coords.longitude
-                },
-                (err, done) => {
-                    console.log("#3");
-
-                    if (err) {
-                        console.log(err);
-                        //Add localization support
-                        notify.show(err.reason, "error");
-                    }
-                }
-            );
-            console.log("#4");
-            console.log(page);
-            Meteor.call(
-                "fetchBookingReq",
-                { lat: coords.latitude, lng: coords.longitude, page: page },
-                (err, withingDistanceData) => {
-                    console.log(withingDistanceData);
-                    if (err) {
-                        console.log(err);
-                        //Add localization support
-                        notify.show(err.reason, "error");
-                    }
-                    if (withingDistanceData && withingDistanceData.length) {
-                        let datas = this.state.datas;
-                        datas = datas.concat(withingDistanceData);
-                        datas = lodash.uniqBy(datas, "_id");
-                        this.setState({
-                            datas: datas
-                        });
-                    } else {
-                        this.setState({
-                            hasMoreItems: false
-                        });
-                    }
-                    return { data: withingDistanceData };
-                }
-            );
-        });
+        );
     };
 
     render() {
