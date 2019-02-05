@@ -23,22 +23,22 @@ const node = new Blockcluster.Dynamo({
 const addCard = async (data) => {
     console.log("Card info:", data);
     var expiryMonth = data.expiry && data.expiry.indexOf('/') != -1 ? data.expiry.split('/')[0] : "";
-    if(expiryMonth <= 0 || expiryMonth >= 13) {
+    if (expiryMonth <= 0 || expiryMonth >= 13) {
         return {
             success: false,
             message: "Invalid expiry month!",
         }
-    } else if(data.number <= 0 || data.number.length <= 18){
+    } else if (data.number <= 0 || data.number.length <= 18) {
         return {
             success: false,
             message: "Invalid card number!",
         }
-    } else if(!isNaN(parseInt(data.name.toString()))){
+    } else if (!isNaN(parseInt(data.name.toString()))) {
         return {
             success: false,
             message: "Invalid name!",
         }
-    } else if(data.cvc <= 0){
+    } else if (data.cvc <= 0) {
         return {
             success: false,
             message: "Invalid cvv!",
@@ -66,9 +66,9 @@ const addCard = async (data) => {
         }
     });
 
-    console.log("found:",cards.length > 0);
+    console.log("found:", cards.length > 0);
 
-    if(cards.length > 0){
+    if (cards.length > 0) {
         return {
             success: false,
             message: "Card already exists!",
@@ -125,7 +125,7 @@ const saveCardToBlockcluster = async (data) => {
                 nameOnCard: data.name,
                 expiry: data.expiry,
                 cvv: data.cvc,
-                cardNumber: ""+data.number.toString(),
+                cardNumber: "" + data.number.toString(),
                 hyperPayId: data.hyperPayId,
                 userId: Meteor.userId().toString()
             }
@@ -204,7 +204,28 @@ const getCards = async () => {
     }
 }
 
+const removeCard = async (data) => {
+    try {
+        const txId = await node.callAPI("assets/updateAssetInfo", {
+            assetName: config.ASSET.Card,
+            fromAccount: node.getWeb3().eth.accounts[0],
+            identifier: data,
+            public: {
+                status: "closed"
+            }
+        });
+        console.log(txId);
+        return {
+            success: true,
+        }
+    } catch (ex) {
+        console.log(ex);
+        return ex;
+    }
+}
+
 export {
     addCard,
     getCards,
+    removeCard,
 }

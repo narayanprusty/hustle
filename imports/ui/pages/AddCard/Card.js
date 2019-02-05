@@ -7,17 +7,16 @@ const Container = styled.div`
     margin: 0 auto;
     -webkit-perspective: 1000px;
     perspective: 1000px;
-    width: 290px;
+    width: 100%;
   }
   .rccs__card {
-    height: 182.873px;
-    margin: 0 auto;
+    height: 200px;
     position: relative;
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     -webkit-transition: all 0.4s linear;
     transition: all 0.4s linear;
-    width: 290px;
+    width: 100%;
   }
   .rccs__card--front,
   .rccs__card--back {

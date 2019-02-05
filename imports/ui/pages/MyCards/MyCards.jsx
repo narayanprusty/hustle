@@ -110,14 +110,14 @@ export default class MyCards extends Component {
 
         return (
             <div className="padding-top padding-right padding-left padding-bottom">
-                <h3 className="padding" style={{borderBottomWidth: 1, borderBottomStyle: "solid"}}>
+                <h3 className="padding">
                     <i className="fa fa-credit-card-alt" aria-hidden="true" /> Your Cards
                     <Link to="/app/addCards" className="" style={{float: 'right'}} >
                                 <i className="icon fa fa-plus-square"></i>
                     </Link>
                 </h3>
                 
-                <div>
+                <div className="list padding-bottom">
                     {
                         this.state.cards ? ( this.state.cards.length > 0 ?
                             (
@@ -125,7 +125,7 @@ export default class MyCards extends Component {
                                     {
                                         this.state.cards.map((data, i) => {
                                             return (
-                                                <div key={i} style={{marginBottom: 10}}>
+                                                <div key={i} className="list" style={{marginBottom: 10}}>
                                                     <Card
                                                         number={data.cardNumber || ''}
                                                         name={data.nameOnCard || ''}
