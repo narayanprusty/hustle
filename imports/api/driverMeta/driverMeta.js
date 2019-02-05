@@ -89,13 +89,33 @@ const getDriversWithin = async ({ lat, lng }) => {
     return data;
 };
 
-const getDriver = async () => {
+const getDriver = async driverId => {
     return await DriverMeta.find({ driverId: driverId }).fetch()[0];
 };
+const updateReview = async (driverId, rateVal) => {
+    const driverObj = await getDriver(driverId);
+    let currentRating;
+    let NewNoOfRating;
+    if (driverObj.noOfRating) {
+        NewNoOfRating = driverObj.noOfRating + 1;
+        currentRating =
+            (driverObj.noOfRating * driverObj.avgRating + rateVal) /
+            NewNoOfRating;
+    } else {
+        NewNoOfRating = 1;
+        currentRating = rateVal;
+    }
+    return DriverMeta.update(
+        { driverId: driverId },
+        { $set: { avgRating: currentRating, noOfRating: NewNoOfRating } }
+    );
+};
+
 export {
     markAvailable,
     markUnavailable,
     getDriversWithin,
     getDriver,
-    updateDriverLocation
+    updateDriverLocation,
+    updateReview
 };
