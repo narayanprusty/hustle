@@ -6,6 +6,7 @@ import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
+import Rating from "react-rating";
 
 import mapStyle from "../bookings/MapStyle.json";
 import "./CurrentBooking_client.scss";
@@ -318,7 +319,17 @@ class CurrentBookingRider extends Component {
             }
         );
     };
-
+    onReviewSubmit = () => {
+        this.setState({
+            loader: true
+        });
+        //call submit review here
+    };
+    handleChange = e => {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    };
     render() {
         return (
             <div style={{ height: "100%" }}>
@@ -499,15 +510,55 @@ class CurrentBookingRider extends Component {
                             </GoogleMapReact>
                         )}
                     {this.state.rideFinished && (
-                        <div className="card">
-                            <div
-                                className="item item-text-wrap"
-                                style={{ textAlign: "center" }}
-                            >
-                                Total Fare: {this.state.totalFare}
-                                <br />
-                                Payment Method:
-                                {this.state.paymentMethod || "cash"}
+                        <div>
+                            <div className="card">
+                                <div
+                                    className="item item-text-wrap"
+                                    style={{ textAlign: "center" }}
+                                >
+                                    Total Fare: {this.state.totalFare}
+                                    <br />
+                                    Payment Method:
+                                    {this.state.paymentMethod || "cash"}
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div
+                                    className="item item-text-wrap"
+                                    style={{ textAlign: "center" }}
+                                >
+                                    <Rating
+                                        name="rating"
+                                        start={0}
+                                        stop={10}
+                                        initialRating={0}
+                                        fractions={0.5}
+                                        emptySymbol="fa fa-star-o fa-2x empty"
+                                        fullSymbol="fa fa-star fa-2x full"
+                                        onChange={this.handleChange}
+                                    />
+                                    <textarea
+                                        name="reviewMessage"
+                                        onChange={this.handleChange}
+                                    />
+                                    <LaddaButton
+                                        className="button button-block button-assertive activated"
+                                        loading={this.state.loader}
+                                        onClick={this.onReviewSubmit}
+                                        data-color="##FFFF00"
+                                        data-size={L}
+                                        data-style={SLIDE_UP}
+                                        data-spinner-size={30}
+                                        data-spinner-color="#ddd"
+                                        data-spinner-lines={12}
+                                    >
+                                        <i
+                                            className="fa fa-times"
+                                            aria-hidden="true"
+                                        />{" "}
+                                        Submit Review
+                                    </LaddaButton>
+                                </div>
                             </div>
                         </div>
                     )}
