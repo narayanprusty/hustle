@@ -187,6 +187,9 @@ const onDriverAccept = async (bookingId, driverId) => {
         {
             $set: {
                 onRide: true
+            },
+            $inc: {
+                totalNumberOfRide: 1
             }
         }
     );
