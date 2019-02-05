@@ -18,6 +18,18 @@ DriverMetaCollection.schema = new SimpleSchema({
         type: Boolean,
         defaultValue: true
     },
+    avgRating: {
+        type: Number,
+        defaultValue: 5
+    },
+    noOfRating: {
+        type: Number,
+        defaultValue: 0
+    },
+    totalNumberOfRide: {
+        type: Number,
+        defaultValue: 0
+    },
     carModel: {
         type: String
     },
