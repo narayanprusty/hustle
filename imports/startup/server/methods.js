@@ -6,5 +6,6 @@ require("../../api/subscriptions/methods");
 require("../../api/details/details_methods");
 require("../../api/localization/methods");
 require("../../api/payments/payment_methods");
+require("../../api/reviews/reviews_methods");
 
 export {};
