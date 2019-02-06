@@ -5,6 +5,7 @@ import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
+import Rating from "react-rating";
 import LaddaButton, { S, M, L, SLIDE_UP } from "react-ladda";
 
 class CurrentBooking extends Component {
@@ -19,7 +20,9 @@ class CurrentBooking extends Component {
         });
         this.pubnub.init(this);
 
-        this.state = {};
+        this.state = {
+            rating: 0
+        };
         this._mounted = false;
     }
 
@@ -48,15 +51,6 @@ class CurrentBooking extends Component {
     componentDidMount = async () => {
         this.fetchCurrentRide();
         this._isMounted = true;
-
-        const driverId = Meteor.userId();
-        Meteor.call("riderDetails", driverId, (err, data) => {
-            if (err) {
-                notify.show(err.reason || "Unknown error occurred", "error");
-                return;
-            }
-            this.setState(data);
-        });
         navigator.geolocation.watchPosition(async pos => {
             const coords = pos.coords;
             console.log(coords);
@@ -130,6 +124,20 @@ class CurrentBooking extends Component {
                     });
                 } else {
                     this.setState(currentRide);
+                    Meteor.call(
+                        "riderDetails",
+                        currentRide.userId,
+                        (err, data) => {
+                            if (err) {
+                                notify.show(
+                                    err.reason || "Unknown error occurred",
+                                    "error"
+                                );
+                                return;
+                            }
+                            this.setState(data);
+                        }
+                    );
                     return currentRide;
                 }
             }
@@ -291,7 +299,44 @@ class CurrentBooking extends Component {
             }
         );
     };
-
+    onReviewSubmit = () => {
+        this.setState({
+            review_loader: true
+        });
+        Meteor.call(
+            "rateRider",
+            {
+                riderId: this.state.userId,
+                message: this.state.reviewMessage,
+                rateVal: this.state.rating
+            },
+            (err, updated) => {
+                if (err) {
+                    this.setState({
+                        review_loader: false
+                    });
+                    notify.show(
+                        err.reason || "failed to update the review",
+                        "error"
+                    );
+                }
+                this.setState({
+                    review_loader: false
+                });
+                notify.show("Review submitted, Thank you.", "success");
+            }
+        );
+    };
+    handleChange = e => {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    };
+    onRate = value => {
+        this.setState({
+            rating: value
+        });
+    };
     render() {
         return (
             <div style={{ height: "100%" }}>
@@ -400,6 +445,55 @@ class CurrentBooking extends Component {
                             </LaddaButton>
                         )}
                 </div>
+                {this.state.status == "finished" && (
+                    <div>
+                        <div className="card">
+                            <div
+                                className="list"
+                                style={{ marginBottom: "0px" }}
+                            >
+                                <a className="item item-icon-left" href="#">
+                                    <Rating
+                                        name="rating"
+                                        {...this.props}
+                                        start={0}
+                                        stop={5}
+                                        initialRating={this.state.rating}
+                                        emptySymbol="fa fa-star-o fa-2x empty"
+                                        fullSymbol="fa fa-star fa-2x full"
+                                        onChange={rate => this.onRate(rate)}
+                                    />
+
+                                    <span className="item-note">
+                                        Rate Rider
+                                    </span>
+                                </a>
+                            </div>
+                            <div className="justified">
+                                <textarea
+                                    name="reviewMessage"
+                                    placeholder="Put some feedback of the ride"
+                                    onChange={this.handleChange}
+                                />
+                            </div>
+                        </div>
+
+                        <LaddaButton
+                            className="button button-block button-energized activated"
+                            loading={this.state.review_loader}
+                            onClick={this.onReviewSubmit}
+                            data-color="##FFFF00"
+                            data-size={L}
+                            data-style={SLIDE_UP}
+                            data-spinner-size={30}
+                            data-spinner-color="#ddd"
+                            data-spinner-lines={12}
+                        >
+                            {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
+                            Submit Review
+                        </LaddaButton>
+                    </div>
+                )}
                 {this.state.sendToNewReqs && (
                     <Redirect to="/app/driver/newreqs" />
                 )}

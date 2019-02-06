@@ -41,6 +41,7 @@ class CurrentBookingRider extends Component {
             ssl: true
         });
         this.state = {
+            rating: 0,
             showMap: false,
             accepted: false,
             rideStarted: false,
@@ -77,14 +78,6 @@ class CurrentBookingRider extends Component {
         });
 
         this._isMounted = true;
-        const userId = Meteor.userId();
-        Meteor.call("driverDetails", userId, (err, data) => {
-            if (err) {
-                notify.show(err.reason || "Unknown error occurred", "error");
-                return;
-            }
-            this.setState(data);
-        });
         navigator.geolocation.watchPosition(pos => {
             const coords = pos.coords;
             this.callInsideRender();
@@ -109,6 +102,7 @@ class CurrentBookingRider extends Component {
                     return false;
                 }
                 if (bookingData && bookingData.data.rideStatus == "accepted") {
+                    this.getDriverDetails(bookingData.data.driverId);
                     this.setState({
                         showMap: true,
                         accepted: true
@@ -117,6 +111,8 @@ class CurrentBookingRider extends Component {
                     bookingData &&
                     bookingData.data.rideStatus == "started"
                 ) {
+                    this.getDriverDetails(bookingData.data.driverId);
+
                     this.setState({
                         showMap: true,
                         rideStarted: true
@@ -125,6 +121,8 @@ class CurrentBookingRider extends Component {
                     bookingData &&
                     bookingData.data.rideStatus == "finished"
                 ) {
+                    this.getDriverDetails(bookingData.data.driverId);
+
                     this.setState({
                         showMap: false,
                         rideFinished: true
@@ -132,6 +130,15 @@ class CurrentBookingRider extends Component {
                 }
             }
         );
+    };
+    getDriverDetails = driverId => {
+        Meteor.call("driverDetails", driverId, (err, data) => {
+            if (err) {
+                notify.show(err.reason || "Unknown error occurred", "error");
+                return;
+            }
+            this.setState(data);
+        });
     };
     fetchCurrentRide = async () => {
         return Meteor.call(
@@ -155,6 +162,9 @@ class CurrentBookingRider extends Component {
                         // this.props.history.push("/app/home");
                     }
                     this.setState(currentRide);
+                    if (currentRide.status != "pending") {
+                        this.getDriverDetails(currentRide.driverId);
+                    }
                     return currentRide;
                 }
             }
@@ -255,11 +265,7 @@ class CurrentBookingRider extends Component {
             this.setState({
                 showMap: true,
                 accepted: true,
-                driverLoc: message.message.driverCoords,
-                driverName: message.message.driverName,
-                driverPhone: message.message.driverPhone,
-                carModel: message.message.carModel,
-                carNumber: message.message.carNumber
+                driverLoc: message.message.driverCoords
             });
         }
 
@@ -323,7 +329,29 @@ class CurrentBookingRider extends Component {
         this.setState({
             loader: true
         });
-        //call submit review here
+        Meteor.call(
+            "rateDriver",
+            {
+                driverId: this.state.driverId,
+                message: this.state.reviewMessage,
+                rateVal: this.state.rating
+            },
+            (err, updated) => {
+                if (err) {
+                    this.setState({
+                        loader: false
+                    });
+                    notify.show(
+                        err.reason || "failed to update the review",
+                        "error"
+                    );
+                }
+                this.setState({
+                    loader: false
+                });
+                notify.show("Review submitted, Thank you.", "success");
+            }
+        );
     };
     handleChange = e => {
         this.setState({
@@ -535,14 +563,13 @@ class CurrentBookingRider extends Component {
                                     <a className="item item-icon-left" href="#">
                                         <Rating
                                             name="rating"
+                                            {...this.props}
                                             start={0}
                                             stop={5}
-                                            initialRating={0}
+                                            initialRating={this.state.rating}
                                             emptySymbol="fa fa-star-o fa-2x empty"
                                             fullSymbol="fa fa-star fa-2x full"
-                                            onChange={value =>
-                                                this.onRate.bind(this.value)
-                                            }
+                                            onChange={rate => this.onRate(rate)}
                                         />
 
                                         <span className="item-note">
@@ -558,25 +585,21 @@ class CurrentBookingRider extends Component {
                                     />
                                 </div>
                             </div>
-                            <div className="justified">
-                                <LaddaButton
-                                    className="button button-block button-assertive activated"
-                                    loading={this.state.loader}
-                                    onClick={this.onReviewSubmit}
-                                    data-color="##FFFF00"
-                                    data-size={L}
-                                    data-style={SLIDE_UP}
-                                    data-spinner-size={30}
-                                    data-spinner-color="#ddd"
-                                    data-spinner-lines={12}
-                                >
-                                    <i
-                                        className="fa fa-times"
-                                        aria-hidden="true"
-                                    />{" "}
-                                    Submit Review
-                                </LaddaButton>
-                            </div>
+
+                            <LaddaButton
+                                className="button button-block button-energized activated"
+                                loading={this.state.loader}
+                                onClick={this.onReviewSubmit}
+                                data-color="##FFFF00"
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                            >
+                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
+                                Submit Review
+                            </LaddaButton>
                         </div>
                     )}
                 </div>
