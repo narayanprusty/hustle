@@ -42,6 +42,10 @@ BookingRecordCollection.schema = new SimpleSchema({
         type: new Date(),
         defaultValue: Date.now()
     },
+    riderRating: {
+        type: Number
+        //rating of the user at the time of booking
+    },
     status: {
         type: String
         //accepted riding

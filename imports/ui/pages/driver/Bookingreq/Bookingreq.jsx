@@ -7,7 +7,7 @@ import moment from "moment";
 import { Meteor } from "meteor/meteor";
 import PubNubReact from "pubnub-react";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
-
+import Ratings from "react-rating";
 import config from "../../../../modules/config/client";
 
 class Bookingreq extends Component {
@@ -248,6 +248,14 @@ class Bookingreq extends Component {
                     <div className="item item-avatar">
                         <img src="/images/profile.png" />
                         <h2>{data.username || "unnamed"}</h2>
+                        <Ratings
+                            start={0}
+                            stop={5}
+                            emptySymbol="fa fa-star-o fa-2x empty"
+                            fullSymbol="fa fa-star fa-2x full"
+                            initialRating={data.riderRating}
+                            readonly
+                        />
                         <p>
                             {data.createdAt
                                 ? moment(data.createdAt).format("LLL")

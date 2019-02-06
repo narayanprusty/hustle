@@ -330,6 +330,11 @@ class CurrentBookingRider extends Component {
             [e.target.name]: e.target.value
         });
     };
+    onRate = value => {
+        this.setState({
+            rating: value
+        });
+    };
     render() {
         return (
             <div style={{ height: "100%" }}>
@@ -524,41 +529,53 @@ class CurrentBookingRider extends Component {
                             </div>
                             <div className="card">
                                 <div
-                                    className="item item-text-wrap"
-                                    style={{ textAlign: "center" }}
+                                    className="list"
+                                    style={{ marginBottom: "0px" }}
                                 >
-                                    <Rating
-                                        name="rating"
-                                        start={0}
-                                        stop={10}
-                                        initialRating={0}
-                                        fractions={0.5}
-                                        emptySymbol="fa fa-star-o fa-2x empty"
-                                        fullSymbol="fa fa-star fa-2x full"
-                                        onChange={this.handleChange}
-                                    />
+                                    <a className="item item-icon-left" href="#">
+                                        <Rating
+                                            name="rating"
+                                            start={0}
+                                            stop={5}
+                                            initialRating={0}
+                                            emptySymbol="fa fa-star-o fa-2x empty"
+                                            fullSymbol="fa fa-star fa-2x full"
+                                            onChange={value =>
+                                                this.onRate.bind(this.value)
+                                            }
+                                        />
+
+                                        <span className="item-note">
+                                            Rate Driver
+                                        </span>
+                                    </a>
+                                </div>
+                                <div className="justified">
                                     <textarea
                                         name="reviewMessage"
+                                        placeholder="Put some feedback of the ride"
                                         onChange={this.handleChange}
                                     />
-                                    <LaddaButton
-                                        className="button button-block button-assertive activated"
-                                        loading={this.state.loader}
-                                        onClick={this.onReviewSubmit}
-                                        data-color="##FFFF00"
-                                        data-size={L}
-                                        data-style={SLIDE_UP}
-                                        data-spinner-size={30}
-                                        data-spinner-color="#ddd"
-                                        data-spinner-lines={12}
-                                    >
-                                        <i
-                                            className="fa fa-times"
-                                            aria-hidden="true"
-                                        />{" "}
-                                        Submit Review
-                                    </LaddaButton>
                                 </div>
+                            </div>
+                            <div className="justified">
+                                <LaddaButton
+                                    className="button button-block button-assertive activated"
+                                    loading={this.state.loader}
+                                    onClick={this.onReviewSubmit}
+                                    data-color="##FFFF00"
+                                    data-size={L}
+                                    data-style={SLIDE_UP}
+                                    data-spinner-size={30}
+                                    data-spinner-color="#ddd"
+                                    data-spinner-lines={12}
+                                >
+                                    <i
+                                        className="fa fa-times"
+                                        aria-hidden="true"
+                                    />{" "}
+                                    Submit Review
+                                </LaddaButton>
                             </div>
                         </div>
                     )}

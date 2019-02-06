@@ -35,6 +35,9 @@ const newBookingReq = async ({
     distance_in_meter
 }) => {
     const username = Meteor.user().profile.name;
+    const avgRating = Meteor.user().profile.avgRating
+        ? Meteor.user().profile.avgRating
+        : 5;
     console.log(end_address, start_address);
     const totalFare = (distance_in_meter * config.farePerMeter).toFixed();
     const currentDate = Date.now();
@@ -112,6 +115,7 @@ const newBookingReq = async ({
     });
 
     BookingRecord.insert({
+        riderRating: avgRating,
         username: username,
         paymentMethod: paymentMethod,
         bookingId: identifier,

@@ -1,1 +1,9 @@
-@import '../../Generic.scss';
+@import "../../Generic.scss";
+
+.empty {
+    color: black;
+}
+
+.full {
+    color: yellow;
+}
