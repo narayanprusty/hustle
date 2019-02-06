@@ -121,6 +121,7 @@ class CurrentBookingRider extends Component {
                     bookingData &&
                     bookingData.data.rideStatus == "finished"
                 ) {
+                    clearInterval(this.state.intvl);
                     this.getDriverDetails(bookingData.data.driverId);
 
                     this.setState({
