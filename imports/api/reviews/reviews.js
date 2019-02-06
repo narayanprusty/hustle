@@ -41,10 +41,7 @@ const rateDriver = async ({ driverId, message, rateVal }) => {
 };
 
 const updateReviewRider = async (riderId, rateVal) => {
-    const { profile } = Meteor.users.find(
-        { _id: riderId },
-        { fields: { profile: true } }
-    );
+    const { profile } = Meteor.users.find({ _id: riderId }).fetch()[0];
     let currentRating;
     let NewNoOfRating;
     if (profile.noOfRating) {
