@@ -1,6 +1,7 @@
 import {
     addCard,
     getCards,
+    removeCard,
 } from "./payments";
 import {
     Meteor
@@ -9,5 +10,6 @@ import {
 Meteor.methods({
     addCard,
     getCards,
+    removeCard,
 });
 export {};

@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import { notify } from "react-notify-toast";
-import Styles from './Styles';
 import { Form, Field } from 'react-final-form';
 import Card from './Card';
 import { formatCreditCardNumber, formatCVC, formatExpirationDate } from './CardUtils';
 import { Route } from 'react-router-dom'
+import localizationManager from "../../localization/index";
+
+import "./AddCard_client.scss";
 
 export default class AddCard extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             processing: false,
@@ -27,16 +29,16 @@ export default class AddCard extends Component {
                     console.log(err);
                     notify.show("Failed adding card.", "error");
                 }
-                console.log("info:",res, err);
-                if(res){
-                    if (res.message || !res.success) { 
+                console.log("info:", res, err);
+                if (res) {
+                    if (res.message || !res.success) {
                         notify.show(res.message ? res.message : "Failed adding card.", "error");
                     } else {
                         notify.show("Card added successfully!", "success");
                         this.props.history.push('/app/myCards')
                     }
                 }
-                else{
+                else {
                     notify.show("Failed adding card.", "error");
                 }
                 this.setState({
@@ -106,13 +108,13 @@ export default class AddCard extends Component {
         );
 
         return (<div>
-                    <div className="padding-top padding-right padding-left padding-bottom">
-                        <h3 className="padding" style={{borderBottomWidth: 1, borderBottomStyle: "solid", alignContent: "left"}}>
-                            <i className="fa fa-plus-square" aria-hidden="true" /> Add new card
+            <div className="padding-top padding-right padding-left padding-bottom">
+            {/* style={{ borderBottomWidth: 1, borderBottomStyle: "solid", alignContent: "left" }} */}
+                <h3 className="padding">
+                    <i className="fa fa-plus-square" aria-hidden="true" /> Add new card
                         </h3>
-                        {!this.state.processing ? (
-                        <Styles>
-                        <Form
+                {!this.state.processing ? (
+                    <Form
                         onSubmit={this.onSubmit}
                         render={({
                             handleSubmit,
@@ -123,72 +125,111 @@ export default class AddCard extends Component {
                             active
                         }) => {
                             return (
-                                <center>
-                            <form onSubmit={handleSubmit}>
-                                <Card
-                                number={values.number || ''}
-                                name={values.name || ''}
-                                expiry={values.expiry || ''}
-                                cvc={values.cvc  || ''}
-                                focused={active}
-                                />
-                                <div>
-                                <Field
-                                    name="number"
-                                    component="input"
-                                    type="text"
-                                    pattern="[\d| ]{16,22}"
-                                    placeholder="Card Number"
-                                    format={formatCreditCardNumber}
-                                />
-                                </div>
-                                <div>
-                                <Field
-                                    name="name"
-                                    component="input"
-                                    type="text"
-                                    placeholder="Name"
-                                />
-                                </div>
-                                <div>
-                                <Field
-                                    name="expiry"
-                                    component="input"
-                                    type="text"
-                                    pattern="\d\d/\d\d"
-                                    placeholder="Valid Thru"
-                                    format={formatExpirationDate}
-                                />
-                                </div>
-                                <div>
-                                <Field
-                                    name="cvc"
-                                    component="input"
-                                    type="text"
-                                    pattern="\d{3,4}"
-                                    placeholder="CVV"
-                                    maxLength="4"
-                                    style={{width:'10'}}
-                                    format={formatCVC}
-                                />
-                                </div>
-                                <div className="buttons">
-                                <button type="submit" disabled={submitting} className="button button-block button-energized activated">
-                                    Submit
+                                <div className="list padding-bottom">
+                                    <form onSubmit={handleSubmit}>
+                                        <Card
+                                            number={values.number || ''}
+                                            name={values.name || ''}
+                                            expiry={values.expiry || ''}
+                                            cvc={values.cvc || ''}
+                                            focused={active}
+                                        />
+                                        <div style={{marginTop: 10}}>
+                                            <div className="list">
+                                                <label className="item item-input item-stacked-label">
+                                                    <span className="input-label">
+                                                        {" "}
+                                                        {
+                                                            "Card Number"
+                                                        }:{" "}
+                                                    </span>
+                                                    <Field
+                                                        name="number"
+                                                        component="input"
+                                                        type="text"
+                                                        pattern="[\d| ]{16,22}"
+                                                        placeholder="Card Number"
+                                                        format={formatCreditCardNumber}
+                                                    />
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="list">
+                                                <label className="item item-input item-stacked-label">
+                                                    <span className="input-label">
+                                                        {" "}
+                                                        {
+                                                            "Name on the card"
+                                                        }:{" "}
+                                                    </span>
+                                                    <Field
+                                                        name="name"
+                                                        component="input"
+                                                        type="text"
+                                                        placeholder="Name"
+                                                    />
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="list">
+                                                <label className="item item-input item-stacked-label">
+                                                    <span className="input-label">
+                                                        {" "}
+                                                        {
+                                                            "Card expiry"
+                                                        }:{" "}
+                                                    </span>
+                                                    <Field
+                                                        name="expiry"
+                                                        component="input"
+                                                        type="text"
+                                                        pattern="\d\d/\d\d"
+                                                        placeholder="Valid Thru"
+                                                        format={formatExpirationDate}
+                                                    />
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="list">
+                                                <label className="item item-input item-stacked-label">
+                                                    <span className="input-label">
+                                                        {" "}
+                                                        {
+                                                            "CVV"
+                                                        }:{" "}
+                                                    </span>
+                                                    <Field
+                                                        name="cvc"
+                                                        component="input"
+                                                        type="text"
+                                                        pattern="\d{3,4}"
+                                                        placeholder="CVV"
+                                                        maxLength="4"
+                                                        style={{ width: '10' }}
+                                                        format={formatCVC}
+                                                    />
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="buttons">
+                                            <button type="submit" disabled={submitting} className="button button-block button-energized activated">
+                                                Submit
                                 </button>
-                                <button className="button button-block button-energized activated"
-                                    type="button"
-                                    onClick={reset}
-                                    disabled={submitting || pristine} > Reset </button>
+                                            <button className="button button-block button-energized activated"
+                                                type="button"
+                                                onClick={reset}
+                                                disabled={submitting || pristine} > Reset </button>
+                                        </div>
+                                    </form>
                                 </div>
-                            </form>
-                            </center>
                             )
                         }}
-                        />
-                        </Styles>)
-                        : loader }
-                    </div>
-                </div>);
+                    />)
+                    : loader}
+            </div>
+        </div>);
     }
 }
