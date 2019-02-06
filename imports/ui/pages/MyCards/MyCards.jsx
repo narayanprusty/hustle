@@ -121,10 +121,13 @@ export default class MyCards extends Component {
                     {
                         this.state.cards ? ( this.state.cards.length > 0 ?
                             (
-                                <div style={{paddingBottom: 90}}>
+                                <div>
+                                <ion-grid>
                                     {
                                         this.state.cards.map((data, i) => {
                                             return (
+                                                <ion-row key={i}>
+                                                    <ion-col size="10">
                                                 <div key={i} className="list" style={{marginBottom: 10}}>
                                                     <Card
                                                         number={data.cardNumber || ''}
@@ -133,9 +136,15 @@ export default class MyCards extends Component {
                                                         cvc={data.cvv  || ''}
                                                     />
                                                 </div>
+                                                    </ion-col>
+                                                    <ion-col size="2">
+                                                        <i className="icon fa fa-plus-square"></i>
+                                                    </ion-col>
+                                                </ion-row>
                                             )
                                         })
                                     }
+                                </ion-grid>
                                 </div>
                             ) : 
                             <center>

@@ -4,7 +4,6 @@ import Cards from 'react-credit-cards'
 
 const Container = styled.div`
   .rccs {
-    margin: 0 auto;
     -webkit-perspective: 1000px;
     perspective: 1000px;
     width: 290px;

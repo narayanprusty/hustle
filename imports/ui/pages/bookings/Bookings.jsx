@@ -34,12 +34,14 @@ const Marker = ({ metaData }) => (
         )}
     </div>
 );
+
 class Bookings extends Component {
     constructor(props) {
         super(props);
         this._isMounted = false;
     }
     state = {
+        cards: [],
         listnToDriver: false,
         paymentMethod: "cash",
         fields: {
@@ -141,6 +143,35 @@ class Bookings extends Component {
                 this.setState({
                     allDrivers: result
                 });
+            }
+        );
+
+        Meteor.call(
+            "getCardsForPayment",
+            (err, res) => {
+                if (err) {
+                    console.log(err);
+                    return notify.show("Failed adding card.", "error");
+                }
+                if (res.message || !res.cards) { 
+                    notify.show(ex.message ? ex.message : "Unable to load cards!", "error");
+                } else {
+                    let options = [{
+                        value: "cash",
+                        text: "Cash"
+                    }];
+                    for(let i=0;i<res.cards.length;i++){
+                        options.push({
+                            value: res.cards[i].hyperPayId,
+                            text:  res.cards[i].cardNumber
+                        });
+                    }
+                    this.setState({
+                        cards: options
+                    });
+                    
+                    console.log("cards loaded", this.state.cards);
+                }
             }
         );
 
@@ -526,45 +557,35 @@ class Bookings extends Component {
                                             {localizationManager.strings.fare}
                                         </span>
                                     </a>
-                                    <a className="item item-icon-left" href="#">
-                                        <i className="icon fa fa-shopping-cart" />
-                                        <select
-                                            name="paymentMethod"
-                                            value={this.state.paymentMethod}
-                                            onChange={this.inputHandler}
-                                            style={{
-                                                fontSize: "16px"
-                                            }}
-                                        >
-                                            <option value={"cash"}>
-                                                {
-                                                    localizationManager.strings
-                                                        .cash
-                                                }
-                                            </option>
-                                            <option value={"card 1"}>
-                                                {
-                                                    localizationManager.strings
-                                                        .Card
-                                                }{" "}
-                                                1
-                                            </option>
-                                        </select>
-                                        <i
-                                            className="fa fa-sort-desc"
-                                            style={{
-                                                position: "relative",
-                                                top: "-2px",
-                                                left: "-12px"
-                                            }}
-                                        />
-                                        <span className="item-note">
-                                            {
-                                                localizationManager.strings
-                                                    .paymentMethod
-                                            }
-                                        </span>
-                                    </a>
+                                    <div className="item item-icon-left">
+                            <i className="icon fa fa-shopping-cart" />
+                                <select
+                                    name="paymentMethod"
+                                    value={this.state.paymentMethod}
+                                    onChange={this.inputHandler}
+                                    style={{
+                                        fontSize: "16px"
+                                    }}
+                                >
+                                    {
+                                        this.state.cards.map((card, i) => <option value={card.value} key={i}> { card.text } </option>)
+                                    }
+                                </select>
+                            <i
+                                className="fa fa-sort-desc"
+                                style={{
+                                    position: "relative",
+                                    top: "-2px",
+                                    left: "-12px"
+                                }}
+                            />
+                            <span className="item-note">
+                                {
+                                    localizationManager.strings
+                                        .paymentMethod
+                                }
+                            </span>
+                        </div>
                                 </div>
 
                                 <div className="padding-left padding-right padding-top">
