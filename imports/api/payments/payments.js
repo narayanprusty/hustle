@@ -204,6 +204,37 @@ const getCards = async () => {
     }
 }
 
+const getCardsForPayment = async () => {
+    try {
+        let cards = await node.callAPI("assets/search", {
+            $query: {
+                assetName: config.ASSET.Card,
+                userId: Meteor.userId().toString(),
+                status: "open",
+            }
+        });
+        let cardslist = [];
+        for (let i = 0; i < cards.length; i++) {
+            let cardNumber = cards[i].cardNumber.toString().slice(0, 4) + " XXXX XXXX " + cards[i].cardNumber.toString().slice(cards[i].cardNumber.toString().length - 4);
+            console.log(cardNumber);
+            cardslist.push({
+                nameOnCard: cards[i].nameOnCard,
+                expiry: cards[i].expiry,
+                cvv: cards[i].cvv,
+                cardNumber: cardNumber,
+                hyperPayId: cards[i].hyperPayId
+            });
+        }
+        return {
+            success: true,
+            cards: cardslist
+        }
+    } catch (ex) {
+        console.log(ex);
+        return ex;
+    }
+}
+
 const removeCard = async (data) => {
     try {
         const txId = await node.callAPI("assets/updateAssetInfo", {
@@ -228,4 +259,5 @@ export {
     addCard,
     getCards,
     removeCard,
+    getCardsForPayment,
 }
