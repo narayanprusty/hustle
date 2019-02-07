@@ -539,7 +539,7 @@ class Bookings extends Component {
                             </span>
                             {mapApiLoaded && (
                                 <SearchBox
-                                    placeholder="Enter a location(default current location)"
+                                    placeholder="Default is Current Location"
                                     map={mapInstance}
                                     mapApi={mapApi}
                                     value={
