@@ -8,7 +8,12 @@ class Subscriptions extends Component {
         super(props);
         this.state = {
             user: Meteor.userId(),
-            showloader: true
+            showloader: true,
+            showPaymentOptions: false,
+            showAddCardButton: false,
+            cards: [],
+            paymentMethod: "",
+            showPayNowButton: false,
         };
         const driverMode = localStorage.getItem("driverMode");
         if (driverMode) {
@@ -21,6 +26,45 @@ class Subscriptions extends Component {
     componentDidMount() {
         this.getUserSubscriptions();
         this.getAllPlans();
+        this.getCards();
+    }
+
+    getCards = async () => {
+        Meteor.call("getCardsForPayment", (err, res) => {
+            if (err) {
+                console.log(err);
+                return notify.show("Failed adding card.", "error");
+            }
+            if (res.message || !res.cards) {
+                notify.show(
+                    ex.message ? ex.message : "Unable to load cards!",
+                    "error"
+                );
+            } else {
+                let options = [{
+                    text: "Select Card",
+                    value: ""
+                }];
+                for (let i = 0; i < res.cards.length; i++) {
+                    options.push({
+                        value: res.cards[i].hyperPayId,
+                        text: res.cards[i].cardNumber
+                    });
+                }
+                if (options.length > 0) {
+                    this.setState({
+                        cards: options
+                    });
+                }
+                else {
+                    this.setState({
+                        showAddCardButton: true
+                    });
+                }
+
+                console.log("cards loaded", this.state.cards);
+            }
+        });
     }
 
     getUserSubscriptions = async () => {
@@ -81,12 +125,27 @@ class Subscriptions extends Component {
         });
     };
 
+    onCardSelected = e => {
+        if (e.target.value) {
+            this.setState({
+                paymentMethod: e.target.value,
+                showPayNowButton: true,
+            });
+        }
+        else {
+            this.setState({
+                paymentMethod: e.target.value,
+                showPayNowButton: false,
+            });
+        }
+    };
+
     subscribe = async planId => {
         try {
             this.setState({ userAlreadySubscribed: true, showloader: true });
             Meteor.call(
                 "subscribePlan",
-                { planId: planId, userId: Meteor.userId() },
+                { planId: planId, userId: Meteor.userId(), hyperPayId: this.state.paymentMethod },
                 (error, response) => {
                     if (error) {
                         console.log(error);
@@ -105,11 +164,18 @@ class Subscriptions extends Component {
                             }
                         } else {
                             notify.show("Plan Subscribed!", "success");
+                            this.props.history.push('/app/home');
+                            this.setState({
+                                userAlreadySubscribed: true,
+                            });
                         }
                     }
                     this.setState({
-                        userAlreadySubscribed: false,
-                        showloader: false
+                        userAlreadySubscribed: true,
+                        showloader: false,
+                        showAddCardButton: false,
+                        showPayNowButton: false,
+                        showPaymentOptions: false,
                     });
                 }
             );
@@ -231,11 +297,7 @@ class Subscriptions extends Component {
                             </ul>
                             <button
                                 className="button button-block button-energized activated"
-                                onClick={this.subscribe.bind(
-                                    this,
-                                    this.state.subscriptionPlan
-                                        .uniqueIdentifier
-                                )}
+                                onClick={(e) => this.setState({ showPaymentOptions: true })}
                                 disabled={
                                     this.state.userAlreadySubscribed
                                         ? true
@@ -244,6 +306,67 @@ class Subscriptions extends Component {
                             >
                                 Subscribe
                             </button>
+                            {this.state.showPaymentOptions ? (
+                                this.state.showAddCardButton ? (
+                                    <button
+                                        className="button button-block button-energized activated"
+                                        onClick={(e) => this.props.history.push('/app/addCards')}
+                                    >
+                                        Add Card
+                                    </button>
+                                ) : (
+                                        <ul className="list">
+                                            <li
+                                                className="item"
+                                                style={{ whiteSpace: "normal" }}
+                                            >
+                                                <div style={{ marginBottom: "10px" }}>
+                                                    <b>Select Card</b>
+                                                </div>
+                                                <div>
+                                                    <select
+                                                        name="paymentMethod"
+                                                        value={this.state.paymentMethod}
+                                                        onChange={this.onCardSelected}
+                                                        style={{
+                                                            fontSize: "16px"
+                                                        }}
+                                                    >
+                                                        {this.state.cards.map((card, i) => (
+                                                            <option
+                                                                value={card.value}
+                                                                key={i}
+                                                            >
+                                                                {" "}
+                                                                {card.text}{" "}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <i
+                                                        className="fa fa-sort-desc"
+                                                        style={{
+                                                            position: "relative",
+                                                            top: "-2px",
+                                                            left: "-12px"
+                                                        }}
+                                                    />
+                                                    {this.state.showPayNowButton ? (
+                                                        <button
+                                                            className="button button-block button-energized activated"
+                                                            onClick={this.subscribe.bind(
+                                                                this,
+                                                                this.state.subscriptionPlan
+                                                                    .uniqueIdentifier
+                                                            )}
+                                                        >
+                                                            Pay Now
+                                                        </button>
+                                                    ) : ""}
+                                                </div>
+                                            </li>
+                                        </ul>
+                                )
+                            ) : ""}
                         </div>
                     </div>
                 ) : (

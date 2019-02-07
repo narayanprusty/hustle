@@ -3,6 +3,7 @@ import { BookingRecord } from "../../collections/booking-record";
 import { DriverMeta } from "../../collections/driver-meta";
 import config from "../../modules/config/server";
 import { sendMessage } from "../../notifications/index";
+import { oneClickPayment } from "../payments/payments";
 
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
@@ -35,6 +36,7 @@ const newBookingReq = async ({
     start_address,
     distance_in_meter
 }) => {
+
     const username = Meteor.user().profile.name;
     const avgRating = Meteor.user().profile.avgRating
         ? Meteor.user().profile.avgRating
@@ -144,6 +146,7 @@ const onCancellation = async (
     bookingId,
     cancel_reason = "DRIVER_NOT_FOUND"
 ) => {
+
     const txId = await node.callAPI("assets/updateAssetInfo", {
         assetName: config.ASSET.Bookings,
         fromAccount: node.getWeb3().eth.accounts[0],
@@ -261,6 +264,30 @@ const onStopRide = async (driverId, bookingId, endingPoint) => {
             }
         }
     );
+
+    let booking = await node.callAPI("assets/search", {
+        $query: {
+            assetName: config.ASSET.Bookings,
+            uniqueIdentifier: bookingId.toString()
+        }
+    });
+
+    booking = booking.length > 0 ? booking[0] : {};
+
+    if (booking) {
+        if (booking.paymentMethod != "cash") {
+            console.log("Paying");
+
+            var receipt = await oneClickPayment(booking.totalFare, booking.paymentMethod);
+
+            console.log(receipt);
+        }
+    } else {
+        return {
+            message: "Booking not found for payment."
+        }
+    }
+    
     return {
         txId: txId
     };

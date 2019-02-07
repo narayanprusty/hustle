@@ -255,9 +255,64 @@ const removeCard = async (data) => {
     }
 }
 
+const oneClickPayment = async (amount, hyperPayId) => {
+    try {
+        console.log(amount, hyperPayId);
+        if (!hyperPayId || !amount || isNaN(parseFloat(amount))) {
+            return {
+                message: "Invalid arguments."
+            }
+        }
+
+        var path = '/v1/registrations/' + hyperPayId.toString() + '/payments';
+        var cardData = querystring.stringify({
+            'authentication.userId': config.HYPERPAY.UserId,
+            'authentication.password': config.HYPERPAY.Password,
+            'authentication.entityId': config.HYPERPAY.EntityId,
+            'amount': amount,
+            'currency': 'SAR',
+            'paymentType': config.HYPERPAY.PaymentType,
+            'testMode': 'EXTERNAL',
+            'merchantTransactionId': '8ac7a4a168c2b4360168c33a485c0567103',
+            'customer.email': 'ukrocks.mehta@gmail.com',
+            'shopperResultUrl':'http://localhost:3000/app/home',
+        });
+        console.log(cardData);
+        var options = {
+            port: 443,
+            host: 'test.oppwa.com',
+            path: path,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': cardData.length
+            }
+        };
+        return new Promise(async (resolve, reject) => {
+            try {
+                var postRequest = https.request(options, function (res) {
+                    res.setEncoding('utf8');
+                    res.on('data', function (chunk) {
+                        jsonRes = JSON.parse(chunk);
+                        resolve(jsonRes);
+                    });
+                });
+                postRequest.write(cardData);
+                postRequest.end();
+            } catch (ex) {
+                console.log(ex);
+                reject(ex);
+            }
+        });
+    } catch (ex) {
+        return ex;
+    }
+}
+
 export {
     addCard,
     getCards,
     removeCard,
     getCardsForPayment,
+    oneClickPayment,
 }
