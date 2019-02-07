@@ -11,7 +11,32 @@ import { Meteor } from "meteor/meteor";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 
 import localizationManager from "../../localization/index";
-
+const cartTypes = [
+    {
+        name: "Micro",
+        value: "micro"
+    },
+    {
+        name: "Mini",
+        value: "mini"
+    },
+    {
+        name: "Prime sedan",
+        value: "sedan"
+    },
+    {
+        name: "prime SUV",
+        value: "suv"
+    },
+    {
+        name: "Prime Exec",
+        value: "exec"
+    },
+    {
+        name: "Prime Lux",
+        value: "lux"
+    }
+];
 Geocode.setApiKey(config.GAPIKEY);
 
 import "./Bookings_client.scss";
@@ -63,7 +88,8 @@ class Bookings extends Component {
         mapInstance: null,
         mapApi: null,
         droppingPlace: {},
-        boardingPlace: {}
+        boardingPlace: {},
+        carType: "micro"
     };
 
     componentWillMount = async () => {
@@ -409,6 +435,7 @@ class Bookings extends Component {
         const data = {
             // username: this.state.username,
             userId: Meteor.userId(),
+            preferredCar: this.state.carType,
             boardingPoint: this.state.boardingPoint,
             droppingPoint: this.state.droppingPoint,
             paymentMethod: this.state.paymentMethod,
@@ -594,6 +621,38 @@ class Bookings extends Component {
                                                 localizationManager.strings
                                                     .paymentMethod
                                             }
+                                        </span>
+                                    </div>
+                                    <div className="item item-icon-left">
+                                        <i className="icon fa fa-car" />
+                                        <select
+                                            name="carType"
+                                            value={this.state.cartType}
+                                            onChange={this.inputHandler}
+                                            style={{
+                                                fontSize: "16px"
+                                            }}
+                                        >
+                                            {cartTypes.map((cars, i) => (
+                                                <option
+                                                    value={cars.value}
+                                                    key={i}
+                                                >
+                                                    {" "}
+                                                    {cars.name}{" "}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <i
+                                            className="fa fa-sort-desc"
+                                            style={{
+                                                position: "relative",
+                                                top: "-2px",
+                                                left: "-12px"
+                                            }}
+                                        />
+                                        <span className="item-note">
+                                            Preferred Car
                                         </span>
                                     </div>
                                 </div>

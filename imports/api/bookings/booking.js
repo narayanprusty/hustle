@@ -21,6 +21,7 @@ const node = new Blockcluster.Dynamo({
 const newBookingReq = async ({
     // username,
     userId,
+    preferredCar,
     boardingPoint,
     droppingPoint,
     paymentMethod,
@@ -50,6 +51,7 @@ const newBookingReq = async ({
             .split(".")[1]; //this is the Booking Id
     const data = {
         createdAt: currentDate,
+        preferredCar: preferredCar,
         userId: userId,
         paymentMethod: paymentMethod,
         paymentStatus: "pending",
@@ -67,6 +69,7 @@ const newBookingReq = async ({
 
     const infoData = {
         bookingId: identifier,
+        preferredCar: preferredCar,
         time_shown: reachAfter,
         distance_shown: distance,
         usersLatLng_bookingTime: JSON.stringify(currentLocation),
@@ -116,6 +119,7 @@ const newBookingReq = async ({
 
     BookingRecord.insert({
         riderRating: avgRating,
+        preferredCar: preferredCar,
         username: username,
         paymentMethod: paymentMethod,
         bookingId: identifier,
@@ -405,7 +409,7 @@ const getDistance = (driverLoc, boardingPoint) => {
 
 //for more exact u can pass mapApi obj from frontend only and do calculation
 //mapApi.geometry.spherical.computeDistanceBetween (latLngA, latLngB); //return values in Meter
-const fetchBookingReq = async ({ lat, lng, page }) => {
+const fetchBookingReq = async ({ lat, lng, carType, page }) => {
     const data = await BookingRecord.rawCollection()
         .aggregate(
             [
@@ -426,7 +430,8 @@ const fetchBookingReq = async ({ lat, lng, page }) => {
                 {
                     $match: {
                         active: true,
-                        status: "pending"
+                        status: "pending",
+                        preferredCar: carType //may be do this match before geonear, so that it will be little fast
                     }
                 },
                 {

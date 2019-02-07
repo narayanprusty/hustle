@@ -46,6 +46,9 @@ BookingRecordCollection.schema = new SimpleSchema({
         type: Number
         //rating of the user at the time of booking
     },
+    preferredCar: {
+        type: String
+    },
     status: {
         type: String
         //accepted riding

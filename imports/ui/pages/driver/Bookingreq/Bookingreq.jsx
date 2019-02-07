@@ -33,14 +33,28 @@ class Bookingreq extends Component {
     };
 
     componentDidMount = () => {
+        this._isMounted = true;
+        this.fetchDriverDetails();
         const intRecord = setInterval(this.loadItems(1), 3000);
         this.setState({
             invl: intRecord
         });
-        this._isMounted = true;
     };
     componentWillMount = async () => {
         await this.fetchCurrentRide();
+    };
+    fetchDriverDetails = () => {
+        return Meteor.call("getDriver", Meteor.userId(), (err, driverMeta) => {
+            if (err) {
+                notify.show(
+                    err.reason || "unable to fetch driver details",
+                    "error"
+                );
+            }
+            this.setState({
+                carType: driverMeta.carType ? driverMeta.carType : "micro"
+            });
+        });
     };
     fetchCurrentRide = () => {
         return Meteor.call(
@@ -145,7 +159,12 @@ class Bookingreq extends Component {
                 console.log(page);
                 Meteor.call(
                     "fetchBookingReq",
-                    { lat: coords.latitude, lng: coords.longitude, page: page },
+                    {
+                        lat: coords.latitude,
+                        lng: coords.longitude,
+                        carType: this.state.carType,
+                        page: page
+                    },
                     (err, withingDistanceData) => {
                         console.log(withingDistanceData);
                         if (err) {

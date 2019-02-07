@@ -30,6 +30,11 @@ DriverMetaCollection.schema = new SimpleSchema({
         type: Number,
         defaultValue: 0
     },
+    carType: {
+        type: String
+        //can be of this types olnly
+        //sedan,suv,exec,mini,micro,lux
+    },
     carModel: {
         type: String
     },
