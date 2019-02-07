@@ -146,34 +146,36 @@ class Bookings extends Component {
             }
         );
 
-        Meteor.call(
-            "getCardsForPayment",
-            (err, res) => {
-                if (err) {
-                    console.log(err);
-                    return notify.show("Failed adding card.", "error");
-                }
-                if (res.message || !res.cards) { 
-                    notify.show(ex.message ? ex.message : "Unable to load cards!", "error");
-                } else {
-                    let options = [{
+        Meteor.call("getCardsForPayment", (err, res) => {
+            if (err) {
+                console.log(err);
+                return notify.show("Failed adding card.", "error");
+            }
+            if (res.message || !res.cards) {
+                notify.show(
+                    ex.message ? ex.message : "Unable to load cards!",
+                    "error"
+                );
+            } else {
+                let options = [
+                    {
                         value: "cash",
                         text: "Cash"
-                    }];
-                    for(let i=0;i<res.cards.length;i++){
-                        options.push({
-                            value: res.cards[i].hyperPayId,
-                            text:  res.cards[i].cardNumber
-                        });
                     }
-                    this.setState({
-                        cards: options
+                ];
+                for (let i = 0; i < res.cards.length; i++) {
+                    options.push({
+                        value: res.cards[i].hyperPayId,
+                        text: res.cards[i].cardNumber
                     });
-                    
-                    console.log("cards loaded", this.state.cards);
                 }
+                this.setState({
+                    cards: options
+                });
+
+                console.log("cards loaded", this.state.cards);
             }
-        );
+        });
 
         // this.pubnub.subscribe({
         //   channels: [Meteor.userId()],
@@ -492,6 +494,7 @@ class Bookings extends Component {
                             </span>
                             {mapApiLoaded && (
                                 <SearchBox
+                                    placeholder="Enter a location(default current location)"
                                     map={mapInstance}
                                     mapApi={mapApi}
                                     value={
@@ -513,6 +516,7 @@ class Bookings extends Component {
                             </span>
                             {mapApiLoaded && (
                                 <SearchBox
+                                    placeholder="Enter a location"
                                     map={mapInstance}
                                     mapApi={mapApi}
                                     addplace={this.addDroppingPlace}
@@ -558,34 +562,40 @@ class Bookings extends Component {
                                         </span>
                                     </a>
                                     <div className="item item-icon-left">
-                            <i className="icon fa fa-shopping-cart" />
-                                <select
-                                    name="paymentMethod"
-                                    value={this.state.paymentMethod}
-                                    onChange={this.inputHandler}
-                                    style={{
-                                        fontSize: "16px"
-                                    }}
-                                >
-                                    {
-                                        this.state.cards.map((card, i) => <option value={card.value} key={i}> { card.text } </option>)
-                                    }
-                                </select>
-                            <i
-                                className="fa fa-sort-desc"
-                                style={{
-                                    position: "relative",
-                                    top: "-2px",
-                                    left: "-12px"
-                                }}
-                            />
-                            <span className="item-note">
-                                {
-                                    localizationManager.strings
-                                        .paymentMethod
-                                }
-                            </span>
-                        </div>
+                                        <i className="icon fa fa-shopping-cart" />
+                                        <select
+                                            name="paymentMethod"
+                                            value={this.state.paymentMethod}
+                                            onChange={this.inputHandler}
+                                            style={{
+                                                fontSize: "16px"
+                                            }}
+                                        >
+                                            {this.state.cards.map((card, i) => (
+                                                <option
+                                                    value={card.value}
+                                                    key={i}
+                                                >
+                                                    {" "}
+                                                    {card.text}{" "}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <i
+                                            className="fa fa-sort-desc"
+                                            style={{
+                                                position: "relative",
+                                                top: "-2px",
+                                                left: "-12px"
+                                            }}
+                                        />
+                                        <span className="item-note">
+                                            {
+                                                localizationManager.strings
+                                                    .paymentMethod
+                                            }
+                                        </span>
+                                    </div>
                                 </div>
 
                                 <div className="padding-left padding-right padding-top">
