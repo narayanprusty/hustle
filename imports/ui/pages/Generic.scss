@@ -1,71 +1,162 @@
-
 .seperator {
-  display: flex;
-  flex-direction: row;
-  opacity: 0.6;
+    display: flex;
+    flex-direction: row;
+    opacity: 0.6;
 }
-.seperator:before, .seperator:after{
-  content: "";
-  flex: 1 1;
-  border-bottom: 1px solid #000;
-  margin: auto;
-  border-style: ridge;
-  opacity: 0.2;
+.seperator:before,
+.seperator:after {
+    content: "";
+    flex: 1 1;
+    border-bottom: 1px solid #000;
+    margin: auto;
+    border-style: ridge;
+    opacity: 0.2;
 }
 
 .switch-field {
     font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
     padding: 40px;
     overflow: hidden;
-  }
-  
-  .switch-title {
+}
+
+.switch-title {
     margin-bottom: 6px;
-  }
-  
-  .switch-field {
+}
+
+.switch-field {
     input {
-      position: absolute !important;
-      clip: rect(0, 0, 0, 0);
-      height: 1px;
-      width: 1px;
-      border: 0;
-      overflow: hidden;
+        position: absolute !important;
+        clip: rect(0, 0, 0, 0);
+        height: 1px;
+        width: 1px;
+        border: 0;
+        overflow: hidden;
     }
     label {
-      float: left;
-      display: inline-block;
-      width: 120px;
-      background-color: #e4e4e4;
-      color: rgba(0, 0, 0, 0.6);
-      font-size: 14px;
-      font-weight: normal;
-      text-align: center;
-      text-shadow: none;
-      padding: 6px 14px;
-      border: 1px solid rgba(0, 0, 0, 0.2);
-      -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
-      -webkit-transition: all 0.1s ease-in-out;
-      -moz-transition: all 0.1s ease-in-out;
-      -ms-transition: all 0.1s ease-in-out;
-      -o-transition: all 0.1s ease-in-out;
-      transition: all 0.1s ease-in-out;
-      &:hover {
-        cursor: pointer;
-      }
+        float: left;
+        display: inline-block;
+        width: 120px;
+        background-color: #e4e4e4;
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 14px;
+        font-weight: normal;
+        text-align: center;
+        text-shadow: none;
+        padding: 6px 14px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3),
+            0 1px rgba(255, 255, 255, 0.1);
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3),
+            0 1px rgba(255, 255, 255, 0.1);
+        -webkit-transition: all 0.1s ease-in-out;
+        -moz-transition: all 0.1s ease-in-out;
+        -ms-transition: all 0.1s ease-in-out;
+        -o-transition: all 0.1s ease-in-out;
+        transition: all 0.1s ease-in-out;
+        &:hover {
+            cursor: pointer;
+        }
     }
     input:checked + label {
-      background-color: #ffc422;
-      -webkit-box-shadow: none;
-      box-shadow: none;
+        background-color: #ffc422;
+        -webkit-box-shadow: none;
+        box-shadow: none;
     }
     label {
-      &:first-of-type {
-        border-radius: 4px 0 0 4px;
-      }
-      &:last-of-type {
-        border-radius: 0 4px 4px 0;
-      }
+        &:first-of-type {
+            border-radius: 4px 0 0 4px;
+        }
+        &:last-of-type {
+            border-radius: 0 4px 4px 0;
+        }
     }
-  }
+}
+
+// to change styling of dropdown go and check here:https://i.stack.imgur.com/3omPs.png
+//  then comback and change below css
+.pac-container {
+    cursor: pointer;
+    background-color: #fff;
+    position: absolute !important;
+    z-index: 1000;
+    border-radius: 2px;
+    border-top: 1px solid #d9d9d9;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.pac-logo:after {
+    content: "";
+    padding: 1px 1px 1px 0;
+    height: 16px;
+    text-align: right;
+    display: block;
+    background-image: url(https://maps.gstatic.com/mapfiles/api-3/images/powered-by-google-on-white3.png);
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: 120px 14px;
+}
+.hdpi.pac-logo:after {
+    background-image: url(https://maps.gstatic.com/mapfiles/api-3/images/powered-by-google-on-white3_hdpi.png);
+}
+.pac-item {
+    cursor: pointer;
+    padding: 0 4px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    line-height: 30px;
+    text-align: left;
+    border-top: 1px solid #e6e6e6;
+    font-size: 11px;
+    color: #999;
+}
+.pac-item:hover {
+    background-color: #fafafa;
+}
+.pac-item-selected,
+.pac-item-selected:hover {
+    background-color: #ebf2fe;
+}
+.pac-matched {
+    font-weight: 700;
+}
+.pac-item-query {
+    font-size: 13px;
+    padding-right: 3px;
+    color: #000;
+}
+.pac-icon {
+    width: 15px;
+    height: 20px;
+    margin-right: 7px;
+    margin-top: 6px;
+    display: inline-block;
+    vertical-align: top;
+    background-image: url(https://maps.gstatic.com/mapfiles/api-3/images/autocomplete-icons.png);
+    background-size: 34px;
+}
+.hdpi .pac-icon {
+    background-image: url(https://maps.gstatic.com/mapfiles/api-3/images/autocomplete-icons_hdpi.png);
+}
+.pac-icon-search {
+    background-position: -1px -1px;
+}
+.pac-item-selected .pac-icon-search {
+    background-position: -18px -1px;
+}
+.pac-icon-marker {
+    display: none;
+    background-position: -1px -161px;
+}
+.pac-item-selected .pac-icon-marker {
+    display: none;
+    background-position: -18px -161px;
+}
+.pac-placeholder {
+    color: gray;
+}
