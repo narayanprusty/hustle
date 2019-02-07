@@ -284,20 +284,20 @@ class Bookingreq extends Component {
 
                     <div className="item item-body">
                         <p>
-                            <div class="list">
+                            <div className="list">
                                 <a class="item item-icon-right" href="#">
                                     {data.totalFare} USD
-                                    <i class="icon fa fa-money" />
+                                    <i className="icon fa fa-money" />
                                 </a>
 
-                                <a class="item item-icon-right" href="#">
+                                <a className="item item-icon-right" href="#">
                                     {data.totalDistance}
-                                    <i class="icon fa fa-road" />
+                                    <i className="icon fa fa-road" />
                                 </a>
 
-                                <a class="item item-icon-right" href="#">
+                                <a className="item item-icon-right" href="#">
                                     {data.totalDuration}
-                                    <i class="icon fa fa-clock-o" />
+                                    <i className="icon fa fa-clock-o" />
                                 </a>
                             </div>
                         </p>
