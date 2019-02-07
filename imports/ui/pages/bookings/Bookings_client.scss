@@ -346,3 +346,18 @@
 .passo1:checked + .passo2 ~ .cartop {
     left: 680px;
 }
+
+.floatMapButton {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    left: 25%;
+    z-index: 5;
+    background-color: #fff;
+    padding: 5px;
+    border: 1px solid #999;
+    text-align: center;
+    font-family: "Roboto", "sans-serif";
+    line-height: 35px;
+    padding-left: 14px;
+}

@@ -399,7 +399,25 @@ class Bookings extends Component {
             }
         });
     };
+    changeBoardingToCurrent = () => {
+        Geocode.fromLatLng(
+            this.state.currentLocation.lat,
+            this.state.currentLocation.lng
+        ).then(response => {
+            const address = response.results[0];
 
+            this.setState({
+                boardingPoint: {
+                    lat: this.state.currentLocation.lat,
+                    lng: this.state.currentLocation.lng
+                },
+                boardingPlace: address
+            });
+            if (this.state.droppingPoint) {
+                this.changeRoute();
+            }
+        });
+    };
     apiHasLoaded = (map, maps) => {
         this.setState({
             mapApiLoaded: true,
@@ -740,6 +758,18 @@ class Bookings extends Component {
                                             metaData="cartop"
                                         />;
                                     })} */}
+                                {/* <LaddaButton
+                                    className="floatMapButton"
+                                    onClick={this.changeBoardingToCurrent}
+                                    data-color="##FFFF00"
+                                    data-size={L}
+                                    data-style={SLIDE_UP}
+                                    data-spinner-size={30}
+                                    data-spinner-color="#ddd"
+                                    data-spinner-lines={12}
+                                >
+                                    <i className="fa fa-map-marker" />
+                                </LaddaButton> */}
                             </GoogleMapReact>
                         )}
                     </div>
