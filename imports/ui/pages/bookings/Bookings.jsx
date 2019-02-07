@@ -437,7 +437,7 @@ class Bookings extends Component {
             panControl: false,
             mapTypeControl: false,
             scrollwheel: false,
-            fullscreenControl: false,
+            fullscreenControl: true,
             draggable: true,
             zoomControl: true,
             styles: mapStyle
