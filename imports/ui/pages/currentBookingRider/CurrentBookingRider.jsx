@@ -601,6 +601,21 @@ class CurrentBookingRider extends Component {
                                 {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
                                 Submit Review
                             </LaddaButton>
+                            <LaddaButton
+                                className="button button-block button-energized activated"
+                                onClick={() => {
+                                    this.props.history.push("/app");
+                                }}
+                                data-color="##FFFF00"
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                            >
+                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
+                                Skip
+                            </LaddaButton>
                         </div>
                     )}
                 </div>

@@ -293,7 +293,7 @@ class CurrentBooking extends Component {
                 });
                 // this.props.history.push("/app/driver/newreqs");
                 this.setState({
-                    sendToNewReqs: true
+                    paymentReceived: true
                 });
                 notify.show("Payment Marked", "success");
             }
@@ -445,55 +445,72 @@ class CurrentBooking extends Component {
                             </LaddaButton>
                         )}
                 </div>
-                {this.state.status == "finished" && (
-                    <div>
-                        <div className="card">
-                            <div
-                                className="list"
-                                style={{ marginBottom: "0px" }}
-                            >
-                                <a className="item item-icon-left" href="#">
-                                    <Rating
-                                        name="rating"
-                                        {...this.props}
-                                        start={0}
-                                        stop={5}
-                                        initialRating={this.state.rating}
-                                        emptySymbol="fa fa-star-o fa-2x empty"
-                                        fullSymbol="fa fa-star fa-2x full"
-                                        onChange={rate => this.onRate(rate)}
+                {this.state.status == "finished" &&
+                    (this.state.paymentMethod != "cash" ||
+                        this.state.paymentReceived) && (
+                        <div>
+                            <div className="card">
+                                <div
+                                    className="list"
+                                    style={{ marginBottom: "0px" }}
+                                >
+                                    <a className="item item-icon-left" href="#">
+                                        <Rating
+                                            name="rating"
+                                            {...this.props}
+                                            start={0}
+                                            stop={5}
+                                            initialRating={this.state.rating}
+                                            emptySymbol="fa fa-star-o fa-2x empty"
+                                            fullSymbol="fa fa-star fa-2x full"
+                                            onChange={rate => this.onRate(rate)}
+                                        />
+
+                                        <span className="item-note">
+                                            Rate Rider
+                                        </span>
+                                    </a>
+                                </div>
+                                <div className="justified">
+                                    <textarea
+                                        name="reviewMessage"
+                                        placeholder="Put some feedback of the ride"
+                                        onChange={this.handleChange}
                                     />
+                                </div>
+                            </div>
 
-                                    <span className="item-note">
-                                        Rate Rider
-                                    </span>
-                                </a>
-                            </div>
-                            <div className="justified">
-                                <textarea
-                                    name="reviewMessage"
-                                    placeholder="Put some feedback of the ride"
-                                    onChange={this.handleChange}
-                                />
-                            </div>
+                            <LaddaButton
+                                className="button button-block button-energized activated"
+                                loading={this.state.review_loader}
+                                onClick={this.onReviewSubmit}
+                                data-color="##FFFF00"
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                            >
+                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
+                                Submit Review
+                            </LaddaButton>
+                            <LaddaButton
+                                className="button button-block button-energized activated"
+                                onClick={() => {
+                                    this.setState({ sendToNewReqs: true });
+                                }}
+                                data-color="##FFFF00"
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                            >
+                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
+                                Skip
+                            </LaddaButton>
                         </div>
-
-                        <LaddaButton
-                            className="button button-block button-energized activated"
-                            loading={this.state.review_loader}
-                            onClick={this.onReviewSubmit}
-                            data-color="##FFFF00"
-                            data-size={L}
-                            data-style={SLIDE_UP}
-                            data-spinner-size={30}
-                            data-spinner-color="#ddd"
-                            data-spinner-lines={12}
-                        >
-                            {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                            Submit Review
-                        </LaddaButton>
-                    </div>
-                )}
+                    )}
                 {this.state.sendToNewReqs && (
                     <Redirect to="/app/driver/newreqs" />
                 )}
