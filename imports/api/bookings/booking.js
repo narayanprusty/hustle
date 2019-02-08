@@ -470,7 +470,33 @@ const currentBookingRider = userId => {
     }).fetch()[0];
     return data;
 };
-
+/**
+ *
+ * @param {gte:Date,lt:Date} period
+ * @param {String} driverId
+ */
+const getDriverBookingData = async (period, driverId) => {
+    try {
+        let bookings = await node.callAPI("assets/search", {
+            $query: {
+                assetName: config.ASSET.Bookings,
+                driverId: driverId,
+                $lt: {
+                    createdAt: period.lte
+                },
+                $gte: {
+                    createdAt: period.gte
+                }
+            }
+        });
+        return bookings;
+    } catch (error) {
+        console.log(error);
+        throw Meteor.Error({
+            message: "Unable to fetch bookings"
+        });
+    }
+};
 export {
     newBookingReq,
     onDriverAccept,
@@ -483,5 +509,6 @@ export {
     currentBookingDriver,
     currentBookingRider,
     paymentReceived,
-    getBookingById
+    getBookingById,
+    getDriverBookingData
 };

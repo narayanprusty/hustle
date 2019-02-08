@@ -7,6 +7,9 @@ DriverMetaCollection.schema = new SimpleSchema({
     driverId: {
         type: String
     },
+    driverEmail: {
+        type: String
+    },
     currentLocation: {
         type: Object
     },

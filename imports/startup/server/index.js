@@ -1,1 +1,2 @@
-import './methods';
+import "./methods";
+require("../../modules/schedulers/agenda");

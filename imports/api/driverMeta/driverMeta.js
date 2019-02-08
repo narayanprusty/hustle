@@ -1,4 +1,7 @@
 import { DriverMeta } from "../../collections/driver-meta";
+import { getDriverBookingData } from "../bookings/booking";
+import { sendEmail } from "../emails/email-sender";
+import moment from "moment";
 
 const markAvailable = driverId => {
     return DriverMeta.update(
@@ -111,11 +114,113 @@ const updateReview = async (driverId, rateVal) => {
     );
 };
 
+/**  Driver monthly report functions are below  */
+
+/**
+ *  Get summery of a driver of a month
+ * @param {*} driverId
+ * @returns {*} earningsInCash,
+ *              earningsOnline,
+ *              totalEarnings,
+ *              totalTimeOnRide,
+ *              totalDistanceOnRide,
+ *              totalRides
+ */
+const getDriverSummery = async driverId => {
+    const gte = moment().subtract(1, "month");
+    const lt = new Date();
+    const bookings = await getDriverBookingData(
+        { gte: gte, lte: lt },
+        driverId
+    );
+    const totalEarnings = 0;
+    const earningsInCash = 0;
+    const earningsOnline = 0;
+    const totalDistanceOnRide = 0; //in Meter
+    const totalTimeOnRide = 0; //in secoend
+    const totalRides = bookings.length ? bookings.length : 0;
+    if (!totalRides) {
+        totalEarnings = earningsInCash + earningsOnline;
+        return {
+            earningsInCash,
+            earningsOnline,
+            totalEarnings,
+            totalTimeOnRide,
+            totalDistanceOnRide,
+            totalRides
+        };
+    } else {
+        bookings.forEach(v => {
+            //may be check for confirmed txns too here key: paymentStatus
+            if (v.paymentMethod == "cash") {
+                earningsInCash = earningsInCash + v.totalFare;
+            } else {
+                earningsOnline = earningsOnline + v.totalFare;
+            }
+            totalTimeOnRide = v.total_time_in_sec + totalTimeOnRide;
+            totalDistanceOnRide = v.totalDistance + totalDistanceOnRide;
+        });
+        totalEarnings = earningsInCash + earningsOnline;
+        return {
+            earningsInCash,
+            earningsOnline,
+            totalEarnings,
+            totalTimeOnRide,
+            totalDistanceOnRide,
+            totalRides
+        };
+    }
+};
+
+const iterateOverDrivers = () => {
+    const allDriverDocCursor = DriverMeta.find(
+        {},
+        { fields: { driverId: 1, driverEmail: 1 } }
+    );
+    allDriverDocCursor.forEach(async driverDoc => {
+        const {
+            earningsInCash,
+            earningsOnline,
+            totalEarnings,
+            totalTimeOnRide,
+            totalDistanceOnRide,
+            totalRides
+        } = await getDriverSummery(driverDoc.driverId);
+        const { profile } = Meteor.users
+            .find({ _id: driverDoc.driverId })
+            .fetch()[0];
+        //send mail function to be called here with above data and send mail to
+        //driverDoc.driverEmail
+        const finalHTML = `
+        <div>
+        Cash Earnins: ${earningsInCash}<br />
+        Earnings Non-Cash: ${earningsOnline}<br/>
+       Total: ${totalEarnings}<br/>
+       total time spent on ride:  ${totalTimeOnRide / 60} minutes<br/>
+        total disatbnce covered in ride: ${totalDistanceOnRide / 1000} KM,
+        total no of ride: ${totalRides}
+        </div>
+        `;
+        const emailOptions = {
+            from: {
+                email: "saikat.chakrabortty@blockcluster.io",
+                name: "Saikat from Blockcluster"
+            },
+            to: driverDoc.driverEmail,
+            subject: `[HUSTLE] Monthly report`,
+            html: finalHTML
+        };
+        await sendEmail(emailOptions);
+    });
+    return true;
+};
+
 export {
     markAvailable,
     markUnavailable,
     getDriversWithin,
     getDriver,
     updateDriverLocation,
-    updateReview
+    updateReview,
+    iterateOverDrivers
 };
