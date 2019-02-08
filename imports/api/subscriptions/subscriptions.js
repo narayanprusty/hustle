@@ -1,6 +1,6 @@
 import Blockcluster from "blockcluster";
 import config from "../../modules/config/server";
-
+import { oneClickPayment } from '../payments/payments';
 
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
@@ -39,6 +39,7 @@ const getUserSubscriptions = async (userId) => {
                 assetName: config.ASSET.Subscriptions,
                 userId: userId.toString(),
                 active: true,
+                status: "open",
             }
         });
         return {
@@ -54,12 +55,13 @@ const getUserSubscriptions = async (userId) => {
 
 const subscribePlan = async ({
     planId,
-    userId
+    userId,
+    hyperPayId
 }) => {
     try {
         console.log(planId);
         console.log(userId);
-        const plan = await node.callAPI('assets/search', {
+        let plan = await node.callAPI('assets/search', {
             $query: {
                 assetName: config.ASSET.SubscriptionPlans,
                 uniqueIdentifier: planId.toString(),
@@ -67,6 +69,13 @@ const subscribePlan = async ({
         });
 
         if (plan.length > 0) {
+            plan = plan[0];
+
+            console.log("Paying");
+
+            var receipt = await oneClickPayment(plan.price, hyperPayId);
+
+            console.log(receipt);
 
             const identifier =
                 "I" +
@@ -84,7 +93,7 @@ const subscribePlan = async ({
             });
 
             const today = new Date();
-            const validTill = today.setDate(today.getDate() + parseInt(plan[0].validity));
+            const validTill = today.setDate(today.getDate() + parseInt(plan.validity));
 
             const txId = await node.callAPI("assets/updateAssetInfo", {
                 assetName: config.ASSET.Subscriptions,
