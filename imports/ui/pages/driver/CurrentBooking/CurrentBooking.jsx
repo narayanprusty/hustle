@@ -27,18 +27,16 @@ class CurrentBooking extends Component {
     }
 
     isIphone = () => {
-        return (
-            (window.cordova || window.PhoneGap || window.phonegap) &&
-            /^file:\/{3}[^\/]/i.test(window.location.href) &&
-            /ios|iphone|ipod|ipad|/i.test(navigator.userAgent)
-        );
+        if (device.platform == "iOS") {
+            return true;
+        }
+        return false;
     };
     isAndroid = () => {
-        return (
-            (window.cordova || window.PhoneGap || window.phonegap) &&
-            /^file:\/{3}[^\/]/i.test(window.location.href) &&
-            /android|/i.test(navigator.userAgent)
-        );
+        if (device.platform == "Android") {
+            return true;
+        }
+        return false;
     };
     componentWillUnmount() {
         if (this._isMounted) {
