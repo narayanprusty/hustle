@@ -21,12 +21,14 @@ class CurrentBooking extends Component {
             secretKey: config.PUBNUB.secret,
             ssl: true
         });
-        this.pubnub.init(this);
-
         this.state = {
             messageList: [],
-            rating: 0
+            rating: 0,
+            timeArr: []
         };
+
+        this.pubnub.init(this);
+
         this._mounted = false;
     }
 
@@ -44,6 +46,7 @@ class CurrentBooking extends Component {
     };
     componentWillUnmount() {
         if (this._isMounted) {
+            // clearInterval(this.state.ndIntvl);
             this.pubnub.unsubscribe({
                 channels: [this.state.userId]
             });
@@ -51,10 +54,11 @@ class CurrentBooking extends Component {
     }
 
     componentDidMount = async () => {
-        this.fetchCurrentRide();
-        this._isMounted = true;
-
+        await this.fetchCurrentRide();
+        // const ndIntvl = setInterval(this.callInsideRender(), 3000);
+        // this.setState({ ndIntvl: ndIntvl });
         navigator.geolocation.watchPosition(async pos => {
+            this.callInsideRender();
             const coords = pos.coords;
             console.log(coords);
             this.setState({
@@ -63,7 +67,7 @@ class CurrentBooking extends Component {
                     lng: coords.longitude
                 }
             });
-            this.callInsideRender();
+
             Meteor.call(
                 "updateDriverLocation",
                 {
@@ -79,20 +83,21 @@ class CurrentBooking extends Component {
                     }
                 }
             );
-
-            await this.pubnub.publish({
-                message: {
-                    bookingId: this.state.bookingId,
-                    driverCoords: this.state.currentPosition,
-                    time: Date.now()
-                },
-                channel: this.state.userId,
-                sendByPost: false, // true to send via post
-                storeInHistory: false, //override default storage options
-                meta: {
-                    type: "driverLoc"
-                }
-            });
+            if (this._isMounted) {
+                await this.pubnub.publish({
+                    message: {
+                        bookingId: this.state.bookingId,
+                        driverCoords: this.state.currentPosition,
+                        time: Date.now()
+                    },
+                    channel: this.state.userId,
+                    sendByPost: false, // true to send via post
+                    storeInHistory: false, //override default storage options
+                    meta: {
+                        type: "driverLoc"
+                    }
+                });
+            }
             const userId = Meteor.userId();
             Meteor.call(
                 "updateDriverLocation",
@@ -113,8 +118,13 @@ class CurrentBooking extends Component {
     };
 
     callInsideRender = () => {
-        if (this._isMounted) {
-            const messages = this.pubnub.getMessage(this.state.userId);
+        if (this._isMounted && this.state.userId) {
+            let messages;
+            try {
+                messages = this.pubnub.getMessage(this.state.userId);
+            } catch (err) {
+                console.log(err);
+            }
             if (messages && messages.length) {
                 this.handleSocket(messages[messages.length - 1]);
             }
@@ -126,16 +136,20 @@ class CurrentBooking extends Component {
         if (
             message.userMetadata.type == "chat" &&
             this.state.bookingId == message.message.bookingId &&
-            message.message.message
+            message.message.message &&
+            this.state.timeArr.indexOf(message.message.time) == "-1"
         ) {
+            let { timeArr } = this.state;
+            timeArr.push(message.message.time);
+            this.setState(timeArr);
             addResponseMessage(message.message.message);
         }
     };
-    fetchCurrentRide = () => {
+    fetchCurrentRide = async () => {
         return Meteor.call(
             "currentBookingDriver",
             Meteor.userId(),
-            (err, currentRide) => {
+            async (err, currentRide) => {
                 if (err) {
                     console.log(err);
                 }
@@ -145,33 +159,35 @@ class CurrentBooking extends Component {
                     this.setState({
                         sendToNewReqs: true
                     });
+                    this._isMounted = true;
+                    return false;
                 } else {
                     this.setState(currentRide);
                     this.pubnub.subscribe({
                         channels: [currentRide.userId],
                         withPresence: true
                     });
-                    this.pubnub
-                        .deleteMessages({
-                            channel: currentRide.userId
-                        })
-                        .then()
-                        .catch(error => console.log(error));
-                    Meteor.call(
+                    await this.pubnub.deleteMessages({
+                        channel: currentRide.userId
+                    });
+
+                    return Meteor.call(
                         "riderDetails",
-                        currentRide.userId,
+                        currentRide.userId.toString(),
                         (err, data) => {
                             if (err) {
                                 notify.show(
                                     err.reason || "Unknown error occurred",
                                     "error"
                                 );
-                                return;
+                                return false;
                             }
                             this.setState(data);
+                            this.callInsideRender();
+                            this._isMounted = true;
+                            return currentRide;
                         }
                     );
-                    return currentRide;
                 }
             }
         );
@@ -371,11 +387,12 @@ class CurrentBooking extends Component {
         });
     };
     handleNewUserMessage = async newMessage => {
+        const timestamp = Date.now();
         await this.pubnub.publish({
             message: {
                 bookingId: this.state.bookingId,
                 message: newMessage,
-                time: Date.now()
+                time: timestamp
             },
             channel: this.state.userId,
             sendByPost: false, // true to send via post
@@ -384,6 +401,10 @@ class CurrentBooking extends Component {
                 type: "chat"
             }
         });
+        let { timeArr } = this.state;
+        timeArr.push(timestamp);
+        this.setState(timeArr);
+        return true;
     };
     render() {
         return (

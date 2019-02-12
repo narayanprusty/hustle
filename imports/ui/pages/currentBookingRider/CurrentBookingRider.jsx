@@ -7,7 +7,7 @@ import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import Rating from "react-rating";
-import { Widget } from "react-chat-widget";
+import { Widget, addResponseMessage } from "react-chat-widget";
 
 import mapStyle from "../bookings/MapStyle.json";
 import "./CurrentBooking_client.scss";
@@ -54,6 +54,7 @@ class CurrentBookingRider extends Component {
                 lat: 0,
                 lng: 0
             },
+            timeArr: [],
             loader: false
         };
         this.pubnub.init(this);
@@ -256,8 +257,12 @@ class CurrentBookingRider extends Component {
         if (
             message.userMetadata.type == "chat" &&
             this.state.bookingId == message.message.bookingId &&
-            message.message.message
+            message.message.message &&
+            this.state.timeArr.indexOf(message.message.time) == "-1"
         ) {
+            let { timeArr } = this.state;
+            timeArr.push(message.message.time);
+            this.setState(timeArr);
             addResponseMessage(message.message.message);
         } else if (
             message.userMetadata.type == "driverAccept" &&
@@ -375,11 +380,12 @@ class CurrentBookingRider extends Component {
         });
     };
     handleNewUserMessage = async newMessage => {
+        const timestamp = Date.now();
         await this.pubnub.publish({
             message: {
                 bookingId: this.state.bookingId,
                 message: newMessage,
-                time: Date.now()
+                time: timestamp
             },
             channel: this.state.userId,
             sendByPost: false, // true to send via post
@@ -388,6 +394,11 @@ class CurrentBookingRider extends Component {
                 type: "chat"
             }
         });
+
+        let { timeArr } = this.state;
+        timeArr.push(timestamp);
+        this.setState(timeArr);
+        return true;
     };
 
     render() {
