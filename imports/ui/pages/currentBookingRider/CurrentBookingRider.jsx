@@ -259,7 +259,7 @@ class CurrentBookingRider extends Component {
             message.message.message
         ) {
             addResponseMessage(message.message.message);
-        }else if (
+        } else if (
             message.userMetadata.type == "driverAccept" &&
             this.state.bookingId == message.message.bookingId
         ) {
@@ -374,7 +374,7 @@ class CurrentBookingRider extends Component {
             rating: value
         });
     };
-    handleNewUserMessage = newMessage => {
+    handleNewUserMessage = async newMessage => {
         await this.pubnub.publish({
             message: {
                 bookingId: this.state.bookingId,
