@@ -374,6 +374,7 @@ class Bookings extends Component {
                 lat: place.geometry.location.lat(),
                 lng: place.geometry.location.lng()
             },
+            dropsearch: "",
             dropvalue: place.formatted_address
         });
 
@@ -388,6 +389,7 @@ class Bookings extends Component {
                 lat: place.geometry.location.lat(),
                 lng: place.geometry.location.lng()
             },
+            boardsearch: "",
             boardvalue: place.formatted_address
         });
 
