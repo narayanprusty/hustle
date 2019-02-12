@@ -7,6 +7,7 @@ import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import Rating from "react-rating";
+import { Widget } from "react-chat-widget";
 
 import mapStyle from "../bookings/MapStyle.json";
 import "./CurrentBooking_client.scss";
@@ -41,6 +42,7 @@ class CurrentBookingRider extends Component {
             ssl: true
         });
         this.state = {
+            messageList: [],
             rating: 0,
             showMap: false,
             accepted: false,
@@ -93,6 +95,7 @@ class CurrentBookingRider extends Component {
             intvl: intRecord
         });
     };
+
     watchRideStatus = () => {
         Meteor.call(
             "getBookingById",
@@ -132,6 +135,7 @@ class CurrentBookingRider extends Component {
             }
         );
     };
+
     getDriverDetails = driverId => {
         Meteor.call("driverDetails", driverId, (err, data) => {
             if (err) {
@@ -250,6 +254,12 @@ class CurrentBookingRider extends Component {
         console.log(message);
         //on driver connect make showmMap to true
         if (
+            message.userMetadata.type == "chat" &&
+            this.state.bookingId == message.message.bookingId &&
+            message.message.message
+        ) {
+            addResponseMessage(message.message.message);
+        }else if (
             message.userMetadata.type == "driverAccept" &&
             this.state.bookingId == message.message.bookingId
         ) {
@@ -364,6 +374,22 @@ class CurrentBookingRider extends Component {
             rating: value
         });
     };
+    handleNewUserMessage = newMessage => {
+        await this.pubnub.publish({
+            message: {
+                bookingId: this.state.bookingId,
+                message: newMessage,
+                time: Date.now()
+            },
+            channel: this.state.userId,
+            sendByPost: false, // true to send via post
+            storeInHistory: false, //override default storage options
+            meta: {
+                type: "chat"
+            }
+        });
+    };
+
     render() {
         return (
             <div style={{ height: "100%" }}>
@@ -542,6 +568,14 @@ class CurrentBookingRider extends Component {
                                     />
                                 )} */}
                             </GoogleMapReact>
+                        )}
+                    {this.state.accepted &&
+                        (!this.state.rideStarted ||
+                            !this.state.rideFinished) && (
+                            <Widget
+                                handleNewUserMessage={this.handleNewUserMessage}
+                                subtitle={this.state.name}
+                            />
                         )}
                     {this.state.rideFinished && (
                         <div>

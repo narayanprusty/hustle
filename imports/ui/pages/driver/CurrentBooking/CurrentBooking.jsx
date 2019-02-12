@@ -6,7 +6,10 @@ import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
 import Rating from "react-rating";
+import { Widget, addResponseMessage } from "react-chat-widget";
 import LaddaButton, { S, M, L, SLIDE_UP } from "react-ladda";
+
+import "react-chat-widget/lib/styles.css";
 
 class CurrentBooking extends Component {
     constructor(props) {
@@ -21,6 +24,7 @@ class CurrentBooking extends Component {
         this.pubnub.init(this);
 
         this.state = {
+            messageList: [],
             rating: 0
         };
         this._mounted = false;
@@ -49,6 +53,7 @@ class CurrentBooking extends Component {
     componentDidMount = async () => {
         this.fetchCurrentRide();
         this._isMounted = true;
+
         navigator.geolocation.watchPosition(async pos => {
             const coords = pos.coords;
             console.log(coords);
@@ -58,6 +63,7 @@ class CurrentBooking extends Component {
                     lng: coords.longitude
                 }
             });
+            this.callInsideRender();
             Meteor.call(
                 "updateDriverLocation",
                 {
@@ -106,6 +112,25 @@ class CurrentBooking extends Component {
         });
     };
 
+    callInsideRender = () => {
+        if (this._isMounted) {
+            const messages = this.pubnub.getMessage(this.state.userId);
+            if (messages && messages.length) {
+                this.handleSocket(messages[messages.length - 1]);
+            }
+        }
+    };
+    handleSocket = message => {
+        console.log(message);
+        //on driver connect make showmMap to true
+        if (
+            message.userMetadata.type == "chat" &&
+            this.state.bookingId == message.message.bookingId &&
+            message.message.message
+        ) {
+            addResponseMessage(message.message.message);
+        }
+    };
     fetchCurrentRide = () => {
         return Meteor.call(
             "currentBookingDriver",
@@ -122,6 +147,16 @@ class CurrentBooking extends Component {
                     });
                 } else {
                     this.setState(currentRide);
+                    this.pubnub.subscribe({
+                        channels: [currentRide.userId],
+                        withPresence: true
+                    });
+                    this.pubnub
+                        .deleteMessages({
+                            channel: currentRide.userId
+                        })
+                        .then()
+                        .catch(error => console.log(error));
                     Meteor.call(
                         "riderDetails",
                         currentRide.userId,
@@ -335,6 +370,21 @@ class CurrentBooking extends Component {
             rating: value
         });
     };
+    handleNewUserMessage = async newMessage => {
+        await this.pubnub.publish({
+            message: {
+                bookingId: this.state.bookingId,
+                message: newMessage,
+                time: Date.now()
+            },
+            channel: this.state.userId,
+            sendByPost: false, // true to send via post
+            storeInHistory: false, //override default storage options
+            meta: {
+                type: "chat"
+            }
+        });
+    };
     render() {
         return (
             <div style={{ height: "100%" }}>
@@ -509,6 +559,13 @@ class CurrentBooking extends Component {
                             </LaddaButton>
                         </div>
                     )}
+                {this.state.status == "accepted" && (
+                    <Widget
+                        handleNewUserMessage={this.handleNewUserMessage}
+                        subtitle={this.state.name}
+                    />
+                )}
+
                 {this.state.sendToNewReqs && (
                     <Redirect to="/app/driver/newreqs" />
                 )}
