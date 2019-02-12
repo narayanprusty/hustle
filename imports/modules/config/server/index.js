@@ -72,8 +72,9 @@ module.exports = {
         PaymentMethods: {
             VISA: "VISA",
             MASTERCARD: "MASTER"
-        },
+        }
     },
+    GAPIKEY: defaults.GAPIKEY,
     farePerMeter: 0.04,
     fareUnit: "USD",
     driversWithin: defaults.driversWithin,

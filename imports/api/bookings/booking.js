@@ -1,4 +1,6 @@
 import Blockcluster from "blockcluster";
+import rp from "request-promise";
+
 import { BookingRecord } from "../../collections/booking-record";
 import { DriverMeta } from "../../collections/driver-meta";
 import config from "../../modules/config/server";
@@ -36,7 +38,6 @@ const newBookingReq = async ({
     start_address,
     distance_in_meter
 }) => {
-
     const username = Meteor.user().profile.name;
     const avgRating = Meteor.user().profile.avgRating
         ? Meteor.user().profile.avgRating
@@ -146,7 +147,6 @@ const onCancellation = async (
     bookingId,
     cancel_reason = "DRIVER_NOT_FOUND"
 ) => {
-
     const txId = await node.callAPI("assets/updateAssetInfo", {
         assetName: config.ASSET.Bookings,
         fromAccount: node.getWeb3().eth.accounts[0],
@@ -278,16 +278,19 @@ const onStopRide = async (driverId, bookingId, endingPoint) => {
         if (booking.paymentMethod != "cash") {
             console.log("Paying");
 
-            var receipt = await oneClickPayment(booking.totalFare, booking.paymentMethod);
+            var receipt = await oneClickPayment(
+                booking.totalFare,
+                booking.paymentMethod
+            );
 
             console.log(receipt);
         }
     } else {
         return {
             message: "Booking not found for payment."
-        }
+        };
     }
-    
+
     return {
         txId: txId
     };
@@ -524,6 +527,21 @@ const getDriverBookingData = async (period, driverId) => {
         });
     }
 };
+
+const fetchLocationwithKeyword = ({ lat, lng, keyWord }) => {
+    return rp(
+        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${keyWord}&location=${lng},${lat}&key=` +
+            config.GAPIKEY,
+        { json: true }
+    )
+        .then(data => {
+            return data;
+        })
+        .catch(error => {
+            console.log(error);
+        });
+};
+
 export {
     newBookingReq,
     onDriverAccept,
@@ -537,5 +555,6 @@ export {
     currentBookingRider,
     paymentReceived,
     getBookingById,
-    getDriverBookingData
+    getDriverBookingData,
+    fetchLocationwithKeyword
 };
