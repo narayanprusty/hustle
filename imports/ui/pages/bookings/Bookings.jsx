@@ -9,8 +9,10 @@ import Geocode from "react-geocode";
 import { notify } from "react-notify-toast";
 import { Meteor } from "meteor/meteor";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
-
+import ReactGooglePlacesSuggest from "react-google-places-suggest";
+import ReactGoogleMapLoader from "react-google-maps-loader";
 import localizationManager from "../../localization/index";
+
 const cartTypes = [
     {
         name: "Micro",
@@ -89,7 +91,11 @@ class Bookings extends Component {
         mapApi: null,
         droppingPlace: {},
         boardingPlace: {},
-        carType: "micro"
+        carType: "micro",
+        boardsearch: "",
+        boardvalue: "",
+        dropsearch: "",
+        dropvalue: ""
     };
 
     componentWillMount = async () => {
@@ -322,8 +328,9 @@ class Bookings extends Component {
                         start_address: bookingDetails.start_address,
                         reachAfter: bookingDetails.duration.text,
                         distance: bookingDetails.distance.text,
-                        reachAfterIfTraffic:
-                            bookingDetails.duration_in_traffic.text
+                        reachAfterIfTraffic: bookingDetails.duration_in_traffic
+                            ? bookingDetails.duration_in_traffic.text
+                            : "UNKNOWN"
                     };
                     this.setState({
                         rideStatGen: true,
@@ -362,11 +369,12 @@ class Bookings extends Component {
 
     addDroppingPlace = place => {
         this.setState({
-            droppingPlace: place[0],
+            droppingPlace: place,
             droppingPoint: {
-                lat: place[0].geometry.location.lat(),
-                lng: place[0].geometry.location.lng()
-            }
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            },
+            dropvalue: place.formatted_address
         });
 
         //call the change route function
@@ -375,12 +383,32 @@ class Bookings extends Component {
 
     addBoardingPlace = place => {
         this.setState({
-            boardingPlace: place[0],
+            boardingPlace: place,
             boardingPoint: {
-                lat: place[0].geometry.location.lat(),
-                lng: place[0].geometry.location.lng()
-            }
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            },
+            boardvalue: place.formatted_address
         });
+
+        //fit the map bounds
+        const {
+            mapInstance,
+            mapApi,
+            droppingPoint,
+            boardingPoint
+        } = this.state;
+
+        let latlng = [new mapApi.LatLng(boardingPoint.lat, boardingPoint.lng)];
+        if (droppingPoint && droppingPoint.lat) {
+            this.changeRoute();
+        } else {
+            let latlngbounds = new mapApi.LatLngBounds();
+            for (let i = 0; i < latlng.length; i++) {
+                latlngbounds.extend(latlng[i]);
+            }
+            mapInstance.fitBounds(latlngbounds);
+        }
     };
 
     onChangeBoarding = t => {
@@ -492,6 +520,60 @@ class Bookings extends Component {
         });
     };
 
+    // searchLoc = async keyWord => {
+    //     if (!keyWord.length) {
+    //         return;
+    //     }
+    //     this.setState({
+    //         dropDownData: []
+    //     });
+    //     Meteor.call(
+    //         "fetchLocationwithKeyword",
+    //         { ...this.state.currentLocation, keyWord: keyWord },
+    //         (error, data) => {
+    //             if (error) {
+    //                 return notify.show(
+    //                     error.reason || "unable to search.",
+    //                     "error"
+    //                 );
+    //             }
+    //             if (data.results && data.results.length) {
+    //                 const dropDownData = data.results.map((val, i) => {
+    //                     return {
+    //                         value: val.geometry.location,
+    //                         label: val.formatted_address
+    //                     };
+    //                 });
+    //                 this.setState({
+    //                     dropDownData: dropDownData
+    //                 });
+    //                 return dropDownData;
+    //             } else {
+    //                 return [];
+    //             }
+    //         }
+    //     );
+    // };
+
+    handleboardChange(e) {
+        this.setState({
+            boardsearch: e.target.value,
+            boardvalue: e.target.value
+        });
+    }
+
+    handledropChange(e) {
+        this.setState({
+            dropsearch: e.target.value,
+            dropvalue: e.target.value
+        });
+    }
+
+    // handleSelectSuggest(suggest) {
+    //     console.log(suggest);
+    //     this.setState({ search: "", value: suggest.formatted_address });
+    // }
+
     render() {
         const { mapApiLoaded, mapInstance, mapApi, listnToDriver } = this.state;
 
@@ -538,18 +620,39 @@ class Bookings extends Component {
                                 }:{" "}
                             </span>
                             {mapApiLoaded && (
-                                <SearchBox
-                                    placeholder="Default is Current Location"
-                                    map={mapInstance}
-                                    mapApi={mapApi}
-                                    value={
-                                        this.state.boardingPlace
-                                            ? this.state.boardingPlace
-                                                  .formatted_address
-                                            : ""
-                                    }
-                                    addplace={this.addBoardingPlace}
-                                />
+                                // <SearchBox
+                                //     placeholder="Default is Current Location"
+                                //     map={mapInstance}
+                                //     mapApi={mapApi}
+                                //     value={
+                                //         this.state.boardingPlace
+                                //             ? this.state.boardingPlace
+                                //                   .formatted_address
+                                //             : ""
+                                //     }
+                                //     addplace={this.addBoardingPlace}
+                                // />
+
+                                <ReactGooglePlacesSuggest
+                                    name="boardingPoint"
+                                    autocompletionRequest={{
+                                        input: this.state.boardsearch
+                                    }}
+                                    googleMaps={mapApi}
+                                    onSelectSuggest={this.addBoardingPlace.bind(
+                                        this
+                                    )}
+                                >
+                                    <input
+                                        type="text"
+                                        name="boardingPointInput"
+                                        value={this.state.boardvalue}
+                                        placeholder="Default is current location"
+                                        onChange={this.handleboardChange.bind(
+                                            this
+                                        )}
+                                    />
+                                </ReactGooglePlacesSuggest>
                             )}
                         </label>
                         <label className="item item-input item-stacked-label">
@@ -560,12 +663,32 @@ class Bookings extends Component {
                                 }:{" "}
                             </span>
                             {mapApiLoaded && (
-                                <SearchBox
-                                    placeholder="Enter a location"
-                                    map={mapInstance}
-                                    mapApi={mapApi}
-                                    addplace={this.addDroppingPlace}
-                                />
+                                // <SearchBox
+                                //     placeholder="Enter a location"
+                                //     map={mapInstance}
+                                //     mapApi={mapApi}
+                                //     addplace={this.addDroppingPlace}
+                                // />
+                                <ReactGooglePlacesSuggest
+                                    name="droppingPoint"
+                                    autocompletionRequest={{
+                                        input: this.state.dropsearch
+                                    }}
+                                    googleMaps={mapApi}
+                                    onSelectSuggest={this.addDroppingPlace.bind(
+                                        this
+                                    )}
+                                >
+                                    <input
+                                        type="text"
+                                        name="droppingPointInput"
+                                        value={this.state.dropvalue}
+                                        placeholder="select location"
+                                        onChange={this.handledropChange.bind(
+                                            this
+                                        )}
+                                    />
+                                </ReactGooglePlacesSuggest>
                             )}
                         </label>
                         {this.state.rideStatGen && (
