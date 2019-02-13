@@ -203,17 +203,20 @@ class CurrentBooking extends Component {
                 "maps://?ll=" +
                     +this.state.boardingPoint.lat +
                     "," +
-                    this.state.boardingPoint.lng +
-                    "_system"
+                    this.state.boardingPoint.lng,
+                "_system"
             );
-        } else if (this.isAndroid()) {
-            open(
-                "geo:0,0?q=" +
-                    this.state.boardingPoint.lat +
-                    "," +
-                    this.state.boardingPoint.lng
-            );
-        } else {
+        }
+        // else if (this.isAndroid()) {
+        //     open(
+        //         "geo:0,0?q=" +
+        //             this.state.boardingPoint.lat +
+        //             "," +
+        //             this.state.boardingPoint.lng,
+        //         "_system"
+        //     );
+        // }
+        else {
             open(
                 "http://maps.google.com/maps?q=loc:" +
                     this.state.boardingPoint.lat +
@@ -259,16 +262,17 @@ class CurrentBooking extends Component {
                         "maps://?ll=" +
                             +this.state.droppingPoint.lat +
                             "," +
-                            this.state.droppingPoint.lng +
-                            "_system"
+                            this.state.droppingPoint.lng,
+                        "_system"
                     );
-                } else if (this.isAndroid()) {
-                    open(
-                        "geo:0,0?q=" +
-                            this.state.droppingPoint.lat +
-                            "," +
-                            this.state.droppingPoint.lng
-                    );
+                    // else if (this.isAndroid()) {
+                    //     open(
+                    //         "geo:0,0?q=" +
+                    //             this.state.droppingPoint.lat +
+                    //             "," +
+                    //             this.state.droppingPoint.lng,
+                    //         "_system"
+                    //     );
                 } else {
                     open(
                         "http://maps.google.com/maps?q=loc:" +
