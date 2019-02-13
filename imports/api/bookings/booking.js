@@ -130,8 +130,14 @@ const newBookingReq = async ({
         totalFare: totalFare,
         totalDistance: distance,
         totalDuration: reachAfter,
-        boardingPoint: boardingPoint,
-        droppingPoint: droppingPoint,
+        boardingPoint: {
+            type: "Point",
+            coordinates: [boardingPoint.lat, boardingPoint.lng]
+        },
+        droppingPoint: {
+            type: "Point",
+            coordinates: [droppingPoint.lat, droppingPoint.lng]
+        },
         status: "pending",
         active: true,
         createdAt: Date.now()
