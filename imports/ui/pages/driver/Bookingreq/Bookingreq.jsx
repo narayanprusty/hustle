@@ -299,6 +299,20 @@ class Bookingreq extends Component {
                                     {data.totalDuration}
                                     <i className="icon fa fa-clock-o" />
                                 </a>
+                                <a className="item item-icon-right" href="#">
+                                    {data.start_address || "Unknown"}
+                                    <i
+                                        className="icon fa fa-map-marker"
+                                        style={{ color: "green" }}
+                                    />
+                                </a>
+                                <a className="item item-icon-right" href="#">
+                                    {data.end_address || "Unknown"}
+                                    <i
+                                        className="icon fa fa-map-marker"
+                                        style={{ color: "red" }}
+                                    />
+                                </a>
                             </div>
                         </p>
                         <p>

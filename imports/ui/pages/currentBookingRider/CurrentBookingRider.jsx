@@ -157,6 +157,10 @@ class CurrentBookingRider extends Component {
                 } else {
                     if (currentRide.status == "started") {
                         this.setState({
+                            accepted: true
+                        });
+                    } else if (currentRide.status == "started") {
+                        this.setState({
                             showMap: true,
                             rideStarted: true,
                             accepted: true
@@ -458,43 +462,49 @@ class CurrentBookingRider extends Component {
                         </div>
                     </div>
                 )}
-                {!this.state.accepted && this.state.bookingId && (
-                    <div>
-                        <div className="card">
-                            <div
-                                className="item item-text-wrap"
-                                style={{ textAlign: "center" }}
-                            >
-                                <div>
-                                    <img
-                                        src={"/images/pending.png"}
-                                        style={{ width: "40px" }}
-                                    />
-                                </div>
-                                <div className="padding-top">
-                                    Waiting for nearby drivers to accept your
-                                    ride request
+                {!this.state.accepted &&
+                    this.state.bookingId &&
+                    !this.state.rideStarted &&
+                    !this.state.rideFinished && (
+                        <div>
+                            <div className="card">
+                                <div
+                                    className="item item-text-wrap"
+                                    style={{ textAlign: "center" }}
+                                >
+                                    <div>
+                                        <img
+                                            src={"/images/pending.png"}
+                                            style={{ width: "40px" }}
+                                        />
+                                    </div>
+                                    <div className="padding-top">
+                                        Waiting for nearby drivers to accept
+                                        your ride request
+                                    </div>
                                 </div>
                             </div>
+                            <div className="padding-left padding-right">
+                                <LaddaButton
+                                    className="button button-block button-assertive activated"
+                                    loading={this.state.loader}
+                                    onClick={this.onCancel}
+                                    data-color="##FFFF00"
+                                    data-size={L}
+                                    data-style={SLIDE_UP}
+                                    data-spinner-size={30}
+                                    data-spinner-color="#ddd"
+                                    data-spinner-lines={12}
+                                >
+                                    <i
+                                        className="fa fa-times"
+                                        aria-hidden="true"
+                                    />{" "}
+                                    Cancel Request
+                                </LaddaButton>
+                            </div>
                         </div>
-                        <div className="padding-left padding-right">
-                            <LaddaButton
-                                className="button button-block button-assertive activated"
-                                loading={this.state.loader}
-                                onClick={this.onCancel}
-                                data-color="##FFFF00"
-                                data-size={L}
-                                data-style={SLIDE_UP}
-                                data-spinner-size={30}
-                                data-spinner-color="#ddd"
-                                data-spinner-lines={12}
-                            >
-                                <i className="fa fa-times" aria-hidden="true" />{" "}
-                                Cancel Request
-                            </LaddaButton>
-                        </div>
-                    </div>
-                )}
+                    )}
 
                 <div className="mapView padding-left padding-right padding-bottom">
                     {this._isMounted &&
