@@ -17,6 +17,7 @@ import AddCard from "../../pages/AddCard/AddCard";
 
 import { notify } from "react-notify-toast";
 import pubnub from "../../notifications/index";
+import DriverRideHistory from "../../pages/DriverRideHistory/DriverRideHistory";
 
 const menuColStyles = {
     padding: "0px"
@@ -91,14 +92,8 @@ export default class Main extends Component {
                         path="/app/subscriptions"
                         component={Subscriptions}
                     />
-                    <Route
-                        path="/app/myCards"
-                        component={MyCards}
-                    />
-                    <Route
-                        path="/app/addCards"
-                        component={AddCard}
-                    />
+                    <Route path="/app/myCards" component={MyCards} />
+                    <Route path="/app/addCards" component={AddCard} />
                     <Route path="/app/home" component={Bookings} />
                     <Route path="/app/rides" component={Rides} />
                     <Route
@@ -114,6 +109,10 @@ export default class Main extends Component {
                     <Route
                         path="/app/driver/ride/payment/:id"
                         component={RidePayment}
+                    />
+                    <Route
+                        path="/app/driver/rides"
+                        component={DriverRideHistory}
                     />
                 </div>
 
@@ -151,10 +150,10 @@ export default class Main extends Component {
                             <i className="icon ion-home" />
                             Home
                         </Link>
-                        <a to="/app/driver/rides" className="tab-item">
+                        <Link to="/app/driver/rides" className="tab-item">
                             <i className="icon ion-navicon-round" />
                             Rides
-                        </a>
+                        </Link>
                         <Link to="/app/settings" className="tab-item">
                             <i className="icon ion-gear-a" />
                             Settings

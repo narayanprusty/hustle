@@ -54,6 +54,7 @@ const newBookingReq = async ({
             .split(".")[1]; //this is the Booking Id
     const data = {
         createdAt: currentDate,
+        riderName: username,
         preferredCar: preferredCar,
         userId: userId,
         paymentMethod: paymentMethod,
@@ -127,6 +128,8 @@ const newBookingReq = async ({
         paymentMethod: paymentMethod,
         bookingId: identifier,
         userId: userId,
+        start_address: start_address,
+        end_address: end_address,
         totalFare: totalFare,
         totalDistance: distance,
         totalDuration: reachAfter,
@@ -354,6 +357,23 @@ const fetchUserBookings = async (userId, page) => {
     };
 };
 
+const fetchDriverBookings = async (driverId, page) => {
+    const data = await node.callAPI("assets/search", {
+        $query: {
+            assetName: config.ASSET.Bookings,
+            driverId: driverId
+        },
+        $limit: page * 10,
+        $skip: page * 10 - 10,
+        $sort: {
+            _id: -1
+        }
+    });
+    return {
+        data: data
+    };
+};
+
 const getBookingById = async bookingId => {
     if (!bookingId) {
         return false;
@@ -555,6 +575,7 @@ export {
     onStopRide,
     onConfirmPayment,
     fetchUserBookings,
+    fetchDriverBookings,
     fetchBookingReq,
     onCancellation,
     currentBookingDriver,
