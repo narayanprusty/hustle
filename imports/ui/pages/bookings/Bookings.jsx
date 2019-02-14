@@ -414,6 +414,13 @@ class Bookings extends Component {
     };
 
     onChangeBoarding = t => {
+        if (this.state.stopMapInput) {
+            notify.show(
+                "Cant change location while rasing booking request.",
+                "warning"
+            );
+            return false;
+        }
         Geocode.fromLatLng(t.lat, t.lng).then(response => {
             const address = response.results[0];
 
@@ -476,7 +483,8 @@ class Bookings extends Component {
 
     raiseBookingReq = e => {
         this.setState({
-            submitted: true
+            submitted: true,
+            stopMapInput: true
         });
 
         e.preventDefault();
@@ -650,6 +658,11 @@ class Bookings extends Component {
                                         name="boardingPointInput"
                                         value={this.state.boardvalue}
                                         placeholder="Default is current location"
+                                        disabled={
+                                            this.state.stopMapInput
+                                                ? true
+                                                : false
+                                        }
                                         onChange={this.handleboardChange.bind(
                                             this
                                         )}
@@ -686,6 +699,11 @@ class Bookings extends Component {
                                         name="droppingPointInput"
                                         value={this.state.dropvalue}
                                         placeholder="select location"
+                                        disabled={
+                                            this.state.stopMapInput
+                                                ? true
+                                                : false
+                                        }
                                         onChange={this.handledropChange.bind(
                                             this
                                         )}
