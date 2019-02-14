@@ -76,7 +76,7 @@ class CurrentBookingRider extends Component {
             channels: [Meteor.userId().toString()],
             withPresence: true,
             message: msg => {
-                console.log(">>>>>>>>>>>>>>>>");
+                console.log(">>>>>>>>>>>>>>>>", msg);
             }
         });
 
@@ -397,7 +397,7 @@ class CurrentBookingRider extends Component {
                 message: newMessage,
                 time: timestamp
             },
-            channel: this.state.userId,
+            channel: Meteor.userId(),
             sendByPost: false, // true to send via post
             storeInHistory: false, //override default storage options
             meta: {
