@@ -50,9 +50,9 @@ export default class Main extends Component {
             withPresence: true,
             autoload: 100,
             message: msg => {
-                console.log("got msg", msg);
+                // console.log("got msg", msg);
                 //Add localization support
-                notify.show(msg.data, msg.type);
+                if (msg.data) notify.show(msg.data, msg.type);
             }
         });
     }
