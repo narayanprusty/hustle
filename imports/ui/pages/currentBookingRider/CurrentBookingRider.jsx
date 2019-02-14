@@ -391,6 +391,47 @@ class CurrentBookingRider extends Component {
             rating: value
         });
     };
+    copyToClipboard = str => {
+        const el = document.createElement("textarea"); // Create a <textarea> element
+        el.value = str; // Set its value to the string that you want copied
+        el.setAttribute("readonly", ""); // Make it readonly to be tamper-proof
+        el.style.position = "absolute";
+        el.style.left = "-9999px"; // Move outside the screen to make it invisible
+        document.body.appendChild(el); // Append the <textarea> element to the HTML document
+        const selected =
+            document.getSelection().rangeCount > 0 // Check if there is any content selected previously
+                ? document.getSelection().getRangeAt(0) // Store selection if found
+                : false; // Mark as false to know no selection existed before
+        el.select(); // Select the <textarea> content
+        document.execCommand("copy"); // Copy - only works as a result of a user action (e.g. click events)
+        document.body.removeChild(el); // Remove the <textarea> element
+        if (selected) {
+            // If a selection existed before copying
+            document.getSelection().removeAllRanges(); // Unselect everything on the HTML document
+            document.getSelection().addRange(selected); // Restore the original selection
+        }
+    };
+    shareLocation = () => {
+        this.setState({ share_location: true });
+        const uri = config.FRONTEND_HOST + "/track?tid=" + this.state.bookingId;
+        if (navigator.share) {
+            navigator
+                .share({
+                    title: "Live Location Hustle",
+                    text: config.shareText,
+                    url: uri
+                })
+                .then(() => this.setState({ share_location: false }))
+                .catch(error => {
+                    console.log("Error sharing", error);
+                    this.setState({ share_location: false });
+                });
+        } else {
+            this.copyToClipboard(uri);
+            this.setState({ share_location: false });
+            notify.show("Link Copied", "success");
+        }
+    };
     handleNewUserMessage = async newMessage => {
         const timestamp = Date.now();
         await this.pubnub.publish({
@@ -412,25 +453,7 @@ class CurrentBookingRider extends Component {
         this.setState(timeArr);
         return true;
     };
-    shareLocation = () => {
-        this.setState({ share_location: true });
-        if (navigator.share) {
-            navigator
-                .share({
-                    title: "Live Location Hustle",
-                    text: config.shareText,
-                    url:
-                        config.FRONTEND_HOST +
-                        "/track?tid=" +
-                        this.state.bookingId
-                })
-                .then(() => this.setState({ share_location: false }))
-                .catch(error => {
-                    console.log("Error sharing", error);
-                    this.setState({ share_location: false });
-                });
-        }
-    };
+
     render() {
         return (
             <div style={{ height: "100%" }}>
@@ -489,20 +512,22 @@ class CurrentBookingRider extends Component {
                     </div>
                 )}
                 {this.state.rideStarted && (
-                    <LaddaButton
-                        className="button button-block button-assertive activated"
-                        loading={this.state.share_location}
-                        onClick={this.shareLocation}
-                        data-color="##FFFF00"
-                        data-size={L}
-                        data-style={SLIDE_UP}
-                        data-spinner-size={30}
-                        data-spinner-color="#ddd"
-                        data-spinner-lines={12}
-                    >
-                        <i className="fa-share-alt" aria-hidden="true" /> Share
-                        Live Location
-                    </LaddaButton>
+                    <div className="padding-left padding-right">
+                        <LaddaButton
+                            className="button button-block button-energized activated"
+                            loading={this.state.share_location}
+                            onClick={this.shareLocation}
+                            data-color="##FFFF00"
+                            data-size={L}
+                            data-style={SLIDE_UP}
+                            data-spinner-size={30}
+                            data-spinner-color="#ddd"
+                            data-spinner-lines={12}
+                        >
+                            <i className="fa fa-share" aria-hidden="true" />{" "}
+                            Share Live Location
+                        </LaddaButton>
+                    </div>
                 )}
                 {!this.state.accepted &&
                     this.state.bookingId &&
