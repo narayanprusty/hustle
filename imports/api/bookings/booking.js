@@ -586,6 +586,15 @@ const getBookingFromDb = bookingId => {
     }
 };
 
+const getDriverLocation = driverId => {
+    const driverMeta = DriverMeta.find({ driverId: driverId }).fetch()[0];
+    if (driverMeta && driverMeta.currentLocation) {
+        return driverMeta.currentLocation;
+    } else {
+        return false;
+    }
+};
+
 export {
     newBookingReq,
     onDriverAccept,
@@ -602,5 +611,6 @@ export {
     getBookingById,
     getDriverBookingData,
     fetchLocationwithKeyword,
-    getBookingFromDb
+    getBookingFromDb,
+    getDriverLocation
 };

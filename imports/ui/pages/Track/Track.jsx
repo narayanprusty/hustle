@@ -4,7 +4,6 @@ import { notify } from "react-notify-toast";
 import { withRouter } from "react-router-dom";
 import GoogleMapReact from "google-map-react";
 import queryString from "query-string";
-import PubNubReact from "pubnub-react";
 
 import config from "../../../modules/config/client";
 import "./Track_client.scss";
@@ -33,12 +32,6 @@ class Track extends Component {
     constructor(props) {
         super(props);
         this._isMounted = false;
-        this.pubnub = new PubNubReact({
-            publishKey: config.PUBNUB.pubKey,
-            subscribeKey: config.PUBNUB.subKey,
-            secretKey: config.PUBNUB.secret,
-            ssl: true
-        });
         this.state = {
             bookingId: null,
             not_found: false,
@@ -49,14 +42,11 @@ class Track extends Component {
                 lng: 0
             }
         };
-        this.pubnub.init(this);
     }
     componentWillUnmount = () => {
         if (this._isMounted) {
             clearInterval(this.state.intvl);
-            this.pubnub.unsubscribe({
-                channels: [this.state.userId]
-            });
+            clearInterval(this.state.intvl1);
         }
     };
     componentDidMount = () => {
@@ -67,20 +57,48 @@ class Track extends Component {
             });
             notify.show("Invalid Tracking Id", "error");
         } else {
-            const channelToListen = this.fetchBooking(parsed.tid);
-            this.pubnub.subscribe({
-                channels: channelToListen,
-                withPresence: true,
-                message: msg => {
-                    this.handleSocket(msg);
-                }
-            });
+            this.fetchBooking(parsed.tid);
+            //setinerval of getDriverLocation
+            const invlT = setInterval(this.fetchDriverLoc, 3000);
             const intRecord = setInterval(this.watchRideStatus, 5000);
             this.setState({
-                intvl: intRecord
+                intvl: intRecord,
+                intvl1: invlT
             });
         }
         this._isMounted = true;
+    };
+    fetchDriverLoc = () => {
+        return Meteor.call(
+            "getDriverLocation",
+            this.state.driverId,
+            (error, data) => {
+                if (error) {
+                    notify.show(
+                        error.reason || "Unknown Error Occurred!",
+                        "error"
+                    );
+                    return false;
+                } else if (data) {
+                    this.setState({
+                        driverLoc: data
+                    });
+                    const { mapInstance, mapApi, driverLoc } = this.state;
+
+                    const latlng = [
+                        new mapApi.LatLng(driverLoc.lat, driverLoc.lng)
+                    ];
+                    let latlngbounds = new mapApi.LatLngBounds();
+                    for (let i = 0; i < latlng.length; i++) {
+                        latlngbounds.extend(latlng[i]);
+                    }
+                    mapInstance.fitBounds(latlngbounds);
+                } else {
+                    notify.show("Unable to fetch driver Location", "error");
+                    return false;
+                }
+            }
+        );
     };
     fetchBooking = bookingId => {
         return Meteor.call("getBookingFromDb", bookingId, (error, data) => {
@@ -120,34 +138,13 @@ class Track extends Component {
                     bookingData.data.rideStatus == "finished"
                 ) {
                     clearInterval(this.state.intvl);
-
+                    clearInterval(this.state.intvl1);
                     this.setState({
                         status: "finished"
                     });
                 }
             }
         );
-    };
-
-    handleSocket = message => {
-        console.log(message);
-
-        if (
-            message.userMetadata.type == "driverLoc" &&
-            this.state.bookingId == message.message.bookingId
-        ) {
-            this.setState({
-                driverLoc: message.message.driverCoords
-            });
-            const { mapInstance, mapApi, driverLoc } = this.state;
-
-            const latlng = [new mapApi.LatLng(driverLoc.lat, driverLoc.lng)];
-            let latlngbounds = new mapApi.LatLngBounds();
-            for (let i = 0; i < latlng.length; i++) {
-                latlngbounds.extend(latlng[i]);
-            }
-            mapInstance.fitBounds(latlngbounds);
-        }
     };
 
     createMapOptions = () => {

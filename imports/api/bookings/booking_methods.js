@@ -13,7 +13,8 @@ import {
     paymentReceived,
     getBookingById,
     fetchLocationwithKeyword,
-    getBookingFromDb
+    getBookingFromDb,
+    getDriverLocation
 } from "./booking.js";
 import { Meteor } from "meteor/meteor";
 
@@ -32,6 +33,7 @@ Meteor.methods({
     paymentReceived,
     getBookingById,
     fetchLocationwithKeyword,
-    getBookingFromDb
+    getBookingFromDb,
+    getDriverLocation
 });
 export {};
