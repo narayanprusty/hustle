@@ -375,7 +375,9 @@ class CurrentBookingRider extends Component {
                 this.setState({
                     loader: false
                 });
+
                 notify.show("Review submitted, Thank you.", "success");
+                this.props.history.push("/app");
             }
         );
     };
