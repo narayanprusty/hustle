@@ -8,11 +8,9 @@ import PubNubReact from "pubnub-react";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import Rating from "react-rating";
 import { Widget, addResponseMessage } from "react-chat-widget";
-import ShareBtn from "react-share-button";
 
 import mapStyle from "../bookings/MapStyle.json";
 import "./CurrentBooking_client.scss";
-import "react-share-button/dist/ShareBtn";
 
 const Marker = ({ metaData }) => (
     <div>
@@ -414,7 +412,25 @@ class CurrentBookingRider extends Component {
         this.setState(timeArr);
         return true;
     };
-
+    shareLocation = () => {
+        this.setState({ share_location: true });
+        if (navigator.share) {
+            navigator
+                .share({
+                    title: "Live Location Hustle",
+                    text: config.shareText,
+                    url:
+                        config.FRONTEND_HOST +
+                        "/track?tid=" +
+                        this.state.bookingId
+                })
+                .then(() => this.setState({ share_location: false }))
+                .catch(error => {
+                    console.log("Error sharing", error);
+                    this.setState({ share_location: false });
+                });
+        }
+    };
     render() {
         return (
             <div style={{ height: "100%" }}>
@@ -473,16 +489,20 @@ class CurrentBookingRider extends Component {
                     </div>
                 )}
                 {this.state.rideStarted && (
-                    <ShareBtn
-                        url={
-                            config.FRONTEND_HOST +
-                            "/track?tid=" +
-                            this.state.bookingId
-                        }
-                        text={config.shareText}
-                        className="ib"
-                        displayText="Share live location"
-                    />
+                    <LaddaButton
+                        className="button button-block button-assertive activated"
+                        loading={this.state.share_location}
+                        onClick={this.shareLocation}
+                        data-color="##FFFF00"
+                        data-size={L}
+                        data-style={SLIDE_UP}
+                        data-spinner-size={30}
+                        data-spinner-color="#ddd"
+                        data-spinner-lines={12}
+                    >
+                        <i className="fa-share-alt" aria-hidden="true" /> Share
+                        Live Location
+                    </LaddaButton>
                 )}
                 {!this.state.accepted &&
                     this.state.bookingId &&
