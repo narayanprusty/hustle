@@ -53,11 +53,11 @@ class CurrentBooking extends Component {
         }
     }
 
-    componentDidMount = async () => {
-        await this.fetchCurrentRide();
+    componentDidMount = () => {
+        this.fetchCurrentRide();
         // const ndIntvl = setInterval(this.callInsideRender(), 3000);
         // this.setState({ ndIntvl: ndIntvl });
-        navigator.geolocation.watchPosition(async pos => {
+        navigator.geolocation.watchPosition(pos => {
             this.callInsideRender();
             const coords = pos.coords;
             console.log(coords);
@@ -67,7 +67,25 @@ class CurrentBooking extends Component {
                     lng: coords.longitude
                 }
             });
-
+            if (this._isMounted) {
+                this.pubnub
+                    .publish({
+                        message: {
+                            bookingId: this.state.bookingId,
+                            driverCoords: this.state.currentPosition,
+                            time: Date.now()
+                        },
+                        channel: this.state.userId,
+                        sendByPost: false, // true to send via post
+                        storeInHistory: false, //override default storage options
+                        meta: {
+                            type: "driverLoc"
+                        }
+                    })
+                    .then(data => {
+                        console.log(data);
+                    });
+            }
             Meteor.call(
                 "updateDriverLocation",
                 {
@@ -83,21 +101,7 @@ class CurrentBooking extends Component {
                     }
                 }
             );
-            if (this._isMounted) {
-                await this.pubnub.publish({
-                    message: {
-                        bookingId: this.state.bookingId,
-                        driverCoords: this.state.currentPosition,
-                        time: Date.now()
-                    },
-                    channel: this.state.userId,
-                    sendByPost: false, // true to send via post
-                    storeInHistory: false, //override default storage options
-                    meta: {
-                        type: "driverLoc"
-                    }
-                });
-            }
+
             const userId = Meteor.userId();
             Meteor.call(
                 "updateDriverLocation",
@@ -145,11 +149,11 @@ class CurrentBooking extends Component {
             addResponseMessage(message.message.message);
         }
     };
-    fetchCurrentRide = async () => {
+    fetchCurrentRide = () => {
         return Meteor.call(
             "currentBookingDriver",
             Meteor.userId(),
-            async (err, currentRide) => {
+            (err, currentRide) => {
                 if (err) {
                     console.log(err);
                 }
@@ -167,9 +171,9 @@ class CurrentBooking extends Component {
                         channels: [currentRide.userId],
                         withPresence: true
                     });
-                    await this.pubnub.deleteMessages({
-                        channel: currentRide.userId
-                    });
+                    // await this.pubnub.deleteMessages({
+                    //     channel: currentRide.userId
+                    // });
 
                     return Meteor.call(
                         "riderDetails",
@@ -201,27 +205,25 @@ class CurrentBooking extends Component {
         if (this.isIphone()) {
             open(
                 "maps://?ll=" +
-                    +this.state.boardingPoint.lat +
+                    +this.state.boardingPoint.coordinates[0] +
                     "," +
-                    this.state.boardingPoint.lng,
+                    this.state.boardingPoint.coordinates[1],
                 "_system"
             );
-        }
-        // else if (this.isAndroid()) {
-        //     open(
-        //         "geo:0,0?q=" +
-        //             this.state.boardingPoint.lat +
-        //             "," +
-        //             this.state.boardingPoint.lng,
-        //         "_system"
-        //     );
-        // }
-        else {
+        } else if (this.isAndroid()) {
+            open(
+                "geo:0,0?q=" +
+                    this.state.boardingPoint.coordinates[0] +
+                    "," +
+                    this.state.boardingPoint.coordinates[1],
+                "_system"
+            );
+        } else {
             open(
                 "http://maps.google.com/maps?q=loc:" +
-                    this.state.boardingPoint.lat +
+                    this.state.boardingPoint.coordinates[0] +
                     "," +
-                    this.state.boardingPoint.lng,
+                    this.state.boardingPoint.coordinates[1],
                 "_blank"
             );
         }
@@ -260,25 +262,25 @@ class CurrentBooking extends Component {
                     // incase not working try making it `q` instead of ll
                     open(
                         "maps://?ll=" +
-                            +this.state.droppingPoint.lat +
+                            +this.state.droppingPoint.coordinates[0] +
                             "," +
-                            this.state.droppingPoint.lng,
+                            this.state.droppingPoint.coordinates[1],
                         "_system"
                     );
-                    // else if (this.isAndroid()) {
-                    //     open(
-                    //         "geo:0,0?q=" +
-                    //             this.state.droppingPoint.lat +
-                    //             "," +
-                    //             this.state.droppingPoint.lng,
-                    //         "_system"
-                    //     );
+                } else if (this.isAndroid()) {
+                    open(
+                        "geo:0,0?q=" +
+                            this.state.droppingPoint.coordinates[0] +
+                            "," +
+                            this.state.droppingPoint.coordinates[1],
+                        "_system"
+                    );
                 } else {
                     open(
                         "http://maps.google.com/maps?q=loc:" +
-                            this.state.droppingPoint.lat +
+                            this.state.droppingPoint.coordinates[0] +
                             "," +
-                            this.state.droppingPoint.lng,
+                            this.state.droppingPoint.coordinates[1],
                         "_blank"
                     );
                 }

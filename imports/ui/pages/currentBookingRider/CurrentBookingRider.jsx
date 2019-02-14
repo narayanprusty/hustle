@@ -68,16 +68,16 @@ class CurrentBookingRider extends Component {
         }
     }
 
-    componentDidMount = async () => {
+    componentDidMount = () => {
         this.fetchCurrentRide();
         console.log(Meteor.userId());
 
         this.pubnub.subscribe({
-            channels: [Meteor.userId()],
-            withPresence: true
-        });
-        await this.pubnub.deleteMessages({
-            channel: Meteor.userId()
+            channels: [Meteor.userId().toString()],
+            withPresence: true,
+            message: msg => {
+                console.log(">>>>>>>>>>>>>>>>");
+            }
         });
 
         this._isMounted = true;
@@ -146,7 +146,7 @@ class CurrentBookingRider extends Component {
             this.setState(data);
         });
     };
-    fetchCurrentRide = async () => {
+    fetchCurrentRide = () => {
         return Meteor.call(
             "currentBookingRider",
             Meteor.userId(),
@@ -295,7 +295,10 @@ class CurrentBookingRider extends Component {
             this.state.bookingId == message.message.bookingId
         ) {
             this.changeRoute(
-                this.state.droppingPoint,
+                {
+                    lat: this.state.droppingPoint.coordinates[0],
+                    lng: this.state.droppingPoint.coordinates[1]
+                },
                 message.message.driverCoords
             );
         } else if (
@@ -305,7 +308,10 @@ class CurrentBookingRider extends Component {
             this.state.bookingId == message.message.bookingId
         ) {
             this.changeRoute(
-                this.state.boardingPoint,
+                {
+                    lat: this.state.boardingPoint.coordinates[0],
+                    lng: this.state.boardingPoint.coordinates[1]
+                },
                 message.message.driverCoords
             );
         }
@@ -543,36 +549,35 @@ class CurrentBookingRider extends Component {
                                         metaData="current"
                                     />
                                 )}
-                                {this.state.boardingPoint && (
-                                    <Marker
-                                        lat={
-                                            this.state.boardingPoint.lat
-                                                ? this.state.boardingPoint.lat
-                                                : this.state.boardingPoint.lat
-                                        }
-                                        lng={
-                                            this.state.boardingPoint.lng
-                                                ? this.state.boardingPoint.lng
-                                                : this.state.boardingPoint.lng
-                                        }
-                                        metaData="board"
-                                    />
-                                )}
-                                {this.state.droppingPoint && (
-                                    <Marker
-                                        lat={
-                                            this.state.droppingPoint.lat
-                                                ? this.state.droppingPoint.lat
-                                                : this.state.droppingPoint.lat
-                                        }
-                                        lng={
-                                            this.state.droppingPoint.lng
-                                                ? this.state.droppingPoint.lng
-                                                : this.state.droppingPoint.lng
-                                        }
-                                        metaData="drop"
-                                    />
-                                )}
+                                {this.state.boardingPoint &&
+                                    this.state.boardingPoint.coordinates
+                                        .length && (
+                                        <Marker
+                                            lat={
+                                                this.state.boardingPoint
+                                                    .coordinates[0]
+                                            }
+                                            lng={
+                                                this.state.boardingPoint
+                                                    .coordinates[1]
+                                            }
+                                            metaData="board"
+                                        />
+                                    )}
+                                {this.state.droppingPoint &&
+                                    this.state.droppingPoint.coordinates && (
+                                        <Marker
+                                            lat={
+                                                this.state.droppingPoint
+                                                    .coordinates[0]
+                                            }
+                                            lng={
+                                                this.state.droppingPoint
+                                                    .coordinates[1]
+                                            }
+                                            metaData="drop"
+                                        />
+                                    )}
                                 {/* {this.state.driverLoc && (
                                     <Marker
                                         lat={
