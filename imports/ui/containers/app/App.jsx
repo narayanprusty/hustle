@@ -8,6 +8,7 @@ import Notifications from "react-notify-toast";
 import Register from "../../pages/register/Register";
 import EmailVerification from "../../pages/EmailVerification/EmailVerification";
 import Login from "../../pages/login/Login";
+import Track from "../../pages/Track/Track";
 
 requireAuth = RouteComponent => {
     return () => {
@@ -40,6 +41,7 @@ const App = () => (
                 path="/login"
                 render={this.requireNotLoggedIn(Login)}
             />
+            <Route exact path="/track" render={Track} />
             <Route
                 exact
                 path="/signup"

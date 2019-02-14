@@ -8,9 +8,11 @@ import PubNubReact from "pubnub-react";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import Rating from "react-rating";
 import { Widget, addResponseMessage } from "react-chat-widget";
+import ShareBtn from "react-share-button";
 
 import mapStyle from "../bookings/MapStyle.json";
 import "./CurrentBooking_client.scss";
+import "react-share-button/dist/ShareBtn";
 
 const Marker = ({ metaData }) => (
     <div>
@@ -469,6 +471,18 @@ class CurrentBookingRider extends Component {
                             </a>
                         </div>
                     </div>
+                )}
+                {this.state.rideStarted && (
+                    <ShareBtn
+                        url={
+                            config.FRONTEND_HOST +
+                            "/track?tid=" +
+                            this.state.bookingId
+                        }
+                        text={config.shareText}
+                        className="ib"
+                        displayText="Share live location"
+                    />
                 )}
                 {!this.state.accepted &&
                     this.state.bookingId &&

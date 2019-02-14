@@ -568,6 +568,24 @@ const fetchLocationwithKeyword = ({ lat, lng, keyWord }) => {
         });
 };
 
+const getBookingFromDb = bookingId => {
+    const bookingData = BookingRecord.find({
+        bookingId: bookingId,
+        status: "started"
+    }).fetch()[0];
+    if (bookingData) {
+        const driverMeta = DriverMeta.find({
+            driverId: bookingData.driverId
+        }).fetch()[0];
+        return {
+            ...bookingData,
+            driverLoc: driverMeta.currentLocation
+        };
+    } else {
+        return {};
+    }
+};
+
 export {
     newBookingReq,
     onDriverAccept,
@@ -583,5 +601,6 @@ export {
     paymentReceived,
     getBookingById,
     getDriverBookingData,
-    fetchLocationwithKeyword
+    fetchLocationwithKeyword,
+    getBookingFromDb
 };
