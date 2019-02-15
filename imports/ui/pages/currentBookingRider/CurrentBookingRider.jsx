@@ -221,6 +221,7 @@ class CurrentBookingRider extends Component {
             latlngbounds.extend(latlng[i]);
         }
         mapInstance.fitBounds(latlngbounds);
+         mapInstance.setZoom(this.state.zoom);
 
         const directionsService = new mapApi.DirectionsService();
         const directionsDisplay = new mapApi.DirectionsRenderer();

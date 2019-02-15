@@ -93,6 +93,7 @@ class Track extends Component {
                         latlngbounds.extend(latlng[i]);
                     }
                     mapInstance.fitBounds(latlngbounds);
+                    mapInstance.setZoom(this.state.zoom);
                 } else {
                     notify.show("Unable to fetch driver Location", "error");
                     return false;
