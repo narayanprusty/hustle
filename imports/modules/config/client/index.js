@@ -1,6 +1,6 @@
 module.exports = {
     farePerMeter: 0.04,
-    fareUnit: "USD",
+    fareUnit: "SAR",
     GAPIKEY: "AIzaSyAs2LAkFCJr8p4EzgIVtk169Qreykfi74Q",
     // GAPIKEY: "AIzaSyBnjRZAHqrP5Flir8iuhmBmJlOr7qKlSTE",
     PUBNUB: {

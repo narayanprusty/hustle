@@ -286,7 +286,7 @@ class Bookingreq extends Component {
                         <p>
                             <div className="list">
                                 <a class="item item-icon-right" href="#">
-                                    {data.totalFare} USD
+                                    {data.totalFare} {config.fareUnit}
                                     <i className="icon fa fa-money" />
                                 </a>
 

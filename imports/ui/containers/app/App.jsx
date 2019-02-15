@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import { withTracker } from "meteor/react-meteor-data";
 import Main from "../main/Main";
 import { Meteor } from "meteor/meteor";
 import Notifications from "react-notify-toast";

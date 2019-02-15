@@ -76,7 +76,7 @@ module.exports = {
     },
     GAPIKEY: defaults.GAPIKEY,
     farePerMeter: 0.04,
-    fareUnit: "USD",
+    fareUnit: "SAR",
     driversWithin: defaults.driversWithin,
     PUBNUB: defaults.PUBNUB,
     env: getEnv()
