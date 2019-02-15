@@ -48,7 +48,7 @@ class CurrentBookingRider extends Component {
             accepted: false,
             rideStarted: false,
             rideFinished: false,
-            zoom: 18,
+            zoom: 15,
             boardingPoint: { lat: 0, lng: 0 },
             driverLoc: {
                 lat: 0,
@@ -247,7 +247,7 @@ class CurrentBookingRider extends Component {
                     });
                 } else if (status == "ZERO_RESULTS") {
                     notify.show("Cannot find path", "error");
-                }else {
+                } else {
                     notify.show(
                         "Directions request failed due to " + status,
                         "error"
@@ -587,7 +587,7 @@ class CurrentBookingRider extends Component {
                                 }}
                                 initialCenter={this.state.driverLoc}
                                 center={this.state.driverLoc}
-                                defaultZoom={18}
+                                defaultZoom={15}
                                 zoom={this.state.zoom}
                                 layerTypes={["TrafficLayer", "TransitLayer"]}
                                 heat={true}

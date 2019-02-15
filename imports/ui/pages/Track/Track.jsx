@@ -35,7 +35,7 @@ class Track extends Component {
         this.state = {
             bookingId: null,
             not_found: false,
-            zoom: 18,
+            zoom: 15,
             driverLoc: false,
             location: {
                 lat: 0,
@@ -196,7 +196,7 @@ class Track extends Component {
                                 this.state.driverLoc || this.state.location
                             }
                             center={this.state.driverLoc || this.state.location}
-                            defaultZoom={18}
+                            defaultZoom={15}
                             zoom={this.state.zoom}
                             layerTypes={["TrafficLayer", "TransitLayer"]}
                             heat={true}

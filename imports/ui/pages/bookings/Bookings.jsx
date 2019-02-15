@@ -84,7 +84,7 @@ class Bookings extends Component {
             lat: 0,
             lng: 0
         },
-        zoom: 18,
+        zoom: 15,
         mapApiLoaded: false,
         mapInstance: null,
         mapApi: null,
@@ -859,7 +859,7 @@ class Bookings extends Component {
                                 }}
                                 initialCenter={this.state.fields.location}
                                 center={this.state.fields.location}
-                                defaultZoom={18}
+                                defaultZoom={15}
                                 zoom={this.state.zoom}
                                 layerTypes={["TrafficLayer", "TransitLayer"]}
                                 heat={true}
@@ -931,7 +931,7 @@ class Bookings extends Component {
                                     metaData="board"
                                 />
 
-                                {/* {this.state.allDrivers &&
+                                {this.state.allDrivers &&
                                     this.state.allDrivers.length &&
                                     this.state.allDrivers.map(e => {
                                         <Marker
@@ -939,7 +939,7 @@ class Bookings extends Component {
                                             lng={e.currentLocation.lng}
                                             metaData="cartop"
                                         />;
-                                    })} */}
+                                    })}
                                 {/* <LaddaButton
                                     className="floatMapButton"
                                     onClick={this.changeBoardingToCurrent}
