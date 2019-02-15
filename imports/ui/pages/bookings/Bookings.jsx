@@ -12,7 +12,6 @@ import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import ReactGooglePlacesSuggest from "react-google-places-suggest";
 import ReactGoogleMapLoader from "react-google-maps-loader";
 import localizationManager from "../../localization/index";
-import sleep from 'await-sleep'
 
 const cartTypes = [
     {
