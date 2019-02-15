@@ -1,21 +1,20 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { notify } from "react-notify-toast";
 import PhoneInput from "react-phone-number-input";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import Notifications from "react-notify-toast";
-import { BrowserRouter, Route, Switch, Redirect, Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 import "./Register_client.scss";
 export default class Register extends Component {
     constructor(props) {
-        super();
+        super(props);
         this.state = {
             formSubmitError: "",
             formSubmitSuccess: false,
-            userType: "Rider"
+            userType: "Rider",
+            phone: null
         };
     }
 

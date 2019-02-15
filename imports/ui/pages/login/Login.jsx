@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import Notifications from "react-notify-toast";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { Redirect } from "react-router-dom";
 import { notify } from "react-notify-toast";
-import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
+
+import SmartInput from "react-phone-number-input/smart-input";
+import "react-phone-number-input/style.css";
 import "./Login_client.scss";
 
 export default class Login extends Component {
@@ -17,7 +16,8 @@ export default class Login extends Component {
         this.state = {
             formSubmitError: "",
             formSubmitSuccess: false,
-            userType: "Rider"
+            userType: "Rider",
+            phone: null
         };
     }
     componentDidMount() {
@@ -107,6 +107,7 @@ export default class Login extends Component {
                         <label className="item item-input item-stacked-label">
                             <span className="input-label">Phone</span>
                             <PhoneInput
+                                inputComponent={SmartInput}
                                 placeholder="Enter phone number"
                                 value={this.state.phone}
                                 onChange={phone => this.setState({ phone })}
