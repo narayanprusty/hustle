@@ -245,7 +245,9 @@ class CurrentBookingRider extends Component {
                     this.setState({
                         poly: routePolyline
                     });
-                } else {
+                } else if (status == "ZERO_RESULTS") {
+                    notify.show("Cannot find path", "error");
+                }else {
                     notify.show(
                         "Directions request failed due to " + status,
                         "error"

@@ -355,6 +355,8 @@ class Bookings extends Component {
                         poly: routePolyline
                     });
                     routePolyline.setMap(mapInstance);
+                } else if (status == "ZERO_RESULTS") {
+                    notify.show("Cannot find path", "error");
                 } else {
                     //Add localization support
                     notify.show(
@@ -890,7 +892,7 @@ class Bookings extends Component {
                                                     : false
                                             }
                                         >
-                                            <i class="fa fa-location-arrow" />{" "}
+                                            <i className="fa fa-location-arrow" />{" "}
                                         </button>
                                     </MapControl>
                                 )}
