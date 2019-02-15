@@ -755,7 +755,6 @@ class Bookings extends Component {
                                             name="paymentMethod"
                                             value={this.state.paymentMethod}
                                             onChange={this.inputHandler}
-                                            onKeyUp={() => {alert("11")}}
                                             style={{
                                                 fontSize: "16px"
                                             }}
