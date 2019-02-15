@@ -452,19 +452,19 @@ class CurrentBooking extends Component {
                                 config.fareUnit}{" "}
                             <span className="item-note">Fare</span>
                         </a>
-                        <a className="item item-icon-right" href="#">
-                            {this.state.start_address || "Unknown"}
+                        <a className="item item-icon-left" href="#">
                             <i
                                 className="icon fa fa-map-marker"
                                 style={{ color: "green" }}
                             />
+                            {this.state.start_address || "Unknown"}
                         </a>
-                        <a className="item item-icon-right" href="#">
-                            {this.state.end_address || "Unknown"}
+                        <a className="item item-icon-left" href="#">
                             <i
                                 className="icon fa fa-map-marker"
                                 style={{ color: "red" }}
                             />
+                            {this.state.end_address || "Unknown"}
                         </a>
                         <a className="item item-icon-left" href="#">
                             <i className="icon fa fa-shopping-cart" />

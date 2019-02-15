@@ -1,16 +1,14 @@
 import React, { Component, Fragment } from "react";
-import isEmpty from "lodash.isempty";
-import { Link, withRouter, Redirect } from "react-router-dom";
-import SearchBox from "./SearchBox";
-import mapStyle from "./MapStyle"; //https://mapstyle.withgoogle.com/ you can build yours from
-import config from "../../../modules/config/client/";
+import { withRouter, Redirect } from "react-router-dom";
 import GoogleMapReact from "google-map-react";
 import Geocode from "react-geocode";
 import { notify } from "react-notify-toast";
 import { Meteor } from "meteor/meteor";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import ReactGooglePlacesSuggest from "react-google-places-suggest";
-import ReactGoogleMapLoader from "react-google-maps-loader";
+
+import mapStyle from "./MapStyle"; //https://mapstyle.withgoogle.com/ you can build yours from
+import config from "../../../modules/config/client/";
 import localizationManager from "../../localization/index";
 
 const cartTypes = [
@@ -27,7 +25,7 @@ const cartTypes = [
         value: "sedan"
     },
     {
-        name: "prime SUV",
+        name: "Prime SUV",
         value: "suv"
     },
     {
@@ -42,6 +40,7 @@ const cartTypes = [
 Geocode.setApiKey(config.GAPIKEY);
 
 import "./Bookings_client.scss";
+import MapControl from "../../components/MapControls/MapControls";
 
 const Marker = ({ metaData }) => (
     <div>
@@ -452,6 +451,17 @@ class Bookings extends Component {
             });
             if (this.state.droppingPoint) {
                 this.changeRoute();
+            } else {
+                const { mapInstance, mapApi, boardingPoint } = this.state;
+
+                const latlng = [
+                    new mapApi.LatLng(boardingPoint.lat, boardingPoint.lng)
+                ];
+                let latlngbounds = new mapApi.LatLngBounds();
+                for (let i = 0; i < latlng.length; i++) {
+                    latlngbounds.extend(latlng[i]);
+                }
+                mapInstance.fitBounds(latlngbounds);
             }
         });
     };
@@ -858,6 +868,33 @@ class Bookings extends Component {
                                     this.apiHasLoaded(map, maps)
                                 }
                             >
+                                {this.state.mapInstance && (
+                                    <MapControl
+                                        map={this.state.mapInstance || null}
+                                        controlPosition={
+                                            this.state.mapApi
+                                                ? this.state.mapApi
+                                                      .ControlPosition
+                                                      .RIGHT_CENTER
+                                                : null
+                                        }
+                                    >
+                                        <button
+                                            className="centerIt"
+                                            onClick={
+                                                this.changeBoardingToCurrent
+                                            }
+                                            disabled={
+                                                this.state.submitted
+                                                    ? true
+                                                    : false
+                                            }
+                                        >
+                                            <i class="fa fa-location-arrow" />{" "}
+                                        </button>
+                                    </MapControl>
+                                )}
+
                                 {this.state.droppingPoint && (
                                     <Marker
                                         lat={this.state.droppingPoint.lat}
