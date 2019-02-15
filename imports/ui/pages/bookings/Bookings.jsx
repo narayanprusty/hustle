@@ -12,6 +12,7 @@ import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import ReactGooglePlacesSuggest from "react-google-places-suggest";
 import ReactGoogleMapLoader from "react-google-maps-loader";
 import localizationManager from "../../localization/index";
+import sleep from 'await-sleep'
 
 const cartTypes = [
     {
@@ -273,7 +274,7 @@ class Bookings extends Component {
         };
     }
 
-    inputHandler = e => {
+    inputHandler = async e => {
         this.setState({
             [e.target.name]: e.target.value
         });
@@ -755,6 +756,7 @@ class Bookings extends Component {
                                             name="paymentMethod"
                                             value={this.state.paymentMethod}
                                             onChange={this.inputHandler}
+                                            onKeyUp={() => {alert("11")}}
                                             style={{
                                                 fontSize: "16px"
                                             }}
