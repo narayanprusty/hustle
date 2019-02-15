@@ -537,12 +537,8 @@ const getDriverBookingData = async (period, driverId) => {
             $query: {
                 assetName: config.ASSET.Bookings,
                 driverId: driverId,
-                $lt: {
-                    createdAt: period.lte
-                },
-                $gte: {
-                    createdAt: period.gte
-                }
+
+                createdAt: { $lt: period.lte, $gte: period.gte }
             }
         });
         return bookings;
