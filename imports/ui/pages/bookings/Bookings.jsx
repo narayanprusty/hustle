@@ -298,8 +298,6 @@ class Bookings extends Component {
         for (let i = 0; i < latlng.length; i++) {
             latlngbounds.extend(latlng[i]);
         }
-        mapInstance.fitBounds(latlngbounds);
-        mapInstance.setZoom(this.state.zoom);
 
         const directionsService = new mapApi.DirectionsService();
         const directionsDisplay = new mapApi.DirectionsRenderer();
@@ -352,6 +350,8 @@ class Bookings extends Component {
                     const routePolyline = new mapApi.Polyline({
                         path: response.routes[0].overview_path
                     });
+                    mapInstance.fitBounds(latlngbounds);
+                    // mapInstance.setZoom(this.state.zoom); //dont set the zoom otherwise it wont fit to map properly
                     this.setState({
                         poly: routePolyline
                     });
