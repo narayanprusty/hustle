@@ -36,7 +36,7 @@ class Bookingreq extends Component {
         this._isMounted = true;
         this.fetchDriverDetails();
         const intRecord = setInterval(() => {
-            this.setState({ hasMoreItems: true });
+            this.loadItems(1);
         }, 5000);
         this.setState({
             invl: intRecord
@@ -81,6 +81,7 @@ class Bookingreq extends Component {
         this.setState({
             accept_loader: true
         });
+        clearInterval(this.state.invl);
         console.log("Accepting.....");
         Meteor.call(
             "onDriverAccept",
