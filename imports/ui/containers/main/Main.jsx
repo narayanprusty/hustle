@@ -16,7 +16,7 @@ import MyCards from "../../pages/MyCards/MyCards";
 import AddCard from "../../pages/AddCard/AddCard";
 
 import { notify } from "react-notify-toast";
-import pubnub from "../../notifications/index";
+// import pubnub from "../../notifications/index";
 import DriverRideHistory from "../../pages/DriverRideHistory/DriverRideHistory";
 
 const menuColStyles = {
@@ -29,7 +29,7 @@ export default class Main extends Component {
         this.state = {
             openMenu: false
         };
-        this.pubnub = pubnub;
+        // this.pubnub = pubnub;
 
         // this.pubnub.init(this);
     }
@@ -44,25 +44,25 @@ export default class Main extends Component {
 
         this._isMounted = true;
 
-        this.pubnub.subscribe({
-            channel: Meteor.userId().toString(),
-            triggerEvents: true,
-            withPresence: true,
-            autoload: 100,
-            message: msg => {
-                // console.log("got msg", msg);
-                //Add localization support
-                if (msg.data) notify.show(msg.data, msg.type);
-            }
-        });
+        // this.pubnub.subscribe({
+        //     channel: Meteor.userId().toString(),
+        //     triggerEvents: true,
+        //     withPresence: true,
+        //     autoload: 100,
+        //     message: msg => {
+        //         // console.log("got msg", msg);
+        //         //Add localization support
+        //         if (msg.data) notify.show(msg.data, msg.type);
+        //     }
+        // });
     }
 
     componentWillUnmount() {
         if (this._isMounted == true) {
             const userId = Meteor.userId();
-            this.pubnub.unsubscribe({
-                channels: [userId]
-            });
+            // this.pubnub.unsubscribe({
+            //     channels: [userId]
+            // });
             this._isMounted = false;
         }
     }
