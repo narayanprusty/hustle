@@ -33,13 +33,13 @@ class CurrentBooking extends Component {
     }
 
     isIphone = () => {
-        if (device.platform == "iOS") {
+        if (typeof device !== "undefined" && device.platform == "iOS") {
             return true;
         }
         return false;
     };
     isAndroid = () => {
-        if (device.platform == "Android") {
+        if (typeof device !== "undefined" && device.platform == "Android") {
             return true;
         }
         return false;
