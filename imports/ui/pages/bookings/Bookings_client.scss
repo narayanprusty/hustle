@@ -363,6 +363,19 @@
 }
 
 div[class^="sc-"],
-div[class*=" sc-"] {
+div[class*="sc-"] {
     position: relative;
+}
+
+div[class^="sc-"],
+div[class*="sc-"] > div {
+    width: 100%;
+}
+div[class^="sc-"],
+div[class*="sc-"] span:first-child {
+    width: 100%;
+    display: block;
+}
+div[class*="sc-"] span:first-child > span {
+    display: inline;
 }
