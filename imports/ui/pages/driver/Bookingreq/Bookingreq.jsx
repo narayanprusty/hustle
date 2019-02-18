@@ -35,7 +35,9 @@ class Bookingreq extends Component {
     componentDidMount = () => {
         this._isMounted = true;
         this.fetchDriverDetails();
-        const intRecord = setInterval(this.loadItems(1), 3000);
+        const intRecord = setInterval(() => {
+            this.setState({ hasMoreItems: true });
+        }, 5000);
         this.setState({
             invl: intRecord
         });
