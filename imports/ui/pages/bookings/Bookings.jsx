@@ -673,7 +673,7 @@ class Bookings extends Component {
                                         name="boardingPointInput"
                                         value={this.state.boardvalue}
                                         placeholder="Default is current location"
-                                        autocomplete="off"
+                                        autoComplete="off"
                                         disabled={
                                             this.state.stopMapInput
                                                 ? true
@@ -715,7 +715,7 @@ class Bookings extends Component {
                                         name="droppingPointInput"
                                         value={this.state.dropvalue}
                                         placeholder="select location"
-                                        autocomplete="off"
+                                        autoComplete="off"
                                         disabled={
                                             this.state.stopMapInput
                                                 ? true
