@@ -42,8 +42,8 @@ const updateDriverLocation = ({ driverId, lat, lng }) => {
         },
         {
             $set: {
-                "currentLocation.lat": lat,
-                "currentLocation.lng": lng
+                type: "Point",
+                currentLocation: [lng, lat]
             }
         },
         {
@@ -60,7 +60,7 @@ const getDriversWithin = async ({ lat, lng }) => {
                     $geoNear: {
                         near: {
                             type: "Point",
-                            coordinates: [lat, lng]
+                            coordinates: [lng, lat]
                         },
                         distanceField: "currentLocation",
                         maxDistance: 5000, //in meter
