@@ -473,7 +473,7 @@ const fetchBookingReq = async ({ lat, lng, carType, page }) => {
                     $geoNear: {
                         near: {
                             type: "Point",
-                            coordinates: [lat, lng]
+                            coordinates: [lng, lat]
                         },
                         distanceField: "boardingPoint",
                         maxDistance: 5000, //in meter
