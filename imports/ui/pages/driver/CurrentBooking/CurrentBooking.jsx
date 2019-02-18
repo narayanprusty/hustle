@@ -458,6 +458,7 @@ class CurrentBooking extends Component {
                                 style={{ color: "green" }}
                             />
                             {this.state.start_address || "Unknown"}
+                            <span className="item-note">From</span>
                         </a>
                         <a className="item item-icon-left" href="#">
                             <i
@@ -465,6 +466,7 @@ class CurrentBooking extends Component {
                                 style={{ color: "red" }}
                             />
                             {this.state.end_address || "Unknown"}
+                            <span className="item-note">To</span>
                         </a>
                         <a className="item item-icon-left" href="#">
                             <i className="icon fa fa-shopping-cart" />
@@ -505,7 +507,7 @@ class CurrentBooking extends Component {
                     )}
                     {this.state.status == "started" && (
                         <LaddaButton
-                            className="button button-block button-energized activated"
+                            className="button button-block button-balanced activated"
                             loading={this.state.finishRide_loader}
                             onClick={this.finishRide}
                             data-color="##FFFF00"
@@ -515,14 +517,14 @@ class CurrentBooking extends Component {
                             data-spinner-color="#ddd"
                             data-spinner-lines={12}
                         >
-                            Finish Ride
+                            <i className="fa fa-check" aria-hidden="true"></i> Finish Ride
                         </LaddaButton>
                     )}
                     {this.state.paymentMethod == "cash" &&
                         this.state.status == "finished" &&
                         !this.state.paymentReceived && (
                             <LaddaButton
-                                className="button button-block button-energized activated"
+                                className="button button-block button-balanced activated"
                                 loading={this.state.paymentReceived_loader}
                                 onClick={this.paymentReceived}
                                 data-color="##FFFF00"
@@ -532,7 +534,7 @@ class CurrentBooking extends Component {
                                 data-spinner-color="#ddd"
                                 data-spinner-lines={12}
                             >
-                                Payment Received
+                               <i class="fa fa-money" aria-hidden="true"></i> Payment Received
                             </LaddaButton>
                         )}
                     {this.state.status == "finished" &&

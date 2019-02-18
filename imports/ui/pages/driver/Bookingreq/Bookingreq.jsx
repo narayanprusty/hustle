@@ -266,7 +266,7 @@ class Bookingreq extends Component {
         this.state.datas.map((data, i) => {
             console.log(data);
             items.push(
-                <div className="list card">
+                <div key={data._id} className="list card">
                     <div className="item item-avatar">
                         <img src="/images/profile.png" />
                         <h2>{data.username || "unnamed"}</h2>
@@ -286,9 +286,9 @@ class Bookingreq extends Component {
                     </div>
 
                     <div className="item item-body">
-                        <p>
+                        <div>
                             <div className="list">
-                                <a class="item item-icon-right" href="#">
+                                <a className="item item-icon-right" href="#">
                                     {data.totalFare} {config.fareUnit}
                                     <i className="icon fa fa-money" />
                                 </a>
@@ -317,8 +317,8 @@ class Bookingreq extends Component {
                                     />
                                 </a>
                             </div>
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                             <LaddaButton
                                 className="button button-block button-balanced"
                                 loading={this.state.accept_loader}
@@ -335,7 +335,7 @@ class Bookingreq extends Component {
                             >
                                 <i className="icon fa fa-check" /> Accept
                             </LaddaButton>
-                        </p>
+                        </div>
                     </div>
                 </div>
             );

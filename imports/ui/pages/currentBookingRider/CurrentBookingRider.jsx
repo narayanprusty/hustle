@@ -466,7 +466,7 @@ class CurrentBookingRider extends Component {
                         &nbsp; Ongoing Ride
                     </h3>
                 </div>
-                {this.state.accepted &&
+                {/*this.state.accepted &&
                     !this.state.rideFinished &&
                     this.state.bookingId && (
                         <div className="card">
@@ -487,7 +487,7 @@ class CurrentBookingRider extends Component {
                                 </div>
                             </div>
                         </div>
-                    )}
+                )*/}
                 {this.state.accepted && !this.state.rideFinished && (
                     <div className="card">
                         <div className="list" style={{ marginBottom: "0px" }}>
@@ -517,7 +517,7 @@ class CurrentBookingRider extends Component {
                 {this.state.rideStarted && (
                     <div className="padding-left padding-right">
                         <LaddaButton
-                            className="button button-block button-energized activated"
+                            className="button button-block button-stable activated"
                             loading={this.state.share_location}
                             onClick={this.shareLocation}
                             data-color="##FFFF00"
@@ -527,8 +527,7 @@ class CurrentBookingRider extends Component {
                             data-spinner-color="#ddd"
                             data-spinner-lines={12}
                         >
-                            <i className="fa fa-share" aria-hidden="true" />{" "}
-                            Share Live Location
+                            <i className="fa fa-share" aria-hidden="true" /> Share Live Location
                         </LaddaButton>
                     </div>
                 )}
