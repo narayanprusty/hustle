@@ -847,7 +847,7 @@ class Bookings extends Component {
                                         data-spinner-color="#ddd"
                                         data-spinner-lines={12}
                                     >
-                                        {localizationManager.strings.book}{" "}
+                                        <i className="fa fa-car" aria-hidden="true"></i> {localizationManager.strings.book}{" "}
                                     </LaddaButton>
                                 </div>
                             </div>

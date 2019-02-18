@@ -205,25 +205,25 @@ class CurrentBooking extends Component {
         if (this.isIphone()) {
             open(
                 "maps://?ll=" +
-                    +this.state.boardingPoint.coordinates[0] +
+                    +this.state.boardingPoint.coordinates[1] +
                     "," +
-                    this.state.boardingPoint.coordinates[1],
+                    this.state.boardingPoint.coordinates[0],
                 "_system"
             );
         } else if (this.isAndroid()) {
             open(
                 "geo:0,0?q=" +
-                    this.state.boardingPoint.coordinates[0] +
+                    this.state.boardingPoint.coordinates[1] +
                     "," +
-                    this.state.boardingPoint.coordinates[1],
+                    this.state.boardingPoint.coordinates[0],
                 "_system"
             );
         } else {
             open(
                 "http://maps.google.com/maps?q=loc:" +
-                    this.state.boardingPoint.coordinates[0] +
+                    this.state.boardingPoint.coordinates[1] +
                     "," +
-                    this.state.boardingPoint.coordinates[1],
+                    this.state.boardingPoint.coordinates[0],
                 "_blank"
             );
         }
@@ -262,25 +262,25 @@ class CurrentBooking extends Component {
                     // incase not working try making it `q` instead of ll
                     open(
                         "maps://?ll=" +
-                            +this.state.droppingPoint.coordinates[0] +
+                            +this.state.droppingPoint.coordinates[1] +
                             "," +
-                            this.state.droppingPoint.coordinates[1],
+                            this.state.droppingPoint.coordinates[0],
                         "_system"
                     );
                 } else if (this.isAndroid()) {
                     open(
                         "geo:0,0?q=" +
-                            this.state.droppingPoint.coordinates[0] +
+                            this.state.droppingPoint.coordinates[1] +
                             "," +
-                            this.state.droppingPoint.coordinates[1],
+                            this.state.droppingPoint.coordinates[0],
                         "_system"
                     );
                 } else {
                     open(
                         "http://maps.google.com/maps?q=loc:" +
-                            this.state.droppingPoint.coordinates[0] +
+                            this.state.droppingPoint.coordinates[1] +
                             "," +
-                            this.state.droppingPoint.coordinates[1],
+                            this.state.droppingPoint.coordinates[0],
                         "_blank"
                     );
                 }
@@ -477,7 +477,7 @@ class CurrentBooking extends Component {
                     </div>
                     {this.state.status == "accepted" && (
                         <LaddaButton
-                            className="button button-block button-energized activated"
+                            className="button button-block button-calm activated"
                             loading={this.state.navigateToRider_loader}
                             onClick={this.navigateToRider}
                             data-color="##FFFF00"
@@ -487,12 +487,12 @@ class CurrentBooking extends Component {
                             data-spinner-color="#ddd"
                             data-spinner-lines={12}
                         >
-                            Navigate to Rider
+                            <i className="fa fa-location-arrow" aria-hidden="true"></i> Navigate to Rider
                         </LaddaButton>
                     )}
                     {this.state.status == "accepted" && (
                         <LaddaButton
-                            className="button button-block button-energized activated"
+                            className="button button-block button-balanced activated"
                             loading={this.state.startRide_loader}
                             onClick={this.startRide}
                             data-color="##FFFF00"
@@ -502,7 +502,7 @@ class CurrentBooking extends Component {
                             data-spinner-color="#ddd"
                             data-spinner-lines={12}
                         >
-                            Start Ride
+                            <i className="fa fa-car" aria-hidden="true"></i> Start Ride
                         </LaddaButton>
                     )}
                     {this.state.status == "started" && (

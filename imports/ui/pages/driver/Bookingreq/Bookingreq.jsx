@@ -277,6 +277,9 @@ class Bookingreq extends Component {
                             fullSymbol="fa fa-star fa-2x full"
                             initialRating={data.riderRating}
                             readonly
+                            style={{
+                                fontSize: '10px'
+                            }}
                         />
                         <p>
                             {data.createdAt

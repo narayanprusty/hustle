@@ -466,7 +466,7 @@ class CurrentBookingRider extends Component {
                         &nbsp; Ongoing Ride
                     </h3>
                 </div>
-                {/*this.state.accepted &&
+                {this.state.accepted &&
                     !this.state.rideFinished &&
                     this.state.bookingId && (
                         <div className="card">
@@ -487,7 +487,7 @@ class CurrentBookingRider extends Component {
                                 </div>
                             </div>
                         </div>
-                )*/}
+                )}
                 {this.state.accepted && !this.state.rideFinished && (
                     <div className="card">
                         <div className="list" style={{ marginBottom: "0px" }}>
@@ -514,10 +514,10 @@ class CurrentBookingRider extends Component {
                         </div>
                     </div>
                 )}
-                {this.state.rideStarted && (
+                {(this.state.rideStarted && !this.state.rideFinished) && (
                     <div className="padding-left padding-right">
                         <LaddaButton
-                            className="button button-block button-stable activated"
+                            className="button button-block button-dark activated"
                             loading={this.state.share_location}
                             onClick={this.shareLocation}
                             data-color="##FFFF00"
@@ -527,7 +527,7 @@ class CurrentBookingRider extends Component {
                             data-spinner-color="#ddd"
                             data-spinner-lines={12}
                         >
-                            <i className="fa fa-share" aria-hidden="true" /> Share Live Location
+                            <i class="fa fa-share-alt" aria-hidden="true"></i> Share Live Location
                         </LaddaButton>
                     </div>
                 )}
@@ -673,11 +673,33 @@ class CurrentBookingRider extends Component {
                                     className="item item-text-wrap"
                                     style={{ textAlign: "center" }}
                                 >
-                                    Total Fare: {this.state.totalFare}
-                                    <br />
-                                    Payment Method:
-                                    {this.state.paymentMethod || "cash"}
+                                    <div>
+                                        <img
+                                            src={"/images/completed.png"}
+                                            style={{ width: "40px" }}
+                                        />
+                                    </div>
+                                    <div className="padding-top">Ride Completed</div>
                                 </div>
+                            </div>
+                            <div
+                                    className="list"
+                                    style={{ marginBottom: "0px" }}
+                            >
+                                <a className="item item-icon-left" href="#">
+                                    <i className="icon fa fa-money" />
+                                    {this.state.totalFare}
+                                    <span className="item-note">
+                                        Total Fare
+                                    </span>
+                                </a>
+                                <a className="item item-icon-left" href="#">
+                                    <i className="icon  fa fa-credit-card" />
+                                    {this.state.paymentMethod || "Cash"}
+                                    <span className="item-note">
+                                        Payment Method
+                                    </span>
+                                </a>
                             </div>
                             <div className="card">
                                 <div
@@ -711,7 +733,7 @@ class CurrentBookingRider extends Component {
                             </div>
 
                             <LaddaButton
-                                className="button button-block button-energized activated"
+                                className="button button-block button-balanced activated"
                                 loading={this.state.loader}
                                 onClick={this.onReviewSubmit}
                                 data-color="##FFFF00"
@@ -722,10 +744,10 @@ class CurrentBookingRider extends Component {
                                 data-spinner-lines={12}
                             >
                                 {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                Submit Review
+                                <i class="fa fa-paper-plane" aria-hidden="true"></i> Submit Review
                             </LaddaButton>
                             <LaddaButton
-                                className="button button-block button-energized activated"
+                                className="button button-block button-calm activated"
                                 onClick={() => {
                                     this.props.history.push("/app");
                                 }}
@@ -737,7 +759,7 @@ class CurrentBookingRider extends Component {
                                 data-spinner-lines={12}
                             >
                                 {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                Skip
+                                <i class="fa fa-arrow-right" aria-hidden="true"></i> Skip
                             </LaddaButton>
                         </div>
                     )}
