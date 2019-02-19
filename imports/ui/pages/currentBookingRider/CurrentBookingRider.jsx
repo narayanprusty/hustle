@@ -711,6 +711,27 @@ class CurrentBookingRider extends Component {
                                         Payment Method
                                     </span>
                                 </a>
+                                <a className="item item-icon-left" href="#">
+                                    <Rating
+                                        name="rating"
+                                        {...this.props}
+                                        start={0}
+                                        stop={5}
+                                        readonly={true}
+                                        initialRating={
+                                            this.state.avgRating || 0
+                                        }
+                                        emptySymbol="fa fa-star-o fa-2x empty"
+                                        fullSymbol="fa fa-star fa-2x full"
+                                        onChange={rate => this.onRate(rate)}
+                                        style={{
+                                            fontSize: "200%"
+                                        }}
+                                    />
+                                    <span className="item-note">
+                                        Driver Review
+                                    </span>
+                                </a>
                             </div>
                             <div
                                 className="card padding-top padding-bottom card"
