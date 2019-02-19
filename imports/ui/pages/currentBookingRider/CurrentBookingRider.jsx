@@ -229,12 +229,8 @@ class CurrentBookingRider extends Component {
 
         directionsService.route(
             {
-                origin:
-                    this.state.currentPoint.lat +
-                    "," +
-                    this.state.currentPoint.lng,
-                destination:
-                    this.state.destPoint.lat + "," + this.state.destPoint.lng,
+                origin: currentPoint.lat + "," + currentPoint.lng,
+                destination: destPoint.lat + "," + destPoint.lng,
                 travelMode: "DRIVING",
                 unitSystem: mapApi.UnitSystem.METRIC,
                 drivingOptions: {
@@ -305,8 +301,8 @@ class CurrentBookingRider extends Component {
         ) {
             this.setState({
                 destPoint: {
-                    lat: this.state.droppingPoint.coordinates[0],
-                    lng: this.state.droppingPoint.coordinates[1]
+                    lat: this.state.droppingPoint.coordinates[1],
+                    lng: this.state.droppingPoint.coordinates[0]
                 },
                 currentPoint: message.message.driverCoords
             });
@@ -319,8 +315,8 @@ class CurrentBookingRider extends Component {
         ) {
             this.setState({
                 destPoint: {
-                    lat: this.state.boardingPoint.coordinates[0],
-                    lng: this.state.boardingPoint.coordinates[1]
+                    lat: this.state.boardingPoint.coordinates[1],
+                    lng: this.state.boardingPoint.coordinates[0]
                 },
                 currentPoint: message.message.driverCoords
             });
@@ -627,11 +623,11 @@ class CurrentBookingRider extends Component {
                                         <Marker
                                             lat={
                                                 this.state.boardingPoint
-                                                    .coordinates[0]
+                                                    .coordinates[1]
                                             }
                                             lng={
                                                 this.state.boardingPoint
-                                                    .coordinates[1]
+                                                    .coordinates[0]
                                             }
                                             metaData="board"
                                         />
@@ -641,11 +637,11 @@ class CurrentBookingRider extends Component {
                                         <Marker
                                             lat={
                                                 this.state.droppingPoint
-                                                    .coordinates[0]
+                                                    .coordinates[1]
                                             }
                                             lng={
                                                 this.state.droppingPoint
-                                                    .coordinates[1]
+                                                    .coordinates[0]
                                             }
                                             metaData="drop"
                                         />

@@ -210,13 +210,13 @@ class Track extends Component {
                             {this.state.driverLoc && (
                                 <Marker
                                     lat={
-                                        this.state.driverLoc.lat
-                                            ? this.state.driverLoc.lat
+                                        this.state.driverLoc.length
+                                            ? this.state.driverLoc[1]
                                             : this.state.fields.lat
                                     }
                                     lng={
-                                        this.state.driverLoc.lng
-                                            ? this.state.driverLoc.lng
+                                        this.state.driverLoc.length
+                                            ? this.state.driverLoc[0]
                                             : this.state.fields.lng
                                     }
                                     metaData="current"
