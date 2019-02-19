@@ -37,7 +37,7 @@ class Track extends Component {
             not_found: false,
             zoom: 15,
             driverLoc: false,
-            location: {
+            fields: {
                 lat: 0,
                 lng: 0
             }
@@ -86,7 +86,7 @@ class Track extends Component {
                     const { mapInstance, mapApi, driverLoc } = this.state;
 
                     const latlng = [
-                        new mapApi.LatLng(driverLoc.lat, driverLoc.lng)
+                        new mapApi.LatLng(driverLoc[1], driverLoc[0])
                     ];
                     let latlngbounds = new mapApi.LatLngBounds();
                     for (let i = 0; i < latlng.length; i++) {
