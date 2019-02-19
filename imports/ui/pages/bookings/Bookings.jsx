@@ -529,7 +529,7 @@ class Bookings extends Component {
                 });
                 console.log(error);
                 //Add localization support
-                notify.show(
+                return notify.show(
                     error.reason ? error.reason : "Unable to create request!",
                     "error"
                 );
@@ -777,6 +777,11 @@ class Bookings extends Component {
                                             style={{
                                                 fontSize: "16px"
                                             }}
+                                            disabled={
+                                                this.state.stopMapInput
+                                                    ? true
+                                                    : false
+                                            }
                                         >
                                             {this.state.cards.map((card, i) => (
                                                 <option
@@ -825,6 +830,11 @@ class Bookings extends Component {
                                             style={{
                                                 fontSize: "16px"
                                             }}
+                                            disabled={
+                                                this.state.stopMapInput
+                                                    ? true
+                                                    : false
+                                            }
                                         >
                                             {cartTypes.map((cars, i) => (
                                                 <option
