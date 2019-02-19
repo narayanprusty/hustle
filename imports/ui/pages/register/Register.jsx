@@ -60,7 +60,10 @@ export default class Register extends Component {
             (err, res) => {
                 if (err) {
                     console.log(err);
-                    return notify.show("incorrect verification code!", "error");
+                    return notify.show(
+                        err.error || "incorrect verification code!",
+                        "error"
+                    );
                 }
 
                 this.setState(

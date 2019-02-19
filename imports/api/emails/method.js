@@ -9,12 +9,12 @@ const verificationMessage = async phone => {
 };
 
 const verifyCode = phone => {
-    verifyPhone(phone)
+    return verifyPhone(phone)
         .then(data => {
             return true;
         })
         .catch(error => {
-            throw Meteor.Error({ reason: "verification code invalid!" });
+            throw new Meteor.Error("verification code invalid!");
         });
 };
 
