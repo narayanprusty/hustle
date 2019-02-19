@@ -432,7 +432,8 @@ class Bookings extends Component {
                     lat: t.lat,
                     lng: t.lng
                 },
-                boardingPlace: address
+                boardingPlace: address,
+                boardvalue: address.formatted_address
             });
             if (this.state.droppingPoint) {
                 this.changeRoute();
@@ -451,7 +452,8 @@ class Bookings extends Component {
                     lat: this.state.currentLocation.lat,
                     lng: this.state.currentLocation.lng
                 },
-                boardingPlace: address
+                boardingPlace: address,
+                boardvalue: address.formatted_address
             });
             if (this.state.droppingPoint) {
                 this.changeRoute();
@@ -847,7 +849,11 @@ class Bookings extends Component {
                                         data-spinner-color="#ddd"
                                         data-spinner-lines={12}
                                     >
-                                        <i className="fa fa-car" aria-hidden="true"></i> {localizationManager.strings.book}{" "}
+                                        <i
+                                            className="fa fa-car"
+                                            aria-hidden="true"
+                                        />{" "}
+                                        {localizationManager.strings.book}{" "}
                                     </LaddaButton>
                                 </div>
                             </div>
