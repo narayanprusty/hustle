@@ -258,34 +258,38 @@ class CurrentBooking extends Component {
                     status: "started",
                     startRide_loader: false
                 });
-                if (this.isIphone()) {
-                    // incase not working try making it `q` instead of ll
-                    open(
-                        "maps://?ll=" +
-                            +this.state.droppingPoint.coordinates[1] +
-                            "," +
-                            this.state.droppingPoint.coordinates[0],
-                        "_system"
-                    );
-                } else if (this.isAndroid()) {
-                    open(
-                        "geo:0,0?q=" +
-                            this.state.droppingPoint.coordinates[1] +
-                            "," +
-                            this.state.droppingPoint.coordinates[0],
-                        "_system"
-                    );
-                } else {
-                    open(
-                        "http://maps.google.com/maps?q=loc:" +
-                            this.state.droppingPoint.coordinates[1] +
-                            "," +
-                            this.state.droppingPoint.coordinates[0],
-                        "_blank"
-                    );
-                }
+                return true;
             }
         );
+    };
+
+    navigateToDrop = () => {
+        if (this.isIphone()) {
+            // incase not working try making it `q` instead of ll
+            open(
+                "maps://?ll=" +
+                    +this.state.droppingPoint.coordinates[1] +
+                    "," +
+                    this.state.droppingPoint.coordinates[0],
+                "_system"
+            );
+        } else if (this.isAndroid()) {
+            open(
+                "geo:0,0?q=" +
+                    this.state.droppingPoint.coordinates[1] +
+                    "," +
+                    this.state.droppingPoint.coordinates[0],
+                "_system"
+            );
+        } else {
+            open(
+                "http://maps.google.com/maps?q=loc:" +
+                    this.state.droppingPoint.coordinates[1] +
+                    "," +
+                    this.state.droppingPoint.coordinates[0],
+                "_blank"
+            );
+        }
     };
     finishRide = () => {
         this.setState({
@@ -487,7 +491,11 @@ class CurrentBooking extends Component {
                             data-spinner-color="#ddd"
                             data-spinner-lines={12}
                         >
-                            <i className="fa fa-location-arrow" aria-hidden="true"></i> Navigate to Rider
+                            <i
+                                className="fa fa-location-arrow"
+                                aria-hidden="true"
+                            />{" "}
+                            Navigate to Rider
                         </LaddaButton>
                     )}
                     {this.state.status == "accepted" && (
@@ -502,7 +510,27 @@ class CurrentBooking extends Component {
                             data-spinner-color="#ddd"
                             data-spinner-lines={12}
                         >
-                            <i className="fa fa-car" aria-hidden="true"></i> Start Ride
+                            <i className="fa fa-car" aria-hidden="true" /> Start
+                            Ride
+                        </LaddaButton>
+                    )}
+                    {this.state.status != "finished" && (
+                        <LaddaButton
+                            className="button button-block button-balanced activated"
+                            // loading={this.state.startRide_loader}
+                            onClick={this.navigateToDrop}
+                            data-color="##FFFF00"
+                            data-size={S}
+                            data-style={SLIDE_UP}
+                            data-spinner-size={30}
+                            data-spinner-color="#ddd"
+                            data-spinner-lines={12}
+                        >
+                            <i
+                                className="fa fa-map-marker"
+                                aria-hidden="true"
+                            />{" "}
+                            Navigate to drop
                         </LaddaButton>
                     )}
                     {this.state.status == "started" && (
@@ -517,7 +545,8 @@ class CurrentBooking extends Component {
                             data-spinner-color="#ddd"
                             data-spinner-lines={12}
                         >
-                            <i className="fa fa-check" aria-hidden="true"></i> Finish Ride
+                            <i className="fa fa-check" aria-hidden="true" />{" "}
+                            Finish Ride
                         </LaddaButton>
                     )}
                     {this.state.paymentMethod == "cash" &&
@@ -534,20 +563,26 @@ class CurrentBooking extends Component {
                                 data-spinner-color="#ddd"
                                 data-spinner-lines={12}
                             >
-                               <i className="fa fa-money" aria-hidden="true"></i> Payment Received
+                                <i className="fa fa-money" aria-hidden="true" />{" "}
+                                Payment Received
                             </LaddaButton>
                         )}
                     {this.state.status == "finished" &&
                         (this.state.paymentMethod != "cash" ||
                             this.state.paymentReceived) && (
                             <div>
-                                <div className="card padding-top padding-bottom card" style={{
-                                    marginLeft: '0px',
-                                    marginRight: '0px'
-                                }}>
-                                    <div style={{
-                                        textAlign: 'center'
-                                    }}>
+                                <div
+                                    className="card padding-top padding-bottom card"
+                                    style={{
+                                        marginLeft: "0px",
+                                        marginRight: "0px"
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            textAlign: "center"
+                                        }}
+                                    >
                                         <Rating
                                             name="rating"
                                             {...this.props}
@@ -558,13 +593,15 @@ class CurrentBooking extends Component {
                                             fullSymbol="fa fa-star fa-2x full"
                                             onChange={rate => this.onRate(rate)}
                                             style={{
-                                                fontSize: '200%'
+                                                fontSize: "200%"
                                             }}
                                         />
                                     </div>
-                                    <div style={{
-                                        textAlign: 'center'
-                                    }}>
+                                    <div
+                                        style={{
+                                            textAlign: "center"
+                                        }}
+                                    >
                                         Rate Rider
                                     </div>
                                     {/*<div className="justified">
@@ -588,7 +625,11 @@ class CurrentBooking extends Component {
                                     data-spinner-lines={12}
                                 >
                                     {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                    <i className="fa fa-paper-plane" aria-hidden="true"></i> Submit Review
+                                    <i
+                                        className="fa fa-paper-plane"
+                                        aria-hidden="true"
+                                    />{" "}
+                                    Submit Review
                                 </LaddaButton>
                                 <LaddaButton
                                     className="button button-block button-calm activated"
@@ -603,7 +644,11 @@ class CurrentBooking extends Component {
                                     data-spinner-lines={12}
                                 >
                                     {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                    <i className="fa fa-arrow-right" aria-hidden="true"></i> Skip
+                                    <i
+                                        className="fa fa-arrow-right"
+                                        aria-hidden="true"
+                                    />{" "}
+                                    Skip
                                 </LaddaButton>
                             </div>
                         )}
