@@ -105,7 +105,7 @@ class CurrentBookingRider extends Component {
                 if (error) {
                     return false;
                 }
-                if (bookingData && bookingData.data.status == "accepted") {
+                if (bookingData && bookingData.data.rideStatus == "accepted") {
                     this.getDriverDetails(bookingData.data.driverId);
                     this.setState({
                         showMap: true,
@@ -113,7 +113,7 @@ class CurrentBookingRider extends Component {
                     });
                 } else if (
                     bookingData &&
-                    bookingData.data.status == "started"
+                    bookingData.data.rideStatus == "started"
                 ) {
                     this.getDriverDetails(bookingData.data.driverId);
 
@@ -123,7 +123,7 @@ class CurrentBookingRider extends Component {
                     });
                 } else if (
                     bookingData &&
-                    bookingData.data.status == "finished"
+                    bookingData.data.rideStatus == "finished"
                 ) {
                     clearInterval(this.state.intvl);
                     this.getDriverDetails(bookingData.data.driverId);
@@ -155,24 +155,27 @@ class CurrentBookingRider extends Component {
                     this.props.history.push("/app");
                     return;
                 } else {
-                    if (currentRide.status == "started") {
+                    if (currentRide.rideStatus == "started") {
                         this.setState({
                             accepted: true
                         });
-                    } else if (currentRide.status == "started") {
+                    } else if (currentRide.rideStatus == "started") {
                         this.setState({
                             showMap: true,
                             rideStarted: true,
                             accepted: true
                         });
-                    } else if (currentRide.status == "finished") {
+                    } else if (currentRide.rideStatus == "finished") {
                         this.setState({
                             rideFinished: true
                         });
                         // this.props.history.push("/app/home");
                     }
                     this.setState(currentRide);
-                    if (currentRide.status != "pending") {
+                    if (
+                        currentRide.rideStatus != "pending" &&
+                        currentRide.driverId
+                    ) {
                         this.getDriverDetails(currentRide.driverId);
                     }
                     return currentRide;
@@ -205,30 +208,33 @@ class CurrentBookingRider extends Component {
             mapApi: maps
         });
     };
-    changeRoute = (destPoint, currentPoint) => {
+    changeRoute = () => {
         if (this.state.poly) {
             this.state.poly.setMap(null);
         }
 
-        const { mapInstance, mapApi } = this.state;
+        const { mapInstance, mapApi, destPoint, currentPoint } = this.state;
 
         const latlng = [
-            new mapApi.LatLng(destPoint.lat, destPoint.lng),
-            new mapApi.LatLng(currentPoint.lat, currentPoint.lng)
+            new mapApi.LatLng(currentPoint.lat, currentPoint.lng),
+            new mapApi.LatLng(destPoint.lat, destPoint.lng)
         ];
         let latlngbounds = new mapApi.LatLngBounds();
         for (let i = 0; i < latlng.length; i++) {
             latlngbounds.extend(latlng[i]);
         }
-        mapInstance.fitBounds(latlngbounds);
-        mapInstance.setZoom(this.state.zoom);
 
         const directionsService = new mapApi.DirectionsService();
         const directionsDisplay = new mapApi.DirectionsRenderer();
+
         directionsService.route(
             {
-                origin: currentPoint.lat + "," + currentPoint.lng,
-                destination: destPoint.lat + "," + destPoint.lng,
+                origin:
+                    this.state.currentPoint.lat +
+                    "," +
+                    this.state.currentPoint.lng,
+                destination:
+                    this.state.destPoint.lat + "," + this.state.destPoint.lng,
                 travelMode: "DRIVING",
                 unitSystem: mapApi.UnitSystem.METRIC,
                 drivingOptions: {
@@ -297,26 +303,28 @@ class CurrentBookingRider extends Component {
             this.state.mapApiLoaded &&
             this.state.bookingId == message.message.bookingId
         ) {
-            this.changeRoute(
-                {
+            this.setState({
+                destPoint: {
                     lat: this.state.droppingPoint.coordinates[0],
                     lng: this.state.droppingPoint.coordinates[1]
                 },
-                message.message.driverCoords
-            );
+                currentPoint: message.message.driverCoords
+            });
+            this.changeRoute();
         } else if (
             this.state.accepted &&
             !this.state.rideStarted &&
             this.state.mapApiLoaded &&
             this.state.bookingId == message.message.bookingId
         ) {
-            this.changeRoute(
-                {
+            this.setState({
+                destPoint: {
                     lat: this.state.boardingPoint.coordinates[0],
                     lng: this.state.boardingPoint.coordinates[1]
                 },
-                message.message.driverCoords
-            );
+                currentPoint: message.message.driverCoords
+            });
+            this.changeRoute();
         }
     };
 
@@ -527,7 +535,7 @@ class CurrentBookingRider extends Component {
                             data-spinner-color="#ddd"
                             data-spinner-lines={12}
                         >
-                            <i class="fa fa-share-alt" aria-hidden="true" />{" "}
+                            <i className="fa fa-share-alt" aria-hidden="true" />{" "}
                             Share Live Location
                         </LaddaButton>
                     </div>
@@ -659,14 +667,12 @@ class CurrentBookingRider extends Component {
                                 )} */}
                             </GoogleMapReact>
                         )}
-                    {this.state.accepted &&
-                        (!this.state.rideStarted ||
-                            !this.state.rideFinished) && (
-                            <Widget
-                                handleNewUserMessage={this.handleNewUserMessage}
-                                subtitle={this.state.name}
-                            />
-                        )}
+                    {this.state.status == "accepted" && (
+                        <Widget
+                            handleNewUserMessage={this.handleNewUserMessage}
+                            subtitle={this.state.name}
+                        />
+                    )}
                     {this.state.rideFinished && (
                         <div>
                             <div
