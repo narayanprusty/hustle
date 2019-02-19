@@ -362,7 +362,7 @@ class CurrentBookingRider extends Component {
             "rateDriver",
             {
                 driverId: this.state.driverId,
-                message: this.state.reviewMessage,
+                message: "",
                 rateVal: this.state.rating
             },
             (err, updated) => {
@@ -668,7 +668,10 @@ class CurrentBookingRider extends Component {
                         )}
                     {this.state.rideFinished && (
                         <div>
-                            <div className="card">
+                            <div className="card" style={{
+                                marginLeft: '0px',
+                                marginRight: '0px'
+                            }}>
                                 <div
                                     className="item item-text-wrap"
                                     style={{ textAlign: "center" }}
@@ -701,35 +704,39 @@ class CurrentBookingRider extends Component {
                                     </span>
                                 </a>
                             </div>
-                            <div className="card">
-                                <div
-                                    className="list"
-                                    style={{ marginBottom: "0px" }}
-                                >
-                                    <a className="item item-icon-left" href="#">
-                                        <Rating
-                                            name="rating"
-                                            {...this.props}
-                                            start={0}
-                                            stop={5}
-                                            initialRating={this.state.rating}
-                                            emptySymbol="fa fa-star-o fa-2x empty"
-                                            fullSymbol="fa fa-star fa-2x full"
-                                            onChange={rate => this.onRate(rate)}
-                                        />
-
-                                        <span className="item-note">
-                                            Rate Driver
-                                        </span>
-                                    </a>
+                            <div className="card padding-top padding-bottom card" style={{
+                                marginLeft: '0px',
+                                marginRight: '0px'
+                            }}>
+                                <div style={{
+                                    textAlign: 'center'
+                                }}>
+                                    <Rating
+                                        name="rating"
+                                        {...this.props}
+                                        start={0}
+                                        stop={5}
+                                        initialRating={this.state.rating}
+                                        emptySymbol="fa fa-star-o fa-2x empty"
+                                        fullSymbol="fa fa-star fa-2x full"
+                                        onChange={rate => this.onRate(rate)}
+                                        style={{
+                                            fontSize: '200%'
+                                        }}
+                                    />
                                 </div>
-                                <div className="justified">
+                                <div style={{
+                                    textAlign: 'center'
+                                }}>
+                                    Rate Driver
+                                </div>
+                                {/*<div className="justified">
                                     <textarea
                                         name="reviewMessage"
                                         placeholder="Put some feedback of the ride"
                                         onChange={this.handleChange}
                                     />
-                                </div>
+                                </div>*/}
                             </div>
 
                             <LaddaButton
@@ -744,7 +751,7 @@ class CurrentBookingRider extends Component {
                                 data-spinner-lines={12}
                             >
                                 {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                <i class="fa fa-paper-plane" aria-hidden="true"></i> Submit Review
+                                <i className="fa fa-paper-plane" aria-hidden="true"></i> Submit Review
                             </LaddaButton>
                             <LaddaButton
                                 className="button button-block button-calm activated"
@@ -759,7 +766,7 @@ class CurrentBookingRider extends Component {
                                 data-spinner-lines={12}
                             >
                                 {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                <i class="fa fa-arrow-right" aria-hidden="true"></i> Skip
+                                <i className="fa fa-arrow-right" aria-hidden="true"></i> Skip
                             </LaddaButton>
                         </div>
                     )}
