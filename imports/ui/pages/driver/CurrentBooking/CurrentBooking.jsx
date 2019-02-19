@@ -549,7 +549,7 @@ class CurrentBooking extends Component {
                             Finish Ride
                         </LaddaButton>
                     )}
-                    {this.state.paymentMethod == "cash" &&
+                    {/* {this.state.paymentMethod == "cash" &&
                         this.state.status == "finished" &&
                         !this.state.paymentReceived && (
                             <LaddaButton
@@ -566,92 +566,90 @@ class CurrentBooking extends Component {
                                 <i className="fa fa-money" aria-hidden="true" />{" "}
                                 Payment Received
                             </LaddaButton>
-                        )}
-                    {this.state.status == "finished" &&
-                        (this.state.paymentMethod != "cash" ||
-                            this.state.paymentReceived) && (
-                            <div>
+                        )} */}
+                    {this.state.status == "finished" && (
+                        <div>
+                            <div
+                                className="card padding-top padding-bottom card"
+                                style={{
+                                    marginLeft: "0px",
+                                    marginRight: "0px"
+                                }}
+                            >
                                 <div
-                                    className="card padding-top padding-bottom card"
                                     style={{
-                                        marginLeft: "0px",
-                                        marginRight: "0px"
+                                        textAlign: "center"
                                     }}
                                 >
-                                    <div
+                                    <Rating
+                                        name="rating"
+                                        {...this.props}
+                                        start={0}
+                                        stop={5}
+                                        initialRating={this.state.rating}
+                                        emptySymbol="fa fa-star-o fa-2x empty"
+                                        fullSymbol="fa fa-star fa-2x full"
+                                        onChange={rate => this.onRate(rate)}
                                         style={{
-                                            textAlign: "center"
+                                            fontSize: "200%"
                                         }}
-                                    >
-                                        <Rating
-                                            name="rating"
-                                            {...this.props}
-                                            start={0}
-                                            stop={5}
-                                            initialRating={this.state.rating}
-                                            emptySymbol="fa fa-star-o fa-2x empty"
-                                            fullSymbol="fa fa-star fa-2x full"
-                                            onChange={rate => this.onRate(rate)}
-                                            style={{
-                                                fontSize: "200%"
-                                            }}
-                                        />
-                                    </div>
-                                    <div
-                                        style={{
-                                            textAlign: "center"
-                                        }}
-                                    >
-                                        Rate Rider
-                                    </div>
-                                    {/*<div className="justified">
+                                    />
+                                </div>
+                                <div
+                                    style={{
+                                        textAlign: "center"
+                                    }}
+                                >
+                                    Rate Rider
+                                </div>
+                                {/*<div className="justified">
                                         <textarea
                                             name="reviewMessage"
                                             placeholder="Put some feedback of the ride"
                                             onChange={this.handleChange}
                                         />
                                     </div>*/}
-                                </div>
-
-                                <LaddaButton
-                                    className="button button-block button-balanced activated"
-                                    loading={this.state.review_loader}
-                                    onClick={this.onReviewSubmit}
-                                    data-color="##FFFF00"
-                                    data-size={L}
-                                    data-style={SLIDE_UP}
-                                    data-spinner-size={30}
-                                    data-spinner-color="#ddd"
-                                    data-spinner-lines={12}
-                                >
-                                    {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                    <i
-                                        className="fa fa-paper-plane"
-                                        aria-hidden="true"
-                                    />{" "}
-                                    Submit Review
-                                </LaddaButton>
-                                <LaddaButton
-                                    className="button button-block button-calm activated"
-                                    onClick={() => {
-                                        this.setState({ sendToNewReqs: true });
-                                    }}
-                                    data-color="##FFFF00"
-                                    data-size={L}
-                                    data-style={SLIDE_UP}
-                                    data-spinner-size={30}
-                                    data-spinner-color="#ddd"
-                                    data-spinner-lines={12}
-                                >
-                                    {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                    <i
-                                        className="fa fa-arrow-right"
-                                        aria-hidden="true"
-                                    />{" "}
-                                    Skip
-                                </LaddaButton>
                             </div>
-                        )}
+
+                            <LaddaButton
+                                className="button button-block button-balanced activated"
+                                loading={this.state.review_loader}
+                                onClick={this.onReviewSubmit}
+                                data-color="##FFFF00"
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                            >
+                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
+                                <i
+                                    className="fa fa-paper-plane"
+                                    aria-hidden="true"
+                                />{" "}
+                                Submit Review
+                            </LaddaButton>
+                            <LaddaButton
+                                className="button button-block button-calm activated"
+                                onClick={() => {
+                                    this.setState({ sendToNewReqs: true });
+                                }}
+                                data-color="##FFFF00"
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                            >
+                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
+                                <i
+                                    className="fa fa-arrow-right"
+                                    aria-hidden="true"
+                                />{" "}
+                                Skip
+                            </LaddaButton>
+                        </div>
+                    )}
                     {this.state.status == "accepted" && (
                         <Widget
                             handleNewUserMessage={this.handleNewUserMessage}
