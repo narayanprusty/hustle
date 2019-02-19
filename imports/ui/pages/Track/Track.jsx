@@ -50,21 +50,29 @@ class Track extends Component {
         }
     };
     componentDidMount = () => {
-        const parsed = queryString.parse(this.props.location.search);
+        let parsed;
+        try {
+            parsed = queryString.parse(this.props.location.search);
+        } catch (error) {
+            return notify.show("No tracking record found", "error");
+        }
         if (!parsed.tid) {
             this.setState({
                 not_found: true
             });
-            notify.show("Invalid Tracking Id", "error");
+
+            // notify.show("Invalid Tracking Id", "error");
         } else {
-            this.fetchBooking(parsed.tid);
+            const fetched = this.fetchBooking(parsed.tid);
             //setinerval of getDriverLocation
-            const invlT = setInterval(this.fetchDriverLoc, 3000);
-            const intRecord = setInterval(this.watchRideStatus, 5000);
-            this.setState({
-                intvl: intRecord,
-                intvl1: invlT
-            });
+            if (fetched) {
+                const invlT = setInterval(this.fetchDriverLoc, 3000);
+                const intRecord = setInterval(this.watchRideStatus, 5000);
+                this.setState({
+                    intvl: intRecord,
+                    intvl1: invlT
+                });
+            }
         }
         this._isMounted = true;
     };
@@ -104,14 +112,17 @@ class Track extends Component {
     fetchBooking = bookingId => {
         return Meteor.call("getBookingFromDb", bookingId, (error, data) => {
             if (error) {
-                notify.show(error.reason || "Unknown Error Occurred!", "error");
+                // notify.show(error.reason || "Unknown Error Occurred!", "error");
+                this.setState({ not_found: true });
                 return false;
             }
             if (Object.keys(data).length) {
                 this.setState(data);
                 return data.userId;
             } else {
-                notify.show("Invalid Tracking Id", "error");
+                this.setState({ not_found: true });
+                // notify.show("Invalid Tracking Id", "error");
+                return false;
             }
         });
     };
@@ -183,7 +194,20 @@ class Track extends Component {
                     </h3>
                 </div>
                 {this.state.not_found && (
-                    <div className="card">No Tracking Data Found</div>
+                    <div className="card">
+                        <div
+                            className="item item-text-wrap"
+                            style={{ textAlign: "center" }}
+                        >
+                            <div>
+                                <img
+                                    src={"/images/waiting.png"}
+                                    style={{ width: "40px" }}
+                                />
+                            </div>
+                            <div className="padding-top">No data found</div>
+                        </div>
+                    </div>
                 )}
                 <div className="mapView padding-left padding-right padding-bottom">
                     {this.state.bookingId && this.state.status == "started" && (

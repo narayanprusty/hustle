@@ -572,20 +572,24 @@ const fetchLocationwithKeyword = ({ lat, lng, keyWord }) => {
 };
 
 const getBookingFromDb = bookingId => {
+    console.log(bookingId, ">>>>>>>>>>>");
     const bookingData = BookingRecord.find({
         bookingId: bookingId,
         status: "started"
     }).fetch()[0];
+    console.log(bookingData, ">>>>>>>>>>");
     if (bookingData) {
         const driverMeta = DriverMeta.find({
             driverId: bookingData.driverId
         }).fetch()[0];
+        console.log(driverMeta, ">>>>>>>>>");
         return {
             ...bookingData,
             driverLoc: driverMeta.currentLocation
         };
     } else {
-        return {};
+        console.log(">>>>>>>>>>>>>>>>>>>>");
+        throw new Meteor.Error("No data found");
     }
 };
 
