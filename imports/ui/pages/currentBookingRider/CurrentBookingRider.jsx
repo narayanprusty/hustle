@@ -465,7 +465,30 @@ class CurrentBookingRider extends Component {
         this.setState(timeArr);
         return true;
     };
-
+    triggerSos = () => {
+        const messageElem = {
+            username: this.state.username,
+            userId: this.state.userId,
+            carModel: this.state.carModel,
+            carNumber: this.state.carNumber,
+            currentLatlng: this.state.currentPosition,
+            trackUrl:
+                config.FRONTEND_HOST + "/track?tid=" + this.state.bookingId,
+            bookingId: this.state.bookingId,
+            driverId: this.state.driverId,
+            start_address: this.state.start_address,
+            end_address: this.state.end_address
+        };
+        Meteor.call("triggerSos", messageElem, (err, res) => {
+            if (err) {
+                return notify.show(
+                    err.error || "Unable to make the request!",
+                    "error"
+                );
+            }
+            return notify.show("Sos request success!", "success");
+        });
+    };
     render() {
         return (
             <div style={{ height: "100%" }}>
@@ -679,6 +702,11 @@ class CurrentBookingRider extends Component {
                                 )} */}
                             </GoogleMapReact>
                         )}
+                    {this.state.status == "started" && (
+                        <button id="sos" onClick={this.triggerSos}>
+                            SOS
+                        </button>
+                    )}
                     {this.state.status == "accepted" && (
                         <Widget
                             handleNewUserMessage={this.handleNewUserMessage}

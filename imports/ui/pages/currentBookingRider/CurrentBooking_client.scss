@@ -29,3 +29,21 @@ textarea {
 .rcw-widget-container {
     z-index: 2;
 }
+
+#sos {
+    outline: none;
+    width: 7em;
+    height: 7em;
+    margin-top: 30px;
+    border: none;
+    border-radius: 100px;
+    background-color: red;
+    color: white;
+    font-size: 1em;
+    font-weight: bold;
+    border: 5px solid pink;
+    box-shadow: 0 0 5px gray;
+}
+#sos:focus {
+    box-shadow: 0 0 1px black;
+}
