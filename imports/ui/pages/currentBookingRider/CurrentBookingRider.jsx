@@ -109,7 +109,8 @@ class CurrentBookingRider extends Component {
                     this.getDriverDetails(bookingData.data.driverId);
                     this.setState({
                         showMap: true,
-                        accepted: true
+                        accepted: true,
+                        status: "accepted"
                     });
                 } else if (
                     bookingData &&
@@ -119,7 +120,8 @@ class CurrentBookingRider extends Component {
 
                     this.setState({
                         showMap: true,
-                        rideStarted: true
+                        rideStarted: true,
+                        status: "started"
                     });
                 } else if (
                     bookingData &&
@@ -130,7 +132,8 @@ class CurrentBookingRider extends Component {
 
                     this.setState({
                         showMap: false,
-                        rideFinished: true
+                        rideFinished: true,
+                        status: "finished"
                     });
                 }
             }
@@ -245,6 +248,8 @@ class CurrentBookingRider extends Component {
                     });
 
                     routePolyline.setMap(mapInstance);
+                    mapInstance.fitBounds(latlngbounds);
+                    // mapInstance.setZoom(this.state.zoom);
                     this.setState({
                         poly: routePolyline
                     });
@@ -470,8 +475,8 @@ class CurrentBookingRider extends Component {
                         &nbsp; Ongoing Ride
                     </h3>
                 </div>
-                {this.state.accepted &&
-                    !this.state.rideFinished &&
+                {(this.state.status == "accepted" ||
+                    this.state.status == "started") &&
                     this.state.bookingId && (
                         <div className="card">
                             <div
@@ -515,6 +520,23 @@ class CurrentBookingRider extends Component {
                                 {this.state.carNumber || "-"}
                                 <span className="item-note">Car Number</span>
                             </a>
+                            <a className="item item-icon-left" href="#">
+                                <Rating
+                                    name="rating"
+                                    {...this.props}
+                                    start={0}
+                                    stop={5}
+                                    readonly={true}
+                                    initialRating={this.state.avgRating || 0}
+                                    emptySymbol="fa fa-star-o fa-2x empty"
+                                    fullSymbol="fa fa-star fa-2x full"
+                                    onChange={rate => this.onRate(rate)}
+                                    style={{
+                                        fontSize: "200%"
+                                    }}
+                                />
+                                <span className="item-note">Driver Review</span>
+                            </a>
                         </div>
                     </div>
                 )}
@@ -536,7 +558,7 @@ class CurrentBookingRider extends Component {
                         </LaddaButton>
                     </div>
                 )}
-                {!this.state.status == "accepted" && this.state.bookingId && (
+                {this.state.status == "pending" && this.state.bookingId && (
                     <div>
                         <div className="card">
                             <div
@@ -703,27 +725,6 @@ class CurrentBookingRider extends Component {
                                     {this.state.paymentMethod || "Cash"}
                                     <span className="item-note">
                                         Payment Method
-                                    </span>
-                                </a>
-                                <a className="item item-icon-left" href="#">
-                                    <Rating
-                                        name="rating"
-                                        {...this.props}
-                                        start={0}
-                                        stop={5}
-                                        readonly={true}
-                                        initialRating={
-                                            this.state.avgRating || 0
-                                        }
-                                        emptySymbol="fa fa-star-o fa-2x empty"
-                                        fullSymbol="fa fa-star fa-2x full"
-                                        onChange={rate => this.onRate(rate)}
-                                        style={{
-                                            fontSize: "200%"
-                                        }}
-                                    />
-                                    <span className="item-note">
-                                        Driver Review
                                     </span>
                                 </a>
                             </div>

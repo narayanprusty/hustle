@@ -182,6 +182,13 @@ const onCancellation = async (
 };
 
 const onDriverAccept = async (bookingId, driverId) => {
+    const BookingData = BookingRecord.find({
+        bookingId: bookingId,
+        status: "pending"
+    }).fetch()[0];
+    if (!BookingData) {
+        throw { reason: "Booking already accepted by someone else!" };
+    }
     const txId = await node.callAPI("assets/updateAssetInfo", {
         assetName: config.ASSET.Bookings,
         fromAccount: node.getWeb3().eth.accounts[0],

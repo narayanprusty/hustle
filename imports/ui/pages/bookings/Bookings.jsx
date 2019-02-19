@@ -787,6 +787,19 @@ class Bookings extends Component {
                                                     {card.text}{" "}
                                                 </option>
                                             ))}
+                                            {/* <option
+                                                value={"cash"}
+                                                key={
+                                                    this.state.cards &&
+                                                    this.state.cards.length
+                                                        ? this.state.cards
+                                                              .length + 1
+                                                        : 1
+                                                }
+                                            >
+                                                {" "}
+                                                {"Cash"}{" "}
+                                            </option> */}
                                         </select>
                                         <i
                                             className="fa fa-sort-desc"

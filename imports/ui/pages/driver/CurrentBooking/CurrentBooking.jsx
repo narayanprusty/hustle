@@ -520,7 +520,7 @@ class CurrentBooking extends Component {
                     )}
                     {this.state.status != "finished" && (
                         <LaddaButton
-                            className="button button-block button-balanced activated"
+                            className="button button-block button-calm activated"
                             // loading={this.state.startRide_loader}
                             onClick={this.navigateToDrop}
                             data-color="##FFFF00"
