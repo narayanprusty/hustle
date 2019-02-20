@@ -78,7 +78,7 @@ class EmergencyContact extends Component {
                 return false;
             }
             this.setState({ update_loader: false });
-            return notify.show("Updated", "success");
+            return notify.show("contacts updated", "success");
         });
     };
     render() {
