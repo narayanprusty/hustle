@@ -485,6 +485,9 @@ class CurrentBookingRider extends Component {
         return true;
     };
     triggerSos = () => {
+        this.setState({
+            sos_loader: true
+        });
         const messageElem = {
             username: this.state.username,
             userId: this.state.userId,
@@ -500,11 +503,17 @@ class CurrentBookingRider extends Component {
         };
         Meteor.call("triggerSos", messageElem, (err, res) => {
             if (err) {
+                this.setState({
+                    sos_loader: false
+                });
                 return notify.show(
                     err.error || "Unable to make the request!",
                     "error"
                 );
             }
+            this.setState({
+                sos_loader: false
+            });
             return notify.show("Sos request success!", "success");
         });
     };
@@ -602,6 +611,7 @@ class CurrentBookingRider extends Component {
                         <LaddaButton
                             className="button button-block button-assertive activated"
                             data-color="##FFFF00"
+                            loader={this.state.sos_loader}
                             onClick={this.triggerSos}
                             data-size={L}
                             data-style={SLIDE_UP}
