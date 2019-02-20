@@ -548,6 +548,7 @@ class CurrentBookingRider extends Component {
                                 <span className="item-note">Car Number</span>
                             </a>
                             <a className="item item-icon-left" href="#">
+                                <i className="icon fa fa fa-smile-o" />
                                 <Rating
                                     name="rating"
                                     {...this.props}
@@ -559,7 +560,7 @@ class CurrentBookingRider extends Component {
                                     fullSymbol="fa fa-star fa-2x full"
                                     onChange={rate => this.onRate(rate)}
                                     style={{
-                                        fontSize: "200%"
+                                        fontSize: "10px"
                                     }}
                                 />
                                 <span className="item-note">Driver Review</span>
@@ -582,6 +583,17 @@ class CurrentBookingRider extends Component {
                         >
                             <i className="fa fa-share-alt" aria-hidden="true" />{" "}
                             Share Live Location
+                        </LaddaButton>
+                        <LaddaButton
+                            className="button button-block button-assertive activated"
+                            data-color="##FFFF00"
+                            data-size={L}
+                            data-style={SLIDE_UP}
+                            data-spinner-size={30}
+                            data-spinner-color="#ddd"
+                            data-spinner-lines={12}
+                        >
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> SOS
                         </LaddaButton>
                     </div>
                 )}
@@ -707,11 +719,7 @@ class CurrentBookingRider extends Component {
                                     )} */}
                             </GoogleMapReact>
                         )}
-                    {this.state.status == "started" && (
-                        <button id="sos" onClick={this.triggerSos}>
-                            SOS
-                        </button>
-                    )}
+                    
                     {this.state.status == "accepted" && (
                         <Widget
                             handleNewUserMessage={this.handleNewUserMessage}
