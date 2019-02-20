@@ -6,8 +6,12 @@ import { Meteor } from "meteor/meteor";
 
 const triggerSos = async messageElems => {
     const driver = await driverDetails(messageElems.driverId);
-    const message = `${messageElems.username} needs your help, its emergency.
-    current lat:${messageElems.lat}, lng:${messageElems.lng},
+    const message = `[HUSTLE]\n${
+        messageElems.username
+    } needs your help, its emergency.
+    current lat:${messageElems.currentLatlng.lat}, lng:${
+        messageElems.currentLatlng.lng
+    },
     car number:${messageElems.carNumber},car model:${messageElems.carModel},
     track here: ${messageElems.trackUrl},boarded from:${
         messageElems.start_address
@@ -17,16 +21,16 @@ const triggerSos = async messageElems => {
     },driver phone:${driver.phone}
     `;
 
-    const { econtacts } = getContacts();
-    const defaultContacts = getSOSNumbers();
+    const { econtacts } = await getContacts();
+    const defaultContacts = await getSOSNumbers();
     let allNumbers = [];
     if (econtacts && econtacts.length) {
         const userContacts = econtacts.split(",");
-        allNumbers.concat(userContacts);
+        allNumbers = allNumbers.concat(userContacts);
     }
     if (defaultContacts && defaultContacts.length) {
         const globalContacts = defaultContacts.split(",");
-        allNumbers.concat(globalContacts);
+        allNumbers = allNumbers.concat(globalContacts);
     }
     if (allNumbers.length) {
         const sendMessages = await sendMessage(allNumbers, message);

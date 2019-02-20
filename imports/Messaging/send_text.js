@@ -6,7 +6,7 @@ const sendMessage = (numbers, messageBody) => {
         numbers.map(number => {
             return client.messages.create({
                 to: number,
-                from: config.messagingServiceSid,
+                from: config.SMS.fromNumber,
                 body: messageBody
             });
         })
