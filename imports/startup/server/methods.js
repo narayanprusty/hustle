@@ -8,5 +8,6 @@ require("../../api/localization/methods");
 require("../../api/payments/payment_methods");
 require("../../api/reviews/reviews_methods");
 require("../../api/userFunctions/userFunction_methods");
+require("../../api/EmergencyContact/EmergencyContact_methods");
 
 export {};
