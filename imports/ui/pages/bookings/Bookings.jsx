@@ -67,6 +67,7 @@ class Bookings extends Component {
         this._isMounted = false;
     }
     state = {
+        loading_cards: true,
         cards: [],
         listnToDriver: false,
         paymentMethod: "cash",
@@ -178,6 +179,9 @@ class Bookings extends Component {
         );
 
         Meteor.call("getCardsForPayment", (err, res) => {
+            this.setState({
+                loading_cards: false
+            });
             if (err) {
                 console.log(err);
                 return notify.show("Failed adding card.", "error");
@@ -873,6 +877,7 @@ class Bookings extends Component {
                                         data-spinner-size={30}
                                         data-spinner-color="#ddd"
                                         data-spinner-lines={12}
+                                        disabled={this.state.loading_cards}
                                     >
                                         <i
                                             className="fa fa-car"
@@ -884,7 +889,20 @@ class Bookings extends Component {
                             </div>
                         )}
                     </div>
-
+                    {this.state.loading_cards && (
+                        <div className="card">
+                            <div
+                                className="item item-text-wrap"
+                                style={{ textAlign: "center" }}
+                            >
+                                <div />
+                                <div className="padding-top">
+                                    Please wait while we load your payment
+                                    options.
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     <div className="mapView padding-left padding-right padding-bottom">
                         {this._isMounted && (
                             <GoogleMapReact
