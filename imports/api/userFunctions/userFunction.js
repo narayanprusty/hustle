@@ -1,4 +1,9 @@
 import { driverDetails } from "../details/driver";
+import { getSOSNumbers } from "../sos/sos";
+import { getContacts } from "../EmergencyContact/EmergencyContact";
+import { sendMessage } from "../../Messaging/send_text";
+import { Meteor } from "meteor/meteor";
+
 const triggerSos = async messageElems => {
     const driver = await driverDetails(messageElems.driverId);
     const message = `${messageElems.username} needs your help, its emergency.
@@ -11,6 +16,24 @@ const triggerSos = async messageElems => {
         driver.name
     },driver phone:${driver.phone}
     `;
+
+    const { econtacts } = getContacts();
+    const defaultContacts = getSOSNumbers();
+    let allNumbers = [];
+    if (econtacts && econtacts.length) {
+        const userContacts = econtacts.split(",");
+        allNumbers.concat(userContacts);
+    }
+    if (defaultContacts && defaultContacts.length) {
+        const globalContacts = defaultContacts.split(",");
+        allNumbers.concat(globalContacts);
+    }
+    if (allNumbers.length) {
+        const sendMessages = await sendMessage(allNumbers, message);
+        return sendMessages;
+    } else {
+        throw new Meteor.Error("No contacts found!");
+    }
     //send message to every one here
 };
 

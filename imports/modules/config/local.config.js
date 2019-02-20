@@ -9,7 +9,10 @@ module.exports = {
     GAPIKEY: "AIzaSyAs2LAkFCJr8p4EzgIVtk169Qreykfi74Q",
     // GAPIKEY: "AIzaSyBnjRZAHqrP5Flir8iuhmBmJlOr7qKlSTE",
     SMS: {
-        apiKey: "MJicpcEuLaUG5gQ57O4Xa5MORszWXsOd"
+        apiKey: "MJicpcEuLaUG5gQ57O4Xa5MORszWXsOd",
+        messagingServiceSid: "MG44d767b6a11119203c63d0705a24204a",
+        accountSid: "ACbc23fa717de59ce2264e4e3475a17a7c", //Test cred
+        authToken: "db2923904bde436cb3a9a1fd068dbb55" //test cred
     },
     BLOCKCLUSTER: {
         host: "app-ap-south-1b.blockcluster.io",
