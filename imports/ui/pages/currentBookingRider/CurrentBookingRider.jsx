@@ -587,13 +587,18 @@ class CurrentBookingRider extends Component {
                         <LaddaButton
                             className="button button-block button-assertive activated"
                             data-color="##FFFF00"
+                            onClick={this.triggerSos}
                             data-size={L}
                             data-style={SLIDE_UP}
                             data-spinner-size={30}
                             data-spinner-color="#ddd"
                             data-spinner-lines={12}
                         >
-                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> SOS
+                            <i
+                                className="fa fa-exclamation-triangle"
+                                aria-hidden="true"
+                            />{" "}
+                            SOS
                         </LaddaButton>
                     </div>
                 )}
@@ -719,7 +724,7 @@ class CurrentBookingRider extends Component {
                                     )} */}
                             </GoogleMapReact>
                         )}
-                    
+
                     {this.state.status == "accepted" && (
                         <Widget
                             handleNewUserMessage={this.handleNewUserMessage}
