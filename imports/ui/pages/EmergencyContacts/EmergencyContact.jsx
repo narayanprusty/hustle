@@ -31,16 +31,22 @@ class EmergencyContact extends Component {
             load_existing: true
         });
         Meteor.call("getContacts", (error, allData) => {
-            if (error || !allData.length) {
+            if (error) {
                 console.log(error);
                 this.setState({
                     load_existing: false
                 });
                 notify.show(error.reason || "Unable to get contacts", "error");
                 return false;
+            } else if (allData && !allData.econtacts) {
+                this.setState({
+                    load_existing: false,
+                    maxNumbers: allData.count || 5
+                });
+                return notify.show("No existing contact found!", "warning");
             }
             console.log(allData);
-            const numbersArr = allData[0].econtacts.split(",");
+            const numbersArr = allData.econtacts.split(",");
             let stateObj = {};
             let inputs = [];
             for (let i = 0; i < numbersArr.length; i++) {
@@ -51,7 +57,7 @@ class EmergencyContact extends Component {
             this.setState({
                 load_existing: false,
                 inputs: inputs,
-                maxNumbers: allData[0].count || 5,
+                maxNumbers: allData.count || 5,
                 ...stateObj
             });
         });
@@ -111,7 +117,7 @@ class EmergencyContact extends Component {
                                     this.setState({ [input]: phone })
                                 }
                             />
-                            {this.state.inputs.length <=
+                            {this.state.inputs.length <
                                 this.state.maxNumbers && (
                                 <button
                                     className="button button-small"

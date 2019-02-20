@@ -54,7 +54,7 @@ const getContacts = async () => {
     });
     const { count } = await getAllowdSOSCount();
     return {
-        ...existingData,
+        ...existingData[0],
         count
     };
 };
