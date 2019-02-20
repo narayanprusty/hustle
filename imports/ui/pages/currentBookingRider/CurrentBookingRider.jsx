@@ -185,6 +185,8 @@ class CurrentBookingRider extends Component {
                     ) {
                         this.getDriverDetails(currentRide.driverId);
                     }
+                    //at the begning when driver location is not there show normal route.
+
                     return currentRide;
                 }
             }
@@ -214,13 +216,24 @@ class CurrentBookingRider extends Component {
             mapInstance: map,
             mapApi: maps
         });
+        this.setState({
+            currentPoint: {
+                lat: this.state.boardingPoint.coordinates[1],
+                lng: this.state.boardingPoint.coordinates[0]
+            },
+            destPoint: {
+                lat: this.state.droppingPoint.coordinates[1],
+                lng: this.state.droppingPoint.coordinates[0]
+            }
+        });
+        this.changeRoute();
     };
     changeRoute = () => {
         if (this.state.poly) {
             this.state.poly.setMap(null);
         }
 
-        const { mapInstance, mapApi, destPoint, currentPoint } = this.state;
+        let { mapInstance, mapApi, destPoint, currentPoint } = this.state;
 
         const latlng = [
             new mapApi.LatLng(currentPoint.lat, currentPoint.lng),
