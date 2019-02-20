@@ -611,7 +611,7 @@ class CurrentBookingRider extends Component {
                         <LaddaButton
                             className="button button-block button-assertive activated"
                             data-color="##FFFF00"
-                            loader={this.state.sos_loader}
+                            loading={this.state.sos_loader}
                             onClick={this.triggerSos}
                             data-size={L}
                             data-style={SLIDE_UP}
