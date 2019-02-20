@@ -43,6 +43,9 @@ DriverMetaCollection.schema = new SimpleSchema({
     },
     carNumber: {
         type: String
+    },
+    active: {
+        type: Boolean
     }
 });
 if (Meteor.isServer) {

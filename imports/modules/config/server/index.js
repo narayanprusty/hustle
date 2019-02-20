@@ -61,7 +61,8 @@ module.exports = {
         BookingsInfo: "BookingsInfo",
         SubscriptionPlans: "SubscriptionPlans",
         Subscriptions: "Subscriptions",
-        Reviews: "Reviews"
+        Reviews: "Reviews",
+        GlobalSettings: "GlobalSettings",
     },
     HYPERPAY: {
         UserId: "8ac7a4c86783997f0167971a1b65109d",
