@@ -176,6 +176,39 @@
     }
 }
 
+.floatMapButton {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    left: 25%;
+    z-index: 5;
+    background-color: #fff;
+    padding: 5px;
+    border: 1px solid #999;
+    text-align: center;
+    font-family: "Roboto", "sans-serif";
+    line-height: 35px;
+    padding-left: 14px;
+}
+
+div[class^="sc-"],
+div[class*="sc-"] {
+    position: relative;
+}
+
+div[class^="sc-"],
+div[class*="sc-"] > div {
+    width: 98%;
+}
+div[class^="sc-"],
+div[class*="sc-"] span:first-child {
+    width: 100%;
+    display: block;
+}
+div[class*="sc-"] span:first-child > span {
+    display: inline;
+}
+
 .cartop:after,
 .cartop:before {
     content: "";
@@ -185,7 +218,6 @@
     right: 80px;
     position: absolute;
 }
-
 .cartop .cartop-front:after,
 .cartop .cartop-front:before {
     content: "";
@@ -198,7 +230,6 @@
     -webkit-border-radius: 50%;
     border-radius: 50%;
 }
-
 .cartop .cartop-middle:before,
 .cartop .cartop-middle:after {
     content: "";
@@ -211,7 +242,6 @@
     position: absolute;
     right: 52px;
 }
-
 .cartop .cartop-back:before,
 .cartop .cartop-back:after {
     content: "";
@@ -221,13 +251,14 @@
     position: absolute;
     bottom: -62px;
 }
-
 .cartop-line + .cartop-line {
     margin-top: 40px;
 }
 
 .cartop {
-    zoom: 100%;
+    width: 285px;
+    height: 125px;
+    background: #b6bec3;
     position: relative;
     display: inline-block;
     vertical-align: middle;
@@ -342,40 +373,6 @@
     -webkit-animation: animacao-passo1 3s ease-in-out;
     animation: animacao-passo1 3s ease-in-out;
 }
-
 .passo1:checked + .passo2 ~ .cartop {
     left: 680px;
-}
-
-.floatMapButton {
-    cursor: pointer;
-    position: absolute;
-    top: 10px;
-    left: 25%;
-    z-index: 5;
-    background-color: #fff;
-    padding: 5px;
-    border: 1px solid #999;
-    text-align: center;
-    font-family: "Roboto", "sans-serif";
-    line-height: 35px;
-    padding-left: 14px;
-}
-
-div[class^="sc-"],
-div[class*="sc-"] {
-    position: relative;
-}
-
-div[class^="sc-"],
-div[class*="sc-"] > div {
-    width: 98%;
-}
-div[class^="sc-"],
-div[class*="sc-"] span:first-child {
-    width: 100%;
-    display: block;
-}
-div[class*="sc-"] span:first-child > span {
-    display: inline;
 }

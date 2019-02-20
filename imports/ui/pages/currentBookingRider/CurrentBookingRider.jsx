@@ -689,21 +689,22 @@ class CurrentBookingRider extends Component {
                                             metaData="drop"
                                         />
                                     )}
-                                {/* {this.state.driverLoc && (
-                                    <Marker
-                                        lat={
-                                            this.state.driverLoc.lat
-                                                ? this.state.driverLoc.lat
-                                                : this.state.driverLoc.lat
-                                        }
-                                        lng={
-                                            this.state.driverLoc.lng
-                                                ? this.state.driverLoc.lng
-                                                : this.state.driverLoc.lng
-                                        }
-                                        metaData="cartop"
-                                    />
-                                )} */}
+                                {/* {this.state.driverLoc &&
+                                    this.state.driverLoc.lat != 0 && (
+                                        <Marker
+                                            lat={
+                                                this.state.driverLoc.lat
+                                                    ? this.state.driverLoc.lat
+                                                    : this.state.driverLoc.lat
+                                            }
+                                            lng={
+                                                this.state.driverLoc.lng
+                                                    ? this.state.driverLoc.lng
+                                                    : this.state.driverLoc.lng
+                                            }
+                                            metaData="cartop"
+                                        />
+                                    )} */}
                             </GoogleMapReact>
                         )}
                     {this.state.status == "started" && (
