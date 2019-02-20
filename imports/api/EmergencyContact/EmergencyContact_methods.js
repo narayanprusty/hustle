@@ -1,4 +1,4 @@
-import { getContacts, saveAndUpdate } from "./EmergencyContact.js";
+import { getContacts, saveAndUpdate } from "./EmergencyContact";
 import { Meteor } from "meteor/meteor";
 
 Meteor.methods({

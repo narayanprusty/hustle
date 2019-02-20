@@ -51,6 +51,7 @@ class EmergencyContact extends Component {
             this.setState({
                 load_existing: false,
                 inputs: inputs,
+                maxNumbers: allData[0].count || 5,
                 ...stateObj
             });
         });

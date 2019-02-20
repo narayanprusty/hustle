@@ -1,4 +1,5 @@
 import Blockcluster from "blockcluster";
+import { getAllowdSOSCount } from "../sos/sos";
 import config from "../../modules/config/server";
 
 const node = new Blockcluster.Dynamo({
@@ -46,10 +47,15 @@ const saveAndUpdate = async numbersArray => {
 
 const getContacts = async () => {
     const identifier = Meteor.userId();
-    return await node.callAPI("assets/search", {
+    const existingData = await node.callAPI("assets/search", {
         $query: {
             uniqueIdentifier: identifier
         }
     });
+    const { count } = await getAllowdSOSCount();
+    return {
+        ...existingData,
+        count
+    };
 };
 export { saveAndUpdate, getContacts };
