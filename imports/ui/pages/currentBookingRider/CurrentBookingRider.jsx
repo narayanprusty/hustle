@@ -62,6 +62,7 @@ class CurrentBookingRider extends Component {
     componentWillUnmount() {
         if (this._isMounted) {
             clearInterval(this.state.intvl);
+            clearInterval(this.state.intvlc);
             this.pubnub.unsubscribe({
                 channels: [Meteor.userId()]
             });
@@ -81,19 +82,22 @@ class CurrentBookingRider extends Component {
         });
 
         this._isMounted = true;
-        navigator.geolocation.watchPosition(pos => {
-            const coords = pos.coords;
-            this.callInsideRender();
-            this.setState({
-                currentPosition: {
-                    lat: coords.latitude,
-                    lng: coords.longitude
-                }
+        const c = setInterval(() => {
+            navigator.geolocation.getCurrentPosition(pos => {
+                const coords = pos.coords;
+                this.callInsideRender();
+                this.setState({
+                    currentPosition: {
+                        lat: coords.latitude,
+                        lng: coords.longitude
+                    }
+                });
             });
-        });
+        }, 2000);
         const intRecord = setInterval(this.watchRideStatus, 5000);
         this.setState({
-            intvl: intRecord
+            intvl: intRecord,
+            intvlc: c
         });
     };
 

@@ -47,6 +47,7 @@ class CurrentBooking extends Component {
     componentWillUnmount() {
         if (this._isMounted) {
             // clearInterval(this.state.ndIntvl);
+            clearInterval(this.setState.intvlc);
             this.pubnub.unsubscribe({
                 channels: [this.state.userId]
             });
@@ -57,68 +58,54 @@ class CurrentBooking extends Component {
         this.fetchCurrentRide();
         // const ndIntvl = setInterval(this.callInsideRender(), 3000);
         // this.setState({ ndIntvl: ndIntvl });
-        navigator.geolocation.watchPosition(pos => {
-            this.callInsideRender();
-            const coords = pos.coords;
-            console.log(coords);
-            this.setState({
-                currentPosition: {
-                    lat: coords.latitude,
-                    lng: coords.longitude
+        const c = setInterval(() => {
+            navigator.geolocation.getCurrentPosition(pos => {
+                this.callInsideRender();
+                const coords = pos.coords;
+                console.log(coords);
+                this.setState({
+                    currentPosition: {
+                        lat: coords.latitude,
+                        lng: coords.longitude
+                    }
+                });
+                if (this._isMounted) {
+                    this.pubnub
+                        .publish({
+                            message: {
+                                bookingId: this.state.bookingId,
+                                driverCoords: this.state.currentPosition,
+                                time: Date.now()
+                            },
+                            channel: this.state.userId,
+                            sendByPost: false, // true to send via post
+                            storeInHistory: false, //override default storage options
+                            meta: {
+                                type: "driverLoc"
+                            }
+                        })
+                        .then(data => {
+                            console.log(data);
+                        });
                 }
-            });
-            if (this._isMounted) {
-                this.pubnub
-                    .publish({
-                        message: {
-                            bookingId: this.state.bookingId,
-                            driverCoords: this.state.currentPosition,
-                            time: Date.now()
-                        },
-                        channel: this.state.userId,
-                        sendByPost: false, // true to send via post
-                        storeInHistory: false, //override default storage options
-                        meta: {
-                            type: "driverLoc"
+                Meteor.call(
+                    "updateDriverLocation",
+                    {
+                        driverId: Meteor.userId(),
+                        lat: coords.latitude,
+                        lng: coords.longitude
+                    },
+                    (err, done) => {
+                        if (err) {
+                            console.log(err);
+                            //Add localization support
+                            notify.show(err.reason, "error");
                         }
-                    })
-                    .then(data => {
-                        console.log(data);
-                    });
-            }
-            Meteor.call(
-                "updateDriverLocation",
-                {
-                    driverId: Meteor.userId(),
-                    lat: coords.latitude,
-                    lng: coords.longitude
-                },
-                (err, done) => {
-                    if (err) {
-                        console.log(err);
-                        //Add localization support
-                        notify.show(err.reason, "error");
                     }
-                }
-            );
-
-            const userId = Meteor.userId();
-            Meteor.call(
-                "updateDriverLocation",
-                {
-                    driverId: userId,
-                    lat: coords.latitude,
-                    lng: coords.longitude
-                },
-                (err, done) => {
-                    if (err) {
-                        console.log(err);
-                        //Add localization support
-                        notify.show(err.reason, "error");
-                    }
-                }
-            );
-        });
+                );
+            });
+        }, 2000);
+        this.setState({ intvlc: c });
     };
 
     callInsideRender = () => {
