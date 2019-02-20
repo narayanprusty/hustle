@@ -10,7 +10,7 @@ const node = new Blockcluster.Dynamo({
 const saveAndUpdate = async numbersArray => {
     const identifier = Meteor.userId();
     const data = {
-        econtacts: numbersArray
+        econtacts: numbersArray.join()
     };
     let txId;
     const count = await node.callAPI("assets/count", {

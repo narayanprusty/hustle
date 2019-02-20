@@ -29,8 +29,8 @@ const triggerSos = async messageElems => {
         allNumbers = allNumbers.concat(userContacts);
     }
     if (defaultContacts && defaultContacts.length) {
-        // const globalContacts = defaultContacts;
-        allNumbers = allNumbers.concat(defaultContacts);
+        const globalContacts = defaultContacts.split(",");
+        allNumbers = allNumbers.concat(globalContacts);
     }
     if (allNumbers.length) {
         return await sendMessage(allNumbers, message);
