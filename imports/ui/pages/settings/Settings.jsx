@@ -80,14 +80,19 @@ export default class Settings extends Component {
                     )}
                     {!driverMode && (
                         <Link to="/app/myCards" className="item item-icon-left">
-                            <i className="icon fa fa-credit-card"></i>
+                            <i className="icon fa fa-credit-card" />
                             {localizationManager.strings.myCards}
-                        </Link>)}
+                        </Link>
+                    )}
                     <a className="item item-icon-left item-icon-right" href="#">
                         <i className="icon ion-chatbubble-working" />
                         {localizationManager.strings.callSupport}
                         <i className="icon ion-ios-telephone-outline" />
                     </a>
+                    <Link to="/app/econtacts" className="item item-icon-left">
+                        <i className="icon fa fa-phone" />
+                        Emergency Contacts
+                    </Link>
                     <div className="item item-divider">
                         {localizationManager.strings.others}
                     </div>
