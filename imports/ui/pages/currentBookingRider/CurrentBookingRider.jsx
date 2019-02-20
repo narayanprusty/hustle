@@ -507,7 +507,9 @@ class CurrentBookingRider extends Component {
                     sos_loader: false
                 });
                 return notify.show(
-                    err.error || "Unable to make the request!",
+                    err.error && err.error != 500
+                        ? err.error
+                        : "Unable to make the request!",
                     "error"
                 );
             }

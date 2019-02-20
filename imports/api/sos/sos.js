@@ -37,7 +37,9 @@ const getSOSNumbers = async () => {
                 status: "open"
             }
         });
-        return settings && settings.length ? settings[0].SOSNumbers : ""; // as this guy doesn't gives array so lets handle that in frontend
+        return settings && settings.length && settings[0].SOSNumbers
+            ? settings[0].SOSNumbers
+            : ""; // as this guy doesn't gives array so lets handle that in frontend
     } catch (ex) {
         console.log(ex);
         return ex;

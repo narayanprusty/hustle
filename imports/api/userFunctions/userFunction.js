@@ -29,12 +29,11 @@ const triggerSos = async messageElems => {
         allNumbers = allNumbers.concat(userContacts);
     }
     if (defaultContacts && defaultContacts.length) {
-        const globalContacts = defaultContacts.split(",");
-        allNumbers = allNumbers.concat(globalContacts);
+        // const globalContacts = defaultContacts;
+        allNumbers = allNumbers.concat(defaultContacts);
     }
     if (allNumbers.length) {
-        const sendMessages = await sendMessage(allNumbers, message);
-        return sendMessages;
+        return await sendMessage(allNumbers, message);
     } else {
         throw new Meteor.Error("No contacts found!");
     }
