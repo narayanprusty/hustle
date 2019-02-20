@@ -358,6 +358,8 @@ class Bookings extends Component {
                     routePolyline.setMap(mapInstance);
                 } else if (status == "ZERO_RESULTS") {
                     notify.show("Cannot find path", "error");
+                } else if (status == "OVER_QUERY_LIMIT") {
+                    notify.show("Internal error", "error");
                 } else {
                     //Add localization support
                     notify.show(

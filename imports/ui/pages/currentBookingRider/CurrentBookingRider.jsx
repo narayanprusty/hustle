@@ -259,6 +259,8 @@ class CurrentBookingRider extends Component {
                     });
                 } else if (status == "ZERO_RESULTS") {
                     notify.show("Cannot find path", "error");
+                } else if (status == "OVER_QUERY_LIMIT") {
+                    notify.show("Internal error", "error");
                 } else {
                     notify.show(
                         "Directions request failed due to " + status,
