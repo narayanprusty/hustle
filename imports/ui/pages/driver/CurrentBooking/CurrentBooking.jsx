@@ -518,7 +518,7 @@ class CurrentBooking extends Component {
                             Ride
                         </LaddaButton>
                     )}
-                    {this.state.status != "finished" && (
+                    {this.state.status == "started" && (
                         <LaddaButton
                             className="button button-block button-calm activated"
                             // loading={this.state.startRide_loader}
