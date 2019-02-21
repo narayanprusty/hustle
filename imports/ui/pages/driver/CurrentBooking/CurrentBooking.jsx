@@ -57,6 +57,12 @@ class CurrentBooking extends Component {
 
     componentDidMount = () => {
         this.fetchCurrentRide();
+        this.pubnub.addListener({
+            message: message => {
+                console.log(">>>>>>>>>>>>>>>>", message);
+                this.callInsideRender(message);
+            }
+        });
         // const ndIntvl = setInterval(this.callInsideRender(), 3000);
         // this.setState({ ndIntvl: ndIntvl });
         const c = setInterval(() => {
@@ -109,17 +115,18 @@ class CurrentBooking extends Component {
         this.setState({ intvlc: c });
     };
 
-    callInsideRender = () => {
+    callInsideRender = (message) => {
         if (this._isMounted && this.state.userId) {
-            let messages;
-            try {
-                messages = this.pubnub.getMessage(this.state.userId);
-            } catch (err) {
-                console.log(err);
-            }
-            if (messages && messages.length) {
-                this.handleSocket(messages[messages.length - 1]);
-            }
+            // let messages;
+            // try {
+            //     messages = this.pubnub.getMessage(this.state.userId);
+            // } catch (err) {
+            //     console.log(err);
+            // }
+            // if (messages && messages.length) {
+            //     this.handleSocket(messages[messages.length - 1]);
+            // }
+            this.handleSocket(message);
         }
     };
     handleSocket = message => {
@@ -175,7 +182,7 @@ class CurrentBooking extends Component {
                                 return false;
                             }
                             this.setState(data);
-                            this.callInsideRender();
+                            // this.callInsideRender();
                             this._isMounted = true;
                             return currentRide;
                         }

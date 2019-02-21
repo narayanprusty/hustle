@@ -73,20 +73,22 @@ class CurrentBookingRider extends Component {
     componentDidMount = () => {
         this.fetchCurrentRide();
         console.log(Meteor.userId());
-
+        this.pubnub.addListener({
+            message: message => {
+                console.log(">>>>>>>>>>>>>>>>", message);
+                this.callInsideRender(message);
+            }
+        });
         this.pubnub.subscribe({
             channels: [Meteor.userId().toString()],
-            withPresence: true,
-            message: msg => {
-                console.log(">>>>>>>>>>>>>>>>", msg);
-            }
+            withPresence: true
         });
 
         this._isMounted = true;
         const c = setInterval(() => {
             navigator.geolocation.getCurrentPosition(pos => {
                 const coords = pos.coords;
-                this.callInsideRender();
+                // this.callInsideRender();
                 this.setState({
                     currentPosition: {
                         lat: coords.latitude,
@@ -351,12 +353,13 @@ class CurrentBookingRider extends Component {
         }
     };
 
-    callInsideRender = () => {
+    callInsideRender = message => {
         if (this._isMounted) {
-            const messages = this.pubnub.getMessage(Meteor.userId());
-            if (messages && messages.length) {
-                this.handleSocket(messages[messages.length - 1]);
-            }
+            // const messages = this.pubnub.getMessage(Meteor.userId());
+            // if (messages && messages.length) {
+            //     this.handleSocket(messages[messages.length - 1]);
+            // }
+            this.handleSocket(message);
         }
     };
 
