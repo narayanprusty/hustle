@@ -58,7 +58,7 @@ BookingRecordCollection.schema = new SimpleSchema({
     }
 });
 if (Meteor.isServer) {
-    BookingRecordCollection.rawCollection().createIndex({
+    BookingRecordCollection._ensureIndex({
         boardingPoint: "2dsphere"
     });
 }
