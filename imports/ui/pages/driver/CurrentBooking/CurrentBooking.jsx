@@ -67,7 +67,7 @@ class CurrentBooking extends Component {
         // this.setState({ ndIntvl: ndIntvl });
         const c = setInterval(() => {
             navigator.geolocation.getCurrentPosition(pos => {
-                this.callInsideRender();
+                // this.callInsideRender();
                 const coords = pos.coords;
                 console.log(coords);
                 this.setState({
@@ -115,7 +115,7 @@ class CurrentBooking extends Component {
         this.setState({ intvlc: c });
     };
 
-    callInsideRender = (message) => {
+    callInsideRender = message => {
         if (this._isMounted && this.state.userId) {
             // let messages;
             // try {

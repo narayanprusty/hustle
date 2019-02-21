@@ -319,8 +319,10 @@ class CurrentBookingRider extends Component {
             this.setState({
                 showMap: true,
                 accepted: true,
-                driverLoc: message.message.driverCoords
+                driverLoc: message.message.driverCoords,
+                currentPoint: message.message.driverCoords
             });
+            this.changeRoute();
         }
 
         if (
