@@ -49,6 +49,7 @@ class CurrentBookingRider extends Component {
             rideStarted: false,
             rideFinished: false,
             zoom: 15,
+            badge: 0,
             boardingPoint: { lat: 0, lng: 0 },
             driverLoc: {
                 lat: 0,
@@ -234,7 +235,9 @@ class CurrentBookingRider extends Component {
         }
 
         let { mapInstance, mapApi, destPoint, currentPoint } = this.state;
-
+        if (!currentPoint || !destPoint) {
+            return false;
+        }
         const latlng = [
             new mapApi.LatLng(currentPoint.lat, currentPoint.lng),
             new mapApi.LatLng(destPoint.lat, destPoint.lng)
@@ -293,9 +296,9 @@ class CurrentBookingRider extends Component {
             message.message.message &&
             this.state.timeArr.indexOf(message.message.time) == "-1"
         ) {
-            let { timeArr } = this.state;
+            let { timeArr, badge } = this.state;
             timeArr.push(message.message.time);
-            this.setState(timeArr);
+            this.setState({ timeArr: timeArr, badge: badge + 1 });
             addResponseMessage(message.message.message);
         } else if (
             message.userMetadata.type == "driverAccept" &&
@@ -481,7 +484,7 @@ class CurrentBookingRider extends Component {
 
         let { timeArr } = this.state;
         timeArr.push(timestamp);
-        this.setState(timeArr);
+        this.setState({ timeArr, badge: 0 });
         return true;
     };
     triggerSos = () => {
@@ -754,6 +757,8 @@ class CurrentBookingRider extends Component {
 
                     {this.state.status == "accepted" && (
                         <Widget
+                            badge={this.state.badge}
+                            onClick={() => this.setState({ badge: 0 })}
                             handleNewUserMessage={this.handleNewUserMessage}
                             subtitle={this.state.name}
                         />

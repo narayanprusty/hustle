@@ -24,6 +24,7 @@ class CurrentBooking extends Component {
         this.state = {
             messageList: [],
             rating: 0,
+            badge: 0,
             timeArr: []
         };
 
@@ -130,9 +131,9 @@ class CurrentBooking extends Component {
             message.message.message &&
             this.state.timeArr.indexOf(message.message.time) == "-1"
         ) {
-            let { timeArr } = this.state;
+            let { timeArr, badge } = this.state;
             timeArr.push(message.message.time);
-            this.setState(timeArr);
+            this.setState({ timeArr: timeArr, badge: badge + 1 });
             addResponseMessage(message.message.message);
         }
     };
@@ -401,7 +402,7 @@ class CurrentBooking extends Component {
         });
         let { timeArr } = this.state;
         timeArr.push(timestamp);
-        this.setState(timeArr);
+        this.setState({ timeArr, badge: 0 });
         return true;
     };
     render() {
@@ -643,6 +644,7 @@ class CurrentBooking extends Component {
                     )}
                     {this.state.status == "accepted" && (
                         <Widget
+                            badge={this.state.badge}
                             handleNewUserMessage={this.handleNewUserMessage}
                             subtitle={this.state.name}
                         />
