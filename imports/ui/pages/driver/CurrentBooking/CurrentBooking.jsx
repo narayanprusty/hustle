@@ -361,7 +361,7 @@ class CurrentBooking extends Component {
             "rateRider",
             {
                 riderId: this.state.userId,
-                message: "",
+                message: this.state.reviewMessage,
                 rateVal: this.state.rating
             },
             (err, updated) => {
@@ -569,45 +569,54 @@ class CurrentBooking extends Component {
                     {this.state.status == "finished" && (
                         <div>
                             <div
-                                className="card padding-top padding-bottom card"
+                                className="card padding-bottom card"
                                 style={{
                                     marginLeft: "0px",
                                     marginRight: "0px"
                                 }}
                             >
-                                <div
-                                    style={{
-                                        textAlign: "center"
-                                    }}
-                                >
-                                    <Rating
-                                        name="rating"
-                                        {...this.props}
-                                        start={0}
-                                        stop={5}
-                                        initialRating={this.state.rating}
-                                        emptySymbol="fa fa-star-o fa-2x empty"
-                                        fullSymbol="fa fa-star fa-2x full"
-                                        onChange={rate => this.onRate(rate)}
-                                        style={{
-                                            fontSize: "200%"
-                                        }}
-                                    />
-                                </div>
-                                <div
-                                    style={{
-                                        textAlign: "center"
-                                    }}
-                                >
+                                <div class="item item-divider">
                                     Rate Rider
                                 </div>
-                                {/*<div className="justified">
+                                <div class="item item-text-wrap">
+                                    <div
+                                        style={{
+                                            textAlign: "center"
+                                        }}
+                                    >
+                                        <Rating
+                                            name="rating"
+                                            {...this.props}
+                                            start={0}
+                                            stop={5}
+                                            initialRating={this.state.rating}
+                                            emptySymbol="fa fa-star-o fa-2x empty"
+                                            fullSymbol="fa fa-star fa-2x full"
+                                            onChange={rate => this.onRate(rate)}
+                                            style={{
+                                                fontSize: "200%"
+                                            }}
+                                        />
+                                    </div>
+                                    <div className='padding-top padding-left padding-right'>
                                         <textarea
+                                            style={{
+                                                borderWidth: "2px",
+                                                textAlign: 'center',
+                                                width: '100%',
+                                                borderStyle: 'solid',
+                                                borderColor: '#e6e6e6',
+                                                padding: '14px',
+                                                borderRadius: '6px'
+                                            }}
                                             name="reviewMessage"
                                             placeholder="Put some feedback of the ride"
                                             onChange={this.handleChange}
                                         />
-                                    </div>*/}
+                                    </div>    
+                                </div>
+
+                                
                             </div>
 
                             <LaddaButton
