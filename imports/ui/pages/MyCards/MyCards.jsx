@@ -109,49 +109,39 @@ export default class MyCards extends Component {
         );
 
         return (
-            <div className="padding-top padding-right padding-left padding-bottom">
-                <h3 className="padding">
+            <div className="padding-top padding-bottom">
+                <h3 className="padding  padding-right padding-left">
                     <i className="fa fa-credit-card-alt" aria-hidden="true" /> Your Cards
-                    <Link to="/app/addCards" className="" style={{float: 'right'}} >
-                                <i className="icon fa fa-plus-square"></i>
-                    </Link>
                 </h3>
                 
                 <div className="list padding-bottom">
                     {
                         this.state.cards ? ( this.state.cards.length > 0 ?
                             (
-                                <div>
-                                <ion-grid>
+                                <div className="list">
                                     {
                                         this.state.cards.map((data, i) => {
                                             return (
-                                                <ion-row key={i}>
-                                                    <ion-col size="10">
-                                                <div key={i} className="list" style={{marginBottom: 10}}>
-                                                    <Card
-                                                        number={data.cardNumber || ''}
-                                                        name={data.nameOnCard || ''}
-                                                        expiry={data.expiry || ''}
-                                                        cvc={data.cvv  || ''}
-                                                    />
-                                                </div>
-                                                    </ion-col>
-                                                    <ion-col size="2">
-                                                        <i className="icon fa fa-plus-square"></i>
-                                                    </ion-col>
-                                                </ion-row>
+                                                <a className="item" href="#">
+                                                    <h2>{data.cardNumber || ''}</h2>
+                                                    <p>{data.nameOnCard || ''} - {data.expiry || ''}</p>
+                                                </a>
                                             )
                                         })
                                     }
-                                </ion-grid>
                                 </div>
                             ) : 
-                            <center>
+                            <div className="padding-left padding-right">
                                 <h4>No cards available</h4>
-                            </center>
+                            </div>
+                            
                         ) : loader
                     }
+                </div>
+                <div className="padding-left padding-right">
+                    <Link to="/app/addCards" className="button button-block button-positive">
+                        <i className="icon fa fa-plus"></i> Add Card
+                    </Link>
                 </div>
             </div>
         );

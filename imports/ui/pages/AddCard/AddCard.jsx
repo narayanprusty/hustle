@@ -215,13 +215,13 @@ export default class AddCard extends Component {
                                             </div>
                                         </div>
                                         <div className="buttons">
-                                            <button type="submit" disabled={submitting} className="button button-block button-energized activated">
-                                                Submit
-                                </button>
-                                            <button className="button button-block button-energized activated"
+                                            <button type="submit" disabled={submitting} className="button button-block button-balanced activated">
+                                            <i class="fa fa-check" aria-hidden="true"></i> Submit
+                                            </button>
+                                            <button className="button button-block button-stable activated"
                                                 type="button"
                                                 onClick={reset}
-                                                disabled={submitting || pristine} > Reset </button>
+                                                disabled={submitting || pristine} > <i class="fa fa-minus" aria-hidden="true"></i> Reset</button>
                                         </div>
                                     </form>
                                 </div>

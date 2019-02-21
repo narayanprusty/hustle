@@ -199,9 +199,11 @@ class Bookings extends Component {
                     }
                 ];
                 for (let i = 0; i < res.cards.length; i++) {
+                    let cardText = "";
+                    cardText = res.cards[i].cardNumber.substr(res.cards[i].cardNumber.length - 4)
                     options.push({
                         value: res.cards[i].hyperPayId,
-                        text: res.cards[i].cardNumber
+                        text: "Card: ..." + cardText
                     });
                 }
                 this.setState({
