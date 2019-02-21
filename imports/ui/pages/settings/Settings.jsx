@@ -22,7 +22,23 @@ export default class Settings extends Component {
         console.log(localizationManager.getLanguage());
     }
 
-    componentDidMount() {}
+    componentDidMount() {
+        Meteor.call("getUserProfile", (error, user) => {
+            if (error || !user) {
+                notify.show(
+                    error.reason || "Unable to fetch user details",
+                    "warning"
+                );
+                return;
+            }
+            if (user && user.userType == "Driver") {
+                this.setState({
+                    isDriver: true
+                });
+                return;
+            }
+        });
+    }
 
     logout = () => {
         Meteor.logout((err, done) => {
@@ -96,7 +112,8 @@ export default class Settings extends Component {
                     <div className="item item-divider">
                         {localizationManager.strings.others}
                     </div>
-                    {!driverMode && (
+
+                    {this.state.isDriver && !driverMode && (
                         <Link
                             to="/app/driver/newreqs"
                             className="item item-icon-left"

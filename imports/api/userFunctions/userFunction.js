@@ -40,4 +40,9 @@ const triggerSos = async messageElems => {
     //send message to every one here
 };
 
-export { triggerSos };
+const getUserProfile = () => {
+    const userProfile = Meteor.user();
+    return { ...userProfile.profile, id: Meteor.userId() };
+};
+
+export { triggerSos, getUserProfile };
