@@ -72,7 +72,6 @@ const getDriversWithin = async ({ lat, lng }) => {
                 },
                 {
                     $match: {
-                        available: true,
                         onRide: false
                     }
                 },

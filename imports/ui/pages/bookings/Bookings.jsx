@@ -1039,11 +1039,17 @@ class Bookings extends Component {
                                         {this.state.allDrivers &&
                                             this.state.allDrivers.length &&
                                             this.state.allDrivers.map(e => {
-                                                <Marker
-                                                    lat={e.currentLocation.lat}
-                                                    lng={e.currentLocation.lng}
-                                                    metaData="cartop"
-                                                />;
+                                                return (
+                                                    <Marker
+                                                        lat={
+                                                            e.currentLocation[1]
+                                                        }
+                                                        lng={
+                                                            e.currentLocation[0]
+                                                        }
+                                                        metaData="cartop"
+                                                    />
+                                                );
                                             })}
                                         {/* <LaddaButton
                                     className="floatMapButton"
