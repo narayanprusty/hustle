@@ -271,9 +271,9 @@ class CurrentBookingRider extends Component {
 
                     routePolyline.setMap(mapInstance);
                     mapInstance.fitBounds(latlngbounds);
-
-                    // mapInstance.setZoom(this.state.zoom);
-
+                    if (this.state.status == "accepted") {
+                        mapInstance.setZoom(this.state.zoom);
+                    }
                     this.setState({
                         poly: routePolyline
                     });
