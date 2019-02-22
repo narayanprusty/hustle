@@ -714,12 +714,11 @@ class CurrentBookingRider extends Component {
                         </div>
                     </div>
                 )}
-   <div style={{ height: "100%" }}>
-                {this._isMounted &&
-                    this.state.showMap &&
-                    !this.state.rideFinished && (
-
-                            <div className="mapView padding-left padding-right padding-bottom">
+                <div style={{ height: "100%" }}>
+                    {this._isMounted &&
+                        this.state.showMap &&
+                        !this.state.rideFinished && (
+                            <div className="mapView padding-left padding-right">
                                 <GoogleMapReact
                                     options={this.createMapOptions}
                                     bootstrapURLKeys={{
@@ -815,9 +814,8 @@ class CurrentBookingRider extends Component {
                                         )}
                                 </GoogleMapReact>
                             </div>
-
-                    )}
-                     </div>
+                        )}
+                </div>
 
                 {this.state.status == "accepted" && (
                     <Widget
