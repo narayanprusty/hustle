@@ -168,9 +168,13 @@ class CurrentBooking extends Component {
                         channels: [currentRide.bookingId],
                         withPresence: true
                     });
-                    // await this.pubnub.deleteMessages({
-                    //     channel: currentRide.userId
-                    // });
+
+                    this.pubnub.history(
+                        { channel: currentRide.bookingId },
+                        (status, response) => {
+                            console.log(response, "$$$$$$$$$$$$$$$$$$");
+                        }
+                    );
 
                     return Meteor.call(
                         "riderDetails",
@@ -400,11 +404,12 @@ class CurrentBooking extends Component {
             message: {
                 bookingId: this.state.bookingId,
                 message: newMessage,
-                time: timestamp
+                time: timestamp,
+                user: Meteor.userId()
             },
             channel: this.state.bookingId,
             sendByPost: false, // true to send via post
-            storeInHistory: false, //override default storage options
+            storeInHistory: true, //override default storage options
             meta: {
                 type: "chat"
             }

@@ -1041,20 +1041,25 @@ class Bookings extends Component {
 
                                         {this.state.allDrivers &&
                                             this.state.allDrivers.length &&
-                                            this.state.allDrivers.map(e => {
-                                                return (
-                                                    <Marker
-                                                        lat={
-                                                            e.currentLocation[1]
-                                                        }
-                                                        lng={
-                                                            e.currentLocation[0]
-                                                        }
-                                                        metaData="cartop"
-                                                        deg={e.heading}
-                                                    />
-                                                );
-                                            })}
+                                            this.state.allDrivers.map(
+                                                (e, i) => {
+                                                    return (
+                                                        <Marker
+                                                            lat={
+                                                                e
+                                                                    .currentLocation[1]
+                                                            }
+                                                            lng={
+                                                                e
+                                                                    .currentLocation[0]
+                                                            }
+                                                            metaData="cartop"
+                                                            deg={e.heading}
+                                                            key={i}
+                                                        />
+                                                    );
+                                                }
+                                            )}
                                         {/* <LaddaButton
                                     className="floatMapButton"
                                     onClick={this.changeBoardingToCurrent}

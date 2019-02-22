@@ -191,6 +191,12 @@ class CurrentBookingRider extends Component {
                         channels: [currentRide.bookingId],
                         withPresence: true
                     });
+                    this.pubnub.history(
+                        { channel: currentRide.bookingId },
+                        (status, response) => {
+                            console.log(response, "$$$$$$$$$$$$$$$$$$");
+                        }
+                    );
                     return true;
                 }
             }
@@ -480,11 +486,12 @@ class CurrentBookingRider extends Component {
             message: {
                 bookingId: this.state.bookingId,
                 message: newMessage,
-                time: timestamp
+                time: timestamp,
+                user: Meteor.userId()
             },
             channel: this.state.bookingId,
             sendByPost: false, // true to send via post
-            storeInHistory: false, //override default storage options
+            storeInHistory: true, //override default storage options
             meta: {
                 type: "chat"
             }
@@ -825,8 +832,10 @@ class CurrentBookingRider extends Component {
                                     marginRight: "0px"
                                 }}
                             >
-                                <div class="item item-divider">Rate Driver</div>
-                                <div class="item item-text-wrap">
+                                <div className="item item-divider">
+                                    Rate Driver
+                                </div>
+                                <div className="item item-text-wrap">
                                     <div
                                         style={{
                                             textAlign: "center"
