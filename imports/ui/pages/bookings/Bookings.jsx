@@ -43,11 +43,14 @@ import "./Bookings_client.scss";
 import MapControl from "../../components/MapControls/MapControls";
 import CarLoader from "../../components/CarLoader/CarLoader";
 
-const Marker = ({ metaData }) => (
+const Marker = ({ metaData, deg }) => (
     <div>
         {metaData == "current" && <span className="pulse_current" />}
         {metaData == "cartop" && (
-            <div className="cartop cartop-red">
+            <div
+                className="cartop cartop-red"
+                style={{ transform: rotate(deg || 30) }}
+            >
                 <div className="cartop-front" />
                 <div className="cartop-middle" />
                 <div className="cartop-back" />
@@ -1048,6 +1051,7 @@ class Bookings extends Component {
                                                             e.currentLocation[0]
                                                         }
                                                         metaData="cartop"
+                                                        deg={e.heading}
                                                     />
                                                 );
                                             })}

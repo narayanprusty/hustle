@@ -12,11 +12,14 @@ import { Widget, addResponseMessage } from "react-chat-widget";
 import mapStyle from "../bookings/MapStyle.json";
 import "./CurrentBooking_client.scss";
 
-const Marker = ({ metaData }) => (
+const Marker = ({ metaData, deg }) => (
     <div>
         {metaData == "current" && <span className="pulse_current" />}
         {metaData == "cartop" && (
-            <div className="cartop cartop-red">
+            <div
+                className="cartop cartop-red"
+                style={{ transform: rotate(deg ? deg : 30) }}
+            >
                 <div className="cartop-front" />
                 <div className="cartop-middle" />
                 <div className="cartop-back" />
@@ -311,7 +314,8 @@ class CurrentBookingRider extends Component {
             this.setState({
                 showMap: true,
                 accepted: true,
-                driverLoc: message.message.driverCoords
+                driverLoc: message.message.driverCoords,
+                heading: message.message.heading
             });
         }
         if (
@@ -322,9 +326,8 @@ class CurrentBookingRider extends Component {
                 showMap: true,
                 accepted: true,
                 driverLoc: message.message.driverCoords,
-                destPoint: message.message.driverCoords
+                heading: message.message.heading
             });
-            this.changeRoute();
         }
 
         if (
@@ -757,6 +760,7 @@ class CurrentBookingRider extends Component {
                                                     : this.state.driverLoc.lng
                                             }
                                             metaData="cartop"
+                                            deg={this.state.driverLoc.heading}
                                         />
                                     )}
                             </GoogleMapReact>

@@ -35,7 +35,7 @@ const markUnavailable = driverId => {
     );
 };
 
-const updateDriverLocation = ({ driverId, lat, lng }) => {
+const updateDriverLocation = ({ driverId, lat, lng, heading }) => {
     return DriverMeta.update(
         {
             driverId: driverId
@@ -43,7 +43,8 @@ const updateDriverLocation = ({ driverId, lat, lng }) => {
         {
             $set: {
                 type: "Point",
-                currentLocation: [lng, lat]
+                currentLocation: [lng, lat],
+                heading: heading
             }
         },
         {
@@ -77,7 +78,8 @@ const getDriversWithin = async ({ lat, lng }) => {
                 },
                 {
                     $project: {
-                        currentLocation: 1
+                        currentLocation: 1,
+                        heading: 1
                     }
                 }
             ],

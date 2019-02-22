@@ -82,6 +82,7 @@ class CurrentBooking extends Component {
                             message: {
                                 bookingId: this.state.bookingId,
                                 driverCoords: this.state.currentPosition,
+                                heading: coords.heading,
                                 time: Date.now()
                             },
                             channel: this.state.userId,
@@ -100,7 +101,8 @@ class CurrentBooking extends Component {
                     {
                         driverId: Meteor.userId(),
                         lat: coords.latitude,
-                        lng: coords.longitude
+                        lng: coords.longitude,
+                        heading: coords.heading
                     },
                     (err, done) => {
                         if (err) {
@@ -575,9 +577,7 @@ class CurrentBooking extends Component {
                                     marginRight: "0px"
                                 }}
                             >
-                                <div class="item item-divider">
-                                    Rate Rider
-                                </div>
+                                <div class="item item-divider">Rate Rider</div>
                                 <div class="item item-text-wrap">
                                     <div
                                         style={{
@@ -598,25 +598,23 @@ class CurrentBooking extends Component {
                                             }}
                                         />
                                     </div>
-                                    <div className='padding-top padding-left padding-right'>
+                                    <div className="padding-top padding-left padding-right">
                                         <textarea
                                             style={{
                                                 borderWidth: "2px",
-                                                textAlign: 'center',
-                                                width: '100%',
-                                                borderStyle: 'solid',
-                                                borderColor: '#e6e6e6',
-                                                padding: '14px',
-                                                borderRadius: '6px'
+                                                textAlign: "center",
+                                                width: "100%",
+                                                borderStyle: "solid",
+                                                borderColor: "#e6e6e6",
+                                                padding: "14px",
+                                                borderRadius: "6px"
                                             }}
                                             name="reviewMessage"
                                             placeholder="Put some feedback of the ride"
                                             onChange={this.handleChange}
                                         />
-                                    </div>    
+                                    </div>
                                 </div>
-
-                                
                             </div>
 
                             <LaddaButton
