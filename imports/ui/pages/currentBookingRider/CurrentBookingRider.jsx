@@ -271,7 +271,9 @@ class CurrentBookingRider extends Component {
 
                     routePolyline.setMap(mapInstance);
                     mapInstance.fitBounds(latlngbounds);
+
                     // mapInstance.setZoom(this.state.zoom);
+
                     this.setState({
                         poly: routePolyline
                     });
@@ -320,7 +322,7 @@ class CurrentBookingRider extends Component {
                 showMap: true,
                 accepted: true,
                 driverLoc: message.message.driverCoords,
-                currentPoint: message.message.driverCoords
+                destPoint: message.message.driverCoords
             });
             this.changeRoute();
         }
@@ -741,7 +743,7 @@ class CurrentBookingRider extends Component {
                                             metaData="drop"
                                         />
                                     )}
-                                {/* {this.state.driverLoc &&
+                                {this.state.driverLoc &&
                                     this.state.driverLoc.lat != 0 && (
                                         <Marker
                                             lat={
@@ -756,7 +758,7 @@ class CurrentBookingRider extends Component {
                                             }
                                             metaData="cartop"
                                         />
-                                    )} */}
+                                    )}
                             </GoogleMapReact>
                         )}
 
@@ -818,9 +820,7 @@ class CurrentBookingRider extends Component {
                                     marginRight: "0px"
                                 }}
                             >
-                                <div class="item item-divider">
-                                    Rate Driver
-                                </div>
+                                <div class="item item-divider">Rate Driver</div>
                                 <div class="item item-text-wrap">
                                     <div
                                         style={{
@@ -841,16 +841,16 @@ class CurrentBookingRider extends Component {
                                             }}
                                         />
                                     </div>
-                                    <div className='padding-top padding-left padding-right'>
+                                    <div className="padding-top padding-left padding-right">
                                         <textarea
                                             style={{
                                                 borderWidth: "2px",
-                                                textAlign: 'center',
-                                                width: '100%',
-                                                borderStyle: 'solid',
-                                                borderColor: '#e6e6e6',
-                                                padding: '14px',
-                                                borderRadius: '6px'
+                                                textAlign: "center",
+                                                width: "100%",
+                                                borderStyle: "solid",
+                                                borderColor: "#e6e6e6",
+                                                padding: "14px",
+                                                borderRadius: "6px"
                                             }}
                                             name="reviewMessage"
                                             placeholder="Put some feedback of the ride"

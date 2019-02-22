@@ -1,7 +1,7 @@
 const config = require("../modules/config/server");
 const client = require("twilio")(config.SMS.accountSid, config.SMS.authToken);
 
-const sendMessage = async (numbers, messageBody) => {
+const sendMessage = (numbers, messageBody) => {
     console.log(numbers);
 
     const messageStack = numbers.map(number =>
@@ -11,8 +11,18 @@ const sendMessage = async (numbers, messageBody) => {
             body: messageBody
         })
     );
-
-    return await Promise.all(messageStack);
+    console.log(messageStack);
+    if (messageStack.length) {
+        return Promise.all(messageStack)
+            .then(data => {
+                console.log(data);
+                return true;
+            })
+            .catch(error => {
+                console.log(error);
+                throw error;
+            });
+    }
 };
 
 export { sendMessage };

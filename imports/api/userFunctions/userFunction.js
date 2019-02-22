@@ -33,8 +33,14 @@ const triggerSos = async messageElems => {
         allNumbers = allNumbers.concat(globalContacts);
     }
     if (allNumbers.length) {
-        return await sendMessage(allNumbers, message);
+        try {
+            return sendMessage(allNumbers, message);
+        } catch (err) {
+            console.log(err, 1);
+            throw new Meteor.Error("Error Occurred");
+        }
     } else {
+        console.log(2);
         throw new Meteor.Error("No contacts found!");
     }
     //send message to every one here
