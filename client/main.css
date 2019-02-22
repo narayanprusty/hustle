@@ -7,6 +7,8 @@ body {
 
 html, body, #react-target {
   height: 100%;
+  bottom: 0;
+  bottom: calc(0px - constant(safe-area-inset-top));
   min-height: calc(100% + constant(safe-area-inset-top));
 	min-height: calc(100% + env(safe-area-inset-top));
 }
