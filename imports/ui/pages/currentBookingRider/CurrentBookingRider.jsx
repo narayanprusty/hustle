@@ -680,7 +680,10 @@ class CurrentBookingRider extends Component {
                     </div>
                 )}
 
-                <div className="mapView padding-left padding-right padding-bottom">
+                <div
+                    className="mapView padding-left padding-right padding-bottom"
+                    style={{ height: "100%" }}
+                >
                     {this._isMounted &&
                         this.state.showMap &&
                         !this.state.rideFinished && (
@@ -862,13 +865,6 @@ class CurrentBookingRider extends Component {
                                         />
                                     </div>
                                 </div>
-                                {/*<div className="justified">
-                                    <textarea
-                                        name="reviewMessage"
-                                        placeholder="Put some feedback of the ride"
-                                        onChange={this.handleChange}
-                                    />
-                                </div>*/}
                             </div>
 
                             <LaddaButton

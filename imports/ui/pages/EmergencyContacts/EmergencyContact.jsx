@@ -164,19 +164,21 @@ class EmergencyContact extends Component {
                             </div>
                         ))}
                         {!this.state.load_existing && (
-                            <LaddaButton
-                                className="button button-block button-balanced activated"
-                                loading={this.state.update_loader}
-                                onClick={this.updateNumbers}
-                                data-color="##FFFF00"
-                                data-size={L}
-                                data-style={SLIDE_UP}
-                                data-spinner-size={30}
-                                data-spinner-color="#ddd"
-                                data-spinner-lines={12}
-                            >
-                                Update Numbers
-                            </LaddaButton>
+                            <div className="padding-left padding-right">
+                                <LaddaButton
+                                    className="button button-block button-balanced activated"
+                                    loading={this.state.update_loader}
+                                    onClick={this.updateNumbers}
+                                    data-color="##FFFF00"
+                                    data-size={L}
+                                    data-style={SLIDE_UP}
+                                    data-spinner-size={30}
+                                    data-spinner-color="#ddd"
+                                    data-spinner-lines={12}
+                                >
+                                    Update Numbers
+                                </LaddaButton>
+                            </div>
                         )}
                     </div>
                 )}
