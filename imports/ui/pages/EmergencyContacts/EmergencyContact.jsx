@@ -27,6 +27,16 @@ class EmergencyContact extends Component {
             inputs: prevState.inputs.concat([newInput])
         }));
     };
+    deleteInput = e => {
+        const indexOfElem = this.state.inputs.indexOf(e.target.name);
+        if (indexOfElem > -1) {
+            const { inputs } = this.state;
+            inputs.splice(indexOfElem, 1);
+            this.setState(inputs);
+        } else {
+            return false;
+        }
+    };
     getNumbers = e => {
         this.setState({
             load_existing: true
@@ -95,7 +105,11 @@ class EmergencyContact extends Component {
                 {!this.state.load_existing && (
                     <div>
                         {this.state.inputs.map(input => (
-                            <div className="input" key={input}>
+                            <div
+                                className="input"
+                                key={input}
+                                style={{ display: "flex" }}
+                            >
                                 <PhoneInput
                                     key={input}
                                     name={input}
@@ -106,6 +120,25 @@ class EmergencyContact extends Component {
                                         this.setState({ [input]: phone })
                                     }
                                 />
+                                <button
+                                    name={input}
+                                    className="button button-small"
+                                    onClick={this.deleteInput}
+                                    style={{
+                                        display: `${
+                                            this.state.inputs[0] == input
+                                                ? "none"
+                                                : "flex"
+                                        }`
+                                    }}
+                                >
+                                    {" "}
+                                    <i
+                                        className="fa fa-times"
+                                        aria-hidden="true"
+                                    />
+                                </button>
+                                &nbsp;
                                 {this.state.inputs.length <
                                     this.state.maxNumbers && (
                                     <button
@@ -121,7 +154,11 @@ class EmergencyContact extends Component {
                                             }`
                                         }}
                                     >
-                                        +
+                                        {" "}
+                                        <i
+                                            className="fa fa-plus"
+                                            aria-hidden="true"
+                                        />
                                     </button>
                                 )}
                             </div>
