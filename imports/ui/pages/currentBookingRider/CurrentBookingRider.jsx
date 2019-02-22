@@ -640,7 +640,9 @@ class CurrentBookingRider extends Component {
                             </div>
                         </div>
                     )}
-                    <div>
+                    <div style={{
+                        height: '100%'
+                    }}>
                         {this.state.accepted && !this.state.rideFinished && (
                             <div className="card">
                                 <div
@@ -700,7 +702,7 @@ class CurrentBookingRider extends Component {
                         {this.state.status == "accepted" && (
                             <div className="padding-left padding-right">
                                 <button className="button button-block button-calm" onClick={() => this.toggleChatBox()}>
-                                    <i class="fa fa-comments" aria-hidden="true"></i> Chat with Driver
+                                    <i className="fa fa-comments" aria-hidden="true"></i> Chat with Driver
                                 </button>
                             </div>
                         )}
