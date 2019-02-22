@@ -208,7 +208,6 @@ div[class*="sc-"] span:first-child {
 div[class*="sc-"] span:first-child > span {
     display: inline;
 }
-
 .cartop:after,
 .cartop:before {
     content: "";
@@ -324,6 +323,7 @@ div[class*="sc-"] span:first-child > span {
 
 .cartop.cartop-red {
     background-color: #e74c3c;
+    zoom: 20%;
 }
 
 .cartop + .cartop,
