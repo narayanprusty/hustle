@@ -8,6 +8,7 @@ import PhoneInput from "react-phone-number-input";
 import lodash from "lodash";
 import SmartInput from "react-phone-number-input/smart-input";
 import "react-phone-number-input/style.css";
+import CarLoader from "../../components/CarLoader/CarLoader";
 
 class EmergencyContact extends Component {
     constructor(props) {
@@ -90,67 +91,57 @@ class EmergencyContact extends Component {
                         &nbsp; Emergency Contacts
                     </h3>
                 </div>
-                {this.state.load_existing && (
-                    <div className="card">
-                        <div
-                            className="item item-text-wrap"
-                            style={{ textAlign: "center" }}
-                        >
-                            <div />
-                            <div className="padding-top">
-                                Please wait while we load your existing
-                                contacts.
-                            </div>
-                        </div>
-                    </div>
-                )}
-                {!this.state.load_existing &&
-                    this.state.inputs.map(input => (
-                        <div className="input" key={input}>
-                            <PhoneInput
-                                key={input}
-                                name={input}
-                                inputComponent={SmartInput}
-                                placeholder="Enter phone number"
-                                value={this.state[input]}
-                                onChange={phone =>
-                                    this.setState({ [input]: phone })
-                                }
-                            />
-                            {this.state.inputs.length <
-                                this.state.maxNumbers && (
-                                <button
-                                    className="button button-small"
-                                    onClick={this.appendInput}
-                                    style={{
-                                        display: `${
-                                            this.state.inputs[
-                                                this.state.inputs.length - 1
-                                            ] == input
-                                                ? "block"
-                                                : "none"
-                                        }`
-                                    }}
-                                >
-                                    +
-                                </button>
-                            )}
-                        </div>
-                    ))}
+                {this.state.load_existing && <CarLoader />}
                 {!this.state.load_existing && (
-                    <LaddaButton
-                        className="button button-block button-balanced activated"
-                        loading={this.state.update_loader}
-                        onClick={this.updateNumbers}
-                        data-color="##FFFF00"
-                        data-size={L}
-                        data-style={SLIDE_UP}
-                        data-spinner-size={30}
-                        data-spinner-color="#ddd"
-                        data-spinner-lines={12}
-                    >
-                        Update Numbers
-                    </LaddaButton>
+                    <div>
+                        {this.state.inputs.map(input => (
+                            <div className="input" key={input}>
+                                <PhoneInput
+                                    key={input}
+                                    name={input}
+                                    inputComponent={SmartInput}
+                                    placeholder="Enter phone number"
+                                    value={this.state[input]}
+                                    onChange={phone =>
+                                        this.setState({ [input]: phone })
+                                    }
+                                />
+                                {this.state.inputs.length <
+                                    this.state.maxNumbers && (
+                                    <button
+                                        className="button button-small"
+                                        onClick={this.appendInput}
+                                        style={{
+                                            display: `${
+                                                this.state.inputs[
+                                                    this.state.inputs.length - 1
+                                                ] == input
+                                                    ? "block"
+                                                    : "none"
+                                            }`
+                                        }}
+                                    >
+                                        +
+                                    </button>
+                                )}
+                            </div>
+                        ))}
+                        {!this.state.load_existing && (
+                            <LaddaButton
+                                className="button button-block button-balanced activated"
+                                loading={this.state.update_loader}
+                                onClick={this.updateNumbers}
+                                data-color="##FFFF00"
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                            >
+                                Update Numbers
+                            </LaddaButton>
+                        )}
+                    </div>
                 )}
             </div>
         );
