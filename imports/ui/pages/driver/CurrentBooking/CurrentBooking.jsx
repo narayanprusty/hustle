@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import config from "../../../../modules/config/client";
 import { Link, withRouter, Redirect } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
+import lodash from "lodash";
 import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
