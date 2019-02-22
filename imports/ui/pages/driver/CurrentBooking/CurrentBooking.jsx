@@ -6,7 +6,7 @@ import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
 import Rating from "react-rating";
-import { Widget, addResponseMessage } from "react-chat-widget";
+import { Widget, addResponseMessage, addUserMessage } from "react-chat-widget";
 import LaddaButton, { S, M, L, SLIDE_UP } from "react-ladda";
 
 import "react-chat-widget/lib/styles.css";
@@ -173,6 +173,7 @@ class CurrentBooking extends Component {
                         { channel: currentRide.bookingId },
                         (status, response) => {
                             console.log(response, "$$$$$$$$$$$$$$$$$$");
+                            this.processOldChats(response);
                         }
                     );
 
@@ -197,7 +198,22 @@ class CurrentBooking extends Component {
             }
         );
     };
-
+    processOldChats = messagesHistory => {
+        const user = Meteor.userId();
+        const allMessageEntities = messagesHistory.messages;
+        const sortedMessage = lodash.sortBy(
+            allMessageEntities,
+            ["timetoken"],
+            ["asc"]
+        );
+        sortedMessage.forEach(messageEntity => {
+            if (messageEntity.entry.user && messageEntity.entry.user == user) {
+                addUserMessage(messageEntity.entry.message);
+            } else if (messageEntity.entry.user) {
+                addResponseMessage(messageEntity.entry.message);
+            }
+        });
+    };
     navigateToRider = () => {
         this.setState({
             navigateToRider_loader: true

@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import config from "../../../modules/config/client";
+import lodash from "lodash";
 import { Link, withRouter } from "react-router-dom";
 import GoogleMapReact from "google-map-react";
 import { Meteor } from "meteor/meteor";
@@ -7,7 +8,7 @@ import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import Rating from "react-rating";
-import { Widget, addResponseMessage } from "react-chat-widget";
+import { Widget, addResponseMessage, addUserMessage } from "react-chat-widget";
 
 import mapStyle from "../bookings/MapStyle.json";
 import "./CurrentBooking_client.scss";
@@ -163,17 +164,33 @@ class CurrentBookingRider extends Component {
                     return;
                 } else {
                     this.setState(currentRide);
-                    if (currentRide.rideStatus == "started") {
+                    this.pubnub.subscribe({
+                        channels: [currentRide.bookingId],
+                        withPresence: true
+                    });
+                    if (currentRide.status == "accepted") {
+                        this.pubnub.history(
+                            { channel: currentRide.bookingId },
+                            (status, response) => {
+                                console.log(
+                                    JSON.stringify(response),
+                                    "$$$$$$$$$$$$$$$$$$"
+                                );
+                                this.processOldChats(response);
+                            }
+                        );
+                    }
+                    if (currentRide.status == "started") {
                         this.setState({
                             accepted: true
                         });
-                    } else if (currentRide.rideStatus == "started") {
+                    } else if (currentRide.status == "started") {
                         this.setState({
                             showMap: true,
                             rideStarted: true,
                             accepted: true
                         });
-                    } else if (currentRide.rideStatus == "finished") {
+                    } else if (currentRide.status == "finished") {
                         this.setState({
                             rideFinished: true
                         });
@@ -187,20 +204,28 @@ class CurrentBookingRider extends Component {
                         this.getDriverDetails(currentRide.driverId);
                     }
                     //at the begning when driver location is not there show normal route.
-                    this.pubnub.subscribe({
-                        channels: [currentRide.bookingId],
-                        withPresence: true
-                    });
-                    this.pubnub.history(
-                        { channel: currentRide.bookingId },
-                        (status, response) => {
-                            console.log(response, "$$$$$$$$$$$$$$$$$$");
-                        }
-                    );
+
                     return true;
                 }
             }
         );
+    };
+
+    processOldChats = messagesHistory => {
+        const user = Meteor.userId();
+        const allMessageEntities = messagesHistory.messages;
+        const sortedMessage = lodash.sortBy(
+            allMessageEntities,
+            ["timetoken"],
+            ["asc"]
+        );
+        sortedMessage.forEach(messageEntity => {
+            if (messageEntity.entry.user && messageEntity.entry.user == user) {
+                addUserMessage(messageEntity.entry.message);
+            } else if (messageEntity.entry.user) {
+                addResponseMessage(messageEntity.entry.message);
+            }
+        });
     };
 
     createMapOptions = maps => {
