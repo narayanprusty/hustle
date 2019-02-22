@@ -570,137 +570,388 @@ class CurrentBookingRider extends Component {
     render() {
         return (
             <div style={{ height: "100%" }}>
-                <div className="padding">
-                    <h3 className="padding">
-                        <i className="fa fa-car" aria-hidden="true" />
-                        &nbsp; Ongoing Ride
-                    </h3>
-                </div>
-                {(this.state.status == "accepted" ||
-                    this.state.status == "started") &&
-                    this.state.bookingId && (
-                        <div className="card">
-                            <div
-                                className="item item-text-wrap"
-                                style={{ textAlign: "center" }}
-                            >
-                                <div>
-                                    <img
-                                        src={"/images/riding.png"}
-                                        style={{ width: "40px" }}
-                                    />
+                <Fragment>
+                    <div className="padding">
+                        <h3 className="padding">
+                            <i className="fa fa-car" aria-hidden="true" />
+                            &nbsp; Ongoing Ride
+                        </h3>
+                    </div>
+                    {(this.state.status == "accepted" ||
+                        this.state.status == "started") &&
+                        this.state.bookingId && (
+                            <div className="card">
+                                <div
+                                    className="item item-text-wrap"
+                                    style={{ textAlign: "center" }}
+                                >
+                                    <div>
+                                        <img
+                                            src={"/images/riding.png"}
+                                            style={{ width: "40px" }}
+                                        />
+                                    </div>
+                                    <div className="padding-top">
+                                        {this.state.rideStarted
+                                            ? "You are on the ride"
+                                            : "Driver accepted your ride request"}
+                                    </div>
                                 </div>
-                                <div className="padding-top">
-                                    {this.state.rideStarted
-                                        ? "You are on the ride"
-                                        : "Driver accepted your ride request"}
+                            </div>
+                        )}
+
+                    {this.state.status == "pending" && this.state.bookingId && (
+                        <div>
+                            <div className="card">
+                                <div
+                                    className="item item-text-wrap"
+                                    style={{ textAlign: "center" }}
+                                >
+                                    <div>
+                                        <img
+                                            src={"/images/pending.png"}
+                                            style={{ width: "40px" }}
+                                        />
+                                    </div>
+                                    <div className="padding-top">
+                                        Waiting for nearby drivers to accept
+                                        your ride request
+                                    </div>
                                 </div>
+                            </div>
+                            <div className="padding-left padding-right">
+                                <LaddaButton
+                                    className="button button-block button-assertive activated"
+                                    loading={this.state.loader}
+                                    onClick={this.onCancel}
+                                    data-color="##FFFF00"
+                                    data-size={L}
+                                    data-style={SLIDE_UP}
+                                    data-spinner-size={30}
+                                    data-spinner-color="#ddd"
+                                    data-spinner-lines={12}
+                                >
+                                    <i
+                                        className="fa fa-times"
+                                        aria-hidden="true"
+                                    />{" "}
+                                    Cancel Request
+                                </LaddaButton>
                             </div>
                         </div>
                     )}
-                {this.state.accepted && !this.state.rideFinished && (
-                    <div className="card">
-                        <div className="list" style={{ marginBottom: "0px" }}>
-                            <a className="item item-icon-left" href="#">
-                                <i className="icon fa fa-user-o" />
-                                {this.state.name || "-"}
-                                <span className="item-note">Name</span>
-                            </a>
-                            <a className="item item-icon-left" href="#">
-                                <i className="icon fa fa-phone" />
-                                {this.state.phone || "-"}
-                                <span className="item-note">Phone</span>
-                            </a>
-                            <a className="item item-icon-left" href="#">
-                                <i className="icon fa fa-car" />
-                                {this.state.carModel || "-"}
-                                <span className="item-note">Car Model</span>
-                            </a>
-                            <a className="item item-icon-left" href="#">
-                                <i className="icon fa fa-text-width" />
-                                {this.state.carNumber || "-"}
-                                <span className="item-note">Car Number</span>
-                            </a>
-                            <a className="item item-icon-left" href="#">
-                                <i className="icon fa fa fa-smile-o" />
-                                <Rating
-                                    name="rating"
-                                    {...this.props}
-                                    start={0}
-                                    stop={5}
-                                    readonly={true}
-                                    initialRating={this.state.avgRating || 0}
-                                    emptySymbol="fa fa-star-o fa-2x empty"
-                                    fullSymbol="fa fa-star fa-2x full"
-                                    onChange={rate => this.onRate(rate)}
-                                    style={{
-                                        fontSize: "10px"
-                                    }}
-                                />
-                                <span className="item-note">Driver Review</span>
-                            </a>
-                        </div>
-                    </div>
-                )}
-                {this.state.rideStarted && !this.state.rideFinished && (
-                    <div className="padding-left padding-right">
-                        <LaddaButton
-                            className="button button-block button-dark activated"
-                            loading={this.state.share_location}
-                            onClick={this.shareLocation}
-                            data-color="##FFFF00"
-                            data-size={L}
-                            data-style={SLIDE_UP}
-                            data-spinner-size={30}
-                            data-spinner-color="#ddd"
-                            data-spinner-lines={12}
-                        >
-                            <i className="fa fa-share-alt" aria-hidden="true" />{" "}
-                            Share Live Location
-                        </LaddaButton>
-                        <LaddaButton
-                            className="button button-block button-assertive activated"
-                            data-color="##FFFF00"
-                            loading={this.state.sos_loader}
-                            onClick={this.triggerSos}
-                            data-size={L}
-                            data-style={SLIDE_UP}
-                            data-spinner-size={30}
-                            data-spinner-color="#ddd"
-                            data-spinner-lines={12}
-                        >
-                            <i
-                                className="fa fa-exclamation-triangle"
-                                aria-hidden="true"
-                            />{" "}
-                            SOS
-                        </LaddaButton>
-                    </div>
-                )}
-                {this.state.status == "pending" && this.state.bookingId && (
-                    <div>
-                        <div className="card">
-                            <div
-                                className="item item-text-wrap"
-                                style={{ textAlign: "center" }}
-                            >
-                                <div>
-                                    <img
-                                        src={"/images/pending.png"}
-                                        style={{ width: "40px" }}
-                                    />
-                                </div>
-                                <div className="padding-top">
-                                    Waiting for nearby drivers to accept your
-                                    ride request
+                    <div style={{ height: "100%" }}>
+                        {this.state.accepted && !this.state.rideFinished && (
+                            <div className="card">
+                                <div
+                                    className="list"
+                                    style={{ marginBottom: "0px" }}
+                                >
+                                    <a className="item item-icon-left" href="#">
+                                        <i className="icon fa fa-user-o" />
+                                        {this.state.name || "-"}
+                                        <span className="item-note">Name</span>
+                                    </a>
+                                    <a className="item item-icon-left" href="#">
+                                        <i className="icon fa fa-phone" />
+                                        {this.state.phone || "-"}
+                                        <span className="item-note">Phone</span>
+                                    </a>
+                                    <a className="item item-icon-left" href="#">
+                                        <i className="icon fa fa-car" />
+                                        {this.state.carModel || "-"}
+                                        <span className="item-note">
+                                            Car Model
+                                        </span>
+                                    </a>
+                                    <a className="item item-icon-left" href="#">
+                                        <i className="icon fa fa-text-width" />
+                                        {this.state.carNumber || "-"}
+                                        <span className="item-note">
+                                            Car Number
+                                        </span>
+                                    </a>
+                                    <a className="item item-icon-left" href="#">
+                                        <i className="icon fa fa fa-smile-o" />
+                                        <Rating
+                                            name="rating"
+                                            {...this.props}
+                                            start={0}
+                                            stop={5}
+                                            readonly={true}
+                                            initialRating={
+                                                this.state.avgRating || 0
+                                            }
+                                            emptySymbol="fa fa-star-o fa-2x empty"
+                                            fullSymbol="fa fa-star fa-2x full"
+                                            onChange={rate => this.onRate(rate)}
+                                            style={{
+                                                fontSize: "10px"
+                                            }}
+                                        />
+                                        <span className="item-note">
+                                            Driver Review
+                                        </span>
+                                    </a>
                                 </div>
                             </div>
-                        </div>
-                        <div className="padding-left padding-right">
+                        )}
+                        {this.state.rideStarted && !this.state.rideFinished && (
+                            <div className="padding-left padding-right">
+                                <LaddaButton
+                                    className="button button-block button-dark activated"
+                                    loading={this.state.share_location}
+                                    onClick={this.shareLocation}
+                                    data-color="##FFFF00"
+                                    data-size={L}
+                                    data-style={SLIDE_UP}
+                                    data-spinner-size={30}
+                                    data-spinner-color="#ddd"
+                                    data-spinner-lines={12}
+                                >
+                                    <i
+                                        className="fa fa-share-alt"
+                                        aria-hidden="true"
+                                    />{" "}
+                                    Share Live Location
+                                </LaddaButton>
+                                <LaddaButton
+                                    className="button button-block button-assertive activated"
+                                    data-color="##FFFF00"
+                                    loading={this.state.sos_loader}
+                                    onClick={this.triggerSos}
+                                    data-size={L}
+                                    data-style={SLIDE_UP}
+                                    data-spinner-size={30}
+                                    data-spinner-color="#ddd"
+                                    data-spinner-lines={12}
+                                >
+                                    <i
+                                        className="fa fa-exclamation-triangle"
+                                        aria-hidden="true"
+                                    />{" "}
+                                    SOS
+                                </LaddaButton>
+                            </div>
+                        )}
+                        {this._isMounted &&
+                            this.state.showMap &&
+                            !this.state.rideFinished && (
+                                <div
+                                    className="mapView padding-left padding-right padding-bottom"
+                                    style={{
+                                        paddingBottom: "2em"
+                                    }}
+                                >
+                                    <GoogleMapReact
+                                        options={this.createMapOptions}
+                                        bootstrapURLKeys={{
+                                            key: config.GAPIKEY,
+                                            libraries: ["places"]
+                                        }}
+                                        initialCenter={this.state.driverLoc}
+                                        center={this.state.driverLoc}
+                                        defaultZoom={15}
+                                        zoom={this.state.zoom}
+                                        layerTypes={[
+                                            "TrafficLayer",
+                                            "TransitLayer"
+                                        ]}
+                                        heat={true}
+                                        gestureHandling="greedy"
+                                        yesIWantToUseGoogleMapApiInternals
+                                        onGoogleApiLoaded={({ map, maps }) =>
+                                            this.apiHasLoaded(map, maps)
+                                        }
+                                    >
+                                        {this.state.currentPosition && (
+                                            <Marker
+                                                lat={
+                                                    this.state.currentPosition
+                                                        .lat
+                                                        ? this.state
+                                                              .currentPosition
+                                                              .lat
+                                                        : this.state
+                                                              .currentPosition
+                                                              .lat
+                                                }
+                                                lng={
+                                                    this.state.currentPosition
+                                                        .lng
+                                                        ? this.state
+                                                              .currentPosition
+                                                              .lng
+                                                        : this.state
+                                                              .currentPosition
+                                                              .lng
+                                                }
+                                                metaData="current"
+                                            />
+                                        )}
+                                        {this.state.boardingPoint &&
+                                            this.state.boardingPoint.coordinates
+                                                .length && (
+                                                <Marker
+                                                    lat={
+                                                        this.state.boardingPoint
+                                                            .coordinates[1]
+                                                    }
+                                                    lng={
+                                                        this.state.boardingPoint
+                                                            .coordinates[0]
+                                                    }
+                                                    metaData="board"
+                                                />
+                                            )}
+                                        {this.state.droppingPoint &&
+                                            this.state.droppingPoint
+                                                .coordinates && (
+                                                <Marker
+                                                    lat={
+                                                        this.state.droppingPoint
+                                                            .coordinates[1]
+                                                    }
+                                                    lng={
+                                                        this.state.droppingPoint
+                                                            .coordinates[0]
+                                                    }
+                                                    metaData="drop"
+                                                />
+                                            )}
+                                        {this.state.driverLoc &&
+                                            this.state.driverLoc.lat != 0 && (
+                                                <Marker
+                                                    lat={
+                                                        this.state.driverLoc.lat
+                                                            ? this.state
+                                                                  .driverLoc.lat
+                                                            : this.state
+                                                                  .driverLoc.lat
+                                                    }
+                                                    lng={
+                                                        this.state.driverLoc.lng
+                                                            ? this.state
+                                                                  .driverLoc.lng
+                                                            : this.state
+                                                                  .driverLoc.lng
+                                                    }
+                                                    metaData="cartop"
+                                                    deg={
+                                                        this.state.driverLoc
+                                                            .heading
+                                                    }
+                                                />
+                                            )}
+                                    </GoogleMapReact>
+                                </div>
+                            )}
+                    </div>
+
+                    {this.state.status == "accepted" && (
+                        <Widget
+                            badge={this.state.badge}
+                            onClick={() => this.setState({ badge: 0 })}
+                            handleNewUserMessage={this.handleNewUserMessage}
+                            subtitle={this.state.name}
+                        />
+                    )}
+                    {this.state.rideFinished && (
+                        <div>
+                            <div
+                                className="card"
+                                style={{
+                                    marginLeft: "0px",
+                                    marginRight: "0px"
+                                }}
+                            >
+                                <div
+                                    className="item item-text-wrap"
+                                    style={{ textAlign: "center" }}
+                                >
+                                    <div>
+                                        <img
+                                            src={"/images/completed.png"}
+                                            style={{ width: "40px" }}
+                                        />
+                                    </div>
+                                    <div className="padding-top">
+                                        Ride Completed
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                className="list"
+                                style={{ marginBottom: "0px" }}
+                            >
+                                <a className="item item-icon-left" href="#">
+                                    <i className="icon fa fa-money" />
+                                    {this.state.totalFare}
+                                    <span className="item-note">
+                                        Total Fare
+                                    </span>
+                                </a>
+                                <a className="item item-icon-left" href="#">
+                                    <i className="icon  fa fa-credit-card" />
+                                    {this.state.paymentMethod || "Cash"}
+                                    <span className="item-note">
+                                        Payment Method
+                                    </span>
+                                </a>
+                            </div>
+                            <div
+                                className="card padding-bottom card"
+                                style={{
+                                    marginLeft: "0px",
+                                    marginRight: "0px"
+                                }}
+                            >
+                                <div className="item item-divider">
+                                    Rate Driver
+                                </div>
+                                <div className="item item-text-wrap">
+                                    <div
+                                        style={{
+                                            textAlign: "center"
+                                        }}
+                                    >
+                                        <Rating
+                                            name="rating"
+                                            {...this.props}
+                                            start={0}
+                                            stop={5}
+                                            initialRating={this.state.rating}
+                                            emptySymbol="fa fa-star-o fa-2x empty"
+                                            fullSymbol="fa fa-star fa-2x full"
+                                            onChange={rate => this.onRate(rate)}
+                                            style={{
+                                                fontSize: "200%"
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="padding-top padding-left padding-right">
+                                        <textarea
+                                            style={{
+                                                borderWidth: "2px",
+                                                textAlign: "center",
+                                                width: "100%",
+                                                borderStyle: "solid",
+                                                borderColor: "#e6e6e6",
+                                                padding: "14px",
+                                                borderRadius: "6px"
+                                            }}
+                                            name="reviewMessage"
+                                            placeholder="Put some feedback of the ride"
+                                            onChange={this.handleChange}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
                             <LaddaButton
-                                className="button button-block button-assertive activated"
+                                className="button button-block button-balanced activated"
                                 loading={this.state.loader}
-                                onClick={this.onCancel}
+                                onClick={this.onReviewSubmit}
                                 data-color="##FFFF00"
                                 data-size={L}
                                 data-style={SLIDE_UP}
@@ -708,247 +959,35 @@ class CurrentBookingRider extends Component {
                                 data-spinner-color="#ddd"
                                 data-spinner-lines={12}
                             >
-                                <i className="fa fa-times" aria-hidden="true" />{" "}
-                                Cancel Request
+                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
+                                <i
+                                    className="fa fa-paper-plane"
+                                    aria-hidden="true"
+                                />{" "}
+                                Submit Review
+                            </LaddaButton>
+                            <LaddaButton
+                                className="button button-block button-calm activated"
+                                onClick={() => {
+                                    this.props.history.push("/app");
+                                }}
+                                data-color="##FFFF00"
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                            >
+                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
+                                <i
+                                    className="fa fa-arrow-right"
+                                    aria-hidden="true"
+                                />{" "}
+                                Skip
                             </LaddaButton>
                         </div>
-                    </div>
-                )}
-                <div style={{ height: "100%" }}>
-                    {this._isMounted &&
-                        this.state.showMap &&
-                        !this.state.rideFinished && (
-                            <div className="mapView padding-left padding-right">
-                                <GoogleMapReact
-                                    options={this.createMapOptions}
-                                    bootstrapURLKeys={{
-                                        key: config.GAPIKEY,
-                                        libraries: ["places"]
-                                    }}
-                                    initialCenter={this.state.driverLoc}
-                                    center={this.state.driverLoc}
-                                    defaultZoom={15}
-                                    zoom={this.state.zoom}
-                                    layerTypes={[
-                                        "TrafficLayer",
-                                        "TransitLayer"
-                                    ]}
-                                    heat={true}
-                                    gestureHandling="greedy"
-                                    yesIWantToUseGoogleMapApiInternals
-                                    onGoogleApiLoaded={({ map, maps }) =>
-                                        this.apiHasLoaded(map, maps)
-                                    }
-                                >
-                                    {this.state.currentPosition && (
-                                        <Marker
-                                            lat={
-                                                this.state.currentPosition.lat
-                                                    ? this.state.currentPosition
-                                                          .lat
-                                                    : this.state.currentPosition
-                                                          .lat
-                                            }
-                                            lng={
-                                                this.state.currentPosition.lng
-                                                    ? this.state.currentPosition
-                                                          .lng
-                                                    : this.state.currentPosition
-                                                          .lng
-                                            }
-                                            metaData="current"
-                                        />
-                                    )}
-                                    {this.state.boardingPoint &&
-                                        this.state.boardingPoint.coordinates
-                                            .length && (
-                                            <Marker
-                                                lat={
-                                                    this.state.boardingPoint
-                                                        .coordinates[1]
-                                                }
-                                                lng={
-                                                    this.state.boardingPoint
-                                                        .coordinates[0]
-                                                }
-                                                metaData="board"
-                                            />
-                                        )}
-                                    {this.state.droppingPoint &&
-                                        this.state.droppingPoint
-                                            .coordinates && (
-                                            <Marker
-                                                lat={
-                                                    this.state.droppingPoint
-                                                        .coordinates[1]
-                                                }
-                                                lng={
-                                                    this.state.droppingPoint
-                                                        .coordinates[0]
-                                                }
-                                                metaData="drop"
-                                            />
-                                        )}
-                                    {this.state.driverLoc &&
-                                        this.state.driverLoc.lat != 0 && (
-                                            <Marker
-                                                lat={
-                                                    this.state.driverLoc.lat
-                                                        ? this.state.driverLoc
-                                                              .lat
-                                                        : this.state.driverLoc
-                                                              .lat
-                                                }
-                                                lng={
-                                                    this.state.driverLoc.lng
-                                                        ? this.state.driverLoc
-                                                              .lng
-                                                        : this.state.driverLoc
-                                                              .lng
-                                                }
-                                                metaData="cartop"
-                                                deg={
-                                                    this.state.driverLoc.heading
-                                                }
-                                            />
-                                        )}
-                                </GoogleMapReact>
-                            </div>
-                        )}
-                </div>
-
-                {this.state.status == "accepted" && (
-                    <Widget
-                        badge={this.state.badge}
-                        onClick={() => this.setState({ badge: 0 })}
-                        handleNewUserMessage={this.handleNewUserMessage}
-                        subtitle={this.state.name}
-                    />
-                )}
-                {this.state.rideFinished && (
-                    <div>
-                        <div
-                            className="card"
-                            style={{
-                                marginLeft: "0px",
-                                marginRight: "0px"
-                            }}
-                        >
-                            <div
-                                className="item item-text-wrap"
-                                style={{ textAlign: "center" }}
-                            >
-                                <div>
-                                    <img
-                                        src={"/images/completed.png"}
-                                        style={{ width: "40px" }}
-                                    />
-                                </div>
-                                <div className="padding-top">
-                                    Ride Completed
-                                </div>
-                            </div>
-                        </div>
-                        <div className="list" style={{ marginBottom: "0px" }}>
-                            <a className="item item-icon-left" href="#">
-                                <i className="icon fa fa-money" />
-                                {this.state.totalFare}
-                                <span className="item-note">Total Fare</span>
-                            </a>
-                            <a className="item item-icon-left" href="#">
-                                <i className="icon  fa fa-credit-card" />
-                                {this.state.paymentMethod || "Cash"}
-                                <span className="item-note">
-                                    Payment Method
-                                </span>
-                            </a>
-                        </div>
-                        <div
-                            className="card padding-bottom card"
-                            style={{
-                                marginLeft: "0px",
-                                marginRight: "0px"
-                            }}
-                        >
-                            <div className="item item-divider">Rate Driver</div>
-                            <div className="item item-text-wrap">
-                                <div
-                                    style={{
-                                        textAlign: "center"
-                                    }}
-                                >
-                                    <Rating
-                                        name="rating"
-                                        {...this.props}
-                                        start={0}
-                                        stop={5}
-                                        initialRating={this.state.rating}
-                                        emptySymbol="fa fa-star-o fa-2x empty"
-                                        fullSymbol="fa fa-star fa-2x full"
-                                        onChange={rate => this.onRate(rate)}
-                                        style={{
-                                            fontSize: "200%"
-                                        }}
-                                    />
-                                </div>
-                                <div className="padding-top padding-left padding-right">
-                                    <textarea
-                                        style={{
-                                            borderWidth: "2px",
-                                            textAlign: "center",
-                                            width: "100%",
-                                            borderStyle: "solid",
-                                            borderColor: "#e6e6e6",
-                                            padding: "14px",
-                                            borderRadius: "6px"
-                                        }}
-                                        name="reviewMessage"
-                                        placeholder="Put some feedback of the ride"
-                                        onChange={this.handleChange}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <LaddaButton
-                            className="button button-block button-balanced activated"
-                            loading={this.state.loader}
-                            onClick={this.onReviewSubmit}
-                            data-color="##FFFF00"
-                            data-size={L}
-                            data-style={SLIDE_UP}
-                            data-spinner-size={30}
-                            data-spinner-color="#ddd"
-                            data-spinner-lines={12}
-                        >
-                            {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                            <i
-                                className="fa fa-paper-plane"
-                                aria-hidden="true"
-                            />{" "}
-                            Submit Review
-                        </LaddaButton>
-                        <LaddaButton
-                            className="button button-block button-calm activated"
-                            onClick={() => {
-                                this.props.history.push("/app");
-                            }}
-                            data-color="##FFFF00"
-                            data-size={L}
-                            data-style={SLIDE_UP}
-                            data-spinner-size={30}
-                            data-spinner-color="#ddd"
-                            data-spinner-lines={12}
-                        >
-                            {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                            <i
-                                className="fa fa-arrow-right"
-                                aria-hidden="true"
-                            />{" "}
-                            Skip
-                        </LaddaButton>
-                    </div>
-                )}
+                    )}
+                </Fragment>
             </div>
         );
     }
