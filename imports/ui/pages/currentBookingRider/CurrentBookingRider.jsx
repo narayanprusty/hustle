@@ -176,7 +176,9 @@ class CurrentBookingRider extends Component {
                                     JSON.stringify(response),
                                     "$$$$$$$$$$$$$$$$$$"
                                 );
-                                this.processOldChats(response);
+                                if (response) {
+                                    this.processOldChats(response);
+                                }
                             }
                         );
                     }
@@ -214,6 +216,9 @@ class CurrentBookingRider extends Component {
     processOldChats = messagesHistory => {
         const user = Meteor.userId();
         const allMessageEntities = messagesHistory.messages;
+        if (!allMessageEntities.length) {
+            return false;
+        }
         const sortedMessage = lodash.sortBy(
             allMessageEntities,
             ["timetoken"],
