@@ -206,3 +206,15 @@ select {
     width: 40px;
     height: 50px;
 }
+
+.rcw-widget-container {
+    width: 92%;
+    left: 4%;
+    bottom: 2%;
+}
+
+@media screen and (max-width: 800px) {
+    .rcw-widget-container.rcw-opened {
+        height: 96%;
+    }
+}

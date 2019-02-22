@@ -508,8 +508,13 @@ class CurrentBooking extends Component {
                         </div>
                     )}
                     {this.state.status == "accepted" && (
+                        <button className="button button-block button-calm" onClick={() => this.toggleChatBox()}>
+                            <i class="fa fa-comments" aria-hidden="true"></i> Chat with Rider
+                        </button>
+                    )}
+                    {this.state.status == "accepted" && (
                         <LaddaButton
-                            className="button button-block button-calm activated"
+                            className="button button-block button-royal activated"
                             loading={this.state.navigateToRider_loader}
                             onClick={this.navigateToRider}
                             data-color="##FFFF00"
@@ -688,6 +693,7 @@ class CurrentBooking extends Component {
                             badge={this.state.badge}
                             handleNewUserMessage={this.handleNewUserMessage}
                             subtitle={this.state.name}
+                            launcher={handleToggle => this.toggleChatBox = handleToggle}
                         />
                     )}
                 </div>

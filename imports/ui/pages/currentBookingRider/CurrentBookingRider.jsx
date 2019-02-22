@@ -640,7 +640,7 @@ class CurrentBookingRider extends Component {
                             </div>
                         </div>
                     )}
-                    <div style={{ height: "100%" }}>
+                    <div>
                         {this.state.accepted && !this.state.rideFinished && (
                             <div className="card">
                                 <div
@@ -696,6 +696,15 @@ class CurrentBookingRider extends Component {
                                 </div>
                             </div>
                         )}
+
+                        {this.state.status == "accepted" && (
+                            <div className="padding-left padding-right">
+                                <button className="button button-block button-calm" onClick={() => this.toggleChatBox()}>
+                                    <i class="fa fa-comments" aria-hidden="true"></i> Chat with Driver
+                                </button>
+                            </div>
+                        )}
+
                         {this.state.rideStarted && !this.state.rideFinished && (
                             <div className="padding-left padding-right">
                                 <LaddaButton
@@ -847,15 +856,18 @@ class CurrentBookingRider extends Component {
                                 </div>
                             )}
                     </div>
+                    
 
                     {this.state.status == "accepted" && (
                         <Widget
                             badge={this.state.badge}
                             onClick={() => this.setState({ badge: 0 })}
                             handleNewUserMessage={this.handleNewUserMessage}
+                            launcher={handleToggle => this.toggleChatBox = handleToggle}
                             subtitle={this.state.name}
                         />
                     )}
+
                     {this.state.rideFinished && (
                         <div>
                             <div
