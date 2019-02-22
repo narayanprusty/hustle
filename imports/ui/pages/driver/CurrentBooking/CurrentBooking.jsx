@@ -50,7 +50,7 @@ class CurrentBooking extends Component {
             // clearInterval(this.state.ndIntvl);
             clearInterval(this.setState.intvlc);
             this.pubnub.unsubscribe({
-                channels: [this.state.userId]
+                channels: [this.state.bookingId]
             });
         }
     }
@@ -85,7 +85,7 @@ class CurrentBooking extends Component {
                                 heading: coords.heading,
                                 time: Date.now()
                             },
-                            channel: this.state.userId,
+                            channel: this.state.bookingId,
                             sendByPost: false, // true to send via post
                             storeInHistory: false, //override default storage options
                             meta: {
@@ -165,7 +165,7 @@ class CurrentBooking extends Component {
                 } else {
                     this.setState(currentRide);
                     this.pubnub.subscribe({
-                        channels: [currentRide.userId],
+                        channels: [currentRide.bookingId],
                         withPresence: true
                     });
                     // await this.pubnub.deleteMessages({
@@ -402,7 +402,7 @@ class CurrentBooking extends Component {
                 message: newMessage,
                 time: timestamp
             },
-            channel: this.state.userId,
+            channel: this.state.bookingId,
             sendByPost: false, // true to send via post
             storeInHistory: false, //override default storage options
             meta: {

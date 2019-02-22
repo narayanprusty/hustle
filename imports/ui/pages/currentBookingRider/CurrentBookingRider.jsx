@@ -68,25 +68,19 @@ class CurrentBookingRider extends Component {
             clearInterval(this.state.intvl);
             clearInterval(this.state.intvlc);
             this.pubnub.unsubscribe({
-                channels: [Meteor.userId()]
+                channels: [this.state.bookingId]
             });
         }
     }
 
     componentDidMount = () => {
         this.fetchCurrentRide();
-        console.log(Meteor.userId());
         this.pubnub.addListener({
             message: message => {
                 console.log(">>>>>>>>>>>>>>>>", message);
                 this.callInsideRender(message);
             }
         });
-        this.pubnub.subscribe({
-            channels: [Meteor.userId().toString()],
-            withPresence: true
-        });
-
         this._isMounted = true;
         const c = setInterval(() => {
             navigator.geolocation.getCurrentPosition(pos => {
@@ -168,6 +162,7 @@ class CurrentBookingRider extends Component {
                     this.props.history.push("/app");
                     return;
                 } else {
+                    this.setState(currentRide);
                     if (currentRide.rideStatus == "started") {
                         this.setState({
                             accepted: true
@@ -184,7 +179,7 @@ class CurrentBookingRider extends Component {
                         });
                         // this.props.history.push("/app/home");
                     }
-                    this.setState(currentRide);
+
                     if (
                         currentRide.rideStatus != "pending" &&
                         currentRide.driverId
@@ -192,8 +187,11 @@ class CurrentBookingRider extends Component {
                         this.getDriverDetails(currentRide.driverId);
                     }
                     //at the begning when driver location is not there show normal route.
-
-                    return currentRide;
+                    this.pubnub.subscribe({
+                        channels: [currentRide.bookingId],
+                        withPresence: true
+                    });
+                    return true;
                 }
             }
         );
@@ -484,7 +482,7 @@ class CurrentBookingRider extends Component {
                 message: newMessage,
                 time: timestamp
             },
-            channel: Meteor.userId(),
+            channel: this.state.bookingId,
             sendByPost: false, // true to send via post
             storeInHistory: false, //override default storage options
             meta: {

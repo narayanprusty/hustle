@@ -108,7 +108,7 @@ class Bookingreq extends Component {
                         bookingId: data.bookingId,
                         driverLoc: this.state.current_pos
                     },
-                    channel: data.userId,
+                    channel: data.bookingId,
                     meta: {
                         type: "driverAccept"
                     }
