@@ -18,7 +18,7 @@ const Marker = ({ metaData, deg }) => (
         {metaData == "cartop" && (
             <div
                 className="cartop cartop-red"
-                style={{ transform: rotate(deg ? deg : 30) }}
+                style={{ transform: "rotate(" + deg ? deg : 30 + ")" }}
             >
                 <div className="cartop-front" />
                 <div className="cartop-middle" />
