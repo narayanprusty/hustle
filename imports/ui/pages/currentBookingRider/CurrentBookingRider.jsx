@@ -356,7 +356,6 @@ class CurrentBookingRider extends Component {
                     }
                   });
                 }
-              
               }
 
             if(window.cordova) {
@@ -671,236 +670,232 @@ class CurrentBookingRider extends Component {
                             </div>
                         </div>
                     )}
-                    <div style={{
-                        height: '100%'
-                    }}>
-                        {this.state.accepted && !this.state.rideFinished && (
-                            <div className="card">
-                                <div
-                                    className="list"
-                                    style={{ marginBottom: "0px" }}
-                                >
-                                    <a className="item item-icon-left" href="#">
-                                        <i className="icon fa fa-user-o" />
-                                        {this.state.name || "-"}
-                                        <span className="item-note">Name</span>
-                                    </a>
-                                    <a className="item item-icon-left" href="#">
-                                        <i className="icon fa fa-phone" />
-                                        {this.state.phone || "-"}
-                                        <span className="item-note">Phone</span>
-                                    </a>
-                                    <a className="item item-icon-left" href="#">
-                                        <i className="icon fa fa-car" />
-                                        {this.state.carModel || "-"}
-                                        <span className="item-note">
-                                            Car Model
-                                        </span>
-                                    </a>
-                                    <a className="item item-icon-left" href="#">
-                                        <i className="icon fa fa-text-width" />
-                                        {this.state.carNumber || "-"}
-                                        <span className="item-note">
-                                            Car Number
-                                        </span>
-                                    </a>
-                                    <a className="item item-icon-left" href="#">
-                                        <i className="icon fa fa fa-smile-o" />
-                                        <Rating
-                                            name="rating"
-                                            {...this.props}
-                                            start={0}
-                                            stop={5}
-                                            readonly={true}
-                                            initialRating={
-                                                this.state.avgRating || 0
-                                            }
-                                            emptySymbol="fa fa-star-o fa-2x empty"
-                                            fullSymbol="fa fa-star fa-2x full"
-                                            onChange={rate => this.onRate(rate)}
-                                            style={{
-                                                fontSize: "10px"
-                                            }}
-                                        />
-                                        <span className="item-note">
-                                            Driver Review
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        )}
-
-                        {this.state.status == "accepted" && (
-                            <div className="padding-left padding-right">
-                                <button className="button button-block button-calm" onClick={() => {
-                                    this.setState({badge: 0})
-                                    this.toggleChatBox()
-                                }}>
-                                    <i className="fa fa-comments" aria-hidden="true"></i> Chat with Driver {
-                                        this.state.badge !== 0 && <span style={{
-                                            padding: '6px',
-                                            paddingTop: '2px',
-                                            paddingBottom: '3px',
-                                            backgroundColor: 'red',
-                                            color: 'white',
-                                            borderRadius: '16px'
-                                        }}>{this.state.badge}</span>
-                                    } 
-                                </button>
-                            </div>
-                        )}
-
-                        {this.state.rideStarted && !this.state.rideFinished && (
-                            <div className="padding-left padding-right">
-                                <LaddaButton
-                                    className="button button-block button-dark activated"
-                                    loading={this.state.share_location}
-                                    onClick={this.shareLocation}
-                                    data-color="##FFFF00"
-                                    data-size={L}
-                                    data-style={SLIDE_UP}
-                                    data-spinner-size={30}
-                                    data-spinner-color="#ddd"
-                                    data-spinner-lines={12}
-                                >
-                                    <i
-                                        className="fa fa-share-alt"
-                                        aria-hidden="true"
-                                    />{" "}
-                                    Share Live Location
-                                </LaddaButton>
-                                <LaddaButton
-                                    className="button button-block button-assertive activated"
-                                    data-color="##FFFF00"
-                                    loading={this.state.sos_loader}
-                                    onClick={this.triggerSos}
-                                    data-size={L}
-                                    data-style={SLIDE_UP}
-                                    data-spinner-size={30}
-                                    data-spinner-color="#ddd"
-                                    data-spinner-lines={12}
-                                >
-                                    <i
-                                        className="fa fa-exclamation-triangle"
-                                        aria-hidden="true"
-                                    />{" "}
-                                    SOS
-                                </LaddaButton>
-                            </div>
-                        )}
-                        {this._isMounted &&
-                            this.state.showMap &&
-                            !this.state.rideFinished && (
-                                <div
-                                    className="mapView padding-left padding-right padding-bottom"
-                                    style={{
-                                        paddingBottom: "2em"
-                                    }}
-                                >
-                                    <GoogleMapReact
-                                        options={this.createMapOptions}
-                                        bootstrapURLKeys={{
-                                            key: config.GAPIKEY,
-                                            libraries: ["places"]
-                                        }}
-                                        initialCenter={this.state.driverLoc}
-                                        center={this.state.driverLoc}
-                                        defaultZoom={15}
-                                        zoom={this.state.zoom}
-                                        layerTypes={[
-                                            "TrafficLayer",
-                                            "TransitLayer"
-                                        ]}
-                                        heat={true}
-                                        gestureHandling="greedy"
-                                        yesIWantToUseGoogleMapApiInternals
-                                        onGoogleApiLoaded={({ map, maps }) =>
-                                            this.apiHasLoaded(map, maps)
+                    {this.state.accepted && !this.state.rideFinished && (
+                        <div className="card">
+                            <div
+                                className="list"
+                                style={{ marginBottom: "0px" }}
+                            >
+                                <a className="item item-icon-left" href="#">
+                                    <i className="icon fa fa-user-o" />
+                                    {this.state.name || "-"}
+                                    <span className="item-note">Name</span>
+                                </a>
+                                <a className="item item-icon-left" href="#">
+                                    <i className="icon fa fa-phone" />
+                                    {this.state.phone || "-"}
+                                    <span className="item-note">Phone</span>
+                                </a>
+                                <a className="item item-icon-left" href="#">
+                                    <i className="icon fa fa-car" />
+                                    {this.state.carModel || "-"}
+                                    <span className="item-note">
+                                        Car Model
+                                    </span>
+                                </a>
+                                <a className="item item-icon-left" href="#">
+                                    <i className="icon fa fa-text-width" />
+                                    {this.state.carNumber || "-"}
+                                    <span className="item-note">
+                                        Car Number
+                                    </span>
+                                </a>
+                                <a className="item item-icon-left" href="#">
+                                    <i className="icon fa fa fa-smile-o" />
+                                    <Rating
+                                        name="rating"
+                                        {...this.props}
+                                        start={0}
+                                        stop={5}
+                                        readonly={true}
+                                        initialRating={
+                                            this.state.avgRating || 0
                                         }
-                                    >
-                                        {this.state.currentPosition && (
+                                        emptySymbol="fa fa-star-o fa-2x empty"
+                                        fullSymbol="fa fa-star fa-2x full"
+                                        onChange={rate => this.onRate(rate)}
+                                        style={{
+                                            fontSize: "10px"
+                                        }}
+                                    />
+                                    <span className="item-note">
+                                        Driver Review
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    )}
+
+                    {this.state.status == "accepted" && (
+                        <div className="padding-left padding-right">
+                            <button className="button button-block button-calm" onClick={() => {
+                                this.setState({badge: 0})
+                                this.toggleChatBox()
+                            }}>
+                                <i className="fa fa-comments" aria-hidden="true"></i> Chat with Driver {
+                                    this.state.badge !== 0 && <span style={{
+                                        padding: '6px',
+                                        paddingTop: '2px',
+                                        paddingBottom: '3px',
+                                        backgroundColor: 'red',
+                                        color: 'white',
+                                        borderRadius: '16px'
+                                    }}>{this.state.badge}</span>
+                                } 
+                            </button>
+                        </div>
+                    )}
+
+                    {this.state.rideStarted && !this.state.rideFinished && (
+                        <div className="padding-left padding-right">
+                            <LaddaButton
+                                className="button button-block button-dark activated"
+                                loading={this.state.share_location}
+                                onClick={this.shareLocation}
+                                data-color="##FFFF00"
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                            >
+                                <i
+                                    className="fa fa-share-alt"
+                                    aria-hidden="true"
+                                />{" "}
+                                Share Live Location
+                            </LaddaButton>
+                            <LaddaButton
+                                className="button button-block button-assertive activated"
+                                data-color="##FFFF00"
+                                loading={this.state.sos_loader}
+                                onClick={this.triggerSos}
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                            >
+                                <i
+                                    className="fa fa-exclamation-triangle"
+                                    aria-hidden="true"
+                                />{" "}
+                                SOS
+                            </LaddaButton>
+                        </div>
+                    )}
+                    {this._isMounted &&
+                        this.state.showMap &&
+                        !this.state.rideFinished && (
+                            <div
+                                className="mapView padding-left padding-right padding-bottom"
+                                style={{
+                                    paddingBottom: "2em"
+                                }}
+                            >
+                                <GoogleMapReact
+                                    options={this.createMapOptions}
+                                    bootstrapURLKeys={{
+                                        key: config.GAPIKEY,
+                                        libraries: ["places"]
+                                    }}
+                                    initialCenter={this.state.driverLoc}
+                                    center={this.state.driverLoc}
+                                    defaultZoom={15}
+                                    zoom={this.state.zoom}
+                                    layerTypes={[
+                                        "TrafficLayer",
+                                        "TransitLayer"
+                                    ]}
+                                    heat={true}
+                                    gestureHandling="greedy"
+                                    yesIWantToUseGoogleMapApiInternals
+                                    onGoogleApiLoaded={({ map, maps }) =>
+                                        this.apiHasLoaded(map, maps)
+                                    }
+                                >
+                                    {this.state.currentPosition && (
+                                        <Marker
+                                            lat={
+                                                this.state.currentPosition
+                                                    .lat
+                                                    ? this.state
+                                                            .currentPosition
+                                                            .lat
+                                                    : this.state
+                                                            .currentPosition
+                                                            .lat
+                                            }
+                                            lng={
+                                                this.state.currentPosition
+                                                    .lng
+                                                    ? this.state
+                                                            .currentPosition
+                                                            .lng
+                                                    : this.state
+                                                            .currentPosition
+                                                            .lng
+                                            }
+                                            metaData="current"
+                                        />
+                                    )}
+                                    {this.state.boardingPoint &&
+                                        this.state.boardingPoint.coordinates
+                                            .length && (
                                             <Marker
                                                 lat={
-                                                    this.state.currentPosition
-                                                        .lat
-                                                        ? this.state
-                                                              .currentPosition
-                                                              .lat
-                                                        : this.state
-                                                              .currentPosition
-                                                              .lat
+                                                    this.state.boardingPoint
+                                                        .coordinates[1]
                                                 }
                                                 lng={
-                                                    this.state.currentPosition
-                                                        .lng
-                                                        ? this.state
-                                                              .currentPosition
-                                                              .lng
-                                                        : this.state
-                                                              .currentPosition
-                                                              .lng
+                                                    this.state.boardingPoint
+                                                        .coordinates[0]
                                                 }
-                                                metaData="current"
+                                                metaData="board"
                                             />
                                         )}
-                                        {this.state.boardingPoint &&
-                                            this.state.boardingPoint.coordinates
-                                                .length && (
-                                                <Marker
-                                                    lat={
-                                                        this.state.boardingPoint
-                                                            .coordinates[1]
-                                                    }
-                                                    lng={
-                                                        this.state.boardingPoint
-                                                            .coordinates[0]
-                                                    }
-                                                    metaData="board"
-                                                />
-                                            )}
-                                        {this.state.droppingPoint &&
-                                            this.state.droppingPoint
-                                                .coordinates && (
-                                                <Marker
-                                                    lat={
-                                                        this.state.droppingPoint
-                                                            .coordinates[1]
-                                                    }
-                                                    lng={
-                                                        this.state.droppingPoint
-                                                            .coordinates[0]
-                                                    }
-                                                    metaData="drop"
-                                                />
-                                            )}
-                                        {this.state.driverLoc &&
-                                            this.state.driverLoc.lat != 0 && (
-                                                <Marker
-                                                    lat={
-                                                        this.state.driverLoc.lat
-                                                            ? this.state
-                                                                  .driverLoc.lat
-                                                            : this.state
-                                                                  .driverLoc.lat
-                                                    }
-                                                    lng={
-                                                        this.state.driverLoc.lng
-                                                            ? this.state
-                                                                  .driverLoc.lng
-                                                            : this.state
-                                                                  .driverLoc.lng
-                                                    }
-                                                    metaData="cartop"
-                                                    deg={
-                                                        this.state.driverLoc
-                                                            .heading
-                                                    }
-                                                />
-                                            )}
-                                    </GoogleMapReact>
-                                </div>
-                            )}
-                    </div>
+                                    {this.state.droppingPoint &&
+                                        this.state.droppingPoint
+                                            .coordinates && (
+                                            <Marker
+                                                lat={
+                                                    this.state.droppingPoint
+                                                        .coordinates[1]
+                                                }
+                                                lng={
+                                                    this.state.droppingPoint
+                                                        .coordinates[0]
+                                                }
+                                                metaData="drop"
+                                            />
+                                        )}
+                                    {this.state.driverLoc &&
+                                        this.state.driverLoc.lat != 0 && (
+                                            <Marker
+                                                lat={
+                                                    this.state.driverLoc.lat
+                                                        ? this.state
+                                                                .driverLoc.lat
+                                                        : this.state
+                                                                .driverLoc.lat
+                                                }
+                                                lng={
+                                                    this.state.driverLoc.lng
+                                                        ? this.state
+                                                                .driverLoc.lng
+                                                        : this.state
+                                                                .driverLoc.lng
+                                                }
+                                                metaData="cartop"
+                                                deg={
+                                                    this.state.driverLoc
+                                                        .heading
+                                                }
+                                            />
+                                        )}
+                                </GoogleMapReact>
+                            </div>
+                        )}
                     
 
                     {this.state.status == "accepted" && (
