@@ -104,7 +104,7 @@ export default class Login extends Component {
                                 }}
                             />
                         </div>
-                        <label className="item item-input item-stacked-label">
+                        <span className="item item-input item-stacked-label">
                             <span className="input-label">Phone</span>
                             <PhoneInput
                                 inputComponent={SmartInput}
@@ -112,7 +112,7 @@ export default class Login extends Component {
                                 value={this.state.phone}
                                 onChange={phone => this.setState({ phone })}
                             />
-                        </label>
+                        </span>
                         <label className="item item-input item-stacked-label">
                             <span className="input-label">Password</span>
                             <input

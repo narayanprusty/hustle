@@ -105,64 +105,87 @@ class EmergencyContact extends Component {
                 {!this.state.load_existing && (
                     <div>
                         {this.state.inputs.map(input => (
-                            <div
-                                className="input"
-                                key={input}
-                                style={{ display: "flex" }}
-                            >
-                                <PhoneInput
-                                    key={input}
-                                    name={input}
-                                    inputComponent={SmartInput}
-                                    placeholder="Enter phone number"
-                                    value={this.state[input]}
-                                    onChange={phone =>
-                                        this.setState({ [input]: phone })
-                                    }
-                                />
-                                <button
-                                    name={input}
-                                    className="button button-small"
-                                    onClick={this.deleteInput}
-                                    style={{
-                                        display: `${
-                                            this.state.inputs[0] == input
-                                                ? "none"
-                                                : "flex"
-                                        }`
-                                    }}
-                                >
-                                    {" "}
-                                    <i
-                                        className="fa fa-times"
-                                        aria-hidden="true"
-                                    />
-                                </button>
-                                &nbsp;
-                                {this.state.inputs.length <
-                                    this.state.maxNumbers && (
-                                    <button
-                                        className="button button-small"
-                                        onClick={this.appendInput}
-                                        style={{
-                                            display: `${
-                                                this.state.inputs[
-                                                    this.state.inputs.length - 1
-                                                ] == input
-                                                    ? "block"
-                                                    : "none"
-                                            }`
-                                        }}
-                                    >
-                                        {" "}
-                                        <i
-                                            className="fa fa-plus"
-                                            aria-hidden="true"
+                            <div className="padding-left padding-right" style={{
+                                marginBottom: '10px'
+                            }}>
+                                {this.state.inputs[0] == input &&
+                                    <span className="item item-input item-stacked-label">
+                                        <span className="input-label">Phone Number</span>
+                                        <PhoneInput
+                                            key={input}
+                                            name={input}
+                                            inputComponent={SmartInput}
+                                            placeholder="Enter phone number"
+                                            value={this.state[input]}
+                                            onChange={phone =>
+                                                this.setState({ [input]: phone })
+                                            }
                                         />
-                                    </button>
-                                )}
+                                    </span>
+                                }
+
+                                {this.state.inputs[0] !== input &&
+                                    <div class="row" style={{
+                                        padding: '0px'
+                                    }}>
+                                        <div class="col col-75" style={{
+                                            padding: '0px'
+                                        }}>
+                                            <span className="item item-input item-stacked-label">
+                                                <span className="input-label">Phone Number</span>
+                                                <PhoneInput
+                                                    key={input}
+                                                    name={input}
+                                                    inputComponent={SmartInput}
+                                                    placeholder="Enter phone number"
+                                                    value={this.state[input]}
+                                                    onChange={phone =>
+                                                        this.setState({ [input]: phone })
+                                                    }
+                                                />
+                                            </span>
+                                        </div>
+                                        <div class="col" style={{
+                                            padding: '0px'
+                                        }}>
+                                            <button
+                                                name={input}
+                                                className="button button-block button-assertive"
+                                                onClick={this.deleteInput}
+                                                style={{
+                                                    height: "100%",
+                                                    margin: "0",
+                                                    border: "0",
+                                                    borderRadius: "0"
+                                                }}
+                                            >
+                                                {" "}
+                                                <i
+                                                    className="fa fa-times"
+                                                    aria-hidden="true"
+                                                /> Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                  
+                                } 
                             </div>
                         ))}
+                        {this.state.inputs.length <
+                            this.state.maxNumbers && (
+                            <div className="padding-left padding-right">
+                                <button
+                                    className="ladda-button button button-block button-calm activated"
+                                    onClick={this.appendInput}
+                                >
+                                    
+                                    <i
+                                        className="fa fa-plus"
+                                        aria-hidden="true"
+                                    /> Add More Numbers
+                                </button>
+                            </div>
+                        )}
                         {!this.state.load_existing && (
                             <div className="padding-left padding-right">
                                 <LaddaButton
@@ -176,7 +199,7 @@ class EmergencyContact extends Component {
                                     data-spinner-color="#ddd"
                                     data-spinner-lines={12}
                                 >
-                                    Update Numbers
+                                    <i className="fa fa-floppy-o" aria-hidden="true"></i> Save Numbers
                                 </LaddaButton>
                             </div>
                         )}
