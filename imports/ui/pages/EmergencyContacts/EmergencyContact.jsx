@@ -57,7 +57,7 @@ class EmergencyContact extends Component {
                 return notify.show("No existing contact found!", "warning");
             }
             console.log(allData);
-            const numbersArr = allData.econtacts.split(",");
+            const numbersArr = allData.econtacts;
             let stateObj = {};
             let inputs = [];
             for (let i = 0; i < numbersArr.length; i++) {
@@ -105,12 +105,17 @@ class EmergencyContact extends Component {
                 {!this.state.load_existing && (
                     <div>
                         {this.state.inputs.map(input => (
-                            <div className="padding-left padding-right" style={{
-                                marginBottom: '10px'
-                            }}>
-                                {this.state.inputs[0] == input &&
+                            <div
+                                className="padding-left padding-right"
+                                style={{
+                                    marginBottom: "10px"
+                                }}
+                            >
+                                {this.state.inputs[0] == input && (
                                     <span className="item item-input item-stacked-label">
-                                        <span className="input-label">Phone Number</span>
+                                        <span className="input-label">
+                                            Phone Number
+                                        </span>
                                         <PhoneInput
                                             key={input}
                                             name={input}
@@ -118,21 +123,31 @@ class EmergencyContact extends Component {
                                             placeholder="Enter phone number"
                                             value={this.state[input]}
                                             onChange={phone =>
-                                                this.setState({ [input]: phone })
+                                                this.setState({
+                                                    [input]: phone
+                                                })
                                             }
                                         />
                                     </span>
-                                }
+                                )}
 
-                                {this.state.inputs[0] !== input &&
-                                    <div class="row" style={{
-                                        padding: '0px'
-                                    }}>
-                                        <div class="col col-75" style={{
-                                            padding: '0px'
-                                        }}>
+                                {this.state.inputs[0] !== input && (
+                                    <div
+                                        className="row"
+                                        style={{
+                                            padding: "0px"
+                                        }}
+                                    >
+                                        <div
+                                            className="col col-75"
+                                            style={{
+                                                padding: "0px"
+                                            }}
+                                        >
                                             <span className="item item-input item-stacked-label">
-                                                <span className="input-label">Phone Number</span>
+                                                <span className="input-label">
+                                                    Phone Number
+                                                </span>
                                                 <PhoneInput
                                                     key={input}
                                                     name={input}
@@ -140,14 +155,19 @@ class EmergencyContact extends Component {
                                                     placeholder="Enter phone number"
                                                     value={this.state[input]}
                                                     onChange={phone =>
-                                                        this.setState({ [input]: phone })
+                                                        this.setState({
+                                                            [input]: phone
+                                                        })
                                                     }
                                                 />
                                             </span>
                                         </div>
-                                        <div class="col" style={{
-                                            padding: '0px'
-                                        }}>
+                                        <div
+                                            className="col"
+                                            style={{
+                                                padding: "0px"
+                                            }}
+                                        >
                                             <button
                                                 name={input}
                                                 className="button button-block button-assertive"
@@ -163,26 +183,25 @@ class EmergencyContact extends Component {
                                                 <i
                                                     className="fa fa-times"
                                                     aria-hidden="true"
-                                                /> Remove
+                                                />{" "}
+                                                Remove
                                             </button>
                                         </div>
                                     </div>
-                                  
-                                } 
+                                )}
                             </div>
                         ))}
-                        {this.state.inputs.length <
-                            this.state.maxNumbers && (
+                        {this.state.inputs.length < this.state.maxNumbers && (
                             <div className="padding-left padding-right">
                                 <button
                                     className="ladda-button button button-block button-calm activated"
                                     onClick={this.appendInput}
                                 >
-                                    
                                     <i
                                         className="fa fa-plus"
                                         aria-hidden="true"
-                                    /> Add More Numbers
+                                    />{" "}
+                                    Add More Numbers
                                 </button>
                             </div>
                         )}
@@ -199,7 +218,11 @@ class EmergencyContact extends Component {
                                     data-spinner-color="#ddd"
                                     data-spinner-lines={12}
                                 >
-                                    <i className="fa fa-floppy-o" aria-hidden="true"></i> Save Numbers
+                                    <i
+                                        className="fa fa-floppy-o"
+                                        aria-hidden="true"
+                                    />{" "}
+                                    Save Numbers
                                 </LaddaButton>
                             </div>
                         )}

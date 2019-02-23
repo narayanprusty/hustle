@@ -25,11 +25,11 @@ const triggerSos = async messageElems => {
     const defaultContacts = await getSOSNumbers();
     let allNumbers = [];
     if (econtacts && econtacts.length) {
-        const userContacts = econtacts.split(",");
+        const userContacts = econtacts;
         allNumbers = allNumbers.concat(userContacts);
     }
     if (defaultContacts && defaultContacts.length) {
-        const globalContacts = defaultContacts.split(",");
+        const globalContacts = defaultContacts;
         allNumbers = allNumbers.concat(globalContacts);
     }
     if (allNumbers.length) {
