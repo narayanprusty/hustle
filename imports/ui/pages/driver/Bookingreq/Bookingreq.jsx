@@ -302,6 +302,11 @@ class Bookingreq extends Component {
                             Requests
                         </h3>
                     </div>
+                    {(!this.state.datas || !this.state.datas.length) && (
+                        <div style={{ textAlign: "center" }}>
+                            currently no requests nearby
+                        </div>
+                    )}
                     <div className="padding-left padding-right">{items}</div>
                 </InfiniteScroll>
                 {this.state.redirectTocurrentBooking && (
