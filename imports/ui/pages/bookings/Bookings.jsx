@@ -242,6 +242,7 @@ class Bookings extends Component {
                 console.log(err, currentRide);
                 if (currentRide) {
                     // this.props.history.push("/app/currentBooking");
+                    clearInterval(this.state.intvl);
                     this.setState({
                         redirectToCurrentBooking: true
                     });
@@ -516,6 +517,7 @@ class Bookings extends Component {
     };
 
     raiseBookingReq = e => {
+        clearInterval(this.state.intvl);
         this.setState({
             submitted: true,
             stopMapInput: true
@@ -558,6 +560,7 @@ class Bookings extends Component {
             //show a loader here
             console.log(response);
             // this.props.history.push("/app/currentBooking");
+            clearInterval(this.state.intvl);
             this.setState({
                 redirectToCurrentBooking: true
             });
