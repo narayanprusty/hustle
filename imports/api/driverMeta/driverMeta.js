@@ -42,7 +42,9 @@ const updateDriverLocation = ({ driverId, lat, lng, heading }) => {
         },
         {
             $set: {
-                lastUpdated: Date.now(),
+                lastUpdated: moment()
+                    .utc()
+                    .valueOf(),
                 type: "Point",
                 currentLocation: [lng, lat],
                 heading: heading
@@ -74,6 +76,12 @@ const getDriversWithin = async ({ lat, lng }) => {
                 },
                 {
                     $match: {
+                        lastUpdated: {
+                            $gte: moment()
+                                .subtract(1, "minutes")
+                                .utc()
+                                .valueOf()
+                        },
                         onRide: false
                     }
                 },
