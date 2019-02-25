@@ -370,18 +370,20 @@ class Subscriptions extends Component {
                                         <ul className="list">
                                             <li
                                                 className="item"
-                                                style={{ whiteSpace: "normal" }}
+                                                style={{ 
+                                                    whiteSpace: "normal", 
+                                                    paddingLeft: '0px',
+                                                    paddingRight: '0px'
+                                                }}
                                             >
-                                                <div style={{ marginBottom: "10px" }}>
-                                                    <b>Select Card</b>
-                                                </div>
                                                 <div>
                                                     <select
                                                         name="paymentMethod"
                                                         value={this.state.paymentMethod}
                                                         onChange={this.onCardSelected}
                                                         style={{
-                                                            fontSize: "16px"
+                                                            fontSize: "16px",
+                                                            width: "96%"
                                                         }}
                                                     >
                                                         {this.state.cards.map((card, i) => (
@@ -407,7 +409,7 @@ class Subscriptions extends Component {
                                         </ul>
                                 )
                             ) : ""}
-                            <div className="padding-left padding-right padding-top">
+                            <div className="">
                             {!this.state.userAlreadySubscribed ? (
                                 <LaddaButton
                                     className="button button-block button-energized activated"
