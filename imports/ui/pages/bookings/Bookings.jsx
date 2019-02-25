@@ -105,7 +105,9 @@ class Bookings extends Component {
     componentWillMount = async () => {
         await this.fetchCurrentRide();
     };
-
+    componentWillUnmount = () => {
+        clearInterval(this.state.intvl);
+    };
     componentDidMount = async () => {
         console.log(Meteor.userId());
 
@@ -166,19 +168,6 @@ class Bookings extends Component {
             }
         );
 
-        Meteor.call(
-            "getDriversWithin",
-            { lat: lat, lng: lng },
-            (err, result) => {
-                if (err) {
-                    notify.show("unable to fetch drivers nearby", "warning");
-                }
-                this.setState({
-                    allDrivers: result
-                });
-            }
-        );
-
         Meteor.call("getCardsForPayment", (err, res) => {
             this.setState({
                 loading_cards: false
@@ -216,6 +205,33 @@ class Bookings extends Component {
                 console.log("cards loaded", this.state.cards);
             }
         });
+        const intvl = setInterval(
+            () => this.fetchNearByDrivers(lat, lng),
+            2000
+        );
+        this.setState({ intvl: intvl });
+    };
+
+    fetchNearByDrivers = (lat, lng) => {
+        if (this.state.currentLocation.lat || this.state.currentLocation.lng) {
+            lat = this.state.currentLocation.lat;
+            lng = this.state.currentLocation.lng;
+        }
+        Meteor.call(
+            "getDriversWithin",
+            {
+                lat: lat,
+                lng: lng
+            },
+            (err, result) => {
+                if (err) {
+                    notify.show("unable to fetch drivers nearby", "warning");
+                }
+                this.setState({
+                    allDrivers: result
+                });
+            }
+        );
     };
 
     fetchCurrentRide = async () => {
@@ -226,6 +242,7 @@ class Bookings extends Component {
                 console.log(err, currentRide);
                 if (currentRide) {
                     // this.props.history.push("/app/currentBooking");
+                    clearInterval(this.state.intvl);
                     this.setState({
                         redirectToCurrentBooking: true
                     });
@@ -500,6 +517,7 @@ class Bookings extends Component {
     };
 
     raiseBookingReq = e => {
+        clearInterval(this.state.intvl);
         this.setState({
             submitted: true,
             stopMapInput: true
@@ -542,6 +560,7 @@ class Bookings extends Component {
             //show a loader here
             console.log(response);
             // this.props.history.push("/app/currentBooking");
+            clearInterval(this.state.intvl);
             this.setState({
                 redirectToCurrentBooking: true
             });
