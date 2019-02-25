@@ -1,7 +1,8 @@
 import {
     getSubscriptionPlans,
     getUserSubscriptions,
-    subscribePlan
+    subscribePlan,
+    cancelSubscription
 } from './subscriptions';
 
 import {
@@ -11,7 +12,8 @@ import {
 Meteor.methods({
     getSubscriptionPlans,
     getUserSubscriptions,
-    subscribePlan
+    subscribePlan,
+    cancelSubscription
 });
 
 export {};

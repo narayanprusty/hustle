@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
 import { withRouter, Link } from "react-router-dom";
 import { notify } from "react-notify-toast";
+import LaddaButton, { S, SLIDE_UP } from "react-ladda";
 
 class Subscriptions extends Component {
     constructor(props) {
@@ -9,6 +10,7 @@ class Subscriptions extends Component {
         this.state = {
             user: Meteor.userId(),
             showloader: true,
+            gettingPlans: true,
             showPaymentOptions: false,
             showAddCardButton: false,
             cards: [],
@@ -51,7 +53,7 @@ class Subscriptions extends Component {
                         text: res.cards[i].cardNumber
                     });
                 }
-                if (options.length > 0) {
+                if (options.length > 1) {
                     this.setState({
                         cards: options
                     });
@@ -84,11 +86,9 @@ class Subscriptions extends Component {
                 } else {
                     if (response.success && !response.message) {
                         this.setState({
-                            userPlans: response.data ? response.data : []
+                            userPlans: response.data ? response.data : [],
+                            userAlreadySubscribed: response.data.length > 0,
                         });
-                        if (this.state.userPlans.length > 0) {
-                            this.setState({ userAlreadySubscribed: true });
-                        }
                     } else {
                         if (response.message) {
                             //Add localization support
@@ -164,7 +164,7 @@ class Subscriptions extends Component {
                             }
                         } else {
                             notify.show("Plan Subscribed!", "success");
-                            this.props.history.push('/app/home');
+                            this.getUserSubscriptions();
                             this.setState({
                                 userAlreadySubscribed: true,
                             });
@@ -174,7 +174,6 @@ class Subscriptions extends Component {
                         userAlreadySubscribed: true,
                         showloader: false,
                         showAddCardButton: false,
-                        showPayNowButton: false,
                         showPaymentOptions: false,
                     });
                 }
@@ -184,6 +183,71 @@ class Subscriptions extends Component {
             this.setState({ loading: false });
         }
     };
+
+    cancelSubscription = async () => {
+        try {
+            if (this.state.userPlans) {
+                if (this.state.userPlans.length > 0) {
+                    if (this.state.userPlans[0].uniqueIdentifier) {
+                        this.setState({
+                            showloader: true
+                        });
+                        Meteor.call("cancelSubscription", this.state.userPlans[0].uniqueIdentifier,
+                        (error, response) => {
+                            if (error) {
+                                console.log(error);
+                                //Add localization support
+                                notify.show(
+                                    error.reason
+                                        ? error.reason
+                                        : "Unable to subscribe!",
+                                    "error"
+                                );
+                            } else {
+                                if (response.success) {
+                                    notify.show("Subscription cancelled successfully!", "success");
+                                    this.getUserSubscriptions();
+                                } else {
+                                    notify.show(
+                                        response.message
+                                            ? response.message
+                                            : "Unable to cancel subscription!",
+                                        "error"
+                                    );
+                                }
+                            }
+                            this.setState({
+                                showloader: false
+                            });
+                        });
+                    } else {
+                        throw {
+                            message: "Unexpected Error Occured!"
+                        }
+                    }
+                } else {
+                    throw {
+                        message: "Unexpected Error Occured!"
+                    }
+                }
+            } else {
+                throw {
+                    message: "Unexpected Error Occured!"
+                }
+            }
+        } catch (ex) {
+            console.log(ex);
+            notify.show(
+                ex.message
+                    ? ex.message
+                    : "Unable to cancel subscription!",
+                "error"
+            );
+            this.setState({
+                showloader: true
+            });
+        }
+    }
 
     render() {
         const loader = (
@@ -247,7 +311,7 @@ class Subscriptions extends Component {
 
         return (
             <div className="" style={{ height: "100%" }}>
-                {!this.state.showloader && !this.state.gettingPlans ? (
+                {!this.state.gettingPlans ? (
                     <div>
                         <div className="padding">
                             <h3 className="padding">
@@ -295,19 +359,7 @@ class Subscriptions extends Component {
                                     </div>
                                 </li>
                             </ul>
-                            <button
-                                className="button button-block button-energized activated"
-                                onClick={(e) => this.setState({ showPaymentOptions: true })}
-                                disabled={
-                                    this.state.userAlreadySubscribed
-                                        ? true
-                                        : false
-                                }
-                            >
-                                Subscribe
-                            </button>
-                            {this.state.showPaymentOptions ? (
-                                this.state.showAddCardButton ? (
+                            {!this.state.userAlreadySubscribed ? (this.state.showAddCardButton ? (
                                     <button
                                         className="button button-block button-energized activated"
                                         onClick={(e) => this.props.history.push('/app/addCards')}
@@ -350,23 +402,55 @@ class Subscriptions extends Component {
                                                             left: "-12px"
                                                         }}
                                                     />
-                                                    {this.state.showPayNowButton ? (
-                                                        <button
-                                                            className="button button-block button-energized activated"
-                                                            onClick={this.subscribe.bind(
-                                                                this,
-                                                                this.state.subscriptionPlan
-                                                                    .uniqueIdentifier
-                                                            )}
-                                                        >
-                                                            Pay Now
-                                                        </button>
-                                                    ) : ""}
                                                 </div>
                                             </li>
                                         </ul>
                                 )
                             ) : ""}
+                            <div className="padding-left padding-right padding-top">
+                            {!this.state.userAlreadySubscribed ? (
+                                <LaddaButton
+                                    className="button button-block button-energized activated"
+                                    loading={this.state.showloader}
+                                    disabled={
+                                        this.state.userAlreadySubscribed || !this.state.showPayNowButton
+                                            ? true
+                                            : false
+                                    }
+                                    data-color="##FFFF00"
+                                    data-spinner-size={30}
+                                    data-size={S}
+                                    data-style={SLIDE_UP}
+                                    data-spinner-color="#ddd"
+                                    data-spinner-lines={12}
+                                    onClick={this.subscribe.bind(
+                                        this,
+                                        this.state.subscriptionPlan
+                                            .uniqueIdentifier
+                                    )}
+                                >
+                                    <i className="fa fa-check" aria-hidden="true"></i> Subscribe
+                            </LaddaButton> ) : (
+                            <LaddaButton
+                            className="button button-block button-assertive activated"
+                            loading={this.state.showloader}
+                            disabled={
+                                !this.state.userAlreadySubscribed
+                            }
+                            data-color="##FFFF00"
+                            data-spinner-size={30}
+                            data-size={S}
+                            data-style={SLIDE_UP}
+                            data-spinner-color="#ddd"
+                            data-spinner-lines={12}
+                            onClick={this.cancelSubscription.bind(
+                                this
+                            )}
+                        >
+                            <i className="fa fa-times" aria-hidden="true"></i> Cancel Subscription
+                        </LaddaButton>
+                            ) }
+                            </div>
                         </div>
                     </div>
                 ) : (
