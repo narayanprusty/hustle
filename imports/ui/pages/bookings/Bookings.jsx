@@ -45,7 +45,9 @@ import CarLoader from "../../components/CarLoader/CarLoader";
 
 const Marker = ({ metaData, deg }) => (
     <div>
-        {metaData == "current" && <span className="pulse_current" />}
+        {metaData == "current" && (
+            <span className="pulse_current" style={{ zIndex: 2 }} />
+        )}
         {metaData == "cartop" && (
             <div
                 className="cartop cartop-red"
