@@ -61,6 +61,7 @@ const subscribePlan = async ({
     try {
         console.log(planId);
         console.log(userId);
+        console.log(hyperPayId);
         let plan = await node.callAPI('assets/search', {
             $query: {
                 assetName: config.ASSET.SubscriptionPlans,
@@ -121,8 +122,31 @@ const subscribePlan = async ({
     }
 }
 
+const cancelSubscription = async (identifier) => {
+    try {
+        console.log("Canceling subscription", identifier);
+        const res = await node.callAPI('assets/updateAssetInfo', {
+            assetName: config.ASSET.Subscriptions,
+            fromAccount: node.getWeb3().eth.accounts[0],
+            identifier: identifier.toString(),
+            public: {
+                active: false
+            }
+        });
+        console.log(res);
+        return {
+            success: true,
+            txnHash: res
+        }
+    } catch (ex) {
+        console.log(ex);
+        return ex;
+    }
+};
+
 export {
     getSubscriptionPlans,
     getUserSubscriptions,
     subscribePlan,
+    cancelSubscription
 };
