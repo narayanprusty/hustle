@@ -1,7 +1,5 @@
-import LocalizedStrings from 'react-localization';
-import {
-    Meteor
-} from "meteor/meteor";
+import LocalizedStrings from "react-localization";
+import { Meteor } from "meteor/meteor";
 
 let strings = new LocalizedStrings({
     en: {
@@ -55,7 +53,8 @@ let strings = new LocalizedStrings({
         bookingID: "Booking ID",
         paymentReceived: "Payment Received",
         rideNotFinished: "Ride is not finished yet!",
-        verifyYourEmailAddress: "Visit the following link to verify your email address.",
+        verifyYourEmailAddress:
+            "Visit the following link to verify your email address.",
         confirm: "Confirm",
         on: "on",
         planNotFound: "Plan not found!",
@@ -74,18 +73,23 @@ let strings = new LocalizedStrings({
         unabletoAcceptTheRide: "Unable to accept the ride!",
         unableToGetBooking: "Unable to get booking!",
         rideNotFinishedYet: "Ride not finished yet!",
-        waitingForNearbyDriversToAcceptYourRideRequest: "Waiting for nearby drivers to accept your ride request",
+        waitingForNearbyDriversToAcceptYourRideRequest:
+            "Waiting for nearby drivers to accept your ride request",
         driverAcceptedYourRideRequest: "Driver accepted your ride request",
         unableToFetchDriversNearby: "unable to fetch drivers nearby",
-        unableToFetchYourCurrentLocation: "Unable to fetch your current location",
+        unableToFetchYourCurrentLocation:
+            "Unable to fetch your current location",
         directionsRequestFailedDueTo: "Directions request failed due to",
         unableToCreateRequest: "Unable to create request!",
         unableToCancelRequest: "unable to cancel request",
         unableToMarkPaymentForTheRide: "Unable to mark payment for the ride!",
-        emailVeried: "Congrats...!!! Your email has been verified. You would be automatically redirected to login page in 5 seconds. Else <a href='/login'> Click here </a>",
-        linkExpired: "Email id does not match or the link has expired. Kindly try again...",
+        emailVeried:
+            "Congrats...!!! Your email has been verified. You would be automatically redirected to login page in 5 seconds. Else <a href='/login'> Click here </a>",
+        linkExpired:
+            "Email id does not match or the link has expired. Kindly try again...",
         waitForValidation: "Hold on... We are validating the email id...",
-        emailVerified: "Congrats...!!! Your email has been verified. Redirecting you to login page...",
+        emailVerified:
+            "Congrats...!!! Your email has been verified. Redirecting you to login page...",
         someErrorOccured: "Some Error Occured!",
         anErrorOccuredTryAgain: "An error occured.please try again.",
         loginSuccessful: "Login successful!",
@@ -111,8 +115,10 @@ let strings = new LocalizedStrings({
         changeLanguage: "Switch to ",
         english: "English",
         arabic: "Arabic",
-        invalidVerificationLink: "Oooppsss... <br />Seems like the verification link is invalid. <br />",
-        redirectionToLogin: "If not redirected in 5 seconds, <Link to='/login'>Click here to login</Link>",
+        invalidVerificationLink:
+            "Oooppsss... <br />Seems like the verification link is invalid. <br />",
+        redirectionToLogin:
+            "If not redirected in 5 seconds, <Link to='/login'>Click here to login</Link>"
     },
     ar: {
         myCards: "My Cards",
@@ -122,107 +128,114 @@ let strings = new LocalizedStrings({
         Home: "الصفحة الرئيسية",
         Hello: "مرحبا",
         Register: "تسجيل",
-        logout: "الخروج",
-        Rides: "ركوب الخيل",
-        Ride: "اركب",
+        logout: "تسجيل الخروج",
+        Rides: "مشاوير",
+        Ride: "مشوار",
         Settings: "الإعدادات",
         paymentStatus: "حالة السداد",
         totalDistance: "المسافة الكلية",
         boardingPoint: "نقطة الصعود",
-        droppingPoint: "نقطة اسقاط",
-        yourRides: "ركوب الخيل الخاص بك",
-        distance: "مسافه: بعد",
-        duration: "المدة الزمنية",
-        editEmail: "اديث ايميل",
-        subscriptions: "الاشتراكات",
+        droppingPoint: "نقطة النزول",
+        yourRides: "مشوارك",
+        distance: "المسافة",
+        duration: " المدة الزمنية",
+        editEmail: "تعديل الإيميل",
+        subscriptions: "اشتراكات",
         subscription: "اشتراك",
         price: "السعر",
         renewable: "قابل للتجديد",
         after: "بعد",
         days: "أيام",
         description: "وصف",
-        callSupport: "دعم الاتصال",
-        others: "الآخرين",
-        driverMode: "وضع السائق",
-        userMode: "وضع المستخدم",
+        callSupport: " الاتصال بالدعم",
+        others: "اخرى",
+        driverMode: "للكباتن",
+        userMode: "نمط الراكب",
         at: "في",
-        meterShort: "M",
-        kilimeterShort: "KM",
-        fare: "أجرة",
-        cash: "السيولة النقدية",
+        meterShort: "متر",
+        kilimeterShort: "كيلومتر",
+        fare: "الأجرة",
+        cash: "نقدا",
         Card: "بطاقة",
-        book: "كتاب",
-        bookRide: "كتاب ركوب",
-        Time: "زمن",
-        paymentMethod: "طريقة الدفع او السداد",
-        rideBooked: "ركوب حجزها",
-        rideCompleted: "اكتمل الركوب",
-        paymentMarked: "دفع ملحوظ",
-        onTheWay: "فى الطريق",
-        navigateToRider: "انتقل إلى رايدر",
-        startRide: "بدء الركوب",
-        finishRide: "الانتهاء من ركوب",
-        bookingID: "معرف الحجز",
-        paymentReceived: "الدفعة المستلمة",
-        rideNotFinished: "لم يتم الانتهاء من ركوب حتى الآن!",
-        verifyYourEmailAddress: "قم بزيارة الرابط التالي للتحقق من عنوان بريدك الإلكتروني.",
-        confirm: "تؤكد",
+        book: "أحجز",
+        bookRide: "أحجز مشوارك",
+        Time: "الوقت",
+        paymentMethod: "طريقة الدفع",
+        rideBooked: "تم حجز المشوار",
+        rideCompleted: "انتهي المشوار",
+        paymentMarked: "تم السداد",
+        onTheWay: "في الطريق",
+        navigateToRider: "ابحث عن مشوارك",
+        startRide: "أبداء المشوار",
+        finishRide: "نهي المشوار",
+        bookingID: "رقم الحجز",
+        paymentReceived: "تم استلام المبلغ ",
+        rideNotFinished: "مشوارك لم ينتهي بعد",
+        verifyYourEmailAddress:
+            "ادخل علي الموقع الاتي لتأكيد البريد الالكتروني",
+        confirm: "تأكيد",
         on: "على",
-        enterLocation: "أدخل الموقع",
-        planNotFound: "الخطة غير موجودة!",
-        shouldContainOnlyAlphabets: "يجب أن تحتوي على أحرف أبجدية فقط",
-        shouldContainOnlyNumbers: "يجب أن تحتوي على أرقام فقط",
-        subscriptionPlansNotAvailable: "لا توجد خطط الاشتراك المتاحة!",
-        seeNewRequests: "انظر الطلبات الجديدة",
+        enterLocation: "ادخل الموقع",
+        planNotFound: "لم يتم العثور على الوجهة",
+        shouldContainOnlyAlphabets: "يجب ان يحتوي على الحروف الابجدية فقط ",
+        shouldContainOnlyNumbers: "يجب ان يحتوي على ارقام فقط ",
+        subscriptionPlansNotAvailable: "لا يوجد اشتراك",
+        seeNewRequests: "انظر للطلبات الجديدة",
         cancelRequest: "إلغاء الطلب",
-        subscribe: "الاشتراك",
-        unableToStartTheRide: "غير قادر على بدء الرحلة!",
-        unableToGetSubscriptions: "غير قادر على الحصول على اشتراكات!",
-        unableToGetPlans: "غير قادر على الحصول على خطط!",
-        unableToSubscribe: "غير قادر على الاشتراك!",
-        planSubscribed: "خطة الاشتراك!",
-        unableToFinishTheRide: "غير قادر على إنهاء الرحلة!",
-        unabletoAcceptTheRide: "غير قادر على قبول الركوب!",
-        unableToGetBooking: "غير قادر على الحصول على الحجز!",
-        rideNotFinishedYet: "ركوب لم تنته بعد!",
-        waitingForNearbyDriversToAcceptYourRideRequest: "انتظار السائقين القريبين لقبول طلب رحلتك",
-        driverAcceptedYourRideRequest: "قبل السائق طلب رحلتك",
-        unableToFetchDriversNearby: "غير قادر على جلب السائقين في مكان قريب",
-        unableToFetchYourCurrentLocation: "غير قادر على جلب موقعك الحالي",
-        directionsRequestFailedDueTo: "فشل طلب الاتجاهات بسبب",
-        unableToCreateRequest: "غير قادر على إنشاء الطلب!",
-        unableToCancelRequest: "غير قادر على إلغاء الطلب",
-        unableToMarkPaymentForTheRide: "غير قادر على وضع علامة على الدفع للرحلة!",
-        emailVeried: "مبروك...!!! تم التحقق من بريدك الالكتروني. ستتم إعادة توجيهك تلقائيًا إلى صفحة تسجيل الدخول في 5 ثوانٍ. آخر <a href='/login'> انقر هنا </a>",
-        linkExpired: "معرف البريد الإلكتروني غير متطابق أو انتهت صلاحية الرابط. يرجى المحاولة مرة أخرى ...",
-        waitForValidation: "انتظر ... نحن بصدد التحقق من معرف البريد الإلكتروني ...",
-        emailVerified: "مبروك...!!! تم التحقق من بريدك الالكتروني. جارٍ إعادة توجيهك إلى صفحة تسجيل الدخول ...",
-        someErrorOccured: "حدث خطأ ما!",
-        anErrorOccuredTryAgain: "حدث خطأ. الرجاء المحاولة مرة أخرى.",
-        loginSuccessful: "تسجيل الدخول ناجح!",
-        phone: "هاتف",
-        enterPhoneNumber: "أدخل رقم الهاتف",
-        password: "كلمه السر",
-        login: "تسجيل الدخول",
-        or: "أو",
-        forgotPassword: "هل نسيت كلمة المرور",
-        signUp: "سجل",
-        failedSendingCode: "فشل إرسال الكود.",
-        verificationCodeSent: "تم ارسال رمز التأكيد!",
-        wrongVerificationCode: "رمز التحقق غير صحيح!",
-        emailAlreadyExists: "البريد الالكتروني موجود بالفعل.",
-        phoneAlreadyExists: "الهاتف موجود بالفعل.",
-        accountCreatedSuccessfully: "الحساب اقيم بنجاح!",
-        createAccount: "إنشاء حساب",
-        name: "اسم",
-        verificationCode: "شيفرة التأكيد",
-        unableToFetch: "غير قادر على الجلب!",
-        phoneVerificationCode: "مرحبًا ، رمز التحقق عبر الهاتف هو",
+        subscribe: "اشترك",
+        unableToStartTheRide: "غير قادر على بداء المشوار",
+        unableToGetSubscriptions: "غير قادر للحصول على الاشتراكات",
+        unableToGetPlans: "غير قادر للحصول على وجهة",
+        unableToSubscribe: "غير قادر على الاشتراك",
+        planSubscribed: "خطة او طريقة الاشتراك",
+        unableToFinishTheRide: "غير قادر على انهاء المشوار",
+        unabletoAcceptTheRide: "غير قادر على قبول المشوار",
+        unableToGetBooking: "غير قادر الحصول على حجز",
+        rideNotFinishedYet: "المشوار لم ينتهي بعد",
+        waitingForNearbyDriversToAcceptYourRideRequest:
+            "انتظر اقرب سائق لقبول طلبك",
+        driverAcceptedYourRideRequest: "السائق قبل طلبك",
+        unableToFetchDriversNearby: "غير قادر على إيجاد السائقين القريبين منك",
+        unableToFetchYourCurrentLocation: "لم يستطع إيجاد موقعك الصحيح",
+        directionsRequestFailedDueTo: "فشل طلب الوجهات بسبب",
+        unableToCreateRequest: "غير قادر على انشاء الطلب",
+        unableToCancelRequest: "غير قادر علي الغاء الطلب",
+        unableToMarkPaymentForTheRide: "غير قادر على وضع سعر المشوار",
+        emailVeried:
+            "مبروك!!! تم تفعيل بريدك الإلكتروني سوف يتم توجيهك تلقائيا لصفحة التسجيل in 5 seconds. Else <a href='/login'> Click here </a> في غصون خمس ثواني -  شي اخر او أخرى او شي ثاني – هنا – دخول – اضغط هنا",
+        linkExpired:
+            "البريد الإلكتروني غير مطابق او انتهت صلاحية  الرابط . فضلا حاول مرة أخري ",
+        waitForValidation: " انتظر ... نقوم بالتحقق من بريدك الإلكتروني ",
+        emailVerified:
+            "لقد تم التحقق من بريدك الالكتروني سيتم إعادة توجيهك او نقلك الى صفحة تسجيل الدخول ...تهانينا ",
+        someErrorOccured: "حدث خطأ",
+        anErrorOccuredTryAgain: "حدث خطأ الرجاء المحاولة مره أخرى ",
+        loginSuccessful: "تم التسجيل بنجاح ",
+        phone: "الهاتف",
+        enterPhoneNumber: "ادخل رقم الجوال",
+        password: "الرقم السري",
+        login: "الدخول",
+        or: "او",
+        forgotPassword: "نسيت الرقم السري ",
+        signUp: "تسجيل الدخول",
+        failedSendingCode: "فشل في إرسال الرمز",
+        verificationCodeSent: "تم ارسال رمز التحقق",
+        wrongVerificationCode: "رمز التحقق غير صحيح",
+        emailAlreadyExists: "البريد الإلكتروني موجود من قبل ",
+        phoneAlreadyExists: "رقم الجوال موجود من قبل",
+        accountCreatedSuccessfully: "تم انشاء حسابك بنجاح",
+        createAccount: "انشاء حساب ",
+        name: "الاسم",
+        verificationCode: "رمز التحقق",
+        unableToFetch: "غير قادر على الجلب",
+        phoneVerificationCode: "مرحبا رمز التحقق بهاتفك هو",
         changeLanguage: "التبديل إلى ",
         english: "الإنجليزية",
         arabic: "عربى",
-        invalidVerificationLink: "Oooppsss... <br />يبدو أن رابط التحقق غير صالح. <br />",
-        redirectionToLogin: "إذا لم تتم إعادة توجيهك خلال 5 ثوان ، <Link to='/login'>انقر هنا لتسجيل الدخول</Link>",
+        invalidVerificationLink: "يبدو أن رابط التحقق غير صالح خطأ ",
+        redirectionToLogin:
+            "يبدو ان رابط التحقق غير صالح إذا لم تتم إعادة توجيهك خلال 5 ثوان",
+        yourRides: "مشوارك"
     }
 });
 
@@ -254,11 +267,12 @@ class LocalizationManager {
             this.strings.setLanguage(lang);
             this.language = lang;
             Meteor.call(
-                "updateLangugagePreferance", {
+                "updateLangugagePreferance",
+                {
                     language: this.language
                 },
                 (err, result) => {
-                    console.log(result, err)
+                    console.log(result, err);
                 }
             );
         } catch (ex) {
@@ -272,11 +286,12 @@ class LocalizationManager {
             this.strings.setLanguage(this.language == "en" ? "ar" : "en");
             this.language = this.language == "en" ? "ar" : "en";
             Meteor.call(
-                "updateLangugagePreferance", {
+                "updateLangugagePreferance",
+                {
                     language: this.language
                 },
                 (err, result) => {
-                    console.log(result, err)
+                    console.log(result, err);
                 }
             );
         } catch (ex) {
