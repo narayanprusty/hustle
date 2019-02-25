@@ -184,7 +184,6 @@ class EmergencyContact extends Component {
                                                     className="fa fa-times"
                                                     aria-hidden="true"
                                                 />{" "}
-                                                Remove
                                             </button>
                                         </div>
                                     </div>
