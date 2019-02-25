@@ -668,6 +668,140 @@ class CurrentBookingRider extends Component {
                             </div>
                         </div>
                     )}
+                    {this.state.rideFinished && this.state.bookingId && (
+                        <div
+                            className="padding-left padding-right"
+                            style={{ height: "55%" }}
+                        >
+                            <div className="card">
+                                <div
+                                    className="item item-text-wrap"
+                                    style={{ textAlign: "center" }}
+                                >
+                                    <div>
+                                        <img
+                                            src={"/images/completed.png"}
+                                            style={{ width: "40px" }}
+                                        />
+                                    </div>
+                                    <div className="padding-top">
+                                        {
+                                            localizationManager.strings
+                                                .rideCompleted
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                className="list"
+                                style={{ marginBottom: "0px" }}
+                            >
+                                <a className="item item-icon-left" href="#">
+                                    <i className="icon fa fa-money" />
+                                    {this.state.totalFare}
+                                    <span className="item-note">
+                                        Total Fare
+                                    </span>
+                                </a>
+                                <a className="item item-icon-left" href="#">
+                                    <i className="icon  fa fa-credit-card" />
+                                    {this.state.paymentMethod || "Cash"}
+                                    <span className="item-note">
+                                        {
+                                            localizationManager.strings
+                                                .paymentMethod
+                                        }
+                                    </span>
+                                </a>
+                            </div>
+                            <div
+                                className="card padding-bottom card"
+                                style={{
+                                    marginLeft: "0px",
+                                    marginRight: "0px"
+                                }}
+                            >
+                                <div className="item item-divider">
+                                    Rate Driver
+                                </div>
+                                <div className="item item-text-wrap">
+                                    <div
+                                        style={{
+                                            textAlign: "center"
+                                        }}
+                                    >
+                                        <Rating
+                                            name="rating"
+                                            {...this.props}
+                                            start={0}
+                                            stop={5}
+                                            initialRating={this.state.rating}
+                                            emptySymbol="fa fa-star-o fa-2x empty"
+                                            fullSymbol="fa fa-star fa-2x full"
+                                            onChange={rate => this.onRate(rate)}
+                                            style={{
+                                                fontSize: "200%"
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="padding-top padding-left padding-right">
+                                        <textarea
+                                            style={{
+                                                borderWidth: "2px",
+                                                textAlign: "center",
+                                                width: "100%",
+                                                borderStyle: "solid",
+                                                borderColor: "#e6e6e6",
+                                                padding: "14px",
+                                                borderRadius: "6px"
+                                            }}
+                                            name="reviewMessage"
+                                            placeholder="Put some feedback of the ride"
+                                            onChange={this.handleChange}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <LaddaButton
+                                className="button button-block button-balanced activated"
+                                loading={this.state.loader}
+                                onClick={this.onReviewSubmit}
+                                data-color="##FFFF00"
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                            >
+                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
+                                <i
+                                    className="fa fa-paper-plane"
+                                    aria-hidden="true"
+                                />{" "}
+                                Submit Review
+                            </LaddaButton>
+                            <LaddaButton
+                                className="button button-block button-calm activated"
+                                onClick={() => {
+                                    this.props.history.push("/app");
+                                }}
+                                data-color="##FFFF00"
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                            >
+                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
+                                <i
+                                    className="fa fa-arrow-right"
+                                    aria-hidden="true"
+                                />{" "}
+                                Skip
+                            </LaddaButton>
+                        </div>
+                    )}
                     {this.state.accepted && !this.state.rideFinished && (
                         <div className="card">
                             <div
@@ -797,7 +931,7 @@ class CurrentBookingRider extends Component {
                     )}
                     <div
                         className="mapView padding-left padding-right padding-bottom"
-                        style={{ height: "65%" }}
+                        style={{ height: "65%", paddingBottom: "2em" }}
                     >
                         {this._isMounted &&
                             this.state.showMap &&
@@ -908,144 +1042,6 @@ class CurrentBookingRider extends Component {
                             }
                             subtitle={this.state.name}
                         />
-                    )}
-
-                    {this.state.rideFinished && (
-                        <div>
-                            <div
-                                className="card"
-                                style={{
-                                    marginLeft: "0px",
-                                    marginRight: "0px"
-                                }}
-                            >
-                                <div
-                                    className="item item-text-wrap"
-                                    style={{ textAlign: "center" }}
-                                >
-                                    <div>
-                                        <img
-                                            src={"/images/completed.png"}
-                                            style={{ width: "40px" }}
-                                        />
-                                    </div>
-                                    <div className="padding-top">
-                                        {
-                                            localizationManager.strings
-                                                .rideCompleted
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                            <div
-                                className="list"
-                                style={{ marginBottom: "0px" }}
-                            >
-                                <a className="item item-icon-left" href="#">
-                                    <i className="icon fa fa-money" />
-                                    {this.state.totalFare}
-                                    <span className="item-note">
-                                        Total Fare
-                                    </span>
-                                </a>
-                                <a className="item item-icon-left" href="#">
-                                    <i className="icon  fa fa-credit-card" />
-                                    {this.state.paymentMethod || "Cash"}
-                                    <span className="item-note">
-                                        {
-                                            localizationManager.strings
-                                                .paymentMethod
-                                        }
-                                    </span>
-                                </a>
-                            </div>
-                            <div
-                                className="card padding-bottom card"
-                                style={{
-                                    marginLeft: "0px",
-                                    marginRight: "0px"
-                                }}
-                            >
-                                <div className="item item-divider">
-                                    Rate Driver
-                                </div>
-                                <div className="item item-text-wrap">
-                                    <div
-                                        style={{
-                                            textAlign: "center"
-                                        }}
-                                    >
-                                        <Rating
-                                            name="rating"
-                                            {...this.props}
-                                            start={0}
-                                            stop={5}
-                                            initialRating={this.state.rating}
-                                            emptySymbol="fa fa-star-o fa-2x empty"
-                                            fullSymbol="fa fa-star fa-2x full"
-                                            onChange={rate => this.onRate(rate)}
-                                            style={{
-                                                fontSize: "200%"
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="padding-top padding-left padding-right">
-                                        <textarea
-                                            style={{
-                                                borderWidth: "2px",
-                                                textAlign: "center",
-                                                width: "100%",
-                                                borderStyle: "solid",
-                                                borderColor: "#e6e6e6",
-                                                padding: "14px",
-                                                borderRadius: "6px"
-                                            }}
-                                            name="reviewMessage"
-                                            placeholder="Put some feedback of the ride"
-                                            onChange={this.handleChange}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <LaddaButton
-                                className="button button-block button-balanced activated"
-                                loading={this.state.loader}
-                                onClick={this.onReviewSubmit}
-                                data-color="##FFFF00"
-                                data-size={L}
-                                data-style={SLIDE_UP}
-                                data-spinner-size={30}
-                                data-spinner-color="#ddd"
-                                data-spinner-lines={12}
-                            >
-                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                <i
-                                    className="fa fa-paper-plane"
-                                    aria-hidden="true"
-                                />{" "}
-                                Submit Review
-                            </LaddaButton>
-                            <LaddaButton
-                                className="button button-block button-calm activated"
-                                onClick={() => {
-                                    this.props.history.push("/app");
-                                }}
-                                data-color="##FFFF00"
-                                data-size={L}
-                                data-style={SLIDE_UP}
-                                data-spinner-size={30}
-                                data-spinner-color="#ddd"
-                                data-spinner-lines={12}
-                            >
-                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                <i
-                                    className="fa fa-arrow-right"
-                                    aria-hidden="true"
-                                />{" "}
-                                Skip
-                            </LaddaButton>
-                        </div>
                     )}
                 </Fragment>
             </div>
