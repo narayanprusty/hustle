@@ -46,6 +46,9 @@ DriverMetaCollection.schema = new SimpleSchema({
     },
     active: {
         type: Boolean
+    },
+    lastUpdated: {
+        type: Date
     }
 });
 if (Meteor.isServer) {

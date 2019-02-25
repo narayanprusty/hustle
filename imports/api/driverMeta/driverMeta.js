@@ -42,6 +42,7 @@ const updateDriverLocation = ({ driverId, lat, lng, heading }) => {
         },
         {
             $set: {
+                lastUpdated: Date.now(),
                 type: "Point",
                 currentLocation: [lng, lat],
                 heading: heading

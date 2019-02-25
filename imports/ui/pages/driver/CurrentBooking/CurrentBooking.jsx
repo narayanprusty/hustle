@@ -60,7 +60,6 @@ class CurrentBooking extends Component {
         this.fetchCurrentRide();
         this.pubnub.addListener({
             message: message => {
-                console.log(">>>>>>>>>>>>>>>>", message);
                 this.callInsideRender(message);
             }
         });
@@ -622,24 +621,6 @@ class CurrentBooking extends Component {
                             Finish Ride
                         </LaddaButton>
                     )}
-                    {/* {this.state.paymentMethod == "cash" &&
-                        this.state.status == "finished" &&
-                        !this.state.paymentReceived && (
-                            <LaddaButton
-                                className="button button-block button-balanced activated"
-                                loading={this.state.paymentReceived_loader}
-                                onClick={this.paymentReceived}
-                                data-color="##FFFF00"
-                                data-size={S}
-                                data-style={SLIDE_UP}
-                                data-spinner-size={30}
-                                data-spinner-color="#ddd"
-                                data-spinner-lines={12}
-                            >
-                                <i className="fa fa-money" aria-hidden="true" />{" "}
-                                Payment Received
-                            </LaddaButton>
-                        )} */}
                     {this.state.status == "finished" && (
                         <div>
                             <div
