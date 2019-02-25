@@ -120,15 +120,6 @@ class CurrentBooking extends Component {
 
     callInsideRender = message => {
         if (this._isMounted && this.state.userId) {
-            // let messages;
-            // try {
-            //     messages = this.pubnub.getMessage(this.state.userId);
-            // } catch (err) {
-            //     console.log(err);
-            // }
-            // if (messages && messages.length) {
-            //     this.handleSocket(messages[messages.length - 1]);
-            // }
             this.handleSocket(message);
         }
     };
@@ -145,24 +136,23 @@ class CurrentBooking extends Component {
             timeArr.push(message.message.time);
             function notifyMe(message) {
                 if (!("Notification" in window)) {
-                  alert("Message From Driver: " + message);
+                    alert("Message From Driver: " + message);
+                } else if (Notification.permission === "granted") {
+                    var notification = new Notification(
+                        "Message from Driver: " + message
+                    );
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission(function(permission) {
+                        if (permission === "granted") {
+                            var notification = new Notification(
+                                "Message from Driver: " + message
+                            );
+                        }
+                    });
                 }
-              
-                else if (Notification.permission === "granted") {
-                  var notification = new Notification("Message from Driver: " + message);
-                }
-              
-                else if (Notification.permission !== 'denied') {
-                  Notification.requestPermission(function (permission) {
-                    if (permission === "granted") {
-                      var notification = new Notification("Message from Driver: " + message);
-                    }
-                  });
-                }
-              
-              }
+            }
 
-            if(window.cordova) {
+            if (window.cordova) {
                 cordova.plugins.notification.local.schedule({
                     id: 1,
                     title: "You have a new message",
@@ -170,7 +160,7 @@ class CurrentBooking extends Component {
                     at: new Date()
                 });
             } else {
-                notifyMe(message.message.message)
+                notifyMe(message.message.message);
             }
             this.setState({ timeArr: timeArr, badge: badge + 1 });
             addResponseMessage(message.message.message);
@@ -537,20 +527,29 @@ class CurrentBooking extends Component {
                         </div>
                     )}
                     {this.state.status == "accepted" && (
-                        <button className="button button-block button-calm" onClick={() => {
-                            this.setState({badge: 0})
-                            this.toggleChatBox()
-                        }}>
-                            <i className="fa fa-comments" aria-hidden="true"></i> Chat with Rider {
-                                this.state.badge !== 0 && <span style={{
-                                    padding: '6px',
-                                    paddingTop: '2px',
-                                    paddingBottom: '3px',
-                                    backgroundColor: 'red',
-                                    color: 'white',
-                                    borderRadius: '16px'
-                                }}>{this.state.badge}</span>
-                            } 
+                        <button
+                            className="button button-block button-calm"
+                            onClick={() => {
+                                this.setState({ badge: 0 });
+                                this.toggleChatBox();
+                            }}
+                        >
+                            <i className="fa fa-comments" aria-hidden="true" />{" "}
+                            Chat with Rider{" "}
+                            {this.state.badge !== 0 && (
+                                <span
+                                    style={{
+                                        padding: "6px",
+                                        paddingTop: "2px",
+                                        paddingBottom: "3px",
+                                        backgroundColor: "red",
+                                        color: "white",
+                                        borderRadius: "16px"
+                                    }}
+                                >
+                                    {this.state.badge}
+                                </span>
+                            )}
                         </button>
                     )}
                     {this.state.status == "accepted" && (
@@ -650,7 +649,9 @@ class CurrentBooking extends Component {
                                     marginRight: "0px"
                                 }}
                             >
-                                <div className="item item-divider">Rate Rider</div>
+                                <div className="item item-divider">
+                                    Rate Rider
+                                </div>
                                 <div className="item item-text-wrap">
                                     <div
                                         style={{
@@ -734,7 +735,9 @@ class CurrentBooking extends Component {
                             badge={this.state.badge}
                             handleNewUserMessage={this.handleNewUserMessage}
                             subtitle={this.state.name}
-                            launcher={handleToggle => this.toggleChatBox = handleToggle}
+                            launcher={handleToggle =>
+                                (this.toggleChatBox = handleToggle)
+                            }
                         />
                     )}
                 </div>

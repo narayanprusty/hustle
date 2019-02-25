@@ -121,10 +121,7 @@ class Bookings extends Component {
         );
         const { lat, lng } = await this.getcurrentLocation();
         this._isMounted = true;
-        // const username = Meteor.user().profile.name;
-        // this.setState({
-        //     username: username
-        // });
+
         Geocode.fromLatLng(lat, lng).then(
             response => {
                 this.setState(prev => ({
@@ -219,11 +216,6 @@ class Bookings extends Component {
                 console.log("cards loaded", this.state.cards);
             }
         });
-
-        // this.pubnub.subscribe({
-        //   channels: [Meteor.userId()],
-        //   withPresence: true
-        // });
     };
 
     fetchCurrentRide = async () => {
@@ -242,11 +234,6 @@ class Bookings extends Component {
             }
         );
     };
-
-    // componentWillUnmount() {
-    //     if (this._isMounted) {
-    //     }
-    // }
 
     getcurrentLocation() {
         if (navigator && navigator.geolocation) {
@@ -561,41 +548,6 @@ class Bookings extends Component {
         });
     };
 
-    // searchLoc = async keyWord => {
-    //     if (!keyWord.length) {
-    //         return;
-    //     }
-    //     this.setState({
-    //         dropDownData: []
-    //     });
-    //     Meteor.call(
-    //         "fetchLocationwithKeyword",
-    //         { ...this.state.currentLocation, keyWord: keyWord },
-    //         (error, data) => {
-    //             if (error) {
-    //                 return notify.show(
-    //                     error.reason || "unable to search.",
-    //                     "error"
-    //                 );
-    //             }
-    //             if (data.results && data.results.length) {
-    //                 const dropDownData = data.results.map((val, i) => {
-    //                     return {
-    //                         value: val.geometry.location,
-    //                         label: val.formatted_address
-    //                     };
-    //                 });
-    //                 this.setState({
-    //                     dropDownData: dropDownData
-    //                 });
-    //                 return dropDownData;
-    //             } else {
-    //                 return [];
-    //             }
-    //         }
-    //     );
-    // };
-
     handleboardChange(e) {
         this.setState({
             boardsearch: e.target.value,
@@ -616,26 +568,7 @@ class Bookings extends Component {
     // }
 
     render() {
-        const { mapApiLoaded, mapInstance, mapApi, listnToDriver } = this.state;
-
-        // if (listnToDriver) {
-        //   const messages = this.pubnub.getMessage(Meteor.userId());
-        //   const latestMsg = messages[messages.length - 1];
-        //   if(latestMsg.userMetadata.type=="driverAccept"){
-        //     notify.show("Driver assigned",'success');
-        //     this.props.history.push("/app/currentBooking");
-        //   }
-
-        //     {actualChannel: null
-        // channel: "RRt8iYvYeSDDN8QaX"
-        // message: {such: "luls"}
-        // publisher: "pn-612e2f1f-fe27-4c72-a96a-064680f93b7a"
-        // subscribedChannel: "RRt8iYvYeSDDN8QaX"
-        // subscription: null
-        // timetoken: "15471134919707428"
-        // userMetadata: {cool: "meta"}}
-        //check above for specific metadata or message item and take the steps accordingly
-        // }
+        const { mapApiLoaded, mapApi } = this.state;
 
         let conatinerClass = "list";
 
@@ -666,19 +599,6 @@ class Bookings extends Component {
                                         :{" "}
                                     </span>
                                     {mapApiLoaded && (
-                                        // <SearchBox
-                                        //     placeholder="Default is Current Location"
-                                        //     map={mapInstance}
-                                        //     mapApi={mapApi}
-                                        //     value={
-                                        //         this.state.boardingPlace
-                                        //             ? this.state.boardingPlace
-                                        //                   .formatted_address
-                                        //             : ""
-                                        //     }
-                                        //     addplace={this.addBoardingPlace}
-                                        // />
-
                                         <ReactGooglePlacesSuggest
                                             name="boardingPoint"
                                             autocompletionRequest={{
@@ -717,12 +637,6 @@ class Bookings extends Component {
                                         :{" "}
                                     </span>
                                     {mapApiLoaded && (
-                                        // <SearchBox
-                                        //     placeholder="Enter a location"
-                                        //     map={mapInstance}
-                                        //     mapApi={mapApi}
-                                        //     addplace={this.addDroppingPlace}
-                                        // />
                                         <ReactGooglePlacesSuggest
                                             name="droppingPoint"
                                             autocompletionRequest={{
@@ -836,19 +750,6 @@ class Bookings extends Component {
                                                             </option>
                                                         )
                                                     )}
-                                                    {/* <option
-                                                value={"cash"}
-                                                key={
-                                                    this.state.cards &&
-                                                    this.state.cards.length
-                                                        ? this.state.cards
-                                                              .length + 1
-                                                        : 1
-                                                }
-                                            >
-                                                {" "}
-                                                {"Cash"}{" "}
-                                            </option> */}
                                                 </select>
                                                 <i
                                                     className="fa fa-sort-desc"
@@ -1060,18 +961,6 @@ class Bookings extends Component {
                                                     );
                                                 }
                                             )}
-                                        {/* <LaddaButton
-                                    className="floatMapButton"
-                                    onClick={this.changeBoardingToCurrent}
-                                    data-color="##FFFF00"
-                                    data-size={L}
-                                    data-style={SLIDE_UP}
-                                    data-spinner-size={30}
-                                    data-spinner-color="#ddd"
-                                    data-spinner-lines={12}
-                                >
-                                    <i className="fa fa-map-marker" />
-                                </LaddaButton> */}
                                     </GoogleMapReact>
                                 )}
                             </div>
