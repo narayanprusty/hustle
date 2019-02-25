@@ -270,8 +270,8 @@ class Bookings extends Component {
                             "error"
                         );
                         resolve({
-                            lat: 25.11102,
-                            lng: 55.19514
+                            lat: 21.54238,
+                            lng: 39.19797
                         });
                     },
                     {
