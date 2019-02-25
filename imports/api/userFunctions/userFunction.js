@@ -6,20 +6,40 @@ import { Meteor } from "meteor/meteor";
 
 const triggerSos = async messageElems => {
     const driver = await driverDetails(messageElems.driverId);
-    const message = `[HUSTLE]\n${
-        messageElems.username
-    } needs your help, its emergency.
-    current lat:${messageElems.currentLatlng.lat}, lng:${
-        messageElems.currentLatlng.lng
-    },
-    car number:${messageElems.carNumber},car model:${messageElems.carModel},
-    track here: ${messageElems.trackUrl},boarded from:${
-        messageElems.start_address
-    },
-    destination:${messageElems.end_address},driver name:${
-        driver.name
-    },driver phone:${driver.phone}
-    `;
+    let message;
+    const LangPref = Meteor.user().profile.langPref || "en";
+    if (LangPref == "ar") {
+        //this needs to be changed
+        message = `[HUSTLE]\n${
+            messageElems.username
+        } needs your help, its emergency.
+        current lat:${messageElems.currentLatlng.lat}, lng:${
+            messageElems.currentLatlng.lng
+        },
+        car number:${messageElems.carNumber},car model:${messageElems.carModel},
+        track here: ${messageElems.trackUrl},boarded from:${
+            messageElems.start_address
+        },
+        destination:${messageElems.end_address},driver name:${
+            driver.name
+        },driver phone:${driver.phone}
+        `;
+    } else {
+        message = `[HUSTLE]\n${
+            messageElems.username
+        } needs your help, its emergency.
+        current lat:${messageElems.currentLatlng.lat}, lng:${
+            messageElems.currentLatlng.lng
+        },
+        car number:${messageElems.carNumber},car model:${messageElems.carModel},
+        track here: ${messageElems.trackUrl},boarded from:${
+            messageElems.start_address
+        },
+        destination:${messageElems.end_address},driver name:${
+            driver.name
+        },driver phone:${driver.phone}
+        `;
+    }
 
     const { econtacts } = await getContacts();
     const defaultContacts = await getSOSNumbers();

@@ -192,7 +192,13 @@ const iterateOverDrivers = () => {
             .fetch()[0];
         //send mail function to be called here with above data and send mail to
         //driverDoc.driverEmail
-        const finalHTML = `
+        let finalHTML;
+        let emailSub;
+        const LangPref = Meteor.user().profile.langPref || "en";
+        if (LangPref == "ar") {
+            //add arabic transtaltion here
+            emailSub = `[HUSTLE] Monthly report`;
+            finalHTML = `
         <div>
         Cash Earnins: ${earningsInCash}<br />
         Earnings Non-Cash: ${earningsOnline}<br/>
@@ -202,13 +208,26 @@ const iterateOverDrivers = () => {
         total no of ride: ${totalRides}
         </div>
         `;
+        } else {
+            emailSub = `[HUSTLE] Monthly report`;
+            finalHTML = `
+        <div>
+        Cash Earnins: ${earningsInCash}<br />
+        Earnings Non-Cash: ${earningsOnline}<br/>
+       Total: ${totalEarnings}<br/>
+       total time spent on ride:  ${totalTimeOnRide / 60} minutes<br/>
+        total disatbnce covered in ride: ${totalDistanceOnRide / 1000} KM,
+        total no of ride: ${totalRides}
+        </div>
+        `;
+        }
         const emailOptions = {
             from: {
                 email: "saikat.chakrabortty@blockcluster.io",
                 name: "Saikat from Blockcluster"
             },
             to: driverDoc.driverEmail,
-            subject: `[HUSTLE] Monthly report`,
+            subject: emailSub,
             html: finalHTML
         };
         await sendEmail(emailOptions);
