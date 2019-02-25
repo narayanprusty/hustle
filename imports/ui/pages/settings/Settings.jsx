@@ -22,7 +22,7 @@ export default class Settings extends Component {
         console.log(localizationManager.getLanguage());
     }
 
-    componentDidMount() {
+    componentWillMount() {
         Meteor.call("getUserProfile", (error, user) => {
             if (error || !user) {
                 notify.show(
@@ -33,7 +33,8 @@ export default class Settings extends Component {
             }
             if (user && user.userType == "Driver") {
                 this.setState({
-                    isDriver: true
+                    isDriver: true,
+                    driverMode: localStorage.getItem("driverMode")
                 });
                 return;
             }
@@ -64,10 +65,18 @@ export default class Settings extends Component {
     };
 
     setDriverMode = () => {
+        this.setState({
+            driverMode: true
+        });
         localStorage.setItem("driverMode", true);
+        this.props.history.push('/app/driver/newreqs');
     };
     setUserMode = () => {
+        this.setState({
+            driverMode: false
+        });
         localStorage.removeItem("driverMode");
+        this.props.history.push('/app/home');
     };
     // if user not loggedIn dont show sideMenu
     render() {
@@ -112,27 +121,17 @@ export default class Settings extends Component {
                     <div className="item item-divider">
                         {localizationManager.strings.others}
                     </div>
-
-                    {this.state.isDriver && !driverMode && (
-                        <Link
-                            to="/app/driver/newreqs"
-                            className="item item-icon-left"
-                            onClick={this.setDriverMode}
-                        >
-                            <i className="icon fa fa-car" />
-                            {localizationManager.strings.driverMode}
-                        </Link>
-                    )}
-                    {driverMode && (
-                        <Link
-                            to="/app/home"
-                            className="item item-icon-left"
-                            onClick={this.setUserMode}
-                        >
-                            <i className="icon fa fa-user" />
-                            {localizationManager.strings.userMode}
-                        </Link>
-                    )}
+                    {this.state.isDriver ? (<li class="item item-icon-left item-toggle">
+                        <i className="icon fa fa-car" />
+                        {localizationManager.strings.driverMode}
+                        <label class="toggle toggle-assertive">
+                        <input type="checkbox" checked={this.state.driverMode} onChange={(e)=> e.target.checked ? this.setDriverMode() : this.setUserMode()} />
+                        <div class="track">
+                            <div class="handle"></div>
+                        </div>
+                        </label>
+                    </li>) : ""
+                    }
 
                     <Link
                         to="#"
