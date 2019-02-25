@@ -342,23 +342,23 @@ class CurrentBookingRider extends Component {
 
             function notifyMe(message) {
                 if (!("Notification" in window)) {
-                  alert("Message From Driver: " + message);
+                    alert("Message From Driver: " + message);
+                } else if (Notification.permission === "granted") {
+                    var notification = new Notification(
+                        "Message from Driver: " + message
+                    );
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission(function(permission) {
+                        if (permission === "granted") {
+                            var notification = new Notification(
+                                "Message from Driver: " + message
+                            );
+                        }
+                    });
                 }
-              
-                else if (Notification.permission === "granted") {
-                  var notification = new Notification("Message from Driver: " + message);
-                }
-              
-                else if (Notification.permission !== 'denied') {
-                  Notification.requestPermission(function (permission) {
-                    if (permission === "granted") {
-                      var notification = new Notification("Message from Driver: " + message);
-                    }
-                  });
-                }
-              }
+            }
 
-            if(window.cordova) {
+            if (window.cordova) {
                 cordova.plugins.notification.local.schedule({
                     id: 1,
                     title: "You have a new message",
@@ -366,9 +366,9 @@ class CurrentBookingRider extends Component {
                     at: new Date()
                 });
             } else {
-                notifyMe(message.message.message)
+                notifyMe(message.message.message);
             }
-            
+
             this.setState({ timeArr: timeArr, badge: badge + 1 });
             addResponseMessage(message.message.message);
         } else if (
@@ -689,9 +689,7 @@ class CurrentBookingRider extends Component {
                                 <a className="item item-icon-left" href="#">
                                     <i className="icon fa fa-car" />
                                     {this.state.carModel || "-"}
-                                    <span className="item-note">
-                                        Car Model
-                                    </span>
+                                    <span className="item-note">Car Model</span>
                                 </a>
                                 <a className="item item-icon-left" href="#">
                                     <i className="icon fa fa-text-width" />
@@ -725,23 +723,34 @@ class CurrentBookingRider extends Component {
                             </div>
                         </div>
                     )}
-
                     {this.state.status == "accepted" && (
                         <div className="padding-left padding-right">
-                            <button className="button button-block button-calm" onClick={() => {
-                                this.setState({badge: 0})
-                                this.toggleChatBox()
-                            }}>
-                                <i className="fa fa-comments" aria-hidden="true"></i> Chat with Driver {
-                                    this.state.badge !== 0 && <span style={{
-                                        padding: '6px',
-                                        paddingTop: '2px',
-                                        paddingBottom: '3px',
-                                        backgroundColor: 'red',
-                                        color: 'white',
-                                        borderRadius: '16px'
-                                    }}>{this.state.badge}</span>
-                                } 
+                            <button
+                                className="button button-block button-calm"
+                                onClick={() => {
+                                    this.setState({ badge: 0 });
+                                    this.toggleChatBox();
+                                }}
+                            >
+                                <i
+                                    className="fa fa-comments"
+                                    aria-hidden="true"
+                                />{" "}
+                                Chat with Driver{" "}
+                                {this.state.badge !== 0 && (
+                                    <span
+                                        style={{
+                                            padding: "6px",
+                                            paddingTop: "2px",
+                                            paddingBottom: "3px",
+                                            backgroundColor: "red",
+                                            color: "white",
+                                            borderRadius: "16px"
+                                        }}
+                                    >
+                                        {this.state.badge}
+                                    </span>
+                                )}
                             </button>
                         </div>
                     )}
@@ -784,15 +793,13 @@ class CurrentBookingRider extends Component {
                             </LaddaButton>
                         </div>
                     )}
-                    {this._isMounted &&
-                        this.state.showMap &&
-                        !this.state.rideFinished && (
-                            <div
-                                className="mapView padding-left padding-right padding-bottom"
-                                style={{
-                                    paddingBottom: "2em"
-                                }}
-                            >
+                    <div
+                        className="mapView padding-left padding-right padding-bottom"
+                        style={{ height: "65%" }}
+                    >
+                        {this._isMounted &&
+                            this.state.showMap &&
+                            !this.state.rideFinished && (
                                 <GoogleMapReact
                                     options={this.createMapOptions}
                                     bootstrapURLKeys={{
@@ -817,24 +824,18 @@ class CurrentBookingRider extends Component {
                                     {this.state.currentPosition && (
                                         <Marker
                                             lat={
-                                                this.state.currentPosition
-                                                    .lat
-                                                    ? this.state
-                                                            .currentPosition
-                                                            .lat
-                                                    : this.state
-                                                            .currentPosition
-                                                            .lat
+                                                this.state.currentPosition.lat
+                                                    ? this.state.currentPosition
+                                                          .lat
+                                                    : this.state.currentPosition
+                                                          .lat
                                             }
                                             lng={
-                                                this.state.currentPosition
-                                                    .lng
-                                                    ? this.state
-                                                            .currentPosition
-                                                            .lng
-                                                    : this.state
-                                                            .currentPosition
-                                                            .lng
+                                                this.state.currentPosition.lng
+                                                    ? this.state.currentPosition
+                                                          .lng
+                                                    : this.state.currentPosition
+                                                          .lng
                                             }
                                             metaData="current"
                                         />
@@ -874,36 +875,35 @@ class CurrentBookingRider extends Component {
                                             <Marker
                                                 lat={
                                                     this.state.driverLoc.lat
-                                                        ? this.state
-                                                                .driverLoc.lat
-                                                        : this.state
-                                                                .driverLoc.lat
+                                                        ? this.state.driverLoc
+                                                              .lat
+                                                        : this.state.driverLoc
+                                                              .lat
                                                 }
                                                 lng={
                                                     this.state.driverLoc.lng
-                                                        ? this.state
-                                                                .driverLoc.lng
-                                                        : this.state
-                                                                .driverLoc.lng
+                                                        ? this.state.driverLoc
+                                                              .lng
+                                                        : this.state.driverLoc
+                                                              .lng
                                                 }
                                                 metaData="cartop"
                                                 deg={
-                                                    this.state.driverLoc
-                                                        .heading
+                                                    this.state.driverLoc.heading
                                                 }
                                             />
                                         )}
                                 </GoogleMapReact>
-                            </div>
-                        )}
-                    
-
+                            )}
+                    </div>
                     {this.state.status == "accepted" && (
                         <Widget
                             badge={this.state.badge}
                             onClick={() => this.setState({ badge: 0 })}
                             handleNewUserMessage={this.handleNewUserMessage}
-                            launcher={handleToggle => this.toggleChatBox = handleToggle}
+                            launcher={handleToggle =>
+                                (this.toggleChatBox = handleToggle)
+                            }
                             subtitle={this.state.name}
                         />
                     )}
