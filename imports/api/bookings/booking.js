@@ -577,18 +577,15 @@ const getBookingFromDb = bookingId => {
         bookingId: bookingId,
         status: "started"
     }).fetch()[0];
-    console.log(bookingData, ">>>>>>>>>>");
     if (bookingData) {
         const driverMeta = DriverMeta.find({
             driverId: bookingData.driverId
         }).fetch()[0];
-        console.log(driverMeta, ">>>>>>>>>");
         return {
             ...bookingData,
             driverLoc: driverMeta.currentLocation
         };
     } else {
-        console.log(">>>>>>>>>>>>>>>>>>>>");
         throw new Meteor.Error("No data found");
     }
 };
