@@ -12,6 +12,7 @@ import { Widget, addResponseMessage, addUserMessage } from "react-chat-widget";
 
 import mapStyle from "../bookings/MapStyle.json";
 import "./CurrentBooking_client.scss";
+import localizationManager from "../../localization";
 
 const Marker = ({ metaData, deg }) => (
     <div>
@@ -78,7 +79,6 @@ class CurrentBookingRider extends Component {
         this.fetchCurrentRide();
         this.pubnub.addListener({
             message: message => {
-                console.log(">>>>>>>>>>>>>>>>", message);
                 this.callInsideRender(message);
             }
         });
@@ -148,7 +148,10 @@ class CurrentBookingRider extends Component {
     getDriverDetails = driverId => {
         Meteor.call("driverDetails", driverId, (err, data) => {
             if (err) {
-                notify.show(err.reason || "Unknown error occurred", "error");
+                notify.show(
+                    err.reason || localizationManager.strings.someErrorOccured,
+                    "error"
+                );
                 return;
             }
             this.setState(data);
@@ -172,10 +175,6 @@ class CurrentBookingRider extends Component {
                         this.pubnub.history(
                             { channel: currentRide.bookingId },
                             (status, response) => {
-                                console.log(
-                                    JSON.stringify(response),
-                                    "$$$$$$$$$$$$$$$$$$"
-                                );
                                 if (response) {
                                     this.processOldChats(response);
                                 }
@@ -345,13 +344,13 @@ class CurrentBookingRider extends Component {
                     alert("Message From Driver: " + message);
                 } else if (Notification.permission === "granted") {
                     var notification = new Notification(
-                        "Message from Driver: " + message
+                        "Message From Driver: " + message
                     );
                 } else if (Notification.permission !== "denied") {
                     Notification.requestPermission(function(permission) {
                         if (permission === "granted") {
                             var notification = new Notification(
-                                "Message from Driver: " + message
+                                "Message From Driver: " + message
                             );
                         }
                     });
@@ -426,10 +425,6 @@ class CurrentBookingRider extends Component {
 
     callInsideRender = message => {
         if (this._isMounted) {
-            // const messages = this.pubnub.getMessage(Meteor.userId());
-            // if (messages && messages.length) {
-            //     this.handleSocket(messages[messages.length - 1]);
-            // }
             this.handleSocket(message);
         }
     };
@@ -624,7 +619,8 @@ class CurrentBookingRider extends Component {
                                     <div className="padding-top">
                                         {this.state.rideStarted
                                             ? "You are on the ride"
-                                            : "Driver accepted your ride request"}
+                                            : localizationManager.strings
+                                                  .driverAcceptedYourRideRequest}
                                     </div>
                                 </div>
                             </div>
@@ -644,8 +640,10 @@ class CurrentBookingRider extends Component {
                                         />
                                     </div>
                                     <div className="padding-top">
-                                        Waiting for nearby drivers to accept
-                                        your ride request
+                                        {
+                                            localizationManager.strings
+                                                .waitingForNearbyDriversToAcceptYourRideRequest
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -665,7 +663,7 @@ class CurrentBookingRider extends Component {
                                         className="fa fa-times"
                                         aria-hidden="true"
                                     />{" "}
-                                    Cancel Request
+                                    {localizationManager.strings.cancelRequest}
                                 </LaddaButton>
                             </div>
                         </div>
@@ -679,12 +677,16 @@ class CurrentBookingRider extends Component {
                                 <a className="item item-icon-left" href="#">
                                     <i className="icon fa fa-user-o" />
                                     {this.state.name || "-"}
-                                    <span className="item-note">Name</span>
+                                    <span className="item-note">
+                                        {localizationManager.strings.name}
+                                    </span>
                                 </a>
                                 <a className="item item-icon-left" href="#">
                                     <i className="icon fa fa-phone" />
                                     {this.state.phone || "-"}
-                                    <span className="item-note">Phone</span>
+                                    <span className="item-note">
+                                        {localizationManager.strings.phone}
+                                    </span>
                                 </a>
                                 <a className="item item-icon-left" href="#">
                                     <i className="icon fa fa-car" />
@@ -928,7 +930,10 @@ class CurrentBookingRider extends Component {
                                         />
                                     </div>
                                     <div className="padding-top">
-                                        Ride Completed
+                                        {
+                                            localizationManager.strings
+                                                .rideCompleted
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -947,7 +952,10 @@ class CurrentBookingRider extends Component {
                                     <i className="icon  fa fa-credit-card" />
                                     {this.state.paymentMethod || "Cash"}
                                     <span className="item-note">
-                                        Payment Method
+                                        {
+                                            localizationManager.strings
+                                                .paymentMethod
+                                        }
                                     </span>
                                 </a>
                             </div>
