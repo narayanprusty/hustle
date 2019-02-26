@@ -2,4 +2,4 @@ cordova-plugin-device@2.0.2
 cordova-plugin-geolocation@4.0.1
 cordova-plugin-meteor-webapp@v1.6.4
 cordova-plugin-web-share@1.2.0
-diogo-cordova-plugin-local-notifications@0.1.27
+de.appplant.cordova.plugin.local-notification@0.8.5
