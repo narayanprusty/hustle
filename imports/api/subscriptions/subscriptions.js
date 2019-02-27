@@ -67,6 +67,8 @@ const subscribePlan = async ({
             $query: {
                 assetName: config.ASSET.SubscriptionPlans,
                 uniqueIdentifier: planId.toString(),
+                status: "open",
+                active: true
             }
         });
 
