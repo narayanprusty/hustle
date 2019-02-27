@@ -63,6 +63,8 @@ export default class DriverRideHistory extends Component {
                 status = "/images/riding.png";
             } else if (data.rideStatus == "finished") {
                 status = "/images/completed.png";
+            } else if (data.rideStatus == "cancelled") {
+                status = "/images/cancelled.png"
             }
             items.push(
                 <div

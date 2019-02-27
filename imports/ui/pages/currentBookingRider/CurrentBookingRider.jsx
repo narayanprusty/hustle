@@ -1037,7 +1037,10 @@ class CurrentBookingRider extends Component {
                     {this.state.status == "accepted" && (
                         <Widget
                             badge={this.state.badge}
-                            onClick={() => this.setState({ badge: 0 })}
+                            autofocus={false}
+                            onClick={() => {
+                                this.setState({ badge: 0 })
+                            }}
                             handleNewUserMessage={this.handleNewUserMessage}
                             launcher={handleToggle =>
                                 (this.toggleChatBox = handleToggle)
