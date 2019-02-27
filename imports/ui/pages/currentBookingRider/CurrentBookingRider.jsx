@@ -868,6 +868,12 @@ class CurrentBookingRider extends Component {
                                 onClick={() => {
                                     this.setState({ badge: 0 });
                                     this.toggleChatBox();
+
+                                    Meteor.setTimeout(() => {
+                                        document.getElementsByClassName("rcw-close-button")[0].addEventListener("click", (e) => {
+                                            window.scrollTo(0, 0)
+                                        }, false)
+                                    }, 1000)
                                 }}
                             >
                                 <i
