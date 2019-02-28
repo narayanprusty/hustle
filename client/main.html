@@ -25,6 +25,54 @@
                     cordova.plugins.notification.local.registerPermission(function (granted) {});
                 }
             });
+
+            var deniedCount = 0;
+
+            function onError(error){
+                console.error("The following error occurred: "+error);
+            }
+
+            function evaluateAuthorizationStatus(status){
+                switch(status){
+                case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
+                    console.log("Permission not requested");
+                    requestAuthorization();
+                    break;
+                case cordova.plugins.diagnostic.permissionStatus.DENIED:
+                    console.log("Permission denied");
+                    if(deniedCount < 3){
+                        deniedCount++;
+                        requestAuthorization();
+                    }else{
+                        // Are we sure we want to hassle the user more than 3 times?
+                    }
+                    break;
+                case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
+                    console.log("Permission permanently denied");
+                    navigator.notification.confirm(
+                            "This app has been denied access to your location and it really needs it function properly. Would you like to switch to the app settings page to allow access?", 
+                            function (i) {
+                                if (i === 1) {
+                                    cordova.plugins.diagnostic.switchToSettings();
+                                }
+                            }, "Location access denied", ['Yes', 'No']);
+                    break;
+                case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+                    console.log("Permission granted always");
+                    // Yay! use location
+                    break;        
+            }
+            }
+
+            function requestAuthorization(){
+                cordova.plugins.diagnostic.requestLocationAuthorization(evaluateAuthorizationStatus, onError);
+            }
+
+            function checkAuthorization(){
+                cordova.plugins.diagnostic.getLocationAuthorizationStatus(evaluateAuthorizationStatus, onError);
+            }
+
+            checkAuthorization();
         }, false);
 
         if(!window.cordova) {
