@@ -166,14 +166,14 @@ export default class Register extends Component {
                                 onChange={this.inputHandler.bind(this)}
                             />
                         </label>
-                        <label className="item item-input item-stacked-label">
+                        <span className="item item-input item-stacked-label">
                             <span className="input-label">Phone</span>
                             <PhoneInput
                                 placeholder="Enter phone number"
                                 value={this.state.phone}
                                 onChange={phone => this.setState({ phone })}
                             />
-                        </label>
+                        </span>
                         <button
                             className="button button-block button-energized activated"
                             onClick={this.sendMessage.bind(this)}
