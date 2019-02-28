@@ -88,6 +88,7 @@ class Subscriptions extends Component {
                         this.setState({
                             userPlans: response.data ? response.data : [],
                             userAlreadySubscribed: response.data.length > 0,
+                            renew: response.data.length > 0 ? (response.data[0].renew ? true : false) : true
                         });
                     } else {
                         if (response.message) {
@@ -249,6 +250,71 @@ class Subscriptions extends Component {
         }
     }
 
+    reSubscribe = async () =>{
+        try {
+            if (this.state.userPlans) {
+                if (this.state.userPlans.length > 0) {
+                    if (this.state.userPlans[0].uniqueIdentifier) {
+                        this.setState({
+                            showloader: true
+                        });
+                        Meteor.call("reSubscribe", this.state.userPlans[0].uniqueIdentifier,
+                        (error, response) => {
+                            if (error) {
+                                console.log(error);
+                                //Add localization support
+                                notify.show(
+                                    error.reason
+                                        ? error.reason
+                                        : "Unable to re-subscribe!",
+                                    "error"
+                                );
+                            } else {
+                                if (response.success) {
+                                    notify.show("Successfully re-subscribed to the plan!", "success");
+                                    this.getUserSubscriptions();
+                                } else {
+                                    notify.show(
+                                        response.message
+                                            ? response.message
+                                            : "Unable to re-subscribe the plan!",
+                                        "error"
+                                    );
+                                }
+                            }
+                            this.setState({
+                                showloader: false
+                            });
+                        });
+                    } else {
+                        throw {
+                            message: "Unexpected Error Occured!"
+                        }
+                    }
+                } else {
+                    throw {
+                        message: "Unexpected Error Occured!"
+                    }
+                }
+            } else {
+                throw {
+                    message: "Unexpected Error Occured!"
+                }
+            }
+        } catch (ex) {
+            console.log(ex);
+            notify.show(
+                ex.message
+                    ? ex.message
+                    : "Unable to re-subscribe the plan!",
+                "error"
+            );
+            this.setState({
+                showloader: true
+            });
+        }
+    }
+
     render() {
         const loader = (
             <div className="loader" key={0}>
@@ -329,7 +395,7 @@ class Subscriptions extends Component {
                                         <b>Price</b>
                                     </div>
                                     <div>
-                                        ${this.state.subscriptionPlan.price}
+                                        {this.state.subscriptionPlan.price} SAR
                                     </div>
                                 </li>
                                 <li
@@ -433,6 +499,7 @@ class Subscriptions extends Component {
                                 >
                                     <i className="fa fa-check" aria-hidden="true"></i> Subscribe
                             </LaddaButton> ) : (
+                                this.state.renew ? (
                             <LaddaButton
                             className="button button-block button-assertive activated"
                             loading={this.state.showloader}
@@ -450,7 +517,25 @@ class Subscriptions extends Component {
                             )}
                         >
                             <i className="fa fa-times" aria-hidden="true"></i> Cancel Subscription
-                        </LaddaButton>
+                        </LaddaButton>) : (
+                            <LaddaButton
+                            className="button button-block button-assertive activated"
+                            loading={this.state.showloader}
+                            disabled={
+                                !this.state.userAlreadySubscribed
+                            }
+                            data-color="##FFFF00"
+                            data-spinner-size={30}
+                            data-size={S}
+                            data-style={SLIDE_UP}
+                            data-spinner-color="#ddd"
+                            data-spinner-lines={12}
+                            onClick={this.reSubscribe.bind(
+                                this
+                            )}
+                        >
+                            <i className="fa fa-refresh" aria-hidden="true"></i> Re-subscribe
+                        </LaddaButton>)
                             ) }
                             </div>
                         </div>

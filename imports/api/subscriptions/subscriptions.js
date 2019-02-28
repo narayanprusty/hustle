@@ -1,7 +1,11 @@
 import Blockcluster from "blockcluster";
 import config from "../../modules/config/server";
-import { oneClickPayment } from '../payments/payments';
-import { start } from "repl";
+import {
+    oneClickPayment
+} from '../payments/payments';
+import {
+    start
+} from "repl";
 
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
@@ -111,6 +115,7 @@ const subscribePlan = async ({
                     hyperPayId: hyperPayId,
                     startDate: (+new Date()).toString(),
                     validTill: (+validTill).toString(),
+                    renew: true
                 }
             });
             return {
@@ -135,7 +140,7 @@ const cancelSubscription = async (identifier) => {
             fromAccount: node.getWeb3().eth.accounts[0],
             identifier: identifier.toString(),
             public: {
-                active: false
+                renew: false
             }
         });
         console.log(res);
@@ -149,6 +154,30 @@ const cancelSubscription = async (identifier) => {
     }
 };
 
+const reSubscribe = async (identifier) => {
+    try {
+        console.log("ReSubscribing plan", identifier);
+        const res = await node.callAPI('assets/updateAssetInfo', {
+            assetName: config.ASSET.Subscriptions,
+            fromAccount: node.getWeb3().eth.accounts[0],
+            identifier: identifier.toString(),
+            public: {
+                renew: true
+            }
+        });
+        console.log(res);
+        return {
+            success: true,
+            txnHash: res
+        }
+    } catch (ex) {
+        console.log(ex);
+        return ex;
+    }
+}
+
+//Check if the validity of plan is expired or not (i.e. on the last day of plan)
+//And renews it or deactivates depending upon users pre-selected choice
 const autoRenewal = async () => {
     try {
         console.log("Running subscription renewal job");
@@ -182,27 +211,40 @@ const autoRenewal = async () => {
                 console.log(validTill);
                 console.log(validTill.getDate(), today.getDate(), validTill.getMonth(), today.getMonth(), validTill.getFullYear(), today.getFullYear());
                 if (validTill.getDate() == today.getDate() && validTill.getMonth() == today.getMonth() && validTill.getFullYear() == today.getFullYear()) {
-                    console.log("Payment ->", subscriptions[i].hyperPayId);
-                    var receipt = await oneClickPayment(plan.price, subscriptions[i].hyperPayId);
+                    if (subscriptions[i].renew) {
+                        console.log("Payment ->", subscriptions[i].hyperPayId);
+                        var receipt = await oneClickPayment(plan.price, subscriptions[i].hyperPayId);
 
-                    //Handle payment failure
-                    console.log(receipt);
+                        //Handle payment failure
+                        console.log(receipt);
 
-                    let startDate = new Date();
-                    let endDate = new Date().setDate(startDate.getDate() + parseInt(plan.validity));
+                        let startDate = new Date();
+                        let endDate = new Date().setDate(startDate.getDate() + parseInt(plan.validity));
 
-                    let data = {
-                        startDate: (+startDate).toString(),
-                        validTill: (+endDate).toString()
+                        let data = {
+                            startDate: (+startDate).toString(),
+                            validTill: (+endDate).toString()
+                        }
+
+                        let res = await node.callAPI('assets/updateAssetInfo', {
+                            assetName: config.ASSET.Subscriptions,
+                            fromAccount: node.getWeb3().eth.accounts[0],
+                            identifier: subscriptions[i].uniqueIdentifier.toString(),
+                            public: data
+                        });
+                        console.log(res);
+                    } else {
+                        console.log("Plan expired -> Deactivating plan");
+                        let res = await node.callAPI('assets/updateAssetInfo', {
+                            assetName: config.ASSET.Subscriptions,
+                            fromAccount: node.getWeb3().eth.accounts[0],
+                            identifier: subscriptions[i].uniqueIdentifier.toString(),
+                            public: {
+                                active: false
+                            }
+                        });
+                        console.log(res);
                     }
-
-                    let res = await node.callAPI('assets/updateAssetInfo', {
-                        assetName: config.ASSET.Subscriptions,
-                        fromAccount: node.getWeb3().eth.accounts[0],
-                        identifier: subscriptions[i].uniqueIdentifier.toString(),
-                        public: data
-                    });
-                    console.log(res);
                 }
 
             } catch (ex) {
@@ -219,5 +261,6 @@ export {
     getUserSubscriptions,
     subscribePlan,
     cancelSubscription,
-    autoRenewal
+    autoRenewal,
+    reSubscribe
 };
