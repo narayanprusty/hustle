@@ -243,15 +243,16 @@ class CurrentBooking extends Component {
             navigateToRider_loader: true
         });
         console.log(this.isIphone(), this.isAndroid());
-        if (this.isIphone()) {
-            open(
-                "maps://?ll=" +
-                    +this.state.boardingPoint.coordinates[1] +
-                    "," +
-                    this.state.boardingPoint.coordinates[0],
-                "_system"
-            );
-        } else if (this.isAndroid()) {
+        // if (this.isIphone()) {
+        //     open(
+        //         "maps://?ll=" +
+        //             +this.state.boardingPoint.coordinates[1] +
+        //             "," +
+        //             this.state.boardingPoint.coordinates[0],
+        //         "_system"
+        //     );
+        // } else
+        if (this.isAndroid()) {
             open(
                 "geo:0,0?q=" +
                     this.state.boardingPoint.coordinates[1] +
@@ -305,16 +306,17 @@ class CurrentBooking extends Component {
     };
 
     navigateToDrop = () => {
-        if (this.isIphone()) {
-            // incase not working try making it `q` instead of ll
-            open(
-                "maps://?ll=" +
-                    +this.state.droppingPoint.coordinates[1] +
-                    "," +
-                    this.state.droppingPoint.coordinates[0],
-                "_system"
-            );
-        } else if (this.isAndroid()) {
+        // if (this.isIphone()) {
+        //     // incase not working try making it `q` instead of ll
+        //     open(
+        //         "maps://?ll=" +
+        //             +this.state.droppingPoint.coordinates[1] +
+        //             "," +
+        //             this.state.droppingPoint.coordinates[0],
+        //         "_system"
+        //     );
+        // } else
+        if (this.isAndroid()) {
             open(
                 "geo:0,0?q=" +
                     this.state.droppingPoint.coordinates[1] +
