@@ -188,13 +188,16 @@ class Bookings extends Component {
                         });
                         if (err) {
                             console.log(err);
-                            return notify.show("Failed adding card.", "error");
+                            return notify.show(
+                                localizationManager.strings.ulc,
+                                "error"
+                            );
                         }
                         if (res.message || !res.cards) {
                             notify.show(
                                 ex.message
                                     ? ex.message
-                                    : "Unable to load cards!",
+                                    : localizationManager.strings.ulc,
                                 "error"
                             );
                         } else {
@@ -244,7 +247,7 @@ class Bookings extends Component {
             },
             (err, result) => {
                 if (err) {
-                    notify.show("unable to fetch drivers nearby", "warning");
+                    notify.show(localizationManager.strings.ufdn, "warning");
                 }
                 this.setState({
                     allDrivers: result
@@ -285,7 +288,8 @@ class Bookings extends Component {
                     },
                     err => {
                         notify.show(
-                            "Unable to fetch your current location",
+                            localizationManager.strings
+                                .unableToFetchYourCurrentLocation,
                             "error"
                         );
                         resolve({
@@ -392,7 +396,7 @@ class Bookings extends Component {
                     });
                     routePolyline.setMap(mapInstance);
                 } else if (status == "ZERO_RESULTS") {
-                    notify.show("Cannot find path", "error");
+                    notify.show(localizationManager.strings.cfp, "error");
                 } else if (status == "OVER_QUERY_LIMIT") {
                     notify.show("Internal error", "error");
                 } else {
@@ -455,10 +459,7 @@ class Bookings extends Component {
 
     onChangeBoarding = t => {
         if (this.state.stopMapInput) {
-            notify.show(
-                "Cant change location while rasing booking request.",
-                "warning"
-            );
+            notify.show(localizationManager.strings.cclwrbr, "warning");
             return false;
         }
         Geocode.fromLatLng(t.lat, t.lng).then(response => {
@@ -568,7 +569,9 @@ class Bookings extends Component {
                 console.log(error);
                 //Add localization support
                 return notify.show(
-                    error.reason ? error.reason : "Unable to create request!",
+                    error.reason
+                        ? error.reason
+                        : localizationManager.strings.unableToCreateRequest,
                     "error"
                 );
             }
@@ -639,7 +642,11 @@ class Bookings extends Component {
                                         />
                                     </div>
                                     <div className="padding-top">
-                                        kindly subscribe to book ride
+                                        {
+                                            localizationManager.strings[
+                                                "kindly subscribe to book ride"
+                                            ]
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -655,7 +662,7 @@ class Bookings extends Component {
                                     className="fa fa-arrow-right"
                                     aria-hidden="true"
                                 />{" "}
-                                Subscribe
+                                {localizationManager.strings.subscribe}
                             </button>
                         </div>
                     )}
@@ -690,7 +697,12 @@ class Bookings extends Component {
                                                     value={
                                                         this.state.boardvalue
                                                     }
-                                                    placeholder="Default is current location"
+                                                    placeholder={
+                                                        localizationManager
+                                                            .strings[
+                                                            "Default is current location"
+                                                        ]
+                                                    }
                                                     autoComplete="off"
                                                     disabled={
                                                         this.state.stopMapInput
@@ -728,7 +740,12 @@ class Bookings extends Component {
                                                     type="text"
                                                     name="droppingPointInput"
                                                     value={this.state.dropvalue}
-                                                    placeholder="select location"
+                                                    placeholder={
+                                                        localizationManager
+                                                            .strings[
+                                                            "select location"
+                                                        ]
+                                                    }
                                                     autoComplete="off"
                                                     disabled={
                                                         this.state.stopMapInput
@@ -901,7 +918,12 @@ class Bookings extends Component {
                                                         }}
                                                     />
                                                     <span className="item-note">
-                                                        Preferred Car
+                                                        {
+                                                            localizationManager
+                                                                .strings[
+                                                                "Preferred Car"
+                                                            ]
+                                                        }
                                                     </span>
                                                 </div>
                                             </div>

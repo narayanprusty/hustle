@@ -28,19 +28,19 @@ export default class AddCard extends Component {
             (err, res) => {
                 if (err) {
                     console.log(err);
-                    notify.show("Failed adding card.", "error");
+                    notify.show(localizationManager.strings.failedAddingCard, "error");
                 }
                 console.log("info:", res, err);
                 if (res) {
                     if (res.message || !res.success) {
-                        notify.show(res.message ? res.message : "Failed adding card.", "error");
+                        notify.show(res.message ? res.message : localizationManager.strings.failedAddingCard, "error");
                     } else {
-                        notify.show("Card added successfully!", "success");
+                        notify.show(localizationManager.strings.cardAdded, "success");
                         this.props.history.push('/app/myCards')
                     }
                 }
                 else {
-                    notify.show("Failed adding card.", "error");
+                    notify.show(localizationManager.strings.failedAddingCard, "error");
                 }
                 this.setState({
                     processing: false
@@ -48,6 +48,7 @@ export default class AddCard extends Component {
             }
         );
     }
+    
     render() {
         return (<div>
             <div className="padding-top padding-right padding-left padding-bottom">

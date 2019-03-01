@@ -6,7 +6,7 @@ import { DriverMeta } from "../../collections/driver-meta";
 import config from "../../modules/config/server";
 import { sendMessage } from "../../notifications/index";
 import { oneClickPayment } from "../payments/payments";
-
+import localization from "../../ui/localization";
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
     instanceId: config.BLOCKCLUSTER.instanceId
@@ -187,7 +187,7 @@ const onDriverAccept = async (bookingId, driverId) => {
         status: "pending"
     }).fetch()[0];
     if (!BookingData) {
-        throw { reason: "Booking already accepted by someone else!" };
+        throw { reason: localization.strings.acceptedBySomeone };
     }
     const txId = await node.callAPI("assets/updateAssetInfo", {
         assetName: config.ASSET.Bookings,
@@ -303,7 +303,7 @@ const onStopRide = async (driverId, bookingId, endingPoint) => {
         }
     } else {
         return {
-            message: "Booking not found for payment."
+            message: localization.strings.bnp
         };
     }
 
@@ -339,7 +339,7 @@ const onConfirmPayment = async (bookingId, txId = null, paymentAmount) => {
             };
         }
         throw {
-            message: "Booking not found!"
+            message: localization.strings.bnf
         };
     } catch (ex) {
         console.log(ex);
@@ -399,7 +399,7 @@ const getBookingById = async bookingId => {
             };
         } else {
             return {
-                message: "Booking not found!"
+                message: localization.strings.bnf
             };
         }
     } catch (ex) {
@@ -441,7 +441,7 @@ const paymentReceived = async bookingId => {
             }
         } else {
             return {
-                message: "Booking not found!"
+                message: localization.strings.bnf
             };
         }
     } catch (ex) {
