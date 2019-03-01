@@ -104,12 +104,12 @@ export default class Settings extends Component {
                             {localizationManager.strings.subscriptions}
                         </Link>
                     )}
-                    {!driverMode && (
-                        <Link to="/app/myCards" className="item item-icon-left">
-                            <i className="icon fa fa-credit-card" />
-                            {localizationManager.strings.myCards}
-                        </Link>
-                    )}
+
+                    <Link to="/app/myCards" className="item item-icon-left">
+                        <i className="icon fa fa-credit-card" />
+                        {localizationManager.strings.myCards}
+                    </Link>
+
                     <a className="item item-icon-left item-icon-right" href="#">
                         <i className="icon ion-chatbubble-working" />
                         {localizationManager.strings.callSupport}
