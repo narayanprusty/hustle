@@ -632,29 +632,31 @@ class Bookings extends Component {
                                 >
                                     <div>
                                         <img
-                                            src={"/images/pending.png"}
+                                            src={"/images/subscribe.png"}
                                             style={{ width: "40px" }}
                                         />
                                     </div>
                                     <div className="padding-top">
-                                        kindly subscribe to book ride
+                                        Kindly subscribe to book ride
                                     </div>
                                 </div>
                             </div>
-                            <button
-                                className="button button-block button-calm"
-                                onClick={() => {
-                                    this.props.history.push(
-                                        "/app/subscriptions"
-                                    );
-                                }}
-                            >
-                                <i
-                                    className="fa fa-arrow-right"
-                                    aria-hidden="true"
-                                />{" "}
-                                Subscribe
-                            </button>
+                            <div className="padding-left padding-right">
+                                <button
+                                    className="button button-block button-calm"
+                                    onClick={() => {
+                                        this.props.history.push(
+                                            "/app/subscriptions"
+                                        );
+                                    }}
+                                >
+                                    <i
+                                        className="fa fa-arrow-right"
+                                        aria-hidden="true"
+                                    />{" "}
+                                    Subscribe
+                                </button>
+                            </div>
                         </div>
                     )}
                     {!this.state.loading_cards &&
