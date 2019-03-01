@@ -53,7 +53,7 @@ export default class AddCard extends Component {
             <div className="padding-top padding-right padding-left padding-bottom">
             {/* style={{ borderBottomWidth: 1, borderBottomStyle: "solid", alignContent: "left" }} */}
                 <h3 className="padding">
-                    <i className="fa fa-plus-square" aria-hidden="true" /> Add new card </h3>
+                    <i className="fa fa-plus-square" aria-hidden="true" /> {localizationManager.strings.addNewCard} </h3>
                     <Form
                         onSubmit={this.onSubmit}
                         render={({
@@ -79,16 +79,14 @@ export default class AddCard extends Component {
                                                 <label className="item item-input item-stacked-label">
                                                     <span className="input-label">
                                                         {" "}
-                                                        {
-                                                            "Card Number"
-                                                        }:{" "}
+                                                        {localizationManager.strings.cardNumber}:{" "}
                                                     </span>
                                                     <Field
                                                         name="number"
                                                         component="input"
                                                         type="text"
                                                         pattern="[\d| ]{16,22}"
-                                                        placeholder="Card Number"
+                                                        placeholder={localizationManager.strings.cardNumber}
                                                         format={formatCreditCardNumber}
                                                     />
                                                 </label>
@@ -99,15 +97,13 @@ export default class AddCard extends Component {
                                                 <label className="item item-input item-stacked-label">
                                                     <span className="input-label">
                                                         {" "}
-                                                        {
-                                                            "Name on the card"
-                                                        }:{" "}
+                                                        {localizationManager.strings.nameOnTheCard}:{" "}
                                                     </span>
                                                     <Field
                                                         name="name"
                                                         component="input"
                                                         type="text"
-                                                        placeholder="Name"
+                                                        placeholder={localizationManager.strings.name}
                                                     />
                                                 </label>
                                             </div>
@@ -117,16 +113,14 @@ export default class AddCard extends Component {
                                                 <label className="item item-input item-stacked-label">
                                                     <span className="input-label">
                                                         {" "}
-                                                        {
-                                                            "Card expiry"
-                                                        }:{" "}
+                                                        {localizationManager.strings.cardExpiry}:{" "}
                                                     </span>
                                                     <Field
                                                         name="expiry"
                                                         component="input"
                                                         type="text"
                                                         pattern="\d\d/\d\d"
-                                                        placeholder="Valid Thru"
+                                                        placeholder={localizationManager.strings.validThru}
                                                         format={formatExpirationDate}
                                                     />
                                                 </label>
@@ -137,16 +131,14 @@ export default class AddCard extends Component {
                                                 <label className="item item-input item-stacked-label">
                                                     <span className="input-label">
                                                         {" "}
-                                                        {
-                                                            "CVV"
-                                                        }:{" "}
+                                                        {localizationManager.strings.cvv}:{" "}
                                                     </span>
                                                     <Field
                                                         name="cvc"
                                                         component="input"
                                                         type="text"
                                                         pattern="\d{3,4}"
-                                                        placeholder="CVV"
+                                                        placeholder={localizationManager.strings.cvv}
                                                         maxLength="4"
                                                         style={{ width: '10' }}
                                                         format={formatCVC}
@@ -167,7 +159,7 @@ export default class AddCard extends Component {
                                                     data-spinner-lines={12}
                                                     type="submit"
                                                 >
-                                                    <i className="fa fa-check" aria-hidden="true"></i> Submit
+                                                    <i className="fa fa-check" aria-hidden="true"></i> {localizationManager.strings.submit}
                                                 </LaddaButton>
                                             </div>
                                             {/* <button type="submit" disabled={submitting} className="button button-block button-balanced activated">
@@ -177,7 +169,7 @@ export default class AddCard extends Component {
                                                 <button className="button button-block button-stable activated"
                                                     type="button"
                                                     onClick={reset}
-                                                    disabled={submitting || pristine || this.state.processing} > <i className="fa fa-minus" aria-hidden="true"></i> Reset</button>
+                                                    disabled={submitting || pristine || this.state.processing} > <i className="fa fa-minus" aria-hidden="true"></i>{localizationManager.strings.reset}</button>
                                             </div>
                                         </div>
                                     </form>

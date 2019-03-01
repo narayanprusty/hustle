@@ -5,6 +5,14 @@ let strings = new LocalizedStrings({
     en: {
         myCards: "My Cards",
         addCards: "Add Card",
+        addNewCard: "Add new card",
+        cardNumber: "Card Number",
+        nameOnTheCard: "Name on the card",
+        cardExpiry: "Card expiry",
+        validThru: "Valid Thru",
+        cvv: "CVV",
+        submit: "Submit",
+        reset: "Reset",
         //Already submitted for translation
         loggingOut: "Logging you out",
         Home: "Home",
@@ -123,6 +131,14 @@ let strings = new LocalizedStrings({
     ar: {
         myCards: "My Cards",
         addCards: "Add Card",
+        addNewCard: "Add new card",
+        cardNumber: "Card Number",
+        nameOnTheCard: "Name on the card",
+        cardExpiry: "Card expiry",
+        validThru: "Valid Thru",
+        cvv: "CVV",
+        submit: "Submit",
+        reset: "Reset",
         //Already submitted for translation
         loggingOut: "تسجيل الخروج",
         Home: "الصفحة الرئيسية",
