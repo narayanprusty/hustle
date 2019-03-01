@@ -10,7 +10,6 @@ import {
     AccordionItemBody
 } from "react-accessible-accordion";
 import "../../../../node_modules/react-accessible-accordion/dist/fancy-example.css";
-
 import "./MyCards_client.scss";
 import { Meteor } from "meteor/meteor";
 
@@ -29,11 +28,11 @@ export default class MyCards extends Component {
             (err, res) => {
                 if (err) {
                     console.log(err);
-                    return notify.show("Failed adding card.", "error");
+                    return notify.show(localizationManager.strings.failedAddingCard, "error");
                 }
                 console.log("info:",res, err);
                 if (res.message || !res.cards) { 
-                    notify.show(ex.message ? ex.message : "Unable to load cards!", "error");
+                    notify.show(ex.message ? ex.message : localizationManager.strings.unableToLoadCards, "error");
                 } else {
                     this.setState(
                         {
@@ -111,7 +110,7 @@ export default class MyCards extends Component {
         return (
             <div className="padding-top padding-bottom">
                 <h3 className="padding  padding-right padding-left">
-                    <i className="fa fa-credit-card-alt" aria-hidden="true" /> Your Cards
+                    <i className="fa fa-credit-card-alt" aria-hidden="true" /> {localizationManager.strings.yourCards}
                 </h3>
                 
                 <div className="list padding-bottom">
@@ -132,7 +131,7 @@ export default class MyCards extends Component {
                                 </div>
                             ) : 
                             <div className="padding-left padding-right">
-                                <h4>No cards available</h4>
+                                <h4>{localizationManager.strings.noCardsAvailable}</h4>
                             </div>
                             
                         ) : loader
@@ -140,7 +139,7 @@ export default class MyCards extends Component {
                 </div>
                 <div className="padding-left padding-right">
                     <Link to="/app/addCards" className="button button-block button-positive">
-                        <i className="icon fa fa-plus"></i> Add Card
+                        <i className="icon fa fa-plus"></i> {localizationManager.strings.addCards}
                     </Link>
                 </div>
             </div>

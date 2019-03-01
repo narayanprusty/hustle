@@ -1,5 +1,7 @@
 import LocalizedStrings from "react-localization";
-import { Meteor } from "meteor/meteor";
+import {
+    Meteor
+} from "meteor/meteor";
 
 let strings = new LocalizedStrings({
     en: {
@@ -28,12 +30,12 @@ let strings = new LocalizedStrings({
         selectLocation: "Select Location",
         preferredCar: "Preferred Car",
         messageFromDriver: "Message From Driver",
-        subscriptionCancelled: "Subscription cancelled successfully!", 
+        subscriptionCancelled: "Subscription cancelled successfully!",
         unableToCancelSubscription: "Unable to cancel subscription!",
-        unexpectedError: "Unexpected Error Occured!", 
+        unexpectedError: "Unexpected Error Occured!",
         unabbleToReSubscribe: "Unable to re-subscribe!",
-        reSubscribed: "Successfully re-subscribed to the plan!",  
-        cancelSubscription: "Cancel Subscription", 
+        reSubscribed: "Successfully re-subscribed to the plan!",
+        cancelSubscription: "Cancel Subscription",
         reSubscribe: "Re-subscribe",
         newMessage: "You have a new message",
         failedToUpdateReview: "failed to update the review",
@@ -47,12 +49,12 @@ let strings = new LocalizedStrings({
         feedbackPlaceHolder: "Put some feedback of the ride",
         submitReview: "Submit Review",
         skip: "Skip",
-        carModel :"Car Model",
-        carNumber :"Car Number",
-        driverReview :"Driver Review",
-        chatWithDriver :"Chat with Driver",
-        shareLiveLocation :"Share Live Location",
-        sos :"SOS",
+        carModel: "Car Model",
+        carNumber: "Car Number",
+        driverReview: "Driver Review",
+        chatWithDriver: "Chat with Driver",
+        shareLiveLocation: "Share Live Location",
+        sos: "SOS",
         unableToFetchDriverDetails: "unable to fetch driver details",
         accept: "Accept",
         rideRequests: "Ride Requests",
@@ -64,6 +66,27 @@ let strings = new LocalizedStrings({
         chatWithRider: "Chat with Rider",
         navigateToDrop: "Navigate to drop",
         rateRider: "Rate Rider",
+        unableToGetContacts: "Unable to get contacts!",
+        noExistingContactFound: "No existing contact found!",
+        internalError: "Internal Error",
+        contactsUpdated: "Contacts Updated",
+        emergencyContacts: "Emergency Contacts",
+        phoneNumber: "Phone Number",
+        addMoreNumbers: "Add More Numbers",
+        saveNumbers: "Save Numbers",
+        yourCards: "Your Cards",
+        noCardsAvailable: "No cards available",
+        unableToFetchUserDetails: "Unable to fetch user details",
+        pending: "pending",
+        confirmed: "confirmed",
+        noTrackingRecordFound: "No tracking record found",
+        unableToFetchDriverLocation: "Unable to fetch driver Location",
+        accepted: "accepted",
+        started: "started",
+        finished: "finished",
+        trackRider: "Track Rider",
+        noDataFound: "No data found",
+        thankYouRideEnded: "The ride has ended, Thanks for using Hustle.",
         //Already submitted for translation
         loggingOut: "Logging you out",
         Home: "Home",
@@ -112,8 +135,7 @@ let strings = new LocalizedStrings({
         bookingID: "Booking ID",
         paymentReceived: "Payment Received",
         rideNotFinished: "Ride is not finished yet!",
-        verifyYourEmailAddress:
-            "Visit the following link to verify your email address.",
+        verifyYourEmailAddress: "Visit the following link to verify your email address.",
         confirm: "Confirm",
         on: "on",
         planNotFound: "Plan not found!",
@@ -132,23 +154,18 @@ let strings = new LocalizedStrings({
         unabletoAcceptTheRide: "Unable to accept the ride!",
         unableToGetBooking: "Unable to get booking!",
         rideNotFinishedYet: "Ride not finished yet!",
-        waitingForNearbyDriversToAcceptYourRideRequest:
-            "Waiting for nearby drivers to accept your ride request",
+        waitingForNearbyDriversToAcceptYourRideRequest: "Waiting for nearby drivers to accept your ride request",
         driverAcceptedYourRideRequest: "Driver accepted your ride request",
         unableToFetchDriversNearby: "unable to fetch drivers nearby",
-        unableToFetchYourCurrentLocation:
-            "Unable to fetch your current location",
+        unableToFetchYourCurrentLocation: "Unable to fetch your current location",
         directionsRequestFailedDueTo: "Directions request failed due to",
         unableToCreateRequest: "Unable to create request!",
         unableToCancelRequest: "unable to cancel request",
         unableToMarkPaymentForTheRide: "Unable to mark payment for the ride!",
-        emailVeried:
-            "Congrats...!!! Your email has been verified. You would be automatically redirected to login page in 5 seconds. Else <a href='/login'> Click here </a>",
-        linkExpired:
-            "Email id does not match or the link has expired. Kindly try again...",
+        emailVeried: "Congrats...!!! Your email has been verified. You would be automatically redirected to login page in 5 seconds. Else <a href='/login'> Click here </a>",
+        linkExpired: "Email id does not match or the link has expired. Kindly try again...",
         waitForValidation: "Hold on... We are validating the email id...",
-        emailVerified:
-            "Congrats...!!! Your email has been verified. Redirecting you to login page...",
+        emailVerified: "Congrats...!!! Your email has been verified. Redirecting you to login page...",
         someErrorOccured: "Some Error Occured!",
         anErrorOccuredTryAgain: "An error occured.please try again.",
         loginSuccessful: "Login successful!",
@@ -174,10 +191,8 @@ let strings = new LocalizedStrings({
         changeLanguage: "Switch to ",
         english: "English",
         arabic: "Arabic",
-        invalidVerificationLink:
-            "Oooppsss... <br />Seems like the verification link is invalid. <br />",
-        redirectionToLogin:
-            "If not redirected in 5 seconds, <Link to='/login'>Click here to login</Link>"
+        invalidVerificationLink: "Oooppsss... <br />Seems like the verification link is invalid. <br />",
+        redirectionToLogin: "If not redirected in 5 seconds, <Link to='/login'>Click here to login</Link>"
     },
     ar: {
         myCards: "تسجيل الخروج",
@@ -212,10 +227,60 @@ let strings = new LocalizedStrings({
         reSubscribed: "تسجيل الخروج",
         cancelSubscription: "تسجيل الخروج",
         reSubscribe: "تسجيل الخروج",
+        newMessage: "تسجيل الخروج",
+        failedToUpdateReview: "تسجيل الخروج",
+        reviewSubmitted: "تسجيل الخروج",
+        linkCopied: "تسجيل الخروج",
+        unableToMakeRequest: "تسجيل الخروج",
+        sosSuccess: "تسجيل الخروج",
+        ongoingRide: "تسجيل الخروج",
+        totalFare: "تسجيل الخروج",
+        rateDriver: "تسجيل الخروج",
+        feedbackPlaceHolder: "تسجيل الخروج",
+        submitReview: "تسجيل الخروج",
+        skip: "تسجيل الخروج",
+        carModel: "تسجيل الخروج",
+        carNumber: "تسجيل الخروج",
+        driverReview: "تسجيل الخروج",
+        chatWithDriver: "تسجيل الخروج",
+        shareLiveLocation: "تسجيل الخروج",
+        sos: "تسجيل الخروج",
+        unableToFetchDriverDetails: "تسجيل الخروج",
+        accept: "تسجيل الخروج",
+        rideRequests: "تسجيل الخروج",
+        noRequests: "تسجيل الخروج",
+        unknownError: "تسجيل الخروج",
+        ongoingBooking: "تسجيل الخروج",
+        from: "تسجيل الخروج",
+        to: "تسجيل الخروج",
+        chatWithRider: "تسجيل الخروج",
+        navigateToDrop: "تسجيل الخروج",
+        rateRider: "تسجيل الخروج",
+        unableToGetContacts: "تسجيل الخروج",
+        noExistingContactFound: "تسجيل الخروج",
+        internalError: "تسجيل الخروج",
+        contactsUpdated: "تسجيل الخروج",
+        emergencyContacts: "تسجيل الخروج",
+        phoneNumber: "تسجيل الخروج",
+        addMoreNumbers: "تسجيل الخروج",
+        saveNumbers: "تسجيل الخروج",
+        yourCards: "تسجيل الخروج",
+        noCardsAvailable: "تسجيل الخروج",
+        unableToFetchUserDetails: "تسجيل الخروج",
+        pending: "تسجيل الخروج",
+        confirmed: "تسجيل الخروج",
+        noTrackingRecordFound: "تسجيل الخروج",
+        unableToFetchDriverLocation: "تسجيل الخروج",
+        accepted: "تسجيل الخروج",
+        started: "تسجيل الخروج",
+        finished: "تسجيل الخروج",
+        trackRider: "تسجيل الخروج",
+        noDataFound: "تسجيل الخروج",
+        thankYouRideEnded: "تسجيل الخروج",
         //Already submitted for translation
         loggingOut: "تسجيل الخروج",
         Home: "الصفحة الرئيسية",
-        Hello: "مرحبا",
+        Hello: "تسجيل",
         Register: "تسجيل",
         logout: "تسجيل الخروج",
         Rides: "مشاوير",
@@ -260,8 +325,7 @@ let strings = new LocalizedStrings({
         bookingID: "رقم الحجز",
         paymentReceived: "تم استلام المبلغ ",
         rideNotFinished: "مشوارك لم ينتهي بعد",
-        verifyYourEmailAddress:
-            "ادخل علي الموقع الاتي لتأكيد البريد الالكتروني",
+        verifyYourEmailAddress: "ادخل علي الموقع الاتي لتأكيد البريد الالكتروني",
         confirm: "تأكيد",
         on: "على",
         enterLocation: "ادخل الموقع",
@@ -281,8 +345,7 @@ let strings = new LocalizedStrings({
         unabletoAcceptTheRide: "غير قادر على قبول المشوار",
         unableToGetBooking: "غير قادر الحصول على حجز",
         rideNotFinishedYet: "المشوار لم ينتهي بعد",
-        waitingForNearbyDriversToAcceptYourRideRequest:
-            "انتظر اقرب سائق لقبول طلبك",
+        waitingForNearbyDriversToAcceptYourRideRequest: "انتظر اقرب سائق لقبول طلبك",
         driverAcceptedYourRideRequest: "السائق قبل طلبك",
         unableToFetchDriversNearby: "غير قادر على إيجاد السائقين القريبين منك",
         unableToFetchYourCurrentLocation: "لم يستطع إيجاد موقعك الصحيح",
@@ -290,13 +353,10 @@ let strings = new LocalizedStrings({
         unableToCreateRequest: "غير قادر على انشاء الطلب",
         unableToCancelRequest: "غير قادر علي الغاء الطلب",
         unableToMarkPaymentForTheRide: "غير قادر على وضع سعر المشوار",
-        emailVeried:
-            "مبروك!!! تم تفعيل بريدك الإلكتروني سوف يتم توجيهك تلقائيا لصفحة التسجيل in 5 seconds. Else <a href='/login'> Click here </a> في غصون خمس ثواني -  شي اخر او أخرى او شي ثاني – هنا – دخول – اضغط هنا",
-        linkExpired:
-            "البريد الإلكتروني غير مطابق او انتهت صلاحية  الرابط . فضلا حاول مرة أخري ",
+        emailVeried: "مبروك!!! تم تفعيل بريدك الإلكتروني سوف يتم توجيهك تلقائيا لصفحة التسجيل in 5 seconds. Else <a href='/login'> Click here </a> في غصون خمس ثواني -  شي اخر او أخرى او شي ثاني – هنا – دخول – اضغط هنا",
+        linkExpired: "البريد الإلكتروني غير مطابق او انتهت صلاحية  الرابط . فضلا حاول مرة أخري ",
         waitForValidation: " انتظر ... نقوم بالتحقق من بريدك الإلكتروني ",
-        emailVerified:
-            "لقد تم التحقق من بريدك الالكتروني سيتم إعادة توجيهك او نقلك الى صفحة تسجيل الدخول ...تهانينا ",
+        emailVerified: "لقد تم التحقق من بريدك الالكتروني سيتم إعادة توجيهك او نقلك الى صفحة تسجيل الدخول ...تهانينا ",
         someErrorOccured: "حدث خطأ",
         anErrorOccuredTryAgain: "حدث خطأ الرجاء المحاولة مره أخرى ",
         loginSuccessful: "تم التسجيل بنجاح ",
@@ -322,9 +382,7 @@ let strings = new LocalizedStrings({
         english: "الإنجليزية",
         arabic: "عربى",
         invalidVerificationLink: "يبدو أن رابط التحقق غير صالح خطأ ",
-        redirectionToLogin:
-            "يبدو ان رابط التحقق غير صالح إذا لم تتم إعادة توجيهك خلال 5 ثوان",
-        yourRides: "مشوارك"
+        redirectionToLogin: "يبدو ان رابط التحقق غير صالح إذا لم تتم إعادة توجيهك خلال 5 ثوان",
     }
 });
 
@@ -356,8 +414,7 @@ class LocalizationManager {
             this.strings.setLanguage(lang);
             this.language = lang;
             Meteor.call(
-                "updateLangugagePreferance",
-                {
+                "updateLangugagePreferance", {
                     language: this.language
                 },
                 (err, result) => {
@@ -375,8 +432,7 @@ class LocalizationManager {
             this.strings.setLanguage(this.language == "en" ? "ar" : "en");
             this.language = this.language == "en" ? "ar" : "en";
             Meteor.call(
-                "updateLangugagePreferance",
-                {
+                "updateLangugagePreferance", {
                     language: this.language
                 },
                 (err, result) => {

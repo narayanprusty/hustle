@@ -4,6 +4,7 @@ import { notify } from "react-notify-toast";
 import { withRouter } from "react-router-dom";
 import GoogleMapReact from "google-map-react";
 import queryString from "query-string";
+import localizationManager from "../../localization";
 
 import config from "../../../modules/config/client";
 import "./Track_client.scss";
@@ -59,7 +60,7 @@ class Track extends Component {
         try {
             parsed = queryString.parse(this.props.location.search);
         } catch (error) {
-            return notify.show("No tracking record found", "error");
+            return notify.show(localizationManager.strings.noTrackingRecordFound, "error");
         }
         if (!parsed.tid) {
             this.setState({
@@ -88,7 +89,7 @@ class Track extends Component {
             (error, data) => {
                 if (error) {
                     notify.show(
-                        error.reason || "Unknown Error Occurred!",
+                        error.reason || localizationManager.strings.unknownError,
                         "error"
                     );
                     return false;
@@ -108,7 +109,7 @@ class Track extends Component {
                     mapInstance.fitBounds(latlngbounds);
                     mapInstance.setZoom(this.state.zoom);
                 } else {
-                    notify.show("Unable to fetch driver Location", "error");
+                    notify.show(localizationManager.strings.unableToFetchDriverLocation, "error");
                     return false;
                 }
             }
@@ -195,7 +196,7 @@ class Track extends Component {
                 <div className="padding">
                     <h3 className="padding">
                         <i className="fa fa-car" aria-hidden="true" />
-                        &nbsp; Track Rider
+                        &nbsp; {localizationManager.strings.trackRider}
                     </h3>
                 </div>
                 {this.state.not_found && (
@@ -210,7 +211,7 @@ class Track extends Component {
                                     style={{ width: "40px" }}
                                 />
                             </div>
-                            <div className="padding-top">No data found</div>
+                            <div className="padding-top">{localizationManager.strings.noDataFound}</div>
                         </div>
                     </div>
                 )}
@@ -256,7 +257,7 @@ class Track extends Component {
                 </div>
                 {this.state.status == "finished" && (
                     <div className="card">
-                        The ride has ended, Thanks for using Hustle.
+                        {localizationManager.strings.thankYouRideEnded}
                     </div>
                 )}
             </div>
