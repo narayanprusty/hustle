@@ -26,7 +26,8 @@ export default class Settings extends Component {
         Meteor.call("getUserProfile", (error, user) => {
             if (error || !user) {
                 notify.show(
-                    error.reason || localizationManager.strings.unableToFetchUserDetails,
+                    error.reason ||
+                        localizationManager.strings.unableToFetchUserDetails,
                     "warning"
                 );
                 return;
@@ -69,14 +70,14 @@ export default class Settings extends Component {
             driverMode: true
         });
         localStorage.setItem("driverMode", true);
-        this.props.history.push('/app/driver/newreqs');
+        this.props.history.push("/app/driver/newreqs");
     };
     setUserMode = () => {
         this.setState({
             driverMode: false
         });
         localStorage.removeItem("driverMode");
-        this.props.history.push('/app/home');
+        this.props.history.push("/app/home");
     };
     // if user not loggedIn dont show sideMenu
     render() {
@@ -94,7 +95,7 @@ export default class Settings extends Component {
                         <i className="icon ion-email" />
                         {localizationManager.strings.editEmail}
                     </a>
-                    {!driverMode && (
+                    {driverMode && (
                         <Link
                             to="/app/subscriptions"
                             className="item item-icon-left"
@@ -121,17 +122,28 @@ export default class Settings extends Component {
                     <div className="item item-divider">
                         {localizationManager.strings.others}
                     </div>
-                    {this.state.isDriver ? (<li class="item item-icon-left item-toggle">
-                        <i className="icon fa fa-car" />
-                        {localizationManager.strings.driverMode}
-                        <label class="toggle toggle-dark">
-                        <input type="checkbox" checked={this.state.driverMode} onChange={(e)=> e.target.checked ? this.setDriverMode() : this.setUserMode()} />
-                        <div class="track">
-                            <div class="handle"></div>
-                        </div>
-                        </label>
-                    </li>) : ""
-                    }
+                    {this.state.isDriver ? (
+                        <li class="item item-icon-left item-toggle">
+                            <i className="icon fa fa-car" />
+                            {localizationManager.strings.driverMode}
+                            <label class="toggle toggle-dark">
+                                <input
+                                    type="checkbox"
+                                    checked={this.state.driverMode}
+                                    onChange={e =>
+                                        e.target.checked
+                                            ? this.setDriverMode()
+                                            : this.setUserMode()
+                                    }
+                                />
+                                <div class="track">
+                                    <div class="handle" />
+                                </div>
+                            </label>
+                        </li>
+                    ) : (
+                        ""
+                    )}
 
                     <Link
                         to="#"
