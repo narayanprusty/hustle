@@ -160,13 +160,13 @@ class CurrentBooking extends Component {
                     }
                 } else if (Notification.permission === "granted") {
                     var notification = new Notification(
-                        "Message from Driver: " + message
+                        localizationManager.strings.messageFromDriver + ": " + message
                     );
                 } else if (Notification.permission !== "denied") {
                     Notification.requestPermission(function(permission) {
                         if (permission === "granted") {
                             var notification = new Notification(
-                                "Message from Driver: " + message
+                                localizationManager.strings.messageFromDriver + ": " + message
                             );
                         }
                     });
@@ -715,7 +715,7 @@ class CurrentBooking extends Component {
                                                 borderRadius: "6px"
                                             }}
                                             name="reviewMessage"
-                                            placeholder="Put some feedback of the ride"
+                                            placeholder={localizationManager.strings.feedbackPlaceHolder}
                                             onChange={this.handleChange}
                                         />
                                     </div>

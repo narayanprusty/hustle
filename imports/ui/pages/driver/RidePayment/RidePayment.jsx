@@ -4,6 +4,7 @@ import { notify } from "react-notify-toast";
 import "../../../../../node_modules/react-accessible-accordion/dist/fancy-example.css";
 import { Meteor } from "meteor/meteor";
 import moment from 'moment';
+import localizationManager from "../../../localization";
 
 import "./RidePayment_client.scss";
 
@@ -42,7 +43,7 @@ class RidePayment extends Component {
             if (error) {
                 console.log(error);
                 notify.show(
-                    error.reason ? error.reason : "Unable to get booking!",
+                    error.reason ? error.reason : localizationManager.strings.unableToGetBooking,
                     "error"
                 );
                 this.props.history.push('/app/driver/newreqs');
@@ -51,7 +52,7 @@ class RidePayment extends Component {
                     this.setState({ booking: response.data });
                     if (response.data.rideStatus != "finished") {
                         notify.show(
-                            "Ride not finished yet!",
+                            localizationManager.strings.rideNotFinishedYet,
                             "error"
                         );
                         this.props.history.push('/app/driver/newreqs');
@@ -78,7 +79,7 @@ class RidePayment extends Component {
             if (error) {
                 console.log(error);
                 notify.show(
-                    error.reason ? error.reason : "Unable to get booking!",
+                    error.reason ? error.reason : localizationManager.strings.unableToGetBooking,
                     "error"
                 );
             } else {
@@ -171,7 +172,7 @@ class RidePayment extends Component {
                             <ul className="list">
                                 <li className="item" style={{ whiteSpace: 'normal' }}>
                                     <div style={{ marginBottom: '10px' }}>
-                                        <b>Booking ID:</b>
+                                        <b>{localizationManager.strings.bookingID}:</b>
                                     </div>
                                     <div>
                                         #{this.state.booking.uniqueIdentifier}
@@ -179,7 +180,7 @@ class RidePayment extends Component {
                                 </li>
                                 <li className="item" style={{ whiteSpace: 'normal' }}>
                                     <div style={{ marginBottom: '10px' }}>
-                                        <b>Boarding Point:</b>
+                                        <b>{localizationManager.strings.boardingPoint}:</b>
                                     </div>
                                     <div>
                                         {this.state.booking.start_address}
@@ -187,7 +188,7 @@ class RidePayment extends Component {
                                 </li>
                                 <li className="item" style={{ whiteSpace: 'normal' }}>
                                     <div style={{ marginBottom: '10px' }}>
-                                        <b>Dropping Point:</b>
+                                        <b>{localizationManager.strings.droppingPoint}:</b>
                                     </div>
                                     <div>
                                         {this.state.booking.end_address}
@@ -195,7 +196,7 @@ class RidePayment extends Component {
                                 </li>
                                 <li className="item">
                                     <div style={{ marginBottom: '10px' }}>
-                                        <b>Duration:</b>
+                                        <b>{localizationManager.strings.duration}:</b>
                                     </div>
                                     <div>
                                         {this.state.booking.time_shown}
@@ -203,7 +204,7 @@ class RidePayment extends Component {
                                 </li>
                                 <li className="item">
                                     <div style={{ marginBottom: '10px' }}>
-                                        <b>Payment Method:</b>
+                                        <b>{localizationManager.strings.paymentMethod}:</b>
                                     </div>
                                     <div>
                                         {this.state.booking.paymentMethod}
@@ -211,7 +212,7 @@ class RidePayment extends Component {
                                 </li>
                                 <li className="item">
                                     <div style={{ marginBottom: '10px' }}>
-                                        <b>Payment Status:</b>
+                                        <b>{localizationManager.strings.paymentStatus}:</b>
                                     </div>
                                     <div>
                                         {this.state.booking.paymentStatus}
@@ -219,7 +220,7 @@ class RidePayment extends Component {
                                 </li>
                                 <li className="item">
                                     <div style={{ marginBottom: '10px' }}>
-                                        <b>Total Distance: </b>
+                                        <b>{localizationManager.strings.totalDistance}: </b>
                                     </div>
                                     <div>
                                         {this.state.booking.totalDistance / 1000}KM
@@ -232,7 +233,7 @@ class RidePayment extends Component {
                                                 className="button button-block button-energized activated"
                                                 onClick={this.paymentReceived}
                                                 disabled={this.state.booking.paymentStatus == "pending" && !this.state.loading ? false : true} >
-                                                Payment Received
+                                                {localizationManager.strings.paymentReceived}
                                                     </button>
                                         </div>
                                     </div>

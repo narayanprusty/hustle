@@ -2,6 +2,8 @@ import React, { Component, Fragment } from "react";
 import { notify } from "react-notify-toast";
 import InfiniteScroll from "react-infinite-scroller";
 import moment from "moment";
+import localizationManager from "../../localization";
+
 import {
     Accordion,
     AccordionItem,
@@ -29,7 +31,7 @@ export default class DriverRideHistory extends Component {
                 if (error) {
                     //Add localization support
                     notify.show(
-                        error.reason ? error.reason : "Unable to fetch!",
+                        error.reason ? error.reason : localizationManager.strings.unableToFetch,
                         "error"
                     );
                 }
@@ -93,7 +95,7 @@ export default class DriverRideHistory extends Component {
                                         style={{ whiteSpace: "normal" }}
                                     >
                                         <div style={{ marginBottom: "10px" }}>
-                                            <b>Booking ID:</b>
+                                            <b>{localizationManager.strings.bookingID}:</b>
                                         </div>
                                         <div>#{data.uniqueIdentifier}</div>
                                     </li>
@@ -102,7 +104,7 @@ export default class DriverRideHistory extends Component {
                                         style={{ whiteSpace: "normal" }}
                                     >
                                         <div style={{ marginBottom: "10px" }}>
-                                            <b>Boarding Point:</b>
+                                            <b>{localizationManager.strings.boardingPoint}:</b>
                                         </div>
                                         <div>{data.start_address}</div>
                                     </li>
@@ -111,31 +113,31 @@ export default class DriverRideHistory extends Component {
                                         style={{ whiteSpace: "normal" }}
                                     >
                                         <div style={{ marginBottom: "10px" }}>
-                                            <b>Dropping Point:</b>
+                                            <b>{localizationManager.strings.droppingPoint}:</b>
                                         </div>
                                         <div>{data.end_address}</div>
                                     </li>
                                     <li className="item">
                                         <div style={{ marginBottom: "10px" }}>
-                                            <b>Duration:</b>
+                                            <b>{localizationManager.strings.duration}:</b>
                                         </div>
                                         <div>{data.time_shown}</div>
                                     </li>
                                     <li className="item">
                                         <div style={{ marginBottom: "10px" }}>
-                                            <b>Payment Method:</b>
+                                            <b>{localizationManager.strings.paymentMethod}:</b>
                                         </div>
                                         <div>{data.paymentMethod}</div>
                                     </li>
                                     <li className="item">
                                         <div style={{ marginBottom: "10px" }}>
-                                            <b>Payment Status:</b>
+                                            <b>{localizationManager.strings.paymentStatus}:</b>
                                         </div>
                                         <div>{data.paymentStatus}</div>
                                     </li>
                                     <li className="item">
                                         <div style={{ marginBottom: "10px" }}>
-                                            <b>Total Distance: </b>
+                                            <b>{localizationManager.strings.totalDistance}: </b>
                                         </div>
                                         <div>{data.totalDistance / 1000}KM</div>
                                     </li>
@@ -157,8 +159,8 @@ export default class DriverRideHistory extends Component {
             >
                 <div className="padding-top padding-right padding-left padding-bottom">
                     <h3 className="padding">
-                        <i className="fa fa-road" aria-hidden="true" /> Your
-                        Rides
+                        <i className="fa fa-road" aria-hidden="true" /> 
+                        {localizationManager.strings.yourRides}
                     </h3>
                     <Accordion>{items}</Accordion>
                 </div>
