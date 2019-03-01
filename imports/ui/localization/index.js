@@ -128,7 +128,10 @@ let strings = new LocalizedStrings({
         invalidVerificationLink:
             "Oooppsss... <br />Seems like the verification link is invalid. <br />",
         redirectionToLogin:
-            "If not redirected in 5 seconds, <Link to='/login'>Click here to login</Link>"
+            "If not redirected in 5 seconds, <Link to='/login'>Click here to login</Link>",
+        acceptedBySomeone: "Booking already accepted by someone else!",
+        bnp: "Booking not found for payment.",
+        bnf: "Booking not found!"
     },
     ar: {
         myCards: "My Cards",
