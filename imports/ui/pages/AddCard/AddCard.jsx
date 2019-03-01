@@ -56,7 +56,7 @@ export default class AddCard extends Component {
             {/* style={{ borderBottomWidth: 1, borderBottomStyle: "solid", alignContent: "left" }} */}
                 <h3 className="padding">
                     <i className="fa fa-plus-square" aria-hidden="true" /> 
-                    {localizationManager.strings.addNewCard} </h3>
+                    &nbsp; {localizationManager.strings.addNewCard} </h3>
                     <Form
                         onSubmit={this.onSubmit}
                         render={({

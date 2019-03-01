@@ -58,7 +58,7 @@ let strings = new LocalizedStrings({
         unableToFetchDriverDetails: "unable to fetch driver details",
         accept: "Accept",
         rideRequests: "Ride Requests",
-        noRequests: "currently no requests nearby",
+        noRequests: "Currently no requests nearby",
         unknownError: "Unknown error occurred",
         ongoingBooking: "Ongoing Booking",
         from: "From",

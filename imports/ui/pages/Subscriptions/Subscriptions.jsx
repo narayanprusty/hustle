@@ -19,7 +19,7 @@ class Subscriptions extends Component {
             showPayNowButton: false,
         };
         const driverMode = localStorage.getItem("driverMode");
-        if (driverMode) {
+        if (!driverMode) {
             this.props.history.push("/app/driver/newreqs");
         }
         this.getAllPlans = this.getAllPlans.bind(this);
@@ -520,7 +520,7 @@ class Subscriptions extends Component {
                             <i className="fa fa-times" aria-hidden="true"></i> {localizationManager.strings.cancelSubscription}
                         </LaddaButton>) : (
                             <LaddaButton
-                            className="button button-block button-assertive activated"
+                            className="button button-block button-calm activated"
                             loading={this.state.showloader}
                             disabled={
                                 !this.state.userAlreadySubscribed
