@@ -9,6 +9,7 @@ import lodash from "lodash";
 import SmartInput from "react-phone-number-input/smart-input";
 import "react-phone-number-input/style.css";
 import CarLoader from "../../components/CarLoader/CarLoader";
+import localizationManager from "../../localization";
 
 class EmergencyContact extends Component {
     constructor(props) {
@@ -47,14 +48,14 @@ class EmergencyContact extends Component {
                 this.setState({
                     load_existing: false
                 });
-                notify.show(error.reason || "Unable to get contacts", "error");
+                notify.show(error.reason || localizationManager.strings.unableToGetContacts, "error");
                 return false;
             } else if (allData && !allData.econtacts) {
                 this.setState({
                     load_existing: false,
                     maxNumbers: allData.count || 5
                 });
-                return notify.show("No existing contact found!", "warning");
+                return notify.show(localizationManager.strings.noExistingContactFound, "warning");
             }
             console.log(allData);
             const numbersArr = allData.econtacts;
@@ -85,11 +86,11 @@ class EmergencyContact extends Component {
             if (error) {
                 console.log(error);
                 this.setState({ update_loader: false });
-                notify.show(error.reason || "Internal Error", "error");
+                notify.show(error.reason || localizationManager.strings.internalError , "error");
                 return false;
             }
             this.setState({ update_loader: false });
-            return notify.show("contacts updated", "success");
+            return notify.show(localizationManager.strings.contactsUpdated, "success");
         });
     };
     render() {
@@ -98,7 +99,7 @@ class EmergencyContact extends Component {
                 <div className="padding">
                     <h3 className="padding">
                         <i className="fa fa-phone" aria-hidden="true" />
-                        &nbsp; Emergency Contacts
+                        &nbsp; {localizationManager.strings.emergencyContacts}
                     </h3>
                 </div>
                 {this.state.load_existing && <CarLoader />}
@@ -114,13 +115,13 @@ class EmergencyContact extends Component {
                                 {this.state.inputs[0] == input && (
                                     <span className="item item-input item-stacked-label">
                                         <span className="input-label">
-                                            Phone Number
+                                            {localizationManager.strings.phoneNumber}
                                         </span>
                                         <PhoneInput
                                             key={input}
                                             name={input}
                                             inputComponent={SmartInput}
-                                            placeholder="Enter phone number"
+                                            placeholder={localizationManager.strings.enterPhoneNumber}
                                             value={this.state[input]}
                                             onChange={phone =>
                                                 this.setState({
@@ -146,13 +147,13 @@ class EmergencyContact extends Component {
                                         >
                                             <span className="item item-input item-stacked-label">
                                                 <span className="input-label">
-                                                    Phone Number
+                                                    {localizationManager.strings.phoneNumber}
                                                 </span>
                                                 <PhoneInput
                                                     key={input}
                                                     name={input}
                                                     inputComponent={SmartInput}
-                                                    placeholder="Enter phone number"
+                                                    placeholder={localizationManager.strings.enterPhoneNumber}
                                                     value={this.state[input]}
                                                     onChange={phone =>
                                                         this.setState({
@@ -200,7 +201,7 @@ class EmergencyContact extends Component {
                                         className="fa fa-plus"
                                         aria-hidden="true"
                                     />{" "}
-                                    Add More Numbers
+                                    {localizationManager.strings.addMoreNumbers}
                                 </button>
                             </div>
                         )}
@@ -221,7 +222,7 @@ class EmergencyContact extends Component {
                                         className="fa fa-floppy-o"
                                         aria-hidden="true"
                                     />{" "}
-                                    Save Numbers
+                                    {localizationManager.strings.saveNumbers}
                                 </LaddaButton>
                             </div>
                         )}

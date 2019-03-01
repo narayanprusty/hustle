@@ -26,7 +26,7 @@ export default class Settings extends Component {
         Meteor.call("getUserProfile", (error, user) => {
             if (error || !user) {
                 notify.show(
-                    error.reason || "Unable to fetch user details",
+                    error.reason || localizationManager.strings.unableToFetchUserDetails,
                     "warning"
                 );
                 return;
@@ -116,7 +116,7 @@ export default class Settings extends Component {
                     </a>
                     <Link to="/app/econtacts" className="item item-icon-left">
                         <i className="icon fa fa-phone" />
-                        Emergency Contacts
+                        {localizationManager.strings.emergencyContacts}
                     </Link>
                     <div className="item item-divider">
                         {localizationManager.strings.others}

@@ -12,6 +12,7 @@ import "../../../../node_modules/react-accessible-accordion/dist/fancy-example.c
 
 import "./Rides_client.scss";
 import { Meteor } from "meteor/meteor";
+import localizationManager from "../../localization";
 
 export default class Rides extends Component {
   state = {
@@ -28,7 +29,7 @@ export default class Rides extends Component {
         if (error) {
         //Add localization support
           notify.show(
-            error.reason ? error.reason : "Unable to fetch!",
+            error.reason ? error.reason : localizationManager.strings.unableToFetch,
             "error"
           );
         }
@@ -138,7 +139,7 @@ export default class Rides extends Component {
                 <ul className="list">
                   <li className="item" style={{whiteSpace: 'normal'}}>
                     <div style={{marginBottom: '10px'}}>
-                      <b>Booking ID:</b>
+                      <b>{localizationManager.strings.bookingID}:</b>
                     </div>
                     <div>
                       #{data.uniqueIdentifier}
@@ -146,7 +147,7 @@ export default class Rides extends Component {
                   </li>
                   <li className="item" style={{whiteSpace: 'normal'}}>
                     <div style={{marginBottom: '10px'}}>
-                      <b>Boarding Point:</b>
+                      <b>{localizationManager.strings.boardingPoint}:</b>
                     </div>
                     <div>
                       {data.start_address}
@@ -154,7 +155,7 @@ export default class Rides extends Component {
                   </li>
                   <li className="item" style={{whiteSpace: 'normal'}}>
                     <div style={{marginBottom: '10px'}}>
-                      <b>Dropping Point:</b>
+                      <b>{localizationManager.strings.droppingPoint}:</b>
                     </div>
                     <div>
                       {data.end_address}
@@ -162,7 +163,7 @@ export default class Rides extends Component {
                   </li>
                   <li className="item">
                     <div style={{marginBottom: '10px'}}>
-                      <b>Duration:</b>
+                      <b>{localizationManager.strings.duration}:</b>
                     </div>
                     <div>
                       {data.time_shown}
@@ -170,7 +171,7 @@ export default class Rides extends Component {
                   </li>
                   <li className="item">
                     <div style={{marginBottom: '10px'}}>
-                      <b>Payment Method:</b>
+                      <b>{localizationManager.strings.paymentMethod}:</b>
                     </div>
                     <div>
                       {data.paymentMethod}
@@ -178,7 +179,7 @@ export default class Rides extends Component {
                   </li>
                   <li className="item">
                     <div style={{marginBottom: '10px'}}>
-                      <b>Payment Status:</b>
+                      <b>{localizationManager.strings.paymentStatus}:</b>
                     </div>
                     <div>
                       {data.paymentStatus}
@@ -186,7 +187,7 @@ export default class Rides extends Component {
                   </li>
                   <li className="item">
                     <div style={{marginBottom: '10px'}}>
-                      <b>Total Distance: </b>
+                      <b>{localizationManager.strings.totalDistance}: </b>
                     </div>
                     <div>
                       {data.totalDistance / 1000}KM
@@ -210,7 +211,7 @@ export default class Rides extends Component {
       >
         <div className="padding-top padding-right padding-left padding-bottom">
           <h3 className="padding">
-            <i className="fa fa-road" aria-hidden="true" /> Your Rides
+            <i className="fa fa-road" aria-hidden="true" /> {localizationManager.strings.yourRides}
           </h3>
           <Accordion>
             {items}
