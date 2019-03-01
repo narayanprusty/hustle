@@ -104,6 +104,7 @@ class Bookingreq extends Component {
                             : localizationManager.strings.unabletoAcceptTheRide,
                         "error"
                     );
+                    return false;
                 }
 
                 await this.pubnub.publish({
@@ -132,7 +133,7 @@ class Bookingreq extends Component {
             (pos, err) => {
                 console.log("#2");
                 if (err) {
-                    notify.show(
+                    return notify.show(
                         localizationManager.strings
                             .unableToFetchYourCurrentLocation,
                         "error"
@@ -159,7 +160,7 @@ class Bookingreq extends Component {
                         if (err) {
                             console.log(err);
                             //Add localization support
-                            notify.show(err.reason, "error");
+                            return notify.show(err.reason, "error");
                         }
                     }
                 );
@@ -178,7 +179,7 @@ class Bookingreq extends Component {
                         if (err) {
                             console.log(err);
                             //Add localization support
-                            notify.show(err.reason, "error");
+                            return notify.show(err.reason, "error");
                         }
                         if (withingDistanceData && withingDistanceData.length) {
                             let datas = this.state.datas;
