@@ -131,7 +131,15 @@ let strings = new LocalizedStrings({
             "If not redirected in 5 seconds, <Link to='/login'>Click here to login</Link>",
         acceptedBySomeone: "Booking already accepted by someone else!",
         bnp: "Booking not found for payment.",
-        bnf: "Booking not found!"
+        bnf: "Booking not found!",
+        ulc: "Unable to load cards!",
+        ufdn: "unable to fetch drivers nearby",
+        cfp: "Cannot find path",
+        cclwrbr: "Cant change location while rasing booking request.",
+        "kindly subscribe to book ride": "kindly subscribe to book ride",
+        "select location": "select location",
+        "Default is current location": "Default is current location",
+        "Preferred Car": "Preferred Car"
     },
     ar: {
         myCards: "My Cards",
