@@ -3,6 +3,7 @@ import { Meteor } from "meteor/meteor";
 import { withRouter, Link } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import LaddaButton, { S, SLIDE_UP } from "react-ladda";
+import localizationManager from "../../localization";
 
 class Subscriptions extends Component {
     constructor(props) {
@@ -80,7 +81,7 @@ class Subscriptions extends Component {
                     notify.show(
                         error.reason
                             ? error.reason
-                            : "Unable to get subscriptions!",
+                            : localizationManager.strings.unableToGetSubscriptions,
                         "error"
                     );
                 } else {
@@ -109,7 +110,7 @@ class Subscriptions extends Component {
                 console.log(error);
                 //Add localization support
                 notify.show(
-                    error.reason ? error.reason : "Unable to get plans!",
+                    error.reason ? error.reason : localizationManager.strings.unableToGetPlans,
                     "error"
                 );
             } else {
@@ -154,7 +155,7 @@ class Subscriptions extends Component {
                         notify.show(
                             error.reason
                                 ? error.reason
-                                : "Unable to subscribe!",
+                                : localizationManager.strings.unableToSubscribe,
                             "error"
                         );
                     } else {
@@ -164,7 +165,7 @@ class Subscriptions extends Component {
                                 notify.show(response.message, "error");
                             }
                         } else {
-                            notify.show("Plan Subscribed!", "success");
+                            notify.show(localizationManager.strings.planSubscribed, "success");
                             this.getUserSubscriptions();
                             this.setState({
                                 userAlreadySubscribed: true,
@@ -206,13 +207,13 @@ class Subscriptions extends Component {
                                 );
                             } else {
                                 if (response.success) {
-                                    notify.show("Subscription cancelled successfully!", "success");
+                                    notify.show(localizationManager.strings.subscriptionCancelled, "success");
                                     this.getUserSubscriptions();
                                 } else {
                                     notify.show(
                                         response.message
                                             ? response.message
-                                            : "Unable to cancel subscription!",
+                                            : localizationManager.strings.unableToCancelSubscription,
                                         "error"
                                     );
                                 }
@@ -223,17 +224,17 @@ class Subscriptions extends Component {
                         });
                     } else {
                         throw {
-                            message: "Unexpected Error Occured!"
+                            message: localizationManager.strings.unexpectedError
                         }
                     }
                 } else {
                     throw {
-                        message: "Unexpected Error Occured!"
+                        message: localizationManager.strings.unexpectedError
                     }
                 }
             } else {
                 throw {
-                    message: "Unexpected Error Occured!"
+                    message: localizationManager.strings.unexpectedError
                 }
             }
         } catch (ex) {
@@ -241,7 +242,7 @@ class Subscriptions extends Component {
             notify.show(
                 ex.message
                     ? ex.message
-                    : "Unable to cancel subscription!",
+                    : localizationManager.strings.unableToCancelSubscription,
                 "error"
             );
             this.setState({
@@ -266,18 +267,18 @@ class Subscriptions extends Component {
                                 notify.show(
                                     error.reason
                                         ? error.reason
-                                        : "Unable to re-subscribe!",
+                                        : localizationManager.strings.unabbleToReSubscribe,
                                     "error"
                                 );
                             } else {
                                 if (response.success) {
-                                    notify.show("Successfully re-subscribed to the plan!", "success");
+                                    notify.show(localizationManager.strings.reSubscribed, "success");
                                     this.getUserSubscriptions();
                                 } else {
                                     notify.show(
                                         response.message
                                             ? response.message
-                                            : "Unable to re-subscribe the plan!",
+                                            : localizationManager.strings.unabbleToReSubscribe,
                                         "error"
                                     );
                                 }
@@ -288,17 +289,17 @@ class Subscriptions extends Component {
                         });
                     } else {
                         throw {
-                            message: "Unexpected Error Occured!"
+                            message: localizationManager.strings.unexpectedError
                         }
                     }
                 } else {
                     throw {
-                        message: "Unexpected Error Occured!"
+                        message: localizationManager.strings.unexpectedError
                     }
                 }
             } else {
                 throw {
-                    message: "Unexpected Error Occured!"
+                    message: localizationManager.strings.unexpectedError
                 }
             }
         } catch (ex) {
@@ -306,7 +307,7 @@ class Subscriptions extends Component {
             notify.show(
                 ex.message
                     ? ex.message
-                    : "Unable to re-subscribe the plan!",
+                    : localizationManager.strings.unabbleToReSubscribe,
                 "error"
             );
             this.setState({
@@ -382,7 +383,7 @@ class Subscriptions extends Component {
                         <div className="padding">
                             <h3 className="padding">
                                 <i className="fa fa-cog" aria-hidden="true" />{" "}
-                                Subscription
+                                {localizationManager.strings.subscription}
                             </h3>
                         </div>
                         <div className="item item-body" style={{border: "none"}}>
@@ -392,7 +393,7 @@ class Subscriptions extends Component {
                                     style={{ whiteSpace: "normal" }}
                                 >
                                     <div style={{ marginBottom: "10px" }}>
-                                        <b>Price</b>
+                                        <b>{localizationManager.strings.price}</b>
                                     </div>
                                     <div>
                                         {this.state.subscriptionPlan.price} SAR
@@ -403,11 +404,11 @@ class Subscriptions extends Component {
                                     style={{ whiteSpace: "normal" }}
                                 >
                                     <div style={{ marginBottom: "10px" }}>
-                                        <b>Renewable</b>
+                                        <b>{localizationManager.strings.renewable}</b>
                                     </div>
                                     <div>
-                                        After {this.state.subscriptionPlan.validity}{" "}
-                                        days
+                                    {localizationManager.strings.after} {this.state.subscriptionPlan.validity}{" "}
+                                    {localizationManager.strings.days}
                                     </div>
                                 </li>
                                 <li
@@ -415,7 +416,7 @@ class Subscriptions extends Component {
                                     style={{ whiteSpace: "normal" }}
                                 >
                                     <div style={{ marginBottom: "10px" }}>
-                                        <b>Description</b>
+                                        <b>{localizationManager.strings.description}</b>
                                     </div>
                                     <div>
                                         {
@@ -430,7 +431,7 @@ class Subscriptions extends Component {
                                         className="button button-block button-energized activated"
                                         onClick={(e) => this.props.history.push('/app/addCards')}
                                     >
-                                        Add Card
+                                        {localizationManager.strings.addCards}
                                     </button>
                                 ) : (
                                         <ul className="list">
@@ -497,7 +498,7 @@ class Subscriptions extends Component {
                                             .uniqueIdentifier
                                     )}
                                 >
-                                    <i className="fa fa-check" aria-hidden="true"></i> Subscribe
+                                    <i className="fa fa-check" aria-hidden="true"></i> {localizationManager.strings.subscribe}
                             </LaddaButton> ) : (
                                 this.state.renew ? (
                             <LaddaButton
@@ -516,7 +517,7 @@ class Subscriptions extends Component {
                                 this
                             )}
                         >
-                            <i className="fa fa-times" aria-hidden="true"></i> Cancel Subscription
+                            <i className="fa fa-times" aria-hidden="true"></i> {localizationManager.strings.cancelSubscription}
                         </LaddaButton>) : (
                             <LaddaButton
                             className="button button-block button-assertive activated"
@@ -534,7 +535,7 @@ class Subscriptions extends Component {
                                 this
                             )}
                         >
-                            <i className="fa fa-refresh" aria-hidden="true"></i> Re-subscribe
+                            <i className="fa fa-refresh" aria-hidden="true"></i> {localizationManager.strings.reSubscribe}
                         </LaddaButton>)
                             ) }
                             </div>

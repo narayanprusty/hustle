@@ -318,12 +318,12 @@ class CurrentBookingRider extends Component {
                         poly: routePolyline
                     });
                 } else if (status == "ZERO_RESULTS") {
-                    notify.show(localizationManager.strings.cfp, "error");
+                    notify.show("Cannot find path", "error");
                 } else if (status == "OVER_QUERY_LIMIT") {
                     notify.show("Internal error", "error");
                 } else {
                     notify.show(
-                        "Directions request failed due to " + status,
+                       localizationManager.strings.directionsRequestFailedDueTo + " " + status,
                         "error"
                     );
                 }
@@ -345,16 +345,16 @@ class CurrentBookingRider extends Component {
 
             function notifyMe(message) {
                 if (!("Notification" in window)) {
-                    alert("Message From Driver: " + message);
+                    alert( localizationManager.strings.messageFromDriver +": " + message);
                 } else if (Notification.permission === "granted") {
                     var notification = new Notification(
-                        "Message From Driver: " + message
+                        localizationManager.strings.messageFromDriver + ": " + message
                     );
                 } else if (Notification.permission !== "denied") {
                     Notification.requestPermission(function(permission) {
                         if (permission === "granted") {
                             var notification = new Notification(
-                                "Message From Driver: " + message
+                                localizationManager.strings.messageFromDriver + ": " + message
                             );
                         }
                     });
@@ -364,7 +364,7 @@ class CurrentBookingRider extends Component {
             if (window.cordova) {
                 cordova.plugins.notification.local.schedule({
                     id: 1,
-                    title: "You have a new message",
+                    title: localizationManager.str.newMessage,
                     message: message.message.message,
                     at: new Date()
                 });
@@ -447,10 +447,7 @@ class CurrentBookingRider extends Component {
                         loader: false
                     });
                     notify.show(
-                        err.reason ||
-                            localizationManager.strings[
-                                "unable to cancel request"
-                            ],
+                        err.reason || localizationManager.strings.unableToCancelRequest,
                         "error"
                     );
                     return;
@@ -478,10 +475,7 @@ class CurrentBookingRider extends Component {
                         loader: false
                     });
                     notify.show(
-                        err.reason ||
-                            localizationManager.strings[
-                                "failed to update the review"
-                            ],
+                        err.reason || localizationManager.strings.failedToUpdateReview,
                         "error"
                     );
                 }
@@ -489,10 +483,7 @@ class CurrentBookingRider extends Component {
                     loader: false
                 });
 
-                notify.show(
-                    localizationManager.strings["Review submitted, Thank you."],
-                    "success"
-                );
+                notify.show(localizationManager.strings.reviewSubmitted, "success");
                 this.props.history.push("/app");
             }
         );
@@ -533,7 +524,7 @@ class CurrentBookingRider extends Component {
         if (navigator.share) {
             navigator
                 .share({
-                    title: localizationManager.strings["Live Location Hustle"],
+                    title: "Live Location Hustle",
                     text: config.shareText,
                     url: uri
                 })
@@ -545,7 +536,7 @@ class CurrentBookingRider extends Component {
         } else {
             this.copyToClipboard(uri);
             this.setState({ share_location: false });
-            notify.show(localizationManager.strings["Link Copied"], "success");
+            notify.show(localizationManager.strings.linkCopied, "success");
         }
     };
     handleNewUserMessage = async newMessage => {
@@ -595,14 +586,14 @@ class CurrentBookingRider extends Component {
                 return notify.show(
                     err.error && err.error != 500
                         ? err.error
-                        : localizationManager.strings.umr,
+                        : localizationManager.strings.unableToMakeRequest,
                     "error"
                 );
             }
             this.setState({
                 sos_loader: false
             });
-            return notify.show(localizationManager.strings.srs, "success");
+            return notify.show(localizationManager.strings.sosSuccess, "success");
         });
     };
     render() {
@@ -612,7 +603,7 @@ class CurrentBookingRider extends Component {
                     <div className="padding">
                         <h3 className="padding">
                             <i className="fa fa-car" aria-hidden="true" />
-                            &nbsp; {localizationManager.strings["Ongoing Ride"]}
+                            &nbsp; {localizationManager.strings.ongoingRide}
                         </h3>
                     </div>
                     {(this.state.status == "accepted" ||
@@ -713,11 +704,7 @@ class CurrentBookingRider extends Component {
                                     <i className="icon fa fa-money" />
                                     {this.state.totalFare}
                                     <span className="item-note">
-                                        {
-                                            localizationManager.strings[
-                                                "Total Fare"
-                                            ]
-                                        }
+                                        {localizationManager.strings.totalFare}
                                     </span>
                                 </a>
                                 <a className="item item-icon-left" href="#">
@@ -739,7 +726,7 @@ class CurrentBookingRider extends Component {
                                 }}
                             >
                                 <div className="item item-divider">
-                                    {localizationManager.strings["Rate Driver"]}
+                                    {localizationManager.strings.rateDriver}
                                 </div>
                                 <div className="item item-text-wrap">
                                     <div
@@ -773,11 +760,7 @@ class CurrentBookingRider extends Component {
                                                 borderRadius: "6px"
                                             }}
                                             name="reviewMessage"
-                                            placeholder={
-                                                localizationManager.strings[
-                                                    "Put some feedback of the ride"
-                                                ]
-                                            }
+                                            placeholder={localizationManager.strings.feedbackPlaceHolder}
                                             onChange={this.handleChange}
                                         />
                                     </div>
@@ -800,7 +783,7 @@ class CurrentBookingRider extends Component {
                                     className="fa fa-paper-plane"
                                     aria-hidden="true"
                                 />{" "}
-                                {localizationManager.strings["Submit Review"]}
+                                {localizationManager.strings.submitReview}
                             </LaddaButton>
                             <LaddaButton
                                 className="button button-block button-calm activated"
@@ -819,7 +802,7 @@ class CurrentBookingRider extends Component {
                                     className="fa fa-arrow-right"
                                     aria-hidden="true"
                                 />{" "}
-                                {localizationManager.strings.Skip}
+                                {localizationManager.strings.skip}
                             </LaddaButton>
                         </div>
                     )}
@@ -846,23 +829,13 @@ class CurrentBookingRider extends Component {
                                 <a className="item item-icon-left" href="#">
                                     <i className="icon fa fa-car" />
                                     {this.state.carModel || "-"}
-                                    <span className="item-note">
-                                        {
-                                            localizationManager.strings[
-                                                "Car Model"
-                                            ]
-                                        }
-                                    </span>
+                                    <span className="item-note">{localizationManager.strings.carModel}</span>
                                 </a>
                                 <a className="item item-icon-left" href="#">
                                     <i className="icon fa fa-text-width" />
                                     {this.state.carNumber || "-"}
                                     <span className="item-note">
-                                        {
-                                            localizationManager.strings[
-                                                "Car Number"
-                                            ]
-                                        }
+                                        {localizationManager.strings.carNumber}
                                     </span>
                                 </a>
                                 <a className="item item-icon-left" href="#">
@@ -884,11 +857,7 @@ class CurrentBookingRider extends Component {
                                         }}
                                     />
                                     <span className="item-note">
-                                        {
-                                            localizationManager.strings[
-                                                "Driver Review"
-                                            ]
-                                        }
+                                        {localizationManager.strings.driverReview}
                                     </span>
                                 </a>
                             </div>
@@ -921,11 +890,7 @@ class CurrentBookingRider extends Component {
                                     className="fa fa-comments"
                                     aria-hidden="true"
                                 />{" "}
-                                {
-                                    localizationManager.strings[
-                                        "Chat with Driver"
-                                    ]
-                                }{" "}
+                                {localizationManager.strings.chatWithDriver}{" "}
                                 {this.state.badge !== 0 && (
                                     <span
                                         style={{
@@ -961,11 +926,7 @@ class CurrentBookingRider extends Component {
                                     className="fa fa-share-alt"
                                     aria-hidden="true"
                                 />{" "}
-                                {
-                                    localizationManager.strings[
-                                        "Share Live Location"
-                                    ]
-                                }
+                                {localizationManager.strings.shareLiveLocation}
                             </LaddaButton>
                             <LaddaButton
                                 className="button button-block button-assertive activated"
@@ -982,7 +943,7 @@ class CurrentBookingRider extends Component {
                                     className="fa fa-exclamation-triangle"
                                     aria-hidden="true"
                                 />{" "}
-                                {localizationManager.strings["SOS"]}
+                                {localizationManager.strings.sos}
                             </LaddaButton>
                         </div>
                     )}

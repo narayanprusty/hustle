@@ -13,27 +13,27 @@ import localizationManager from "../../localization/index";
 
 const cartTypes = [
     {
-        name: "Micro",
+        name: localizationManager.strings.micro,
         value: "micro"
     },
     {
-        name: "Mini",
+        name: localizationManager.strings.mini,
         value: "mini"
     },
     {
-        name: "Prime sedan",
+        name: localizationManager.strings.primeSedan,
         value: "sedan"
     },
     {
-        name: "Prime SUV",
+        name: localizationManager.strings.primeSUV,
         value: "suv"
     },
     {
-        name: "Prime Exec",
+        name: localizationManager.strings.primeExec,
         value: "exec"
     },
     {
-        name: "Prime Lux",
+        name: localizationManager.strings.primeLux,
         value: "lux"
     }
 ];
@@ -188,16 +188,13 @@ class Bookings extends Component {
                         });
                         if (err) {
                             console.log(err);
-                            return notify.show(
-                                localizationManager.strings.ulc,
-                                "error"
-                            );
+                            return notify.show(localizationManager.strings.unableToLoadCards, "error");
                         }
                         if (res.message || !res.cards) {
                             notify.show(
                                 ex.message
                                     ? ex.message
-                                    : localizationManager.strings.ulc,
+                                    : localizationManager.strings.unableToLoadCards,
                                 "error"
                             );
                         } else {
@@ -214,7 +211,7 @@ class Bookings extends Component {
                                 );
                                 options.push({
                                     value: res.cards[i].hyperPayId,
-                                    text: "Card: ..." + cardText
+                                    text: localizationManager.strings.Card+": ..." + cardText
                                 });
                             }
                             this.setState({
@@ -247,7 +244,7 @@ class Bookings extends Component {
             },
             (err, result) => {
                 if (err) {
-                    notify.show(localizationManager.strings.ufdn, "warning");
+                    notify.show(localizationManager.strings.unableToFetchDriversNearby, "warning");
                 }
                 this.setState({
                     allDrivers: result
@@ -288,8 +285,7 @@ class Bookings extends Component {
                     },
                     err => {
                         notify.show(
-                            localizationManager.strings
-                                .unableToFetchYourCurrentLocation,
+                            localizationManager.strings.unableToFetchYourCurrentLocation,
                             "error"
                         );
                         resolve({
@@ -396,13 +392,13 @@ class Bookings extends Component {
                     });
                     routePolyline.setMap(mapInstance);
                 } else if (status == "ZERO_RESULTS") {
-                    notify.show(localizationManager.strings.cfp, "error");
+                    notify.show("Cannot find path", "error");
                 } else if (status == "OVER_QUERY_LIMIT") {
                     notify.show("Internal error", "error");
                 } else {
                     //Add localization support
                     notify.show(
-                        "Directions request failed due to " + status,
+                        localizationManager.strings.directionsRequestFailedDueTo + " " + status,
                         "error"
                     );
                 }
@@ -459,7 +455,10 @@ class Bookings extends Component {
 
     onChangeBoarding = t => {
         if (this.state.stopMapInput) {
-            notify.show(localizationManager.strings.cclwrbr, "warning");
+            notify.show(
+                localizationManager.strings.canNotChangeLocation,
+                "warning"
+            );
             return false;
         }
         Geocode.fromLatLng(t.lat, t.lng).then(response => {
@@ -478,6 +477,7 @@ class Bookings extends Component {
             }
         });
     };
+
     changeBoardingToCurrent = () => {
         Geocode.fromLatLng(
             this.state.currentLocation.lat,
@@ -510,6 +510,7 @@ class Bookings extends Component {
             }
         });
     };
+
     apiHasLoaded = (map, maps) => {
         this.setState({
             mapApiLoaded: true,
@@ -569,9 +570,7 @@ class Bookings extends Component {
                 console.log(error);
                 //Add localization support
                 return notify.show(
-                    error.reason
-                        ? error.reason
-                        : localizationManager.strings.unableToCreateRequest,
+                    error.reason ? error.reason : localizationManager.strings.unableToCreateRequest,
                     "error"
                 );
             }
@@ -642,11 +641,7 @@ class Bookings extends Component {
                                         />
                                     </div>
                                     <div className="padding-top">
-                                        {
-                                            localizationManager.strings[
-                                                "kindly subscribe to book ride"
-                                            ]
-                                        }
+                                        {localizationManager.strings.kindlySubscribe}
                                     </div>
                                 </div>
                             </div>
@@ -697,12 +692,7 @@ class Bookings extends Component {
                                                     value={
                                                         this.state.boardvalue
                                                     }
-                                                    placeholder={
-                                                        localizationManager
-                                                            .strings[
-                                                            "Default is current location"
-                                                        ]
-                                                    }
+                                                    placeholder={localizationManager.strings.defaultLocation}
                                                     autoComplete="off"
                                                     disabled={
                                                         this.state.stopMapInput
@@ -740,12 +730,7 @@ class Bookings extends Component {
                                                     type="text"
                                                     name="droppingPointInput"
                                                     value={this.state.dropvalue}
-                                                    placeholder={
-                                                        localizationManager
-                                                            .strings[
-                                                            "select location"
-                                                        ]
-                                                    }
+                                                    placeholder={localizationManager.strings.selectLocation}
                                                     autoComplete="off"
                                                     disabled={
                                                         this.state.stopMapInput
@@ -823,8 +808,8 @@ class Bookings extends Component {
                                                     <select
                                                         name="paymentMethod"
                                                         value={
-                                                            this.state
-                                                                .paymentMethod
+                                                            localizationManager.strings[this.state
+                                                                .paymentMethod]
                                                         }
                                                         onChange={
                                                             this.inputHandler
@@ -918,12 +903,7 @@ class Bookings extends Component {
                                                         }}
                                                     />
                                                     <span className="item-note">
-                                                        {
-                                                            localizationManager
-                                                                .strings[
-                                                                "Preferred Car"
-                                                            ]
-                                                        }
+                                                        {localizationManager.strings.preferredCar}
                                                     </span>
                                                 </div>
                                             </div>
