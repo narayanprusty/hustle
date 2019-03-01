@@ -174,7 +174,7 @@ export default class Rides extends Component {
                       <b>{localizationManager.strings.paymentMethod}:</b>
                     </div>
                     <div>
-                      {data.paymentMethod}
+                      {localizationManager.strings[data.paymentMethod]}
                     </div>
                   </li>
                   <li className="item">
@@ -182,7 +182,7 @@ export default class Rides extends Component {
                       <b>{localizationManager.strings.paymentStatus}:</b>
                     </div>
                     <div>
-                      {data.paymentStatus}
+                      {localizationManager.strings[data.paymentStatus]}
                     </div>
                   </li>
                   <li className="item">

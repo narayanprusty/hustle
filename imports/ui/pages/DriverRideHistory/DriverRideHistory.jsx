@@ -127,13 +127,13 @@ export default class DriverRideHistory extends Component {
                                         <div style={{ marginBottom: "10px" }}>
                                             <b>{localizationManager.strings.paymentMethod}:</b>
                                         </div>
-                                        <div>{data.paymentMethod}</div>
+                                        <div>{localizationManager.strings[data.paymentMethod]}</div>
                                     </li>
                                     <li className="item">
                                         <div style={{ marginBottom: "10px" }}>
                                             <b>{localizationManager.strings.paymentStatus}:</b>
                                         </div>
-                                        <div>{data.paymentStatus}</div>
+                                        <div>{localizationManager.strings[data.paymentStatus]}</div>
                                     </li>
                                     <li className="item">
                                         <div style={{ marginBottom: "10px" }}>
