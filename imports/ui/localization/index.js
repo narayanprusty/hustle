@@ -13,6 +13,8 @@ let strings = new LocalizedStrings({
         cvv: "CVV",
         submit: "Submit",
         reset: "Reset",
+        cardAdded: "Card added successfully!",
+        failedAddingCard: "Failed adding card.",
         //Already submitted for translation
         loggingOut: "Logging you out",
         Home: "Home",
@@ -139,6 +141,8 @@ let strings = new LocalizedStrings({
         cvv: "CVV",
         submit: "Submit",
         reset: "Reset",
+        cardAdded: "Card added successfully!",
+        failedAddingCard: "Failed adding card.",
         //Already submitted for translation
         loggingOut: "تسجيل الخروج",
         Home: "الصفحة الرئيسية",
