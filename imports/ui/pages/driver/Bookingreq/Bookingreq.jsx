@@ -10,6 +10,7 @@ import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import Ratings from "react-rating";
 import config from "../../../../modules/config/client";
 import CarLoader from "../../../components/CarLoader/CarLoader";
+import localizationManager from "../../../localization";
 
 class Bookingreq extends Component {
     constructor(props) {
@@ -50,7 +51,10 @@ class Bookingreq extends Component {
         return Meteor.call("getDriver", Meteor.userId(), (err, driverMeta) => {
             if (err) {
                 notify.show(
-                    err.reason || "unable to fetch driver details",
+                    err.reason ||
+                        localizationManager.strings[
+                            "unable to fetch driver details"
+                        ],
                     "error"
                 );
             }
@@ -98,7 +102,9 @@ class Bookingreq extends Component {
                     notify.show(
                         error.reason
                             ? error.reason
-                            : "Unable to accept the ride!",
+                            : localizationManager.strings[
+                                  "unabletoAcceptTheRide"
+                              ],
                         "error"
                     );
                 }
@@ -130,7 +136,9 @@ class Bookingreq extends Component {
                 console.log("#2");
                 if (err) {
                     notify.show(
-                        "Unable to fetch your current location",
+                        localizationManager.strings[
+                            "unableToFetchYourCurrentLocation"
+                        ],
                         "error"
                     );
                 }
@@ -193,7 +201,12 @@ class Bookingreq extends Component {
                 );
             },
             err => {
-                notify.show("Unable to fetch your current location", "error");
+                notify.show(
+                    localizationManager.strings[
+                        "unableToFetchYourCurrentLocation"
+                    ],
+                    "error"
+                );
             },
             {
                 enableHighAccuracy: true,
@@ -280,7 +293,8 @@ class Bookingreq extends Component {
                                 data-spinner-color="#ddd"
                                 data-spinner-lines={12}
                             >
-                                <i className="icon fa fa-check" /> Accept
+                                <i className="icon fa fa-check" />{" "}
+                                {localizationManager.strings["Accept"]}
                             </LaddaButton>
                         </div>
                     </div>
@@ -298,13 +312,17 @@ class Bookingreq extends Component {
                 >
                     <div className="padding">
                         <h3 className="padding">
-                            <i className="fa fa-car" aria-hidden="true" /> Ride
-                            Requests
+                            <i className="fa fa-car" aria-hidden="true" />{" "}
+                            {localizationManager.strings["Ride Requests"]}
                         </h3>
                     </div>
                     {(!this.state.datas || !this.state.datas.length) && (
                         <div style={{ textAlign: "center" }}>
-                            currently no requests nearby
+                            {
+                                localizationManager.strings[
+                                    "currently no requests nearby"
+                                ]
+                            }
                         </div>
                     )}
                     <div className="padding-left padding-right">{items}</div>

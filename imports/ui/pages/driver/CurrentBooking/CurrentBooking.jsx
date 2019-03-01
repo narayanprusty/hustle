@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import config from "../../../../modules/config/client";
 import { Link, withRouter, Redirect } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
 import lodash from "lodash";
@@ -9,6 +8,9 @@ import PubNubReact from "pubnub-react";
 import Rating from "react-rating";
 import { Widget, addResponseMessage, addUserMessage } from "react-chat-widget";
 import LaddaButton, { S, M, L, SLIDE_UP } from "react-ladda";
+
+import config from "../../../../modules/config/client";
+import localizationManager from "../../../localization";
 
 import "react-chat-widget/lib/styles.css";
 
@@ -143,7 +145,23 @@ class CurrentBooking extends Component {
             timeArr.push(message.message.time);
             function notifyMe(message) {
                 if (!("Notification" in window)) {
-                    alert("Message From Driver: " + message);
+                    if (localizationManager.getLanguage() == "en") {
+                        alert(
+                            localizationManager.strings[
+                                "messageFroDriverNotif"
+                            ] +
+                                " " +
+                                message
+                        );
+                    } else {
+                        alert(
+                            message +
+                                " " +
+                                localizationManager.strings[
+                                    "messageFroDriverNotif"
+                                ]
+                        );
+                    }
                 } else if (Notification.permission === "granted") {
                     var notification = new Notification(
                         "Message from Driver: " + message
@@ -162,7 +180,8 @@ class CurrentBooking extends Component {
             if (window.cordova) {
                 cordova.plugins.notification.local.schedule({
                     id: 1,
-                    title: "You have a new message",
+                    title:
+                        localizationManager.strings["You have a new message"],
                     message: message.message.message,
                     at: new Date()
                 });
@@ -212,7 +231,10 @@ class CurrentBooking extends Component {
                         (err, data) => {
                             if (err) {
                                 notify.show(
-                                    err.reason || "Unknown error occurred",
+                                    err.reason ||
+                                        localizationManager.strings[
+                                            "Unknown error occurred"
+                                        ],
                                     "error"
                                 );
                                 return false;
@@ -300,7 +322,9 @@ class CurrentBooking extends Component {
                     notify.show(
                         error.reason
                             ? error.reason
-                            : "Unable to start the ride!",
+                            : localizationManager.strings[
+                                  "Unable to start the ride!"
+                              ],
                         "error"
                     );
                 }
@@ -363,7 +387,9 @@ class CurrentBooking extends Component {
                     notify.show(
                         error.reason
                             ? error.reason
-                            : "Unable to Finish the ride!",
+                            : localizationManager.strings[
+                                  "Unable to Finish the ride!"
+                              ],
                         "error"
                     );
                 }
@@ -371,7 +397,10 @@ class CurrentBooking extends Component {
                     status: "finished",
                     finishRide_loader: false
                 });
-                notify.show("Ride completed", "success");
+                notify.show(
+                    localizationManager.strings["Ride completed"],
+                    "success"
+                );
             }
         );
     };
@@ -394,7 +423,9 @@ class CurrentBooking extends Component {
                     notify.show(
                         error.reason
                             ? error.reason
-                            : "Unable to mark payment for the ride!",
+                            : localizationManager.strings[
+                                  "Unable to mark payment for the ride!"
+                              ],
                         "error"
                     );
                 }
@@ -405,7 +436,10 @@ class CurrentBooking extends Component {
                 this.setState({
                     paymentReceived: true
                 });
-                notify.show("Payment Marked", "success");
+                notify.show(
+                    localizationManager.strings["Payment Marked"],
+                    "success"
+                );
             }
         );
     };
@@ -426,7 +460,10 @@ class CurrentBooking extends Component {
                         review_loader: false
                     });
                     notify.show(
-                        err.reason || "failed to update the review",
+                        err.reason ||
+                            localizationManager.strings[
+                                "failed to update the review"
+                            ],
                         "error"
                     );
                 }
@@ -434,7 +471,10 @@ class CurrentBooking extends Component {
                     review_loader: false,
                     sendToNewReqs: true
                 });
-                notify.show("Review submitted, Thank you.", "success");
+                notify.show(
+                    localizationManager.strings["Review submitted, Thank you."],
+                    "success"
+                );
             }
         );
     };
@@ -474,8 +514,8 @@ class CurrentBooking extends Component {
             <div style={{ height: "100%" }}>
                 <div className="padding">
                     <h3 className="padding">
-                        <i className="fa fa-car" aria-hidden="true" /> Ongoing
-                        Booking
+                        <i className="fa fa-car" aria-hidden="true" />{" "}
+                        {localizationManager.strings["Ongoing Booking"]}
                     </h3>
                 </div>
                 <div className="padding-left padding-right padding-bottom">
@@ -484,30 +524,40 @@ class CurrentBooking extends Component {
                             <a className="item item-icon-left" href="#">
                                 <i className="icon fa fa-user-o" />
                                 {this.state.name || "-"}
-                                <span className="item-note">Name</span>
+                                <span className="item-note">
+                                    {localizationManager.strings.name}
+                                </span>
                             </a>
                             <a className="item item-icon-left" href="#">
                                 <i className="icon fa fa-phone" />
                                 {this.state.phone || "-"}
-                                <span className="item-note">Phone</span>
+                                <span className="item-note">
+                                    {localizationManager.strings.phone}
+                                </span>
                             </a>
                             <a className="item item-icon-left" href="#">
                                 <i className="icon fa fa-clock-o" />
                                 {this.state.totalDuration}
-                                <span className="item-note">Time</span>
+                                <span className="item-note">
+                                    {localizationManager.strings.Time}
+                                </span>
                             </a>
 
                             <a className="item item-icon-left" href="#">
                                 <i className="icon fa fa-road" />
                                 {this.state.totalDistance}
-                                <span className="item-note">Distance</span>
+                                <span className="item-note">
+                                    {localizationManager.strings.distance}
+                                </span>
                             </a>
 
                             <a className="item item-icon-left" href="#">
                                 <i className="icon fa fa-money" />
                                 {Math.round(this.state.totalFare) +
                                     config.fareUnit}{" "}
-                                <span className="item-note">Fare</span>
+                                <span className="item-note">
+                                    {localizationManager.strings.fare}
+                                </span>
                             </a>
                             <a className="item item-icon-left" href="#">
                                 <i
@@ -515,7 +565,9 @@ class CurrentBooking extends Component {
                                     style={{ color: "green" }}
                                 />
                                 {this.state.start_address || "Unknown"}
-                                <span className="item-note">From</span>
+                                <span className="item-note">
+                                    {localizationManager.strings.From}
+                                </span>
                             </a>
                             <a className="item item-icon-left" href="#">
                                 <i
@@ -523,14 +575,16 @@ class CurrentBooking extends Component {
                                     style={{ color: "red" }}
                                 />
                                 {this.state.end_address || "Unknown"}
-                                <span className="item-note">To</span>
+                                <span className="item-note">
+                                    {localizationManager.strings.To}
+                                </span>
                             </a>
                             <a className="item item-icon-left" href="#">
                                 <i className="icon fa fa-shopping-cart" />
 
                                 {this.state.paymentMethod}
                                 <span className="item-note">
-                                    Payment Method
+                                    {localizationManager.strings.paymentMethod}
                                 </span>
                             </a>
                         </div>
@@ -544,7 +598,7 @@ class CurrentBooking extends Component {
                             }}
                         >
                             <i className="fa fa-comments" aria-hidden="true" />{" "}
-                            Chat with Rider{" "}
+                            {localizationManager.strings["Chat with Rider"]}{" "}
                             {this.state.badge !== 0 && (
                                 <span
                                     style={{
@@ -577,7 +631,7 @@ class CurrentBooking extends Component {
                                 className="fa fa-location-arrow"
                                 aria-hidden="true"
                             />{" "}
-                            Navigate to Rider
+                            {localizationManager.strings["Navigate to Rider"]}
                         </LaddaButton>
                     )}
                     {this.state.status == "accepted" && (
@@ -592,8 +646,8 @@ class CurrentBooking extends Component {
                             data-spinner-color="#ddd"
                             data-spinner-lines={12}
                         >
-                            <i className="fa fa-car" aria-hidden="true" /> Start
-                            Ride
+                            <i className="fa fa-car" aria-hidden="true" />{" "}
+                            {localizationManager.strings["Start Ride"]}
                         </LaddaButton>
                     )}
                     {this.state.status == "started" && (
@@ -612,7 +666,7 @@ class CurrentBooking extends Component {
                                 className="fa fa-map-marker"
                                 aria-hidden="true"
                             />{" "}
-                            Navigate to drop
+                            {localizationManager.strings["Navigate to drop"]}
                         </LaddaButton>
                     )}
                     {this.state.status == "started" && (
@@ -628,7 +682,7 @@ class CurrentBooking extends Component {
                             data-spinner-lines={12}
                         >
                             <i className="fa fa-check" aria-hidden="true" />{" "}
-                            Finish Ride
+                            {localizationManager.strings["Finish Ride"]}
                         </LaddaButton>
                     )}
                     {this.state.status == "finished" && (
@@ -641,7 +695,7 @@ class CurrentBooking extends Component {
                                 }}
                             >
                                 <div className="item item-divider">
-                                    Rate Rider
+                                    {localizationManager.strings["Rate Rider"]}
                                 </div>
                                 <div className="item item-text-wrap">
                                     <div
@@ -698,7 +752,7 @@ class CurrentBooking extends Component {
                                     className="fa fa-paper-plane"
                                     aria-hidden="true"
                                 />{" "}
-                                Submit Review
+                                {localizationManager.strings["Submit Review"]}
                             </LaddaButton>
                             <LaddaButton
                                 className="button button-block button-calm activated"
@@ -717,7 +771,7 @@ class CurrentBooking extends Component {
                                     className="fa fa-arrow-right"
                                     aria-hidden="true"
                                 />{" "}
-                                Skip
+                                {localizationManager.strings["Skip"]}
                             </LaddaButton>
                         </div>
                     )}
