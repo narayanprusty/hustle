@@ -126,109 +126,102 @@ class Bookings extends Component {
             }
         );
         const { lat, lng } = await this.getcurrentLocation();
+        this._isMounted = true;
 
-        Meteor.call(
-            "getUserSubscriptions",
-            Meteor.userId(),
-            (error, subData) => {
-                if (subData && !subData.data.length) {
-                    this.setState({
-                        subscriptionFound: true
-                    });
-                } else if (subData && subData.data.length) {
-                    this._isMounted = true;
-
-                    Geocode.fromLatLng(lat, lng).then(
-                        response => {
-                            this.setState(prev => ({
-                                fields: {
-                                    ...prev.fields,
-                                    location: {
-                                        lat,
-                                        lng
-                                    }
-                                },
-                                currentLocation: {
-                                    lat,
-                                    lng
-                                },
-                                boardingPoint: {
-                                    lat: lat,
-                                    lng: lng
-                                },
-                                boardingPlace: response.results[0]
-                            }));
-                        },
-                        error => {
-                            this.setState(prev => ({
-                                fields: {
-                                    ...prev.fields,
-                                    location: {
-                                        lat,
-                                        lng
-                                    }
-                                },
-                                currentLocation: {
-                                    lat,
-                                    lng
-                                },
-                                boardingPoint: {
-                                    lat: lat,
-                                    lng: lng
-                                },
-                                boardingPlace: "" //unable to get because api call fails here
-                            }));
-                            console.error(error);
+        Geocode.fromLatLng(lat, lng).then(
+            response => {
+                this.setState(prev => ({
+                    fields: {
+                        ...prev.fields,
+                        location: {
+                            lat,
+                            lng
                         }
-                    );
-
-                    Meteor.call("getCardsForPayment", (err, res) => {
-                        this.setState({
-                            loading_cards: false
-                        });
-                        if (err) {
-                            console.log(err);
-                            return notify.show(localizationManager.strings.unableToLoadCards, "error");
+                    },
+                    currentLocation: {
+                        lat,
+                        lng
+                    },
+                    boardingPoint: {
+                        lat: lat,
+                        lng: lng
+                    },
+                    boardingPlace: response.results[0]
+                }));
+            },
+            error => {
+                this.setState(prev => ({
+                    fields: {
+                        ...prev.fields,
+                        location: {
+                            lat,
+                            lng
                         }
-                        if (res.message || !res.cards) {
-                            notify.show(
-                                ex.message
-                                    ? ex.message
-                                    : localizationManager.strings.unableToLoadCards,
-                                "error"
-                            );
-                        } else {
-                            let options = [
-                                {
-                                    value: "cash",
-                                    text: "Cash"
-                                }
-                            ];
-                            for (let i = 0; i < res.cards.length; i++) {
-                                let cardText = "";
-                                cardText = res.cards[i].cardNumber.substr(
-                                    res.cards[i].cardNumber.length - 4
-                                );
-                                options.push({
-                                    value: res.cards[i].hyperPayId,
-                                    text: localizationManager.strings.Card+": ..." + cardText
-                                });
-                            }
-                            this.setState({
-                                cards: options
-                            });
-
-                            console.log("cards loaded", this.state.cards);
-                        }
-                    });
-                    const intvl = setInterval(
-                        () => this.fetchNearByDrivers(lat, lng),
-                        2000
-                    );
-                    this.setState({ intvl: intvl });
-                }
+                    },
+                    currentLocation: {
+                        lat,
+                        lng
+                    },
+                    boardingPoint: {
+                        lat: lat,
+                        lng: lng
+                    },
+                    boardingPlace: "" //unable to get because api call fails here
+                }));
+                console.error(error);
             }
         );
+
+        Meteor.call("getCardsForPayment", (err, res) => {
+            this.setState({
+                loading_cards: false
+            });
+            if (err) {
+                console.log(err);
+                return notify.show(
+                    localizationManager.strings.unableToLoadCards,
+                    "error"
+                );
+            }
+            if (res.message || !res.cards) {
+                notify.show(
+                    ex.message
+                        ? ex.message
+                        : localizationManager.strings.unableToLoadCards,
+                    "error"
+                );
+            } else {
+                let options = [
+                    {
+                        value: "cash",
+                        text: "Cash"
+                    }
+                ];
+                for (let i = 0; i < res.cards.length; i++) {
+                    let cardText = "";
+                    cardText = res.cards[i].cardNumber.substr(
+                        res.cards[i].cardNumber.length - 4
+                    );
+                    options.push({
+                        value: res.cards[i].hyperPayId,
+                        text:
+                            localizationManager.strings.Card +
+                            ": ..." +
+                            cardText
+                    });
+                }
+                this.setState({
+                    cards: options
+                });
+
+                console.log("cards loaded", this.state.cards);
+            }
+        });
+        const intvl = setInterval(
+            () => this.fetchNearByDrivers(lat, lng),
+            2000
+        );
+        this.setState({ intvl: intvl });
     };
 
     fetchNearByDrivers = (lat, lng) => {
@@ -244,7 +237,10 @@ class Bookings extends Component {
             },
             (err, result) => {
                 if (err) {
-                    notify.show(localizationManager.strings.unableToFetchDriversNearby, "warning");
+                    notify.show(
+                        localizationManager.strings.unableToFetchDriversNearby,
+                        "warning"
+                    );
                 }
                 this.setState({
                     allDrivers: result
@@ -285,7 +281,8 @@ class Bookings extends Component {
                     },
                     err => {
                         notify.show(
-                            localizationManager.strings.unableToFetchYourCurrentLocation,
+                            localizationManager.strings
+                                .unableToFetchYourCurrentLocation,
                             "error"
                         );
                         resolve({
@@ -398,7 +395,10 @@ class Bookings extends Component {
                 } else {
                     //Add localization support
                     notify.show(
-                        localizationManager.strings.directionsRequestFailedDueTo + " " + status,
+                        localizationManager.strings
+                            .directionsRequestFailedDueTo +
+                            " " +
+                            status,
                         "error"
                     );
                 }
@@ -570,7 +570,9 @@ class Bookings extends Component {
                 console.log(error);
                 //Add localization support
                 return notify.show(
-                    error.reason ? error.reason : localizationManager.strings.unableToCreateRequest,
+                    error.reason
+                        ? error.reason
+                        : localizationManager.strings.unableToCreateRequest,
                     "error"
                 );
             }
@@ -625,460 +627,402 @@ class Bookings extends Component {
                             {localizationManager.strings.bookRide}
                         </h3>
                     </div>
-                    {!this.state.subscriptionFound &&
-                        this.state.loading_cards && <CarLoader />}
-                    {this.state.subscriptionFound && (
-                        <div>
-                            <div className="card">
-                                <div
-                                    className="item item-text-wrap"
-                                    style={{ textAlign: "center" }}
-                                >
+                    {this.state.loading_cards && <CarLoader />}
+
+                    {!this.state.loading_cards && (
+                        <div style={{ height: "100%" }}>
+                            <div className={conatinerClass}>
+                                <label className="item item-input item-stacked-label">
+                                    <span className="input-label">
+                                        {" "}
+                                        {
+                                            localizationManager.strings
+                                                .boardingPoint
+                                        }
+                                        :{" "}
+                                    </span>
+                                    {mapApiLoaded && (
+                                        <ReactGooglePlacesSuggest
+                                            name="boardingPoint"
+                                            autocompletionRequest={{
+                                                input: this.state.boardsearch
+                                            }}
+                                            googleMaps={mapApi}
+                                            onSelectSuggest={this.addBoardingPlace.bind(
+                                                this
+                                            )}
+                                        >
+                                            <input
+                                                type="text"
+                                                name="boardingPointInput"
+                                                value={this.state.boardvalue}
+                                                placeholder={
+                                                    localizationManager.strings
+                                                        .defaultLocation
+                                                }
+                                                autoComplete="off"
+                                                disabled={
+                                                    this.state.stopMapInput
+                                                        ? true
+                                                        : false
+                                                }
+                                                onChange={this.handleboardChange.bind(
+                                                    this
+                                                )}
+                                            />
+                                        </ReactGooglePlacesSuggest>
+                                    )}
+                                </label>
+                                <label className="item item-input item-stacked-label">
+                                    <span className="input-label">
+                                        {" "}
+                                        {
+                                            localizationManager.strings
+                                                .droppingPoint
+                                        }
+                                        :{" "}
+                                    </span>
+                                    {mapApiLoaded && (
+                                        <ReactGooglePlacesSuggest
+                                            name="droppingPoint"
+                                            autocompletionRequest={{
+                                                input: this.state.dropsearch
+                                            }}
+                                            googleMaps={mapApi}
+                                            onSelectSuggest={this.addDroppingPlace.bind(
+                                                this
+                                            )}
+                                        >
+                                            <input
+                                                type="text"
+                                                name="droppingPointInput"
+                                                value={this.state.dropvalue}
+                                                placeholder={
+                                                    localizationManager.strings
+                                                        .selectLocation
+                                                }
+                                                autoComplete="off"
+                                                disabled={
+                                                    this.state.stopMapInput
+                                                        ? true
+                                                        : false
+                                                }
+                                                onChange={this.handledropChange.bind(
+                                                    this
+                                                )}
+                                            />
+                                        </ReactGooglePlacesSuggest>
+                                    )}
+                                </label>
+                                {this.state.rideStatGen && (
                                     <div>
-                                        <img
-                                            src={"/images/pending.png"}
-                                            style={{ width: "40px" }}
-                                        />
-                                    </div>
-                                    <div className="padding-top">
-                                        {localizationManager.strings.kindlySubscribe}
-                                    </div>
-                                </div>
-                            </div>
-                            <button
-                                className="button button-block button-calm"
-                                onClick={() => {
-                                    this.props.history.push(
-                                        "/app/subscriptions"
-                                    );
-                                }}
-                            >
-                                <i
-                                    className="fa fa-arrow-right"
-                                    aria-hidden="true"
-                                />{" "}
-                                {localizationManager.strings.subscribe}
-                            </button>
-                        </div>
-                    )}
-                    {!this.state.loading_cards &&
-                        !this.state.subscriptionFound && (
-                            <div style={{ height: "100%" }}>
-                                <div className={conatinerClass}>
-                                    <label className="item item-input item-stacked-label">
-                                        <span className="input-label">
-                                            {" "}
-                                            {
-                                                localizationManager.strings
-                                                    .boardingPoint
-                                            }
-                                            :{" "}
-                                        </span>
-                                        {mapApiLoaded && (
-                                            <ReactGooglePlacesSuggest
-                                                name="boardingPoint"
-                                                autocompletionRequest={{
-                                                    input: this.state
-                                                        .boardsearch
-                                                }}
-                                                googleMaps={mapApi}
-                                                onSelectSuggest={this.addBoardingPlace.bind(
-                                                    this
-                                                )}
+                                        <div
+                                            className="list"
+                                            style={{ marginBottom: "0px" }}
+                                        >
+                                            <a
+                                                className="item item-icon-left"
+                                                href="#"
                                             >
-                                                <input
-                                                    type="text"
-                                                    name="boardingPointInput"
+                                                <i className="icon fa fa-clock-o" />
+                                                {this.state.reachAfter}
+                                                <span className="item-note">
+                                                    {
+                                                        localizationManager
+                                                            .strings.Time
+                                                    }
+                                                </span>
+                                            </a>
+
+                                            <a
+                                                className="item item-icon-left"
+                                                href="#"
+                                            >
+                                                <i className="icon fa fa-road" />
+                                                {this.state.distance}
+                                                <span className="item-note">
+                                                    {
+                                                        localizationManager
+                                                            .strings.distance
+                                                    }
+                                                </span>
+                                            </a>
+
+                                            <a
+                                                className="item item-icon-left"
+                                                href="#"
+                                            >
+                                                <i className="icon fa fa-money" />
+                                                {Math.round(
+                                                    this.state
+                                                        .distance_in_meter *
+                                                        config.farePerMeter
+                                                ) + config.fareUnit}{" "}
+                                                {localizationManager.strings.at}{" "}
+                                                {config.farePerMeter +
+                                                    config.fareUnit}
+                                                /M
+                                                <span className="item-note">
+                                                    {
+                                                        localizationManager
+                                                            .strings.fare
+                                                    }
+                                                </span>
+                                            </a>
+                                            <div className="item item-icon-left">
+                                                <i className="icon fa fa-shopping-cart" />
+                                                <select
+                                                    name="paymentMethod"
                                                     value={
-                                                        this.state.boardvalue
-                                                    }
-                                                    placeholder={localizationManager.strings.defaultLocation}
-                                                    autoComplete="off"
-                                                    disabled={
-                                                        this.state.stopMapInput
-                                                            ? true
-                                                            : false
-                                                    }
-                                                    onChange={this.handleboardChange.bind(
-                                                        this
-                                                    )}
-                                                />
-                                            </ReactGooglePlacesSuggest>
-                                        )}
-                                    </label>
-                                    <label className="item item-input item-stacked-label">
-                                        <span className="input-label">
-                                            {" "}
-                                            {
-                                                localizationManager.strings
-                                                    .droppingPoint
-                                            }
-                                            :{" "}
-                                        </span>
-                                        {mapApiLoaded && (
-                                            <ReactGooglePlacesSuggest
-                                                name="droppingPoint"
-                                                autocompletionRequest={{
-                                                    input: this.state.dropsearch
-                                                }}
-                                                googleMaps={mapApi}
-                                                onSelectSuggest={this.addDroppingPlace.bind(
-                                                    this
-                                                )}
-                                            >
-                                                <input
-                                                    type="text"
-                                                    name="droppingPointInput"
-                                                    value={this.state.dropvalue}
-                                                    placeholder={localizationManager.strings.selectLocation}
-                                                    autoComplete="off"
-                                                    disabled={
-                                                        this.state.stopMapInput
-                                                            ? true
-                                                            : false
-                                                    }
-                                                    onChange={this.handledropChange.bind(
-                                                        this
-                                                    )}
-                                                />
-                                            </ReactGooglePlacesSuggest>
-                                        )}
-                                    </label>
-                                    {this.state.rideStatGen && (
-                                        <div>
-                                            <div
-                                                className="list"
-                                                style={{ marginBottom: "0px" }}
-                                            >
-                                                <a
-                                                    className="item item-icon-left"
-                                                    href="#"
-                                                >
-                                                    <i className="icon fa fa-clock-o" />
-                                                    {this.state.reachAfter}
-                                                    <span className="item-note">
-                                                        {
-                                                            localizationManager
-                                                                .strings.Time
-                                                        }
-                                                    </span>
-                                                </a>
-
-                                                <a
-                                                    className="item item-icon-left"
-                                                    href="#"
-                                                >
-                                                    <i className="icon fa fa-road" />
-                                                    {this.state.distance}
-                                                    <span className="item-note">
-                                                        {
-                                                            localizationManager
-                                                                .strings
-                                                                .distance
-                                                        }
-                                                    </span>
-                                                </a>
-
-                                                <a
-                                                    className="item item-icon-left"
-                                                    href="#"
-                                                >
-                                                    <i className="icon fa fa-money" />
-                                                    {Math.round(
-                                                        this.state
-                                                            .distance_in_meter *
-                                                            config.farePerMeter
-                                                    ) + config.fareUnit}{" "}
-                                                    {
                                                         localizationManager
-                                                            .strings.at
-                                                    }{" "}
-                                                    {config.farePerMeter +
-                                                        config.fareUnit}
-                                                    /M
-                                                    <span className="item-note">
-                                                        {
-                                                            localizationManager
-                                                                .strings.fare
-                                                        }
-                                                    </span>
-                                                </a>
-                                                <div className="item item-icon-left">
-                                                    <i className="icon fa fa-shopping-cart" />
-                                                    <select
-                                                        name="paymentMethod"
-                                                        value={
-                                                            localizationManager.strings[this.state
-                                                                .paymentMethod]
-                                                        }
-                                                        onChange={
-                                                            this.inputHandler
-                                                        }
-                                                        style={{
-                                                            fontSize: "16px"
-                                                        }}
-                                                        disabled={
+                                                            .strings[
                                                             this.state
-                                                                .stopMapInput
-                                                                ? true
-                                                                : false
-                                                        }
-                                                    >
-                                                        {this.state.cards.map(
-                                                            (card, i) => (
-                                                                <option
-                                                                    value={
-                                                                        card.value
-                                                                    }
-                                                                    key={i}
-                                                                >
-                                                                    {" "}
-                                                                    {
-                                                                        card.text
-                                                                    }{" "}
-                                                                </option>
-                                                            )
-                                                        )}
-                                                    </select>
-                                                    <i
-                                                        className="fa fa-sort-desc"
-                                                        style={{
-                                                            position:
-                                                                "relative",
-                                                            top: "-2px",
-                                                            left: "-12px"
-                                                        }}
-                                                    />
-                                                    <span className="item-note">
-                                                        {
-                                                            localizationManager
-                                                                .strings
                                                                 .paymentMethod
-                                                        }
-                                                    </span>
-                                                </div>
-                                                <div className="item item-icon-left">
-                                                    <i className="icon fa fa-car" />
-                                                    <select
-                                                        name="carType"
-                                                        value={
-                                                            this.state.cartType
-                                                        }
-                                                        onChange={
-                                                            this.inputHandler
-                                                        }
-                                                        style={{
-                                                            fontSize: "16px"
-                                                        }}
-                                                        disabled={
-                                                            this.state
-                                                                .stopMapInput
-                                                                ? true
-                                                                : false
-                                                        }
-                                                    >
-                                                        {cartTypes.map(
-                                                            (cars, i) => (
-                                                                <option
-                                                                    value={
-                                                                        cars.value
-                                                                    }
-                                                                    key={i}
-                                                                >
-                                                                    {" "}
-                                                                    {
-                                                                        cars.name
-                                                                    }{" "}
-                                                                </option>
-                                                            )
-                                                        )}
-                                                    </select>
-                                                    <i
-                                                        className="fa fa-sort-desc"
-                                                        style={{
-                                                            position:
-                                                                "relative",
-                                                            top: "-2px",
-                                                            left: "-12px"
-                                                        }}
-                                                    />
-                                                    <span className="item-note">
-                                                        {localizationManager.strings.preferredCar}
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <div className="padding-left padding-right padding-top">
-                                                <LaddaButton
-                                                    className="button button-block button-energized activated"
-                                                    loading={
-                                                        this.state.submitted
+                                                        ]
                                                     }
-                                                    onClick={
-                                                        this.raiseBookingReq
-                                                    }
-                                                    data-color="##FFFF00"
-                                                    data-size={L}
-                                                    data-style={SLIDE_UP}
-                                                    data-spinner-size={30}
-                                                    data-spinner-color="#ddd"
-                                                    data-spinner-lines={12}
+                                                    onChange={this.inputHandler}
+                                                    style={{
+                                                        fontSize: "16px"
+                                                    }}
                                                     disabled={
-                                                        this.state.loading_cards
+                                                        this.state.stopMapInput
+                                                            ? true
+                                                            : false
                                                     }
                                                 >
-                                                    <i
-                                                        className="fa fa-car"
-                                                        aria-hidden="true"
-                                                    />{" "}
+                                                    {this.state.cards.map(
+                                                        (card, i) => (
+                                                            <option
+                                                                value={
+                                                                    card.value
+                                                                }
+                                                                key={i}
+                                                            >
+                                                                {" "}
+                                                                {card.text}{" "}
+                                                            </option>
+                                                        )
+                                                    )}
+                                                </select>
+                                                <i
+                                                    className="fa fa-sort-desc"
+                                                    style={{
+                                                        position: "relative",
+                                                        top: "-2px",
+                                                        left: "-12px"
+                                                    }}
+                                                />
+                                                <span className="item-note">
                                                     {
                                                         localizationManager
-                                                            .strings.book
-                                                    }{" "}
-                                                </LaddaButton>
+                                                            .strings
+                                                            .paymentMethod
+                                                    }
+                                                </span>
+                                            </div>
+                                            <div className="item item-icon-left">
+                                                <i className="icon fa fa-car" />
+                                                <select
+                                                    name="carType"
+                                                    value={this.state.cartType}
+                                                    onChange={this.inputHandler}
+                                                    style={{
+                                                        fontSize: "16px"
+                                                    }}
+                                                    disabled={
+                                                        this.state.stopMapInput
+                                                            ? true
+                                                            : false
+                                                    }
+                                                >
+                                                    {cartTypes.map(
+                                                        (cars, i) => (
+                                                            <option
+                                                                value={
+                                                                    cars.value
+                                                                }
+                                                                key={i}
+                                                            >
+                                                                {" "}
+                                                                {cars.name}{" "}
+                                                            </option>
+                                                        )
+                                                    )}
+                                                </select>
+                                                <i
+                                                    className="fa fa-sort-desc"
+                                                    style={{
+                                                        position: "relative",
+                                                        top: "-2px",
+                                                        left: "-12px"
+                                                    }}
+                                                />
+                                                <span className="item-note">
+                                                    {
+                                                        localizationManager
+                                                            .strings
+                                                            .preferredCar
+                                                    }
+                                                </span>
                                             </div>
                                         </div>
-                                    )}
-                                </div>
 
-                                <div className="mapView padding-left padding-right padding-bottom">
-                                    {this._isMounted && (
-                                        <GoogleMapReact
-                                            options={this.createMapOptions}
-                                            bootstrapURLKeys={{
-                                                key: config.GAPIKEY,
-                                                libraries: ["places"]
-                                            }}
-                                            initialCenter={
-                                                this.state.fields.location
-                                            }
-                                            center={this.state.fields.location}
-                                            defaultZoom={15}
-                                            zoom={this.state.zoom}
-                                            layerTypes={[
-                                                "TrafficLayer",
-                                                "TransitLayer"
-                                            ]}
-                                            heat={true}
-                                            gestureHandling="greedy"
-                                            onClick={t =>
-                                                this.onChangeBoarding(t)
-                                            }
-                                            yesIWantToUseGoogleMapApiInternals
-                                            onGoogleApiLoaded={({
-                                                map,
-                                                maps
-                                            }) => this.apiHasLoaded(map, maps)}
-                                        >
-                                            {this.state.mapInstance && (
-                                                <MapControl
-                                                    map={
-                                                        this.state
-                                                            .mapInstance || null
+                                        <div className="padding-left padding-right padding-top">
+                                            <LaddaButton
+                                                className="button button-block button-energized activated"
+                                                loading={this.state.submitted}
+                                                onClick={this.raiseBookingReq}
+                                                data-color="##FFFF00"
+                                                data-size={L}
+                                                data-style={SLIDE_UP}
+                                                data-spinner-size={30}
+                                                data-spinner-color="#ddd"
+                                                data-spinner-lines={12}
+                                                disabled={
+                                                    this.state.loading_cards
+                                                }
+                                            >
+                                                <i
+                                                    className="fa fa-car"
+                                                    aria-hidden="true"
+                                                />{" "}
+                                                {
+                                                    localizationManager.strings
+                                                        .book
+                                                }{" "}
+                                            </LaddaButton>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="mapView padding-left padding-right padding-bottom">
+                                {this._isMounted && (
+                                    <GoogleMapReact
+                                        options={this.createMapOptions}
+                                        bootstrapURLKeys={{
+                                            key: config.GAPIKEY,
+                                            libraries: ["places"]
+                                        }}
+                                        initialCenter={
+                                            this.state.fields.location
+                                        }
+                                        center={this.state.fields.location}
+                                        defaultZoom={15}
+                                        zoom={this.state.zoom}
+                                        layerTypes={[
+                                            "TrafficLayer",
+                                            "TransitLayer"
+                                        ]}
+                                        heat={true}
+                                        gestureHandling="greedy"
+                                        onClick={t => this.onChangeBoarding(t)}
+                                        yesIWantToUseGoogleMapApiInternals
+                                        onGoogleApiLoaded={({ map, maps }) =>
+                                            this.apiHasLoaded(map, maps)
+                                        }
+                                    >
+                                        {this.state.mapInstance && (
+                                            <MapControl
+                                                map={
+                                                    this.state.mapInstance ||
+                                                    null
+                                                }
+                                                controlPosition={
+                                                    this.state.mapApi
+                                                        ? this.state.mapApi
+                                                              .ControlPosition
+                                                              .RIGHT_CENTER
+                                                        : null
+                                                }
+                                            >
+                                                <button
+                                                    className="centerIt"
+                                                    onClick={
+                                                        this
+                                                            .changeBoardingToCurrent
                                                     }
-                                                    controlPosition={
-                                                        this.state.mapApi
-                                                            ? this.state.mapApi
-                                                                  .ControlPosition
-                                                                  .RIGHT_CENTER
-                                                            : null
+                                                    disabled={
+                                                        this.state.submitted
+                                                            ? true
+                                                            : false
                                                     }
                                                 >
-                                                    <button
-                                                        className="centerIt"
-                                                        onClick={
-                                                            this
-                                                                .changeBoardingToCurrent
-                                                        }
-                                                        disabled={
-                                                            this.state.submitted
-                                                                ? true
-                                                                : false
-                                                        }
-                                                    >
-                                                        <i className="fa fa-location-arrow" />{" "}
-                                                    </button>
-                                                </MapControl>
-                                            )}
+                                                    <i className="fa fa-location-arrow" />{" "}
+                                                </button>
+                                            </MapControl>
+                                        )}
 
-                                            {this.state.droppingPoint && (
-                                                <Marker
-                                                    lat={
-                                                        this.state.droppingPoint
-                                                            .lat
-                                                    }
-                                                    lng={
-                                                        this.state.droppingPoint
-                                                            .lng
-                                                    }
-                                                    metaData="drop"
-                                                />
-                                            )}
+                                        {this.state.droppingPoint && (
                                             <Marker
                                                 lat={
-                                                    this.state.currentLocation
-                                                        .lat
-                                                        ? this.state
-                                                              .currentLocation
-                                                              .lat
-                                                        : this.state.fields.lat
+                                                    this.state.droppingPoint.lat
                                                 }
                                                 lng={
-                                                    this.state.currentLocation
-                                                        .lng
-                                                        ? this.state
-                                                              .currentLocation
-                                                              .lng
-                                                        : this.state.fields.lng
+                                                    this.state.droppingPoint.lng
                                                 }
-                                                metaData="current"
+                                                metaData="drop"
                                             />
-                                            <Marker
-                                                lat={
-                                                    this.state.boardingPoint.lat
-                                                        ? this.state
-                                                              .boardingPoint.lat
-                                                        : this.state
-                                                              .currentLocation
-                                                              .lat
-                                                }
-                                                lng={
-                                                    this.state.boardingPoint.lng
-                                                        ? this.state
-                                                              .boardingPoint.lng
-                                                        : this.state
-                                                              .currentLocation
-                                                              .lng
-                                                }
-                                                metaData="board"
-                                            />
+                                        )}
+                                        <Marker
+                                            lat={
+                                                this.state.currentLocation.lat
+                                                    ? this.state.currentLocation
+                                                          .lat
+                                                    : this.state.fields.lat
+                                            }
+                                            lng={
+                                                this.state.currentLocation.lng
+                                                    ? this.state.currentLocation
+                                                          .lng
+                                                    : this.state.fields.lng
+                                            }
+                                            metaData="current"
+                                        />
+                                        <Marker
+                                            lat={
+                                                this.state.boardingPoint.lat
+                                                    ? this.state.boardingPoint
+                                                          .lat
+                                                    : this.state.currentLocation
+                                                          .lat
+                                            }
+                                            lng={
+                                                this.state.boardingPoint.lng
+                                                    ? this.state.boardingPoint
+                                                          .lng
+                                                    : this.state.currentLocation
+                                                          .lng
+                                            }
+                                            metaData="board"
+                                        />
 
-                                            {this.state.allDrivers &&
-                                                this.state.allDrivers.length &&
-                                                this.state.allDrivers.map(
-                                                    (e, i) => {
-                                                        return (
-                                                            <Marker
-                                                                lat={
-                                                                    e
-                                                                        .currentLocation[1]
-                                                                }
-                                                                lng={
-                                                                    e
-                                                                        .currentLocation[0]
-                                                                }
-                                                                metaData="cartop"
-                                                                deg={e.heading}
-                                                                key={i}
-                                                            />
-                                                        );
-                                                    }
-                                                )}
-                                        </GoogleMapReact>
-                                    )}
-                                </div>
+                                        {this.state.allDrivers &&
+                                            this.state.allDrivers.length &&
+                                            this.state.allDrivers.map(
+                                                (e, i) => {
+                                                    return (
+                                                        <Marker
+                                                            lat={
+                                                                e
+                                                                    .currentLocation[1]
+                                                            }
+                                                            lng={
+                                                                e
+                                                                    .currentLocation[0]
+                                                            }
+                                                            metaData="cartop"
+                                                            deg={e.heading}
+                                                            key={i}
+                                                        />
+                                                    );
+                                                }
+                                            )}
+                                    </GoogleMapReact>
+                                )}
                             </div>
-                        )}
+                        </div>
+                    )}
                 </Fragment>
                 {this.state.redirectToCurrentBooking && (
                     <Redirect to="/app/currentBooking" />

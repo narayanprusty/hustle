@@ -51,7 +51,8 @@ class Bookingreq extends Component {
         return Meteor.call("getDriver", Meteor.userId(), (err, driverMeta) => {
             if (err) {
                 notify.show(
-                    err.reason || localizationManager.strings.unableToFetchDriverDetails,
+                    err.reason ||
+                        localizationManager.strings.unableToFetchDriverDetails,
                     "error"
                 );
             }
@@ -95,10 +96,11 @@ class Bookingreq extends Component {
                     this.setState({
                         accept_loader: false
                     });
+                    console.log(error);
                     //Add localization support
                     notify.show(
-                        error.reason
-                            ? error.reason
+                        error.error
+                            ? error.error
                             : localizationManager.strings.unabletoAcceptTheRide,
                         "error"
                     );
@@ -131,7 +133,8 @@ class Bookingreq extends Component {
                 console.log("#2");
                 if (err) {
                     notify.show(
-                        localizationManager.strings.unableToFetchYourCurrentLocation,
+                        localizationManager.strings
+                            .unableToFetchYourCurrentLocation,
                         "error"
                     );
                 }
@@ -194,7 +197,11 @@ class Bookingreq extends Component {
                 );
             },
             err => {
-                notify.show(localizationManager.strings.unableToFetchYourCurrentLocation, "error");
+                notify.show(
+                    localizationManager.strings
+                        .unableToFetchYourCurrentLocation,
+                    "error"
+                );
             },
             {
                 enableHighAccuracy: true,
@@ -281,7 +288,8 @@ class Bookingreq extends Component {
                                 data-spinner-color="#ddd"
                                 data-spinner-lines={12}
                             >
-                                <i className="icon fa fa-check" /> {localizationManager.strings.accept}
+                                <i className="icon fa fa-check" />{" "}
+                                {localizationManager.strings.accept}
                             </LaddaButton>
                         </div>
                     </div>
@@ -299,7 +307,7 @@ class Bookingreq extends Component {
                 >
                     <div className="padding">
                         <h3 className="padding">
-                            <i className="fa fa-car" aria-hidden="true" /> 
+                            <i className="fa fa-car" aria-hidden="true" />
                             {localizationManager.strings.rideRequests}
                         </h3>
                     </div>

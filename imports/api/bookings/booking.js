@@ -6,6 +6,7 @@ import { DriverMeta } from "../../collections/driver-meta";
 import config from "../../modules/config/server";
 import { sendMessage } from "../../notifications/index";
 import { oneClickPayment } from "../payments/payments";
+import { getUserSubscriptions } from "../subscriptions/subscriptions";
 import localization from "../../ui/localization";
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
@@ -182,48 +183,53 @@ const onCancellation = async (
 };
 
 const onDriverAccept = async (bookingId, driverId) => {
-    const BookingData = BookingRecord.find({
-        bookingId: bookingId,
-        status: "pending"
-    }).fetch()[0];
-    if (!BookingData) {
-        throw { reason: localization.strings.acceptedBySomeone };
-    }
-    const txId = await node.callAPI("assets/updateAssetInfo", {
-        assetName: config.ASSET.Bookings,
-        fromAccount: node.getWeb3().eth.accounts[0],
-        identifier: bookingId,
-        public: {
-            rideStatus: "accepted",
-            driverId: driverId
+    const subPlan = await getUserSubscriptions(Meteor.userId());
+    if (subPlan.success && subPlan.data && subPlan.data.length) {
+        const BookingData = BookingRecord.find({
+            bookingId: bookingId,
+            status: "pending"
+        }).fetch()[0];
+        if (!BookingData) {
+            throw new Meteor.Error(localization.strings.acceptedBySomeone);
         }
-    });
-    await BookingRecord.update(
-        {
-            bookingId: bookingId
-        },
-        {
-            $set: {
-                driverId: driverId,
-                status: "accepted"
+        const txId = await node.callAPI("assets/updateAssetInfo", {
+            assetName: config.ASSET.Bookings,
+            fromAccount: node.getWeb3().eth.accounts[0],
+            identifier: bookingId,
+            public: {
+                rideStatus: "accepted",
+                driverId: driverId
             }
-        }
-    );
-    await DriverMeta.update(
-        { driverId: driverId },
-        {
-            $set: {
-                onRide: true
+        });
+        await BookingRecord.update(
+            {
+                bookingId: bookingId
             },
-            $inc: {
-                totalNumberOfRide: 1
+            {
+                $set: {
+                    driverId: driverId,
+                    status: "accepted"
+                }
             }
-        }
-    );
+        );
+        await DriverMeta.update(
+            { driverId: driverId },
+            {
+                $set: {
+                    onRide: true
+                },
+                $inc: {
+                    totalNumberOfRide: 1
+                }
+            }
+        );
 
-    return {
-        txId: txId
-    };
+        return {
+            txId: txId
+        };
+    } else {
+        throw new Meteor.Error("Please subscribe to accept.");
+    }
 };
 
 const onStartRide = async (bookingId, startingPoint) => {
