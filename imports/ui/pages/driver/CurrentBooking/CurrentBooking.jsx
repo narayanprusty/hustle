@@ -147,9 +147,7 @@ class CurrentBooking extends Component {
                 if (!("Notification" in window)) {
                     if (localizationManager.getLanguage() == "en") {
                         alert(
-                            localizationManager.strings[
-                                "messageFroDriverNotif"
-                            ] +
+                            localizationManager.strings.messageFromDriver +
                                 " " +
                                 message
                         );
@@ -157,9 +155,7 @@ class CurrentBooking extends Component {
                         alert(
                             message +
                                 " " +
-                                localizationManager.strings[
-                                    "messageFroDriverNotif"
-                                ]
+                                localizationManager.strings.messageFromDriver
                         );
                     }
                 } else if (Notification.permission === "granted") {
@@ -181,7 +177,7 @@ class CurrentBooking extends Component {
                 cordova.plugins.notification.local.schedule({
                     id: 1,
                     title:
-                        localizationManager.strings["You have a new message"],
+                        localizationManager.strings.newMessage,
                     message: message.message.message,
                     at: new Date()
                 });
@@ -232,9 +228,7 @@ class CurrentBooking extends Component {
                             if (err) {
                                 notify.show(
                                     err.reason ||
-                                        localizationManager.strings[
-                                            "Unknown error occurred"
-                                        ],
+                                        localizationManager.strings.unknownError,
                                     "error"
                                 );
                                 return false;
@@ -322,9 +316,7 @@ class CurrentBooking extends Component {
                     notify.show(
                         error.reason
                             ? error.reason
-                            : localizationManager.strings[
-                                  "Unable to start the ride!"
-                              ],
+                            : localizationManager.strings.unableToStartTheRide,
                         "error"
                     );
                 }
@@ -387,9 +379,7 @@ class CurrentBooking extends Component {
                     notify.show(
                         error.reason
                             ? error.reason
-                            : localizationManager.strings[
-                                  "Unable to Finish the ride!"
-                              ],
+                            : localizationManager.strings.unableToFinishTheRide,
                         "error"
                     );
                 }
@@ -398,7 +388,7 @@ class CurrentBooking extends Component {
                     finishRide_loader: false
                 });
                 notify.show(
-                    localizationManager.strings["Ride completed"],
+                    localizationManager.strings.rideCompleted,
                     "success"
                 );
             }
@@ -423,9 +413,7 @@ class CurrentBooking extends Component {
                     notify.show(
                         error.reason
                             ? error.reason
-                            : localizationManager.strings[
-                                  "Unable to mark payment for the ride!"
-                              ],
+                            : localizationManager.strings.unableToMarkPaymentForTheRide,
                         "error"
                     );
                 }
@@ -437,7 +425,7 @@ class CurrentBooking extends Component {
                     paymentReceived: true
                 });
                 notify.show(
-                    localizationManager.strings["Payment Marked"],
+                    localizationManager.strings.paymentMarked,
                     "success"
                 );
             }
@@ -461,9 +449,7 @@ class CurrentBooking extends Component {
                     });
                     notify.show(
                         err.reason ||
-                            localizationManager.strings[
-                                "failed to update the review"
-                            ],
+                            localizationManager.strings.failedToUpdateReview,
                         "error"
                     );
                 }
@@ -472,7 +458,7 @@ class CurrentBooking extends Component {
                     sendToNewReqs: true
                 });
                 notify.show(
-                    localizationManager.strings["Review submitted, Thank you."],
+                    localizationManager.strings.reviewSubmitted,
                     "success"
                 );
             }
@@ -515,7 +501,7 @@ class CurrentBooking extends Component {
                 <div className="padding">
                     <h3 className="padding">
                         <i className="fa fa-car" aria-hidden="true" />{" "}
-                        {localizationManager.strings["Ongoing Booking"]}
+                        {localizationManager.strings.ongoingBooking}
                     </h3>
                 </div>
                 <div className="padding-left padding-right padding-bottom">
@@ -598,7 +584,7 @@ class CurrentBooking extends Component {
                             }}
                         >
                             <i className="fa fa-comments" aria-hidden="true" />{" "}
-                            {localizationManager.strings["Chat with Rider"]}{" "}
+                            {localizationManager.strings.chatWithRider}{" "}
                             {this.state.badge !== 0 && (
                                 <span
                                     style={{
@@ -631,7 +617,7 @@ class CurrentBooking extends Component {
                                 className="fa fa-location-arrow"
                                 aria-hidden="true"
                             />{" "}
-                            {localizationManager.strings["Navigate to Rider"]}
+                            {localizationManager.strings.navigateToRider}
                         </LaddaButton>
                     )}
                     {this.state.status == "accepted" && (
@@ -647,7 +633,7 @@ class CurrentBooking extends Component {
                             data-spinner-lines={12}
                         >
                             <i className="fa fa-car" aria-hidden="true" />{" "}
-                            {localizationManager.strings["Start Ride"]}
+                            {localizationManager.strings.startRide}
                         </LaddaButton>
                     )}
                     {this.state.status == "started" && (
@@ -666,7 +652,7 @@ class CurrentBooking extends Component {
                                 className="fa fa-map-marker"
                                 aria-hidden="true"
                             />{" "}
-                            {localizationManager.strings["Navigate to drop"]}
+                            {localizationManager.strings.navigateToDrop}
                         </LaddaButton>
                     )}
                     {this.state.status == "started" && (
@@ -682,7 +668,7 @@ class CurrentBooking extends Component {
                             data-spinner-lines={12}
                         >
                             <i className="fa fa-check" aria-hidden="true" />{" "}
-                            {localizationManager.strings["Finish Ride"]}
+                            {localizationManager.strings.finishRide}
                         </LaddaButton>
                     )}
                     {this.state.status == "finished" && (
@@ -695,7 +681,7 @@ class CurrentBooking extends Component {
                                 }}
                             >
                                 <div className="item item-divider">
-                                    {localizationManager.strings["Rate Rider"]}
+                                    {localizationManager.strings.rateRider}
                                 </div>
                                 <div className="item item-text-wrap">
                                     <div
@@ -752,7 +738,7 @@ class CurrentBooking extends Component {
                                     className="fa fa-paper-plane"
                                     aria-hidden="true"
                                 />{" "}
-                                {localizationManager.strings["Submit Review"]}
+                                {localizationManager.strings.submitReview}
                             </LaddaButton>
                             <LaddaButton
                                 className="button button-block button-calm activated"
@@ -771,7 +757,7 @@ class CurrentBooking extends Component {
                                     className="fa fa-arrow-right"
                                     aria-hidden="true"
                                 />{" "}
-                                {localizationManager.strings["Skip"]}
+                                {localizationManager.strings.skip}
                             </LaddaButton>
                         </div>
                     )}

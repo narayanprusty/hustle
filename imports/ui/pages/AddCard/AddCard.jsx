@@ -33,7 +33,8 @@ export default class AddCard extends Component {
                 console.log("info:", res, err);
                 if (res) {
                     if (res.message || !res.success) {
-                        notify.show(res.message ? res.message : localizationManager.strings.failedAddingCard, "error");
+                        notify.show(res.message ? res.message : 
+                            localizationManager.strings.failedAddingCard, "error");
                     } else {
                         notify.show(localizationManager.strings.cardAdded, "success");
                         this.props.history.push('/app/myCards')
@@ -54,7 +55,8 @@ export default class AddCard extends Component {
             <div className="padding-top padding-right padding-left padding-bottom">
             {/* style={{ borderBottomWidth: 1, borderBottomStyle: "solid", alignContent: "left" }} */}
                 <h3 className="padding">
-                    <i className="fa fa-plus-square" aria-hidden="true" /> {localizationManager.strings.addNewCard} </h3>
+                    <i className="fa fa-plus-square" aria-hidden="true" /> 
+                    {localizationManager.strings.addNewCard} </h3>
                     <Form
                         onSubmit={this.onSubmit}
                         render={({
