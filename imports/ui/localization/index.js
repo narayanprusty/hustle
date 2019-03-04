@@ -19,7 +19,7 @@ let strings = new LocalizedStrings({
         failedAddingCard: "Failed adding card.",
         micro: "Micro",
         mini: "Mini",
-        primeSadan: "Prime sedan",
+        primeSedan: "Prime Sedan",
         primeSUV: "Prime SUV",
         primeExec: "Prime Exec",
         primeLux: "Prime Lux",

@@ -13,23 +13,23 @@ import localizationManager from "../../localization/index";
 
 const cartTypes = [
     {
-        name: localizationManager.strings.micro,
+        name: "micro",
         value: "micro"
     },
     {
-        name: localizationManager.strings.mini,
+        name: "mini",
         value: "mini"
     },
     {
-        name: localizationManager.strings.primeSedan,
+        name: "primeSedan",
         value: "sedan"
     },
     {
-        name: localizationManager.strings.primeSUV,
+        name: "primeSUV",
         value: "suv"
     },
     {
-        name: localizationManager.strings.primeExec,
+        name: "primeExec",
         value: "exec"
     },
     {
@@ -194,7 +194,7 @@ class Bookings extends Component {
                 let options = [
                     {
                         value: "cash",
-                        text: "Cash"
+                        text: localizationManager.strings.cash
                     }
                 ];
                 for (let i = 0; i < res.cards.length; i++) {
@@ -844,7 +844,7 @@ class Bookings extends Component {
                                                                 key={i}
                                                             >
                                                                 {" "}
-                                                                {cars.name}{" "}
+                                                                {localizationManager.strings[cars.name]}{" "}
                                                             </option>
                                                         )
                                                     )}
