@@ -309,12 +309,25 @@ class Bookingreq extends Component {
                     <div className="padding">
                         <h3 className="padding">
                             <i className="fa fa-car" aria-hidden="true" />
-                            {localizationManager.strings.rideRequests}
+                            &nbsp;{localizationManager.strings.rideRequests}
                         </h3>
                     </div>
                     {(!this.state.datas || !this.state.datas.length) && (
-                        <div style={{ textAlign: "center" }}>
-                            {localizationManager.strings.noRequests}
+                        <div className="card">
+                            <div
+                                className="item item-text-wrap"
+                                style={{ textAlign: "center" }}
+                            >
+                                <div>
+                                    <img
+                                        src={"/images/pending.png"}
+                                        style={{ width: "40px" }}
+                                    />
+                                </div>
+                                <div className="padding-top">
+                                {localizationManager.strings.noRequests}
+                                </div>
+                            </div>
                         </div>
                     )}
                     <div className="padding-left padding-right">{items}</div>

@@ -125,10 +125,13 @@ export default class Settings extends Component {
                     {this.state.isDriver ? (
                         <li class="item item-icon-left item-toggle">
                             <i className="icon fa fa-car" />
-                            {localizationManager.strings.driverMode}
+                            <span style={{
+                                        color: "#000"
+                            }}>{localizationManager.strings.driverMode}</span>
                             <label class="toggle toggle-dark">
                                 <input
                                     type="checkbox"
+                                    
                                     checked={this.state.driverMode}
                                     onChange={e =>
                                         e.target.checked
