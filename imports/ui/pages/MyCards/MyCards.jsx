@@ -108,7 +108,7 @@ export default class MyCards extends Component {
         );
 
         return (
-            <div className="padding-top padding-bottom">
+            <div className="padding-top padding-bottom" style={{direction: localizationManager.strings.textDirection}}>
                 <h3 className="padding  padding-right padding-left">
                     <i className="fa fa-credit-card-alt" aria-hidden="true" /> {localizationManager.strings.yourCards}
                 </h3>

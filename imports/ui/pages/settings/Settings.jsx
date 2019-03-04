@@ -83,7 +83,7 @@ export default class Settings extends Component {
     render() {
         const driverMode = localStorage.getItem("driverMode");
         return (
-            <div className="" style={{ height: "100%" }}>
+            <div className="" style={{ height: "100%", direction: localizationManager.strings.textDirection }}>
                 <div className="padding">
                     <h3 className="padding">
                         <i className="fa fa-cog" aria-hidden="true" />{" "}

@@ -298,7 +298,7 @@ class Bookingreq extends Component {
             );
         });
         return (
-            <div>
+            <div style={{direction: localizationManager.strings.textDirection}}>
                 <InfiniteScroll
                     pageStart={0}
                     loadMore={this.loadItems}

@@ -377,7 +377,7 @@ class Subscriptions extends Component {
         );
 
         return (
-            <div className="" style={{ height: "100%" }}>
+            <div className="" style={{ height: "100%", direction: localizationManager.strings.textDirection }}>
                 {!this.state.gettingPlans ? (
                     <div>
                         <div className="padding">

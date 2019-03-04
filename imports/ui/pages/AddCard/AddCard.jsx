@@ -52,7 +52,7 @@ export default class AddCard extends Component {
     
     render() {
         return (<div>
-            <div className="padding-top padding-right padding-left padding-bottom">
+            <div className="padding-top padding-right padding-left padding-bottom" style={{direction: localizationManager.strings.textDirection}}>
             {/* style={{ borderBottomWidth: 1, borderBottomStyle: "solid", alignContent: "left" }} */}
                 <h3 className="padding">
                     <i className="fa fa-plus-square" aria-hidden="true" /> 

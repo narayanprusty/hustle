@@ -160,7 +160,7 @@ class RidePayment extends Component {
         );
 
         return (
-            <div>
+            <div style={{direction: localizationManager.strings.textDirection}}>
                 {this.state.booking ? (
                     <div>
                         <div className="item item-avatar">

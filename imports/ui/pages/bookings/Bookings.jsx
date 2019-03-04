@@ -619,7 +619,7 @@ class Bookings extends Component {
         }
 
         return (
-            <div style={{ height: "100%" }}>
+            <div style={{ height: "100%", direction: localizationManager.strings.textDirection }}>
                 <Fragment>
                     <div className="padding">
                         <h3 className="padding">

@@ -8,6 +8,7 @@ import PhoneInput from "react-phone-number-input";
 import SmartInput from "react-phone-number-input/smart-input";
 import "react-phone-number-input/style.css";
 import "./Login_client.scss";
+import localizationManager from "../../localization";
 
 export default class Login extends Component {
     constructor(props) {
@@ -84,7 +85,8 @@ export default class Login extends Component {
                     backgroundPositionY: "bottom",
                     backgroundRepeat: "repeat-x",
                     backgroundRepeatX: "repeat",
-                    overflow: "scroll"
+                    overflow: "scroll",
+                    direction: localizationManager.strings.textDirection
                 }}
             >
                 <Notifications />

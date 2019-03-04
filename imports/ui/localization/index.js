@@ -87,7 +87,6 @@ let strings = new LocalizedStrings({
         trackRider: "Track Rider",
         noDataFound: "No data found",
         thankYouRideEnded: "The ride has ended, Thanks for using Hustle.",
-        //Already submitted for translation
         loggingOut: "Logging you out",
         Home: "Home",
         Hello: "Hello",
@@ -192,7 +191,9 @@ let strings = new LocalizedStrings({
         english: "English",
         arabic: "Arabic",
         invalidVerificationLink: "Oooppsss... <br />Seems like the verification link is invalid. <br />",
-        redirectionToLogin: "If not redirected in 5 seconds, <Link to='/login'>Click here to login</Link>"
+        redirectionToLogin: "If not redirected in 5 seconds, <Link to='/login'>Click here to login</Link>",
+        //for text direction (don`t change)
+        textDirection: "ltr",
     },
     ar: {
         myCards: "تسجيل الخروج",
@@ -277,7 +278,6 @@ let strings = new LocalizedStrings({
         trackRider: "تسجيل الخروج",
         noDataFound: "تسجيل الخروج",
         thankYouRideEnded: "تسجيل الخروج",
-        //Already submitted for translation
         loggingOut: "تسجيل الخروج",
         Home: "الصفحة الرئيسية",
         Hello: "تسجيل",
@@ -383,6 +383,8 @@ let strings = new LocalizedStrings({
         arabic: "عربى",
         invalidVerificationLink: "يبدو أن رابط التحقق غير صالح خطأ ",
         redirectionToLogin: "يبدو ان رابط التحقق غير صالح إذا لم تتم إعادة توجيهك خلال 5 ثوان",
+        //for text direction (don`t change)
+        textDirection: "rtl",
     }
 });
 

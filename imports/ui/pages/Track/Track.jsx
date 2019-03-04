@@ -254,7 +254,7 @@ class Track extends Component {
 
     render() {
         return (
-            <div style={{ height: "100%" }}>
+            <div style={{ height: "100%", direction: localizationManager.strings.textDirection }}>
                 <div className="padding">
                     <h3 className="padding">
                         <i className="fa fa-car" aria-hidden="true" />

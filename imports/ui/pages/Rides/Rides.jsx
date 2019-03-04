@@ -209,7 +209,7 @@ export default class Rides extends Component {
         loader={loader}
         useWindow={false}
       >
-        <div className="padding-top padding-right padding-left padding-bottom">
+        <div className="padding-top padding-right padding-left padding-bottom" style={{direction: localizationManager.strings.textDirection}}>
           <h3 className="padding">
             <i className="fa fa-road" aria-hidden="true" /> {localizationManager.strings.yourRides}
           </h3>
