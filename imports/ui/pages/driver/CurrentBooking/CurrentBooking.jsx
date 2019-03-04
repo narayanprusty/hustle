@@ -160,13 +160,17 @@ class CurrentBooking extends Component {
                     }
                 } else if (Notification.permission === "granted") {
                     var notification = new Notification(
-                        localizationManager.strings.messageFromDriver + ": " + message
+                        localizationManager.strings.messageFromDriver +
+                            ": " +
+                            message
                     );
                 } else if (Notification.permission !== "denied") {
                     Notification.requestPermission(function(permission) {
                         if (permission === "granted") {
                             var notification = new Notification(
-                                localizationManager.strings.messageFromDriver + ": " + message
+                                localizationManager.strings.messageFromDriver +
+                                    ": " +
+                                    message
                             );
                         }
                     });
@@ -176,8 +180,7 @@ class CurrentBooking extends Component {
             if (window.cordova) {
                 cordova.plugins.notification.local.schedule({
                     id: 1,
-                    title:
-                        localizationManager.strings.newMessage,
+                    title: localizationManager.strings.newMessage,
                     message: message.message.message,
                     at: new Date()
                 });
@@ -228,7 +231,8 @@ class CurrentBooking extends Component {
                             if (err) {
                                 notify.show(
                                     err.reason ||
-                                        localizationManager.strings.unknownError,
+                                        localizationManager.strings
+                                            .unknownError,
                                     "error"
                                 );
                                 return false;
@@ -413,7 +417,8 @@ class CurrentBooking extends Component {
                     notify.show(
                         error.reason
                             ? error.reason
-                            : localizationManager.strings.unableToMarkPaymentForTheRide,
+                            : localizationManager.strings
+                                  .unableToMarkPaymentForTheRide,
                         "error"
                     );
                 }
@@ -516,8 +521,11 @@ class CurrentBooking extends Component {
                             </a>
                             <a className="item item-icon-left" href="#">
                                 <i className="icon fa fa-phone" />
-                                {this.state.phone || "-"}
+                                <a href={"tel:" + this.state.phone}>
+                                    {this.state.phone || "-"}{" "}
+                                </a>
                                 <span className="item-note">
+                                    {" "}
                                     {localizationManager.strings.phone}
                                 </span>
                             </a>
@@ -715,7 +723,10 @@ class CurrentBooking extends Component {
                                                 borderRadius: "6px"
                                             }}
                                             name="reviewMessage"
-                                            placeholder={localizationManager.strings.feedbackPlaceHolder}
+                                            placeholder={
+                                                localizationManager.strings
+                                                    .feedbackPlaceHolder
+                                            }
                                             onChange={this.handleChange}
                                         />
                                     </div>

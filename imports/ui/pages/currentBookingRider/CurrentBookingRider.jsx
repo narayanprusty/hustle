@@ -323,7 +323,10 @@ class CurrentBookingRider extends Component {
                     notify.show("Internal error", "error");
                 } else {
                     notify.show(
-                       localizationManager.strings.directionsRequestFailedDueTo + " " + status,
+                        localizationManager.strings
+                            .directionsRequestFailedDueTo +
+                            " " +
+                            status,
                         "error"
                     );
                 }
@@ -345,16 +348,24 @@ class CurrentBookingRider extends Component {
 
             function notifyMe(message) {
                 if (!("Notification" in window)) {
-                    alert( localizationManager.strings.messageFromDriver +": " + message);
+                    alert(
+                        localizationManager.strings.messageFromDriver +
+                            ": " +
+                            message
+                    );
                 } else if (Notification.permission === "granted") {
                     var notification = new Notification(
-                        localizationManager.strings.messageFromDriver + ": " + message
+                        localizationManager.strings.messageFromDriver +
+                            ": " +
+                            message
                     );
                 } else if (Notification.permission !== "denied") {
                     Notification.requestPermission(function(permission) {
                         if (permission === "granted") {
                             var notification = new Notification(
-                                localizationManager.strings.messageFromDriver + ": " + message
+                                localizationManager.strings.messageFromDriver +
+                                    ": " +
+                                    message
                             );
                         }
                     });
@@ -447,7 +458,8 @@ class CurrentBookingRider extends Component {
                         loader: false
                     });
                     notify.show(
-                        err.reason || localizationManager.strings.unableToCancelRequest,
+                        err.reason ||
+                            localizationManager.strings.unableToCancelRequest,
                         "error"
                     );
                     return;
@@ -475,7 +487,8 @@ class CurrentBookingRider extends Component {
                         loader: false
                     });
                     notify.show(
-                        err.reason || localizationManager.strings.failedToUpdateReview,
+                        err.reason ||
+                            localizationManager.strings.failedToUpdateReview,
                         "error"
                     );
                 }
@@ -483,7 +496,10 @@ class CurrentBookingRider extends Component {
                     loader: false
                 });
 
-                notify.show(localizationManager.strings.reviewSubmitted, "success");
+                notify.show(
+                    localizationManager.strings.reviewSubmitted,
+                    "success"
+                );
                 this.props.history.push("/app");
             }
         );
@@ -593,7 +609,10 @@ class CurrentBookingRider extends Component {
             this.setState({
                 sos_loader: false
             });
-            return notify.show(localizationManager.strings.sosSuccess, "success");
+            return notify.show(
+                localizationManager.strings.sosSuccess,
+                "success"
+            );
         });
     };
     render() {
@@ -760,7 +779,10 @@ class CurrentBookingRider extends Component {
                                                 borderRadius: "6px"
                                             }}
                                             name="reviewMessage"
-                                            placeholder={localizationManager.strings.feedbackPlaceHolder}
+                                            placeholder={
+                                                localizationManager.strings
+                                                    .feedbackPlaceHolder
+                                            }
                                             onChange={this.handleChange}
                                         />
                                     </div>
@@ -821,15 +843,21 @@ class CurrentBookingRider extends Component {
                                 </a>
                                 <a className="item item-icon-left" href="#">
                                     <i className="icon fa fa-phone" />
-                                    {this.state.phone || "-"}
+                                    <a href={"tel:" + this.state.phone}>
+                                        {" "}
+                                        {this.state.phone || "-"}{" "}
+                                    </a>
                                     <span className="item-note">
+                                        {" "}
                                         {localizationManager.strings.phone}
                                     </span>
                                 </a>
                                 <a className="item item-icon-left" href="#">
                                     <i className="icon fa fa-car" />
                                     {this.state.carModel || "-"}
-                                    <span className="item-note">{localizationManager.strings.carModel}</span>
+                                    <span className="item-note">
+                                        {localizationManager.strings.carModel}
+                                    </span>
                                 </a>
                                 <a className="item item-icon-left" href="#">
                                     <i className="icon fa fa-text-width" />
@@ -857,7 +885,10 @@ class CurrentBookingRider extends Component {
                                         }}
                                     />
                                     <span className="item-note">
-                                        {localizationManager.strings.driverReview}
+                                        {
+                                            localizationManager.strings
+                                                .driverReview
+                                        }
                                     </span>
                                 </a>
                             </div>
