@@ -72,21 +72,14 @@ class CurrentBooking extends Component {
                 // this.callInsideRender();
                 const coords = pos.coords;
                 console.log(coords);
-                let publishNow = true;
-                if (
-                    this.state.currentPosition &&
-                    (this.state.currentPosition.lat == coords.latitude &&
-                        this.state.currentPosition.lng == coords.longitude)
-                ) {
-                    publishNow = false;
-                }
+
                 this.setState({
                     currentPosition: {
                         lat: coords.latitude,
                         lng: coords.longitude
                     }
                 });
-                if (this._isMounted && publishNow) {
+                if (this._isMounted) {
                     this.pubnub
                         .publish({
                             message: {

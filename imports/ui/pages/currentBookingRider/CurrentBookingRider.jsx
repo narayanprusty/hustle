@@ -336,6 +336,16 @@ class CurrentBookingRider extends Component {
 
     handleSocket = message => {
         console.log(message);
+        let changeRoute = true;
+        if (
+            this.state.driverLoc &&
+            (message.userMetadata.type == "driverAccept" ||
+                message.userMetadata.type == "driverLoc") &&
+            (this.state.driverLoc.lat == message.message.driverCoords.lat &&
+                this.state.driverLoc.lng == message.message.driverCoords.lng)
+        ) {
+            changeRoute = false;
+        }
         //on driver connect make showmMap to true
         //            this.state.timeArr.indexOf(message.message.time) == "-1"
 
@@ -420,7 +430,8 @@ class CurrentBookingRider extends Component {
         if (
             this.state.rideStarted &&
             this.state.mapApiLoaded &&
-            this.state.bookingId == message.message.bookingId
+            this.state.bookingId == message.message.bookingId &&
+            changeRoute
         ) {
             this.setState({
                 destPoint: {
@@ -434,7 +445,8 @@ class CurrentBookingRider extends Component {
             this.state.accepted &&
             !this.state.rideStarted &&
             this.state.mapApiLoaded &&
-            this.state.bookingId == message.message.bookingId
+            this.state.bookingId == message.message.bookingId &&
+            changeRoute
         ) {
             this.setState({
                 destPoint: {

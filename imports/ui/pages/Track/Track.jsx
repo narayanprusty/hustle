@@ -4,13 +4,15 @@ import { notify } from "react-notify-toast";
 import { withRouter } from "react-router-dom";
 import GoogleMapReact from "google-map-react";
 import queryString from "query-string";
+import PubNubReact from "pubnub-react";
+
 import localizationManager from "../../localization";
 
 import config from "../../../modules/config/client";
 import "./Track_client.scss";
 import mapStyle from "../bookings/MapStyle.json"; //https://mapstyle.withgoogle.com/ you can build yours from
 
-const Marker = ({ metaData }) => (
+const Marker = ({ metaData, deg }) => (
     <div>
         {metaData == "current" && <span className="pulse_current" />}
         {metaData == "cartop" && (
@@ -38,6 +40,12 @@ class Track extends Component {
     constructor(props) {
         super(props);
         this._isMounted = false;
+        this.pubnub = new PubNubReact({
+            publishKey: config.PUBNUB.pubKey,
+            subscribeKey: config.PUBNUB.subKey,
+            secretKey: config.PUBNUB.secret,
+            ssl: true
+        });
         this.state = {
             bookingId: null,
             not_found: false,
@@ -48,19 +56,30 @@ class Track extends Component {
                 lng: 0
             }
         };
+        this.pubnub.init(this);
     }
     componentWillUnmount = () => {
         if (this._isMounted) {
             clearInterval(this.state.intvl);
-            clearInterval(this.state.intvl1);
+            this.pubnub.unsubscribe({
+                channels: [this.state.bookingId]
+            });
         }
     };
-    componentDidMount = () => {
+    componentDidMount = async () => {
+        this.pubnub.addListener({
+            message: message => {
+                this.callInsideRender(message);
+            }
+        });
         let parsed;
         try {
             parsed = queryString.parse(this.props.location.search);
         } catch (error) {
-            return notify.show(localizationManager.strings.noTrackingRecordFound, "error");
+            return notify.show(
+                localizationManager.strings.noTrackingRecordFound,
+                "error"
+            );
         }
         if (!parsed.tid) {
             this.setState({
@@ -69,18 +88,48 @@ class Track extends Component {
 
             // notify.show("Invalid Tracking Id", "error");
         } else {
-            const fetched = this.fetchBooking(parsed.tid);
-            //setinerval of getDriverLocation
-            if (fetched) {
-                const invlT = setInterval(this.fetchDriverLoc, 3000);
-                const intRecord = setInterval(this.watchRideStatus, 5000);
-                this.setState({
-                    intvl: intRecord,
-                    intvl1: invlT
-                });
-            }
+            this.fetchBooking(parsed.tid);
         }
         this._isMounted = true;
+    };
+    callInsideRender = message => {
+        if (this._isMounted && this.state.userId) {
+            this.handleSocket(message);
+        }
+    };
+    handleSocket = message => {
+        console.log(message);
+        if (
+            message.userMetadata.type == "driverLoc" &&
+            this.state.bookingId == message.message.bookingId
+        ) {
+            if (
+                this.state.driverLoc &&
+                (this.state.driverLoc.lat == message.message.driverCoords.lat &&
+                    this.state.driverLoc.lng ==
+                        message.message.driverCoords.lng)
+            ) {
+                return false;
+            }
+            this.setState({
+                showMap: true,
+                accepted: true,
+                driverLoc: message.message.driverCoords,
+                heading: message.message.heading
+            });
+            this.changeRoute();
+        }
+    };
+    changeRoute = () => {
+        const { mapInstance, mapApi, driverLoc } = this.state;
+
+        const latlng = [new mapApi.LatLng(driverLoc.lat, driverLoc.lng)];
+        let latlngbounds = new mapApi.LatLngBounds();
+        for (let i = 0; i < latlng.length; i++) {
+            latlngbounds.extend(latlng[i]);
+        }
+        mapInstance.fitBounds(latlngbounds);
+        mapInstance.setZoom(this.state.zoom);
     };
     fetchDriverLoc = () => {
         return Meteor.call(
@@ -89,7 +138,8 @@ class Track extends Component {
             (error, data) => {
                 if (error) {
                     notify.show(
-                        error.reason || localizationManager.strings.unknownError,
+                        error.reason ||
+                            localizationManager.strings.unknownError,
                         "error"
                     );
                     return false;
@@ -109,21 +159,33 @@ class Track extends Component {
                     mapInstance.fitBounds(latlngbounds);
                     mapInstance.setZoom(this.state.zoom);
                 } else {
-                    notify.show(localizationManager.strings.unableToFetchDriverLocation, "error");
+                    notify.show(
+                        localizationManager.strings.unableToFetchDriverLocation,
+                        "error"
+                    );
                     return false;
                 }
             }
         );
     };
-    fetchBooking = bookingId => {
-        return Meteor.call("getBookingFromDb", bookingId, (error, data) => {
+
+    fetchBooking = async bookingId => {
+        Meteor.call("getBookingFromDb", bookingId, (error, data) => {
             if (error) {
                 // notify.show(error.reason || "Unknown Error Occurred!", "error");
                 this.setState({ not_found: true });
                 return false;
             }
             if (Object.keys(data).length) {
+                this.pubnub.subscribe({
+                    channels: [bookingId],
+                    withPresence: true
+                });
                 this.setState(data);
+                const intRecord = setInterval(this.watchRideStatus, 5000);
+                this.setState({
+                    intvl: intRecord
+                });
                 return data.userId;
             } else {
                 this.setState({ not_found: true });
@@ -211,7 +273,9 @@ class Track extends Component {
                                     style={{ width: "40px" }}
                                 />
                             </div>
-                            <div className="padding-top">{localizationManager.strings.noDataFound}</div>
+                            <div className="padding-top">
+                                {localizationManager.strings.noDataFound}
+                            </div>
                         </div>
                     </div>
                 )}
@@ -240,16 +304,19 @@ class Track extends Component {
                             {this.state.driverLoc && (
                                 <Marker
                                     lat={
-                                        this.state.driverLoc.length
-                                            ? this.state.driverLoc[1]
+                                        this.state.driverLoc &&
+                                        this.state.driverLoc.lat
+                                            ? this.state.driverLoc.lat
                                             : this.state.fields.lat
                                     }
                                     lng={
-                                        this.state.driverLoc.length
-                                            ? this.state.driverLoc[0]
+                                        this.state.driverLoc &&
+                                        this.state.driverLoc.lng
+                                            ? this.state.driverLoc.lng
                                             : this.state.fields.lng
                                     }
-                                    metaData="current"
+                                    metaData="cartop"
+                                    deg={this.state.driverLoc.heading}
                                 />
                             )}
                         </GoogleMapReact>
