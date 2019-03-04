@@ -135,14 +135,21 @@ class CurrentBooking extends Component {
     handleSocket = message => {
         console.log(message);
         //on driver connect make showmMap to true
+
+        //this.state.timeArr.indexOf(message.message.time) == "-1"
         if (
             message.userMetadata.type == "chat" &&
             this.state.bookingId == message.message.bookingId &&
-            message.message.message &&
-            this.state.timeArr.indexOf(message.message.time) == "-1"
+            message.message.message
         ) {
-            let { timeArr, badge } = this.state;
-            timeArr.push(message.message.time);
+            let {
+                // timeArr,
+                badge
+            } = this.state;
+            // timeArr.push(message.message.time);
+            if (message.message.user == Meteor.userId()) {
+                return false;
+            }
             function notifyMe(message) {
                 if (!("Notification" in window)) {
                     if (localizationManager.getLanguage() == "en") {
@@ -187,7 +194,10 @@ class CurrentBooking extends Component {
             } else {
                 notifyMe(message.message.message);
             }
-            this.setState({ timeArr: timeArr, badge: badge + 1 });
+            this.setState({
+                // timeArr: timeArr,
+                badge: badge + 1
+            });
             addResponseMessage(message.message.message);
         }
     };
