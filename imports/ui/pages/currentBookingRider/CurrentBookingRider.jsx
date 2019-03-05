@@ -312,6 +312,16 @@ class CurrentBookingRider extends Component {
                     routePolyline.setMap(mapInstance);
                     mapInstance.fitBounds(latlngbounds);
                     if (this.state.status == "accepted") {
+                        try {
+                            const time =
+                                response.routes[0].legs[0].duration_in_traffic
+                                    .text;
+                            this.setState({
+                                timeToArrive: time
+                            });
+                        } catch (err) {
+                            console.log(err);
+                        }
                         mapInstance.setZoom(this.state.zoom);
                     }
                     this.setState({
@@ -338,9 +348,18 @@ class CurrentBookingRider extends Component {
         console.log(message);
         let changeRoute = true;
         if (
+            message.userMetadata.type == "driverAccept" ||
+            message.userMetadata.type == "driverLoc"
+        ) {
+            this.setState({
+                showTime: true
+            });
+        }
+        if (
             this.state.driverLoc &&
             (message.userMetadata.type == "driverAccept" ||
                 message.userMetadata.type == "driverLoc") &&
+            message.message.driverCoords &&
             (this.state.driverLoc.lat == message.message.driverCoords.lat &&
                 this.state.driverLoc.lng == message.message.driverCoords.lng)
         ) {
@@ -670,6 +689,12 @@ class CurrentBookingRider extends Component {
                                             ? "You are on the ride"
                                             : localizationManager.strings
                                                   .driverAcceptedYourRideRequest}
+                                        <br />
+                                        {this.state.status == "accepted" &&
+                                            this.state.timeToArrive &&
+                                            this.state.showTime &&
+                                            "Partner expected to arrive in " +
+                                                this.state.timeToArrive}
                                     </div>
                                 </div>
                             </div>
