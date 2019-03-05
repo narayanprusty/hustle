@@ -638,7 +638,12 @@ class CurrentBookingRider extends Component {
     };
     render() {
         return (
-            <div style={{ height: "100%", direction: localizationManager.strings.textDirection }}>
+            <div
+                style={{
+                    height: "100%",
+                    direction: localizationManager.strings.textDirection
+                }}
+            >
                 <Fragment>
                     <div className="padding">
                         <h3 className="padding">
@@ -767,6 +772,12 @@ class CurrentBookingRider extends Component {
                             >
                                 <div className="item item-divider">
                                     {localizationManager.strings.rateDriver}
+                                </div>
+                                <div
+                                    className="item item-divider"
+                                    style={{ textAlign: "center" }}
+                                >
+                                    Thank you for riding with Hustle
                                 </div>
                                 <div className="item item-text-wrap">
                                     <div
