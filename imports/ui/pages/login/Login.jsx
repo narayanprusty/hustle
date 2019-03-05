@@ -86,7 +86,6 @@ export default class Login extends Component {
                     backgroundRepeat: "repeat-x",
                     backgroundRepeatX: "repeat",
                     overflow: "scroll",
-                    direction: localizationManager.strings.textDirection
                 }}
             >
                 <Notifications />

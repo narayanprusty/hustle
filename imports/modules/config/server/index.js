@@ -63,7 +63,8 @@ module.exports = {
         Subscriptions: "Subscriptions",
         Reviews: "Reviews",
         EMERGENCY_CONTACT: "Emergency Contact",
-        GlobalSettings: "GlobalSettings"
+        GlobalSettings: "GlobalSettings",
+        dynamicPricing: "dynamicPricing",
     },
     HYPERPAY: {
         UserId: "8ac7a4c86783997f0167971a1b65109d",
