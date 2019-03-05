@@ -1,5 +1,5 @@
-import { triggerSos, getUserProfile } from "./userFunction";
+import { triggerSos, getUserProfile, changeName } from "./userFunction";
 import { Meteor } from "meteor/meteor";
-Meteor.methods({ triggerSos, getUserProfile });
+Meteor.methods({ triggerSos, getUserProfile, changeName });
 
 export {};

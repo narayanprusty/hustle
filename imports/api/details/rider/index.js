@@ -5,7 +5,11 @@ const riderDetails = async userId => {
 
     const dataToSend = {
         name: riderProfile.profile ? riderProfile.profile.name : "-",
-        phone: riderProfile.profile ? riderProfile.profile.phone : "-"
+        phone: riderProfile.profile ? riderProfile.profile.phone : "-",
+        userType: riderProfile.profile
+            ? riderProfile.profile.userType
+            : "Rider",
+        avgRating: riderProfile.profile ? riderProfile.profile.avgRating : "0"
     };
     return dataToSend;
 };

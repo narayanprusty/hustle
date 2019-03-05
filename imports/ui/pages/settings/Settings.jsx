@@ -97,10 +97,10 @@ export default class Settings extends Component {
                     </h3>
                 </div>
                 <div className="list">
-                    <a className="item item-icon-left" href="#">
-                        <i className="icon ion-email" />
+                    <Link to="/app/profile" className="item item-icon-left">
+                        <i className="icon fa fa-user" />
                         {localizationManager.strings.editProfile}
-                    </a>
+                    </Link>
                     {driverMode && (
                         <Link
                             to="/app/subscriptions"

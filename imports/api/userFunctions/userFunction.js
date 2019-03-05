@@ -71,4 +71,18 @@ const getUserProfile = () => {
     return { ...userProfile.profile, id: Meteor.userId() };
 };
 
-export { triggerSos, getUserProfile };
+const changeName = (userId, newName) => {
+    Meteor.users.update(
+        {
+            _id: userId
+        },
+        {
+            $set: {
+                "profile.name": newName
+            }
+        }
+    );
+    return true;
+};
+
+export { triggerSos, getUserProfile, changeName };
