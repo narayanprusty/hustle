@@ -128,6 +128,7 @@ class CurrentBookingRider extends Component {
                     this.getDriverDetails(bookingData.data.driverId);
 
                     this.setState({
+                        showTime: false,
                         showMap: true,
                         rideStarted: true,
                         status: "started"
@@ -140,6 +141,7 @@ class CurrentBookingRider extends Component {
                     this.getDriverDetails(bookingData.data.driverId);
 
                     this.setState({
+                        showTime: false,
                         showMap: false,
                         rideFinished: true,
                         status: "finished"
