@@ -605,6 +605,220 @@ const getDriverLocation = driverId => {
     }
 };
 
+/*
+    distance in meters
+*/
+const calculateApproxBookingPrice = async (fromAddress, toAddress, distance, carType) => {
+    try {
+        let pricingConfig = await node.callAPI('assets/search', {
+            $query: {
+                assetName: config.ASSET.dynamicPricing,
+                status: "open",
+            }
+        });
+        let usePerMeterRate = true;
+        if (pricingConfig) {
+            if (pricingConfig.length > 0) {
+                usePerMeterRate = false;
+                let config = pricingConfig[0];
+                let price = 0;
+                let minimumFare = 0;
+                let perKM = 0;
+                let surge = 0;
+                if (config.basePrice) {
+                    if (config.basePrice[carType]) {
+                        price = config.basePrice[carType].basePrice ? config.basePrice[carType].basePrice : 0;
+                        minimumFare = config.basePrice[carType].minimumFare ? config.basePrice[carType].minimumFare : 0;
+                        perKM = config.basePrice[carType].perKM ? config.basePrice[carType].perKM : 0;
+                    }
+                }
+                if (config.dateTime) {
+                    if (config.dateTime.length > 0) {
+                        let month = new Date().getMonth();
+                        let day = new Date().getDay();
+                        let hour = new Date().getHours();
+                        let monthRuleMatched = false,
+                            dayRuleMatched = false,
+                            hourRuleMatched = false;
+                        for (var i = 0; i < config.dateTime.length; i++) {
+                            if (config.dateTime[i].type == "month" && !monthRuleMatched) {
+                                if (config.dateTime[i].month == month) {
+                                    monthRuleMatched = true;
+                                    surge += parseFloat(config.dateTime[i].change.toString());
+                                }
+                            } else if (config.dateTime[i].type == "hour" && !hourRuleMatched) {
+                                if (config.dateTime[i].fromHour <= hour && config.dateTime[i].toHour >= hour) {
+                                    hourRuleMatched = true;
+                                    surge += parseFloat(config.dateTime[i].change.toString());
+                                }
+                            } else if (config.dateTime[i].type == "day" && !dayRuleMatched) {
+                                if (config.dateTime[i].day == day) {
+                                    dayRuleMatched = true;
+                                    surge += parseFloat(config.dateTime[i].change.toString());
+                                }
+                            }
+                            if(monthRuleMatched && dayRuleMatched && hourRuleMatched){
+                                break;
+                            }
+                        }
+                    }
+                }
+                fromAddress = fromAddress.toString().toLowerCase();
+                toAddress = toAddress.toString().toLowerCase();
+                if (config.locations) {
+                    if (config.locations.length > 0) {
+                        let fromAddressFound = false, toAddressFound = false;
+                        for (var i = 0; i < config.locations.length; i++) {
+                            let location = config.locations[i].location.toString().toLowerCase();
+                            if(fromAddress.indexOf(location) != -1 && !fromAddressFound){
+                                fromAddressFound = true;
+                                surge += parseFloat(config.locations[i].change);
+                            }
+                            if(toAddress.indexOf(location) != -1 && !toAddressFound){
+                                toAddressFound = true;
+                                surge += parseFloat(config.locations[i].change);
+                            }
+                            if(fromAddressFound && toAddressFound){
+                                break;
+                            }
+                        }
+                    }
+                }
+                let retVal = basePrice;
+                retVal += (distance / 1000) * (perKM != 0 ? perKM : config.farePerMeter * 1000);
+                retVal = (retVal * (1 + (surge / 100)));
+                retVal = retVal < minimumFare ? minimumFare : retVal;
+
+                return {
+                    success: true,
+                    price: retVal
+                }
+            }
+        }
+        if (usePerMeterRate) {
+            return {
+                success: true,
+                price: (distance * config.farePerMeter)
+            }
+        }
+    } catch (ex) {
+        console.log(ex);
+        return ex;
+    }
+}
+
+/*
+    distance in meters
+    duration in minutes
+*/
+const calculateFinalBookingPrice = async (fromAddress, toAddress, distance, carType, duration) => {
+    try {
+        let pricingConfig = await node.callAPI('assets/search', {
+            $query: {
+                assetName: config.ASSET.dynamicPricing,
+                status: "open",
+            }
+        });
+        let usePerMeterRate = true;
+        if (pricingConfig) {
+            if (pricingConfig.length > 0) {
+                usePerMeterRate = false;
+                let config = pricingConfig[0];
+                let basePrice = 0;
+                let minimumFare = 0;
+                let perKM = 0;
+                let perMin = 0;
+                let surge = 0;
+                if (config.basePrice) {
+                    if (config.basePrice[carType]) {
+                        basePrice = config.basePrice[carType].basePrice ? config.basePrice[carType].basePrice : 0;
+                        minimumFare = config.basePrice[carType].minimumFare ? config.basePrice[carType].minimumFare : 0;
+                        perKM = config.basePrice[carType].perKM ? config.basePrice[carType].perKM : 0;
+                        perMin = config.basePrice[carType].perMin ? config.basePrice[carType].perMin : 0;
+                    }
+                }
+                if (config.dateTime) {
+                    if (config.dateTime.length > 0) {
+                        let month = new Date().getMonth();
+                        let day = new Date().getDay();
+                        let hour = new Date().getHours();
+                        let monthRuleMatched = false,
+                            dayRuleMatched = false,
+                            hourRuleMatched = false;
+                        for (var i = 0; i < config.dateTime.length; i++) {
+                            if (config.dateTime[i].type == "month" && !monthRuleMatched) {
+                                if (config.dateTime[i].month == month) {
+                                    monthRuleMatched = true;
+                                    surge += parseFloat(config.dateTime[i].change.toString());
+                                }
+                            } else if (config.dateTime[i].type == "hour" && !hourRuleMatched) {
+                                if (config.dateTime[i].fromHour <= hour && config.dateTime[i].toHour >= hour) {
+                                    hourRuleMatched = true;
+                                    surge += parseFloat(config.dateTime[i].change.toString());
+                                }
+                            } else if (config.dateTime[i].type == "day" && !dayRuleMatched) {
+                                if (config.dateTime[i].day == day) {
+                                    dayRuleMatched = true;
+                                    surge += parseFloat(config.dateTime[i].change.toString());
+                                }
+                            }
+                            if(monthRuleMatched && dayRuleMatched && hourRuleMatched){
+                                break;
+                            }
+                        }
+                    }
+                }
+                fromAddress = fromAddress.toString().toLowerCase();
+                toAddress = toAddress.toString().toLowerCase();
+                if (config.locations) {
+                    if (config.locations.length > 0) {
+                        let fromAddressFound = false, toAddressFound = false;
+                        for (var i = 0; i < config.locations.length; i++) {
+                            let location = config.locations[i].location.toString().toLowerCase();
+                            if(fromAddress.indexOf(location) != -1 && !fromAddressFound){
+                                fromAddressFound = true;
+                                surge += parseFloat(config.locations[i].change);
+                            }
+                            if(toAddress.indexOf(location) != -1 && !toAddressFound){
+                                toAddressFound = true;
+                                surge += parseFloat(config.locations[i].change);
+                            }
+                            if(fromAddressFound && toAddressFound){
+                                break;
+                            }
+                        }
+                    }
+                }
+                let retValKM = basePrice;
+                retValKM += (distance / 1000) * (perKM != 0 ? perKM : config.farePerMeter * 1000);
+                retValKM = (retValKM * (1 + (surge / 100)));
+                retValKM = retValKM < minimumFare ? minimumFare : retValKM;
+
+                let retValMin = basePrice;
+                retValMin += duration * perMin;
+                retValMin = (retValMin * (1 + (surge / 100)));
+                retValMin = retValMin < minimumFare ? minimumFare : retValMin;
+
+                let retVal = retValKM > retValMin ? retValKM : retValMin;
+
+                return {
+                    success: true,
+                    price: retVal
+                }
+            }
+        }
+        if (usePerMeterRate) {
+            return {
+                success: true,
+                price: (distance * config.farePerMeter)
+            }
+        }
+    } catch (ex) {
+        console.log(ex);
+        return ex;
+    }
+}
+
 export {
     newBookingReq,
     onDriverAccept,
@@ -622,5 +836,7 @@ export {
     getDriverBookingData,
     fetchLocationwithKeyword,
     getBookingFromDb,
-    getDriverLocation
+    getDriverLocation,
+    calculateApproxBookingPrice,
+    calculateFinalBookingPrice,
 };
