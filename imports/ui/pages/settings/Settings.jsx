@@ -83,7 +83,13 @@ export default class Settings extends Component {
     render() {
         const driverMode = localStorage.getItem("driverMode");
         return (
-            <div className="" style={{ height: "100%", direction: localizationManager.strings.textDirection }}>
+            <div
+                className=""
+                style={{
+                    height: "100%",
+                    direction: localizationManager.strings.textDirection
+                }}
+            >
                 <div className="padding">
                     <h3 className="padding">
                         <i className="fa fa-cog" aria-hidden="true" />{" "}
@@ -93,7 +99,7 @@ export default class Settings extends Component {
                 <div className="list">
                     <a className="item item-icon-left" href="#">
                         <i className="icon ion-email" />
-                        {localizationManager.strings.editEmail}
+                        {localizationManager.strings.editProfile}
                     </a>
                     {driverMode && (
                         <Link
@@ -125,13 +131,16 @@ export default class Settings extends Component {
                     {this.state.isDriver ? (
                         <li class="item item-icon-left item-toggle">
                             <i className="icon fa fa-car" />
-                            <span style={{
-                                        color: "#000"
-                            }}>{localizationManager.strings.driverMode}</span>
+                            <span
+                                style={{
+                                    color: "#000"
+                                }}
+                            >
+                                {localizationManager.strings.driverMode}
+                            </span>
                             <label class="toggle toggle-dark">
                                 <input
                                     type="checkbox"
-                                    
                                     checked={this.state.driverMode}
                                     onChange={e =>
                                         e.target.checked
