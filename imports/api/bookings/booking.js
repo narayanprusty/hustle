@@ -19,6 +19,7 @@ import {
 } from "../subscriptions/subscriptions";
 import localization from "../../ui/localization";
 import moment from "moment";
+import { parse } from "querystring";
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
     instanceId: config.BLOCKCLUSTER.instanceId
@@ -921,16 +922,15 @@ const calculateFinalBookingPrice = async (
                 console.log("basePrice", basePrice, "surge", surge);
                 let retValKM = basePrice;
                 console.log("1. retValKM", retValKM, "distance", distance, "perKM", perKM);
-                retValKM +=
-                    (distance / 1000) *
-                    (perKM != 0 ? perKM : config.farePerMeter * 1000);
+                retValKM = parseFloat(retValKM) + parseFloat((distance / 1000) *
+                    (perKM != 0 ? perKM : config.farePerMeter * 1000));
                 console.log("2. retValKM = distance * perKM", retValKM);
                 retValKM = retValKM * (1 + surge / 100);
                 console.log("3. retValKM = %surge", retValKM);
                 retValKM = retValKM < minimumFare ? minimumFare : retValKM;
                 console.log("4. retValKM = >minimumFare", retValKM);
                 let retValMin = basePrice;
-                retValMin += duration * perMin;
+                retValMin = parseFloat(retValMin) + parseFloat(duration * perMin);
                 retValMin = retValMin * (1 + surge / 100);
                 retValMin = retValMin < minimumFare ? minimumFare : retValMin;
                 console.log("5. retVal Min = >minimumFare", retValMin);
