@@ -882,12 +882,12 @@ class CurrentBookingRider extends Component {
                                         {localizationManager.strings.name}
                                     </span>
                                 </a>
-                                <a className="item item-icon-left" href="#">
-                                    <i className="icon fa fa-phone" />
-                                    <a href={"tel:" + this.state.phone}>
-                                        {" "}
-                                        {this.state.phone || "-"}{" "}
-                                    </a>
+                                <a
+                                    className="item item-icon-left"
+                                    href={"tel:" + this.state.phone}
+                                >
+                                    <i className="icon fa fa-phone" />{" "}
+                                    {this.state.phone || "-"}{" "}
                                     <span className="item-note">
                                         {" "}
                                         {localizationManager.strings.phone}

@@ -535,11 +535,12 @@ class CurrentBooking extends Component {
                                     {localizationManager.strings.name}
                                 </span>
                             </a>
-                            <a className="item item-icon-left" href="#">
+                            <a
+                                className="item item-icon-left"
+                                href={"tel:" + this.state.phone}
+                            >
                                 <i className="icon fa fa-phone" />
-                                <a href={"tel:" + this.state.phone}>
-                                    {this.state.phone || "-"}{" "}
-                                </a>
+                                {this.state.phone || "-"}{" "}
                                 <span className="item-note">
                                     {" "}
                                     {localizationManager.strings.phone}
