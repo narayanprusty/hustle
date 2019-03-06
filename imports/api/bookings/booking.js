@@ -824,7 +824,7 @@ const calculateFinalBookingPrice = async (
     duration
 ) => {
     try {
-        console.log(fromAddress, toAddress, distance, carType, duration);
+        console.log("Final Pricing",fromAddress, toAddress, distance, carType, duration);
         if (!fromAddress || !toAddress || !distance || !carType || !duration) {
             return {
                 success: false,

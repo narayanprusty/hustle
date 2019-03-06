@@ -86,10 +86,12 @@ class Subscriptions extends Component {
                     );
                 } else {
                     if (response.success && !response.message) {
+                        debugger;
                         this.setState({
                             userPlans: response.data ? response.data : [],
                             userAlreadySubscribed: response.data.length > 0,
-                            renew: response.data.length > 0 ? (response.data[0].renew ? true : false) : true
+                            renew: response.data.length > 0 ? (response.data[0].renew ? true : false) : true,
+                            paymentMethod: response.data.length > 0 ? (response.data[0].hyperPayId ? response.data[0].hyperPayId : "") : ""
                         });
                     } else {
                         if (response.message) {
@@ -426,8 +428,9 @@ class Subscriptions extends Component {
                                     </div>
                                 </li>
                             </ul>
-                            {!this.state.userAlreadySubscribed ? (this.state.showAddCardButton ? (
+                            {this.state.showAddCardButton ? (
                                     <button
+                                        disabled={this.state.userAlreadySubscribed}
                                         className="button button-block button-energized activated"
                                         onClick={(e) => this.props.history.push('/app/addCards')}
                                     >
@@ -445,6 +448,7 @@ class Subscriptions extends Component {
                                             >
                                                 <div>
                                                     <select
+                                                        disabled={this.state.userAlreadySubscribed}
                                                         name="paymentMethod"
                                                         value={this.state.paymentMethod}
                                                         onChange={this.onCardSelected}
@@ -475,7 +479,7 @@ class Subscriptions extends Component {
                                             </li>
                                         </ul>
                                 )
-                            ) : ""}
+                            }
                             <div className="">
                             {!this.state.userAlreadySubscribed ? (
                                 <LaddaButton
