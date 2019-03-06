@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter, Redirect } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
 import lodash from "lodash";
+import rp from "request-promise";
 import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
@@ -373,15 +374,23 @@ class CurrentBooking extends Component {
             );
         }
     };
+
     finishRide = () => {
         this.setState({
             finishRide_loader: true
         });
         const userId = Meteor.userId();
+        const p1 = {
+            lat: this.state.boardingPoint.coordinates[1],
+            lng: this.state.boardingPoint.coordinates[0]
+        };
+
         Meteor.call(
             "onStopRide",
             userId,
             this.state.bookingId,
+            this.state.currentPosition,
+            p1,
             this.state.currentPosition,
             async (error, response) => {
                 if (error) {
@@ -399,6 +408,7 @@ class CurrentBooking extends Component {
                     );
                 }
                 this.setState({
+                    ...response,
                     status: "finished",
                     finishRide_loader: false
                 });
@@ -691,6 +701,9 @@ class CurrentBooking extends Component {
                             data-spinner-size={30}
                             data-spinner-color="#ddd"
                             data-spinner-lines={12}
+                            disabled={
+                                !this.state.currentPosition
+                            }
                         >
                             <i className="fa fa-check" aria-hidden="true" />{" "}
                             {localizationManager.strings.finishRide}

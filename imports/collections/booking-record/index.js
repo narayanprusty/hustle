@@ -49,6 +49,9 @@ BookingRecordCollection.schema = new SimpleSchema({
     preferredCar: {
         type: String
     },
+    startedAt: {
+        type: String
+    },
     status: {
         type: String
         //accepted riding

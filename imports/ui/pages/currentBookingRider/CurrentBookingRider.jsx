@@ -142,6 +142,7 @@ class CurrentBookingRider extends Component {
                     this.getDriverDetails(bookingData.data.driverId);
 
                     this.setState({
+                        totalFare: bookingData.totalFare,
                         showTime: false,
                         showMap: false,
                         rideFinished: true,
