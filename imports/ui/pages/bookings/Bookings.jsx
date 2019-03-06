@@ -308,11 +308,14 @@ class Bookings extends Component {
 
     inputHandler = async e => {
         if (e.target.name == "carType") {
-            this.calculateApproxBookingPrice();
+            this.setState({
+                [e.target.name]: e.target.value
+            }, this.calculateApproxBookingPrice);
+        } else {
+            this.setState({
+                [e.target.name]: e.target.value
+            });
         }
-        this.setState({
-            [e.target.name]: e.target.value
-        });
     };
 
     changeRoute = () => {
@@ -382,7 +385,7 @@ class Bookings extends Component {
                             lng: bookingDetails.end_location.lng()
                         },
                         ...dataObj
-                    });
+                    }, this.calculateApproxBookingPrice);
                     directionsDisplay.setDirections(response);
                     const routePolyline = new mapApi.Polyline({
                         path: response.routes[0].overview_path
@@ -532,7 +535,6 @@ class Bookings extends Component {
             });
             if (this.state.droppingPoint) {
                 this.changeRoute();
-                this.calculateApproxBookingPrice();
             } else {
                 const { mapInstance, mapApi, boardingPoint } = this.state;
 
