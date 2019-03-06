@@ -627,12 +627,20 @@ const calculateApproxBookingPrice = async (
     carType
 ) => {
     try {
+        console.log(fromAddress, toAddress, distance, carType);
+        if (!fromAddress || !toAddress || !distance || !carType) {
+            return {
+                success: false,
+                message: "Parameter missing"
+            }
+        }
         let pricingConfig = await node.callAPI("assets/search", {
             $query: {
                 assetName: config.ASSET.dynamicPricing,
                 status: "open"
             }
         });
+        console.log("pricingConfig", !!(pricingConfig));
         let usePerMeterRate = true;
         if (pricingConfig) {
             if (pricingConfig.length > 0) {
@@ -660,6 +668,7 @@ const calculateApproxBookingPrice = async (
                         let month = new Date().getMonth();
                         let day = new Date().getDay();
                         let hour = new Date().getHours();
+                        let min = new Date().getMinutes();
                         let monthRuleMatched = false,
                             dayRuleMatched = false,
                             hourRuleMatched = false;
@@ -679,8 +688,8 @@ const calculateApproxBookingPrice = async (
                                 !hourRuleMatched
                             ) {
                                 if (
-                                    config.dateTime[i].fromHour <= hour &&
-                                    config.dateTime[i].toHour >= hour
+                                    (config.dateTime[i].fromHour < hour && config.dateTime[i].toHour > hour) || 
+                                    (config.dateTime[i].fromHour == hour) || (config.dateTime[i].toHour == hour && min == 0)
                                 ) {
                                     hourRuleMatched = true;
                                     surge += parseFloat(
@@ -738,13 +747,19 @@ const calculateApproxBookingPrice = async (
                         }
                     }
                 }
+                console.log("basePrice", basePrice, "surge", surge);
                 let retVal = basePrice;
-                retVal +=
-                    (distance / 1000) *
-                    (perKM != 0 ? perKM : config.farePerMeter * 1000);
+                console.log("1. retVal", retVal, "distance", distance, "perKM", perKM);
+                retVal = parseFloat(retVal) + 
+                    parseFloat((distance / 1000) *
+                    (perKM != 0 ? perKM : config.farePerMeter * 1000));
+                console.log("2. retVal = distance in KM * perKM", retVal);
                 retVal = retVal * (1 + surge / 100);
+                console.log("3. retVal += %surge", retVal);
                 retVal = retVal < minimumFare ? minimumFare : retVal;
-
+                console.log("4. retVal = >minimum?", retVal);
+                retVal = Math.round(retVal);
+                console.log("5. retVal = Round", retVal);
                 return {
                     success: true,
                     price: retVal
@@ -779,12 +794,20 @@ const calculateFinalBookingPrice = async (
     duration
 ) => {
     try {
+        console.log(fromAddress, toAddress, distance, carType, duration);
+        if (!fromAddress || !toAddress || !distance || !carType || !duration) {
+            return {
+                success: false,
+                message: "Parameter missing"
+            }
+        }
         let pricingConfig = await node.callAPI("assets/search", {
             $query: {
                 assetName: config.ASSET.dynamicPricing,
                 status: "open"
             }
         });
+        console.log("pricingConfig", !!(pricingConfig));
         let usePerMeterRate = true;
         if (pricingConfig) {
             if (pricingConfig.length > 0) {
@@ -816,6 +839,7 @@ const calculateFinalBookingPrice = async (
                         let month = new Date().getMonth();
                         let day = new Date().getDay();
                         let hour = new Date().getHours();
+                        let min = new Date().getMinutes();
                         let monthRuleMatched = false,
                             dayRuleMatched = false,
                             hourRuleMatched = false;
@@ -835,8 +859,8 @@ const calculateFinalBookingPrice = async (
                                 !hourRuleMatched
                             ) {
                                 if (
-                                    config.dateTime[i].fromHour <= hour &&
-                                    config.dateTime[i].toHour >= hour
+                                    (config.dateTime[i].fromHour < hour && config.dateTime[i].toHour > hour) || 
+                                    (config.dateTime[i].fromHour == hour) || (config.dateTime[i].toHour == hour && min == 0)
                                 ) {
                                     hourRuleMatched = true;
                                     surge += parseFloat(
@@ -894,20 +918,24 @@ const calculateFinalBookingPrice = async (
                         }
                     }
                 }
+                console.log("basePrice", basePrice, "surge", surge);
                 let retValKM = basePrice;
+                console.log("1. retValKM", retValKM, "distance", distance, "perKM", perKM);
                 retValKM +=
                     (distance / 1000) *
                     (perKM != 0 ? perKM : config.farePerMeter * 1000);
+                console.log("2. retValKM = distance * perKM", retValKM);
                 retValKM = retValKM * (1 + surge / 100);
+                console.log("3. retValKM = %surge", retValKM);
                 retValKM = retValKM < minimumFare ? minimumFare : retValKM;
-
+                console.log("4. retValKM = >minimumFare", retValKM);
                 let retValMin = basePrice;
                 retValMin += duration * perMin;
                 retValMin = retValMin * (1 + surge / 100);
                 retValMin = retValMin < minimumFare ? minimumFare : retValMin;
-
+                console.log("5. retVal Min = >minimumFare", retValMin);
                 let retVal = retValKM > retValMin ? retValKM : retValMin;
-
+                console.log("Final retVal", retVal);
                 return {
                     success: true,
                     price: retVal

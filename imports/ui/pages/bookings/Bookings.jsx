@@ -414,6 +414,9 @@ class Bookings extends Component {
         this.setState({
             totalFare: false
         });
+        if (!this.state.boardingPlace.formatted_address || !this.state.droppingPlace.formatted_address
+            || !this.state.distance_in_meter || !this.state.carType)
+            return;
         Meteor.call(
             "calculateApproxBookingPrice",
             this.state.boardingPlace.formatted_address,
