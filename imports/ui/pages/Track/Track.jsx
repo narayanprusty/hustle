@@ -10,8 +10,8 @@ import localizationManager from "../../localization";
 
 import config from "../../../modules/config/client";
 import "./Track_client.scss";
-import mapStyle from "../bookings/MapStyle.json"; //https://mapstyle.withgoogle.com/ you can build yours from
-
+// import mapStyle from "../bookings/MapStyle.json"; //https://mapstyle.withgoogle.com/ you can build yours from
+import { mapOptions } from "../../../modules/config/client/mapOptions";
 const Marker = ({ metaData, deg }) => (
     <div>
         {metaData == "current" && <span className="pulse_current" />}
@@ -227,23 +227,6 @@ class Track extends Component {
         );
     };
 
-    createMapOptions = () => {
-        return {
-            keyboardShortcuts: false,
-            panControl: false,
-            scaleControl: false,
-            clickableIcons: false,
-            disableDefaultUI: false,
-            gestureHandling: "greedy",
-            panControl: false,
-            mapTypeControl: false,
-            scrollwheel: false,
-            fullscreenControl: true,
-            draggable: true,
-            zoomControl: true,
-            styles: mapStyle
-        };
-    };
     apiHasLoaded = (map, maps) => {
         this.setState({
             mapApiLoaded: true,
@@ -254,7 +237,12 @@ class Track extends Component {
 
     render() {
         return (
-            <div style={{ height: "100%", direction: localizationManager.strings.textDirection }}>
+            <div
+                style={{
+                    height: "100%",
+                    direction: localizationManager.strings.textDirection
+                }}
+            >
                 <div className="padding">
                     <h3 className="padding">
                         <i className="fa fa-car" aria-hidden="true" />
@@ -282,7 +270,7 @@ class Track extends Component {
                 <div className="mapView padding-left padding-right padding-bottom">
                     {this.state.bookingId && this.state.status == "started" && (
                         <GoogleMapReact
-                            options={this.createMapOptions}
+                            options={mapOptions}
                             bootstrapURLKeys={{
                                 key: config.GAPIKEY,
                                 libraries: ["places"]

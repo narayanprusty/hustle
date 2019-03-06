@@ -7,8 +7,9 @@ import { Meteor } from "meteor/meteor";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import ReactGooglePlacesSuggest from "react-google-places-suggest";
 
-import mapStyle from "./MapStyle"; //https://mapstyle.withgoogle.com/ you can build yours from
+// import mapStyle from "./MapStyle"; //https://mapstyle.withgoogle.com/ you can build yours from
 import config from "../../../modules/config/client/";
+import { mapOptions } from "../../../modules/config/client/mapOptions";
 import localizationManager from "../../localization/index";
 
 const cartTypes = [
@@ -73,6 +74,7 @@ class Bookings extends Component {
     constructor(props) {
         super(props);
         this._isMounted = false;
+        this.poly = false;
     }
     state = {
         loading_cards: true,
@@ -311,8 +313,8 @@ class Bookings extends Component {
     };
 
     changeRoute = () => {
-        if (this.state.poly) {
-            this.state.poly.setMap(null);
+        if (this.poly) {
+            this.poly.setMap(null);
         }
 
         const {
@@ -384,9 +386,9 @@ class Bookings extends Component {
                     });
                     mapInstance.fitBounds(latlngbounds);
                     // mapInstance.setZoom(this.state.zoom); //dont set the zoom otherwise it wont fit to map properly
-                    this.setState({
-                        poly: routePolyline
-                    });
+
+                    this.poly = routePolyline;
+
                     routePolyline.setMap(mapInstance);
                 } else if (status == "ZERO_RESULTS") {
                     notify.show("Cannot find path", "error");
@@ -519,24 +521,6 @@ class Bookings extends Component {
         });
     };
 
-    createMapOptions = maps => {
-        return {
-            keyboardShortcuts: false,
-            panControl: false,
-            scaleControl: false,
-            clickableIcons: false,
-            disableDefaultUI: false,
-            gestureHandling: "greedy",
-            panControl: false,
-            mapTypeControl: false,
-            scrollwheel: false,
-            fullscreenControl: true,
-            draggable: true,
-            zoomControl: true,
-            styles: mapStyle
-        };
-    };
-
     raiseBookingReq = e => {
         clearInterval(this.state.intvl);
         this.setState({
@@ -609,6 +593,12 @@ class Bookings extends Component {
     //     this.setState({ search: "", value: suggest.formatted_address });
     // }
 
+    isAndroid = () => {
+        if (typeof device !== "undefined" && device.platform == "Android") {
+            return true;
+        }
+        return false;
+    };
     render() {
         const { mapApiLoaded, mapApi } = this.state;
 
@@ -619,7 +609,12 @@ class Bookings extends Component {
         }
 
         return (
-            <div style={{ height: "100%", direction: localizationManager.strings.textDirection }}>
+            <div
+                style={{
+                    height: "100%",
+                    direction: localizationManager.strings.textDirection
+                }}
+            >
                 <Fragment>
                     <div className="padding">
                         <h3 className="padding">
@@ -844,7 +839,13 @@ class Bookings extends Component {
                                                                 key={i}
                                                             >
                                                                 {" "}
-                                                                {localizationManager.strings[cars.name]}{" "}
+                                                                {
+                                                                    localizationManager
+                                                                        .strings[
+                                                                        cars
+                                                                            .name
+                                                                    ]
+                                                                }{" "}
                                                             </option>
                                                         )
                                                     )}
@@ -899,7 +900,18 @@ class Bookings extends Component {
                             <div className="mapView padding-left padding-right padding-bottom">
                                 {this._isMounted && (
                                     <GoogleMapReact
-                                        options={this.createMapOptions}
+                                        options={
+                                            this.isAndroid()
+                                                ? {
+                                                      ...mapOptions,
+                                                      fullscreenControl: true,
+                                                      zoomControl: false
+                                                  }
+                                                : {
+                                                      ...mapOptions,
+                                                      fullscreenControl: true
+                                                  }
+                                        }
                                         bootstrapURLKeys={{
                                             key: config.GAPIKEY,
                                             libraries: ["places"]

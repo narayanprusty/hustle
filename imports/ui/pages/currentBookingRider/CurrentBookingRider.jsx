@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import config from "../../../modules/config/client";
+import { mapOptions } from "../../../modules/config/client/mapOptions";
 import lodash from "lodash";
 import { Link, withRouter } from "react-router-dom";
 import GoogleMapReact from "google-map-react";
@@ -10,7 +11,6 @@ import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import Rating from "react-rating";
 import { Widget, addResponseMessage, addUserMessage } from "react-chat-widget";
 
-import mapStyle from "../bookings/MapStyle.json";
 import "./CurrentBooking_client.scss";
 import localizationManager from "../../localization";
 
@@ -238,23 +238,6 @@ class CurrentBookingRider extends Component {
         });
     };
 
-    createMapOptions = maps => {
-        return {
-            keyboardShortcuts: false,
-            panControl: false,
-            scaleControl: false,
-            clickableIcons: false,
-            disableDefaultUI: false,
-            gestureHandling: "greedy",
-            panControl: false,
-            mapTypeControl: false,
-            scrollwheel: false,
-            fullscreenControl: false,
-            draggable: true,
-            zoomControl: true,
-            styles: mapStyle
-        };
-    };
     apiHasLoaded = (map, maps) => {
         this.setState({
             mapApiLoaded: true,
@@ -1045,7 +1028,7 @@ class CurrentBookingRider extends Component {
                             this.state.showMap &&
                             !this.state.rideFinished && (
                                 <GoogleMapReact
-                                    options={this.createMapOptions}
+                                    options={mapOptions}
                                     bootstrapURLKeys={{
                                         key: config.GAPIKEY,
                                         libraries: ["places"]
