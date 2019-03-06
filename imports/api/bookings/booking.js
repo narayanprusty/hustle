@@ -629,13 +629,13 @@ const calculateApproxBookingPrice = async (
             if (pricingConfig.length > 0) {
                 usePerMeterRate = false;
                 let config = pricingConfig[0];
-                let price = 0;
+                let basePrice = 0;
                 let minimumFare = 0;
                 let perKM = 0;
                 let surge = 0;
                 if (config.basePrice) {
                     if (config.basePrice[carType]) {
-                        price = config.basePrice[carType].basePrice
+                        basePrice = config.basePrice[carType].basePrice
                             ? config.basePrice[carType].basePrice
                             : 0;
                         minimumFare = config.basePrice[carType].minimumFare
