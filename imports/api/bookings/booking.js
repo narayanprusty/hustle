@@ -1,12 +1,22 @@
 import Blockcluster from "blockcluster";
 import rp from "request-promise";
 
-import { BookingRecord } from "../../collections/booking-record";
-import { DriverMeta } from "../../collections/driver-meta";
+import {
+    BookingRecord
+} from "../../collections/booking-record";
+import {
+    DriverMeta
+} from "../../collections/driver-meta";
 import config from "../../modules/config/server";
-import { sendMessage } from "../../notifications/index";
-import { oneClickPayment } from "../payments/payments";
-import { getUserSubscriptions } from "../subscriptions/subscriptions";
+import {
+    sendMessage
+} from "../../notifications/index";
+import {
+    oneClickPayment
+} from "../payments/payments";
+import {
+    getUserSubscriptions
+} from "../subscriptions/subscriptions";
 import localization from "../../ui/localization";
 import moment from "moment";
 const node = new Blockcluster.Dynamo({
@@ -42,9 +52,9 @@ const newBookingReq = async ({
     totalFare
 }) => {
     const username = Meteor.user().profile.name;
-    const avgRating = Meteor.user().profile.avgRating
-        ? Meteor.user().profile.avgRating
-        : 5;
+    const avgRating = Meteor.user().profile.avgRating ?
+        Meteor.user().profile.avgRating :
+        5;
     console.log(end_address, start_address);
     const currentDate = Date.now();
     const identifier =
@@ -52,8 +62,8 @@ const newBookingReq = async ({
         Date.now() +
         "" +
         Math.random()
-            .toString()
-            .split(".")[1]; //this is the Booking Id
+        .toString()
+        .split(".")[1]; //this is the Booking Id
     const data = {
         createdAt: currentDate,
         riderName: username,
@@ -105,8 +115,8 @@ const newBookingReq = async ({
         Date.now() +
         "" +
         Math.random()
-            .toString()
-            .split(".")[1];
+        .toString()
+        .split(".")[1];
 
     //create booking info assets
     await node.callAPI("assets/issueSoloAsset", {
@@ -167,17 +177,14 @@ const onCancellation = async (
             cancel_reason: cancel_reason
         }
     });
-    await BookingRecord.update(
-        {
-            bookingId: bookingId
-        },
-        {
-            $set: {
-                active: false,
-                status: "cancelled"
-            }
+    await BookingRecord.update({
+        bookingId: bookingId
+    }, {
+        $set: {
+            active: false,
+            status: "cancelled"
         }
-    );
+    });
     return {
         txId: txId
     };
@@ -202,28 +209,24 @@ const onDriverAccept = async (bookingId, driverId) => {
                 driverId: driverId
             }
         });
-        await BookingRecord.update(
-            {
-                bookingId: bookingId
+        await BookingRecord.update({
+            bookingId: bookingId
+        }, {
+            $set: {
+                driverId: driverId,
+                status: "accepted"
+            }
+        });
+        await DriverMeta.update({
+            driverId: driverId
+        }, {
+            $set: {
+                onRide: true
             },
-            {
-                $set: {
-                    driverId: driverId,
-                    status: "accepted"
-                }
+            $inc: {
+                totalNumberOfRide: 1
             }
-        );
-        await DriverMeta.update(
-            { driverId: driverId },
-            {
-                $set: {
-                    onRide: true
-                },
-                $inc: {
-                    totalNumberOfRide: 1
-                }
-            }
-        );
+        });
 
         return {
             txId: txId
@@ -244,17 +247,14 @@ const onStartRide = async (bookingId, startingPoint) => {
             actualStartingPoint: startingPoint
         }
     });
-    await BookingRecord.update(
-        {
-            bookingId: bookingId
-        },
-        {
-            $set: {
-                startedAt: moment.utc().valueOf(),
-                status: "started"
-            }
+    await BookingRecord.update({
+        bookingId: bookingId
+    }, {
+        $set: {
+            startedAt: moment.utc().valueOf(),
+            status: "started"
         }
-    );
+    });
     return {
         txId: txId
     };
@@ -270,25 +270,21 @@ const onStopRide = async (driverId, bookingId, endingPoint) => {
             actualEndingPoint: endingPoint
         }
     });
-    await BookingRecord.update(
-        {
-            bookingId: bookingId
-        },
-        {
-            $set: {
-                status: "finished",
-                active: false
-            }
+    await BookingRecord.update({
+        bookingId: bookingId
+    }, {
+        $set: {
+            status: "finished",
+            active: false
         }
-    );
-    await DriverMeta.update(
-        { driverId: driverId },
-        {
-            $set: {
-                onRide: false
-            }
+    });
+    await DriverMeta.update({
+        driverId: driverId
+    }, {
+        $set: {
+            onRide: false
         }
-    );
+    });
 
     let booking = await node.callAPI("assets/search", {
         $query: {
@@ -459,7 +455,7 @@ const paymentReceived = async bookingId => {
     }
 };
 
-const rad = function(x) {
+const rad = function (x) {
     return (x * Math.PI) / 180;
 };
 
@@ -471,9 +467,9 @@ const getDistance = (driverLoc, boardingPoint) => {
     const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(rad(driverLoc.lat())) *
-            Math.cos(rad(boardingPoint.lat())) *
-            Math.sin(dLong / 2) *
-            Math.sin(dLong / 2);
+        Math.cos(rad(boardingPoint.lat())) *
+        Math.sin(dLong / 2) *
+        Math.sin(dLong / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c;
     return d; // d is the distance in meter
@@ -481,11 +477,15 @@ const getDistance = (driverLoc, boardingPoint) => {
 
 //for more exact u can pass mapApi obj from frontend only and do calculation
 //mapApi.geometry.spherical.computeDistanceBetween (latLngA, latLngB); //return values in Meter
-const fetchBookingReq = async ({ lat, lng, carType, page }) => {
+const fetchBookingReq = async ({
+    lat,
+    lng,
+    carType,
+    page
+}) => {
     const data = await BookingRecord.rawCollection()
         .aggregate(
-            [
-                {
+            [{
                     $geoNear: {
                         near: {
                             type: "Point",
@@ -512,8 +512,7 @@ const fetchBookingReq = async ({ lat, lng, carType, page }) => {
                 {
                     $skip: page * 10 - 10
                 }
-            ],
-            {
+            ], {
                 cursor: {
                     batchSize: 0
                 }
@@ -554,7 +553,10 @@ const getDriverBookingData = async (period, driverId) => {
                 assetName: config.ASSET.Bookings,
                 driverId: driverId,
 
-                createdAt: { $lt: period.lte, $gte: period.gte }
+                createdAt: {
+                    $lt: period.lte,
+                    $gte: period.gte
+                }
             }
         });
         return bookings;
@@ -566,12 +568,17 @@ const getDriverBookingData = async (period, driverId) => {
     }
 };
 
-const fetchLocationwithKeyword = ({ lat, lng, keyWord }) => {
+const fetchLocationwithKeyword = ({
+    lat,
+    lng,
+    keyWord
+}) => {
     return rp(
-        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${keyWord}&location=${lng},${lat}&key=` +
-            config.GAPIKEY,
-        { json: true }
-    )
+            `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${keyWord}&location=${lng},${lat}&key=` +
+            config.GAPIKEY, {
+                json: true
+            }
+        )
         .then(data => {
             return data;
         })
@@ -600,7 +607,9 @@ const getBookingFromDb = bookingId => {
 };
 
 const getDriverLocation = driverId => {
-    const driverMeta = DriverMeta.find({ driverId: driverId }).fetch()[0];
+    const driverMeta = DriverMeta.find({
+        driverId: driverId
+    }).fetch()[0];
     if (driverMeta && driverMeta.currentLocation) {
         return driverMeta.currentLocation;
     } else {
@@ -635,15 +644,15 @@ const calculateApproxBookingPrice = async (
                 let surge = 0;
                 if (config.basePrice) {
                     if (config.basePrice[carType]) {
-                        basePrice = config.basePrice[carType].basePrice
-                            ? config.basePrice[carType].basePrice
-                            : 0;
-                        minimumFare = config.basePrice[carType].minimumFare
-                            ? config.basePrice[carType].minimumFare
-                            : 0;
-                        perKM = config.basePrice[carType].perKM
-                            ? config.basePrice[carType].perKM
-                            : 0;
+                        basePrice = config.basePrice[carType].basePrice ?
+                            config.basePrice[carType].basePrice :
+                            0;
+                        minimumFare = config.basePrice[carType].minimumFare ?
+                            config.basePrice[carType].minimumFare :
+                            0;
+                        perKM = config.basePrice[carType].perKM ?
+                            config.basePrice[carType].perKM :
+                            0;
                     }
                 }
                 if (config.dateTime) {
@@ -740,7 +749,11 @@ const calculateApproxBookingPrice = async (
                     success: true,
                     price: retVal
                 };
+            } else {
+                console.log("Dynamic config not found!");
             }
+        } else {
+            console.log("Unable to get dynamic config from blockcluster");
         }
         if (usePerMeterRate) {
             return {
@@ -784,18 +797,18 @@ const calculateFinalBookingPrice = async (
                 let surge = 0;
                 if (config.basePrice) {
                     if (config.basePrice[carType]) {
-                        basePrice = config.basePrice[carType].basePrice
-                            ? config.basePrice[carType].basePrice
-                            : 0;
-                        minimumFare = config.basePrice[carType].minimumFare
-                            ? config.basePrice[carType].minimumFare
-                            : 0;
-                        perKM = config.basePrice[carType].perKM
-                            ? config.basePrice[carType].perKM
-                            : 0;
-                        perMin = config.basePrice[carType].perMin
-                            ? config.basePrice[carType].perMin
-                            : 0;
+                        basePrice = config.basePrice[carType].basePrice ?
+                            config.basePrice[carType].basePrice :
+                            0;
+                        minimumFare = config.basePrice[carType].minimumFare ?
+                            config.basePrice[carType].minimumFare :
+                            0;
+                        perKM = config.basePrice[carType].perKM ?
+                            config.basePrice[carType].perKM :
+                            0;
+                        perMin = config.basePrice[carType].perMin ?
+                            config.basePrice[carType].perMin :
+                            0;
                     }
                 }
                 if (config.dateTime) {
@@ -899,7 +912,11 @@ const calculateFinalBookingPrice = async (
                     success: true,
                     price: retVal
                 };
+            } else {
+                console.log("Dynamic config not found!");
             }
+        } else {
+            console.log("Unable to get dynamic config from blockcluster");
         }
         if (usePerMeterRate) {
             return {

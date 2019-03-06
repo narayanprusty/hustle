@@ -15,27 +15,27 @@ import localizationManager from "../../localization/index";
 const cartTypes = [
     {
         name: "micro",
-        value: "micro"
+        value: "Micro"
     },
     {
         name: "mini",
-        value: "mini"
+        value: "Mini"
     },
     {
         name: "primeSedan",
-        value: "sedan"
+        value: "Sedan"
     },
     {
         name: "primeSUV",
-        value: "suv"
+        value: "SUV"
     },
     {
         name: "primeExec",
-        value: "exec"
+        value: "Exec"
     },
     {
         name: localizationManager.strings.primeLux,
-        value: "lux"
+        value: "Lux"
     }
 ];
 Geocode.setApiKey(config.GAPIKEY);
@@ -101,7 +101,7 @@ class Bookings extends Component {
         mapApi: null,
         droppingPlace: {},
         boardingPlace: {},
-        carType: "micro",
+        carType: "Micro",
         boardsearch: "",
         boardvalue: "",
         dropsearch: "",
@@ -868,7 +868,7 @@ class Bookings extends Component {
                                                                     localizationManager
                                                                         .strings[
                                                                         cars
-                                                                            .name
+                                                                            .value
                                                                     ]
                                                                 }{" "}
                                                             </option>
