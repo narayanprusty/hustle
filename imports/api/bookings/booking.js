@@ -253,7 +253,7 @@ const onStartRide = async (bookingId, startingPoint) => {
         },
         {
             $set: {
-                startedAt: moment.valueOf(),
+                startedAt: moment().valueOf(),
                 status: "started"
             }
         }
