@@ -331,6 +331,14 @@ class CurrentBooking extends Component {
                     status: "started",
                     startRide_loader: false
                 });
+                this.pubnub.deleteMessages(
+                    {
+                        channel: this.state.bookingId
+                    },
+                    result => {
+                        console.log(result);
+                    }
+                );
                 return true;
             }
         );
@@ -505,7 +513,12 @@ class CurrentBooking extends Component {
     };
     render() {
         return (
-            <div style={{ height: "100%", direction: localizationManager.strings.textDirection }}>
+            <div
+                style={{
+                    height: "100%",
+                    direction: localizationManager.strings.textDirection
+                }}
+            >
                 <div className="padding">
                     <h3 className="padding">
                         <i className="fa fa-car" aria-hidden="true" />{" "}

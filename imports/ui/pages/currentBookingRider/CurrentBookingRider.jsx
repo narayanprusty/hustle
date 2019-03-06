@@ -50,6 +50,7 @@ class CurrentBookingRider extends Component {
             secretKey: config.PUBNUB.secret,
             ssl: true
         });
+        this.poly = false;
         this.state = {
             messageList: [],
             rating: 0,
@@ -257,8 +258,8 @@ class CurrentBookingRider extends Component {
         this.changeRoute();
     };
     changeRoute = () => {
-        if (this.state.poly) {
-            this.state.poly.setMap(null);
+        if (this.poly) {
+            this.poly.setMap(null);
         }
 
         let { mapInstance, mapApi, destPoint, currentPoint } = this.state;
@@ -309,9 +310,7 @@ class CurrentBookingRider extends Component {
                         }
                         mapInstance.setZoom(this.state.zoom);
                     }
-                    this.setState({
-                        poly: routePolyline
-                    });
+                    this.poly = routePolyline;
                 } else if (status == "ZERO_RESULTS") {
                     notify.show("Cannot find path", "error");
                 } else if (status == "OVER_QUERY_LIMIT") {
