@@ -407,6 +407,29 @@ class Bookings extends Component {
             }
         );
     };
+    calculateApproxBookingPrice = () => {
+        Meteor.call(
+            "calculateApproxBookingPrice",
+            this.state.boardingPlace.formatted_address,
+            this.state.droppingPlace.formatted_address,
+            this.state.distance_in_meter,
+            this.state.carType,
+            (err, priceData) => {
+                if (err) {
+                    console.log(err);
+                    return notify.show("Unable to calculate price", "error");
+                }
+                if (priceData.price) {
+                    this.setState({
+                        totalFare: priceData.price
+                    });
+                } else {
+                    console.log(priceData);
+                    return notify.show("Unable to calculate price", "error");
+                }
+            }
+        );
+    };
 
     addDroppingPlace = place => {
         this.setState({
@@ -421,6 +444,7 @@ class Bookings extends Component {
 
         //call the change route function
         this.changeRoute();
+        this.calculateApproxBookingPrice();
     };
 
     addBoardingPlace = place => {
@@ -445,6 +469,7 @@ class Bookings extends Component {
         let latlng = [new mapApi.LatLng(boardingPoint.lat, boardingPoint.lng)];
         if (droppingPoint && droppingPoint.lat) {
             this.changeRoute();
+            this.calculateApproxBookingPrice();
         } else {
             let latlngbounds = new mapApi.LatLngBounds();
             for (let i = 0; i < latlng.length; i++) {
@@ -476,6 +501,7 @@ class Bookings extends Component {
             });
             if (this.state.droppingPoint) {
                 this.changeRoute();
+                this.calculateApproxBookingPrice();
             }
         });
     };
@@ -497,6 +523,7 @@ class Bookings extends Component {
             });
             if (this.state.droppingPoint) {
                 this.changeRoute();
+                this.calculateApproxBookingPrice();
             } else {
                 const { mapInstance, mapApi, boardingPoint } = this.state;
 
@@ -544,7 +571,8 @@ class Bookings extends Component {
             timeTaken_in_secoend: this.state.timeTaken_in_secoend,
             end_address: this.state.end_address,
             start_address: this.state.start_address,
-            distance_in_meter: this.state.distance_in_meter
+            distance_in_meter: this.state.distance_in_meter,
+            totalFare: this.state.totalFare
         };
         Meteor.call("newBookingReq", data, (error, response) => {
             if (error) {
@@ -748,15 +776,12 @@ class Bookings extends Component {
                                                 href="#"
                                             >
                                                 <i className="icon fa fa-money" />
-                                                {Math.round(
-                                                    this.state
-                                                        .distance_in_meter *
-                                                        config.farePerMeter
-                                                ) + config.fareUnit}{" "}
-                                                {localizationManager.strings.at}{" "}
-                                                {config.farePerMeter +
-                                                    config.fareUnit}
-                                                /M
+                                                {this.state.totalFare >= 0
+                                                    ? this.state.totalFare +
+                                                      " " +
+                                                      config.fareUnit
+                                                    : "Loading..."}
+
                                                 <span className="item-note">
                                                     {
                                                         localizationManager
@@ -880,7 +905,8 @@ class Bookings extends Component {
                                                 data-spinner-color="#ddd"
                                                 data-spinner-lines={12}
                                                 disabled={
-                                                    this.state.loading_cards
+                                                    this.state.loading_cards &&
+                                                    !this.state.totalFare
                                                 }
                                             >
                                                 <i
