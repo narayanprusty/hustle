@@ -307,6 +307,9 @@ class Bookings extends Component {
     }
 
     inputHandler = async e => {
+        if (e.target.name == "carType") {
+            this.calculateApproxBookingPrice();
+        }
         this.setState({
             [e.target.name]: e.target.value
         });
@@ -408,6 +411,9 @@ class Bookings extends Component {
         );
     };
     calculateApproxBookingPrice = () => {
+        this.setState({
+            totalFare: false
+        });
         Meteor.call(
             "calculateApproxBookingPrice",
             this.state.boardingPlace.formatted_address,
@@ -776,7 +782,8 @@ class Bookings extends Component {
                                                 href="#"
                                             >
                                                 <i className="icon fa fa-money" />
-                                                {this.state.totalFare >= 0
+                                                {this.state.totalFare >= 0 &&
+                                                this.state.totalFare != false
                                                     ? this.state.totalFare +
                                                       " " +
                                                       config.fareUnit
@@ -905,7 +912,7 @@ class Bookings extends Component {
                                                 data-spinner-color="#ddd"
                                                 data-spinner-lines={12}
                                                 disabled={
-                                                    this.state.loading_cards &&
+                                                    this.state.loading_cards ||
                                                     !this.state.totalFare
                                                 }
                                             >
