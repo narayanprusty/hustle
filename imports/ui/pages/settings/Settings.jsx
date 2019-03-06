@@ -116,7 +116,7 @@ export default class Settings extends Component {
                         {localizationManager.strings.myCards}
                     </Link>
 
-                    <a className="item item-icon-left item-icon-right" href="#">
+                    <a className="item item-icon-left item-icon-right" href="tel:+966-54-961-1069">
                         <i className="icon ion-chatbubble-working" />
                         {localizationManager.strings.callSupport}
                         <i className="icon ion-ios-telephone-outline" />
