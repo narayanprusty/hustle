@@ -4,6 +4,7 @@ import { withRouter, Link } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import LaddaButton, { S, SLIDE_UP } from "react-ladda";
 import localizationManager from "../../localization";
+import Modal from 'react-responsive-modal';
 
 class Subscriptions extends Component {
     constructor(props) {
@@ -86,7 +87,6 @@ class Subscriptions extends Component {
                     );
                 } else {
                     if (response.success && !response.message) {
-                        debugger;
                         this.setState({
                             userPlans: response.data ? response.data : [],
                             userAlreadySubscribed: response.data.length > 0,
@@ -168,10 +168,12 @@ class Subscriptions extends Component {
                             }
                         } else {
                             notify.show(localizationManager.strings.planSubscribed, "success");
+                            this.onOpenModal();
                             this.getUserSubscriptions();
                             this.setState({
                                 userAlreadySubscribed: true,
                             });
+
                         }
                     }
                     this.setState({
@@ -253,7 +255,7 @@ class Subscriptions extends Component {
         }
     }
 
-    reSubscribe = async () =>{
+    reSubscribe = async () => {
         try {
             if (this.state.userPlans) {
                 if (this.state.userPlans.length > 0) {
@@ -262,33 +264,33 @@ class Subscriptions extends Component {
                             showloader: true
                         });
                         Meteor.call("reSubscribe", this.state.userPlans[0].uniqueIdentifier,
-                        (error, response) => {
-                            if (error) {
-                                console.log(error);
-                                //Add localization support
-                                notify.show(
-                                    error.reason
-                                        ? error.reason
-                                        : localizationManager.strings.unabbleToReSubscribe,
-                                    "error"
-                                );
-                            } else {
-                                if (response.success) {
-                                    notify.show(localizationManager.strings.reSubscribed, "success");
-                                    this.getUserSubscriptions();
-                                } else {
+                            (error, response) => {
+                                if (error) {
+                                    console.log(error);
+                                    //Add localization support
                                     notify.show(
-                                        response.message
-                                            ? response.message
+                                        error.reason
+                                            ? error.reason
                                             : localizationManager.strings.unabbleToReSubscribe,
                                         "error"
                                     );
+                                } else {
+                                    if (response.success) {
+                                        notify.show(localizationManager.strings.reSubscribed, "success");
+                                        this.getUserSubscriptions();
+                                    } else {
+                                        notify.show(
+                                            response.message
+                                                ? response.message
+                                                : localizationManager.strings.unabbleToReSubscribe,
+                                            "error"
+                                        );
+                                    }
                                 }
-                            }
-                            this.setState({
-                                showloader: false
+                                this.setState({
+                                    showloader: false
+                                });
                             });
-                        });
                     } else {
                         throw {
                             message: localizationManager.strings.unexpectedError
@@ -317,6 +319,14 @@ class Subscriptions extends Component {
             });
         }
     }
+
+    onOpenModal = () => {
+        this.setState({ showWindow: true });
+    };
+
+    onCloseModal = () => {
+        this.setState({ showWindow: false });
+    };
 
     render() {
         const loader = (
@@ -380,6 +390,12 @@ class Subscriptions extends Component {
 
         return (
             <div className="" style={{ height: "100%", direction: localizationManager.strings.textDirection }}>
+                <Modal open={this.state.showWindow} onClose={this.onCloseModal.bind(this)} center>
+                    <div>
+                        <center><img src={"/images/subscribe.png"}></img></center>
+                        <h3>{localizationManager.strings.welcomeMessage}</h3>
+                    </div>
+                </Modal>
                 {!this.state.gettingPlans ? (
                     <div>
                         <div className="padding">

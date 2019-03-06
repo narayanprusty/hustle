@@ -814,7 +814,7 @@ const calculateApproxBookingPrice = async (
 
 /*
     distance in meters
-    duration in minutes
+    duration in seconds
 */
 const calculateFinalBookingPrice = async (
     fromAddress,
@@ -831,6 +831,7 @@ const calculateFinalBookingPrice = async (
                 message: "Parameter missing"
             }
         }
+        duration = parseFloat(duration) / 60;
         let pricingConfig = await node.callAPI("assets/search", {
             $query: {
                 assetName: config.ASSET.dynamicPricing,
