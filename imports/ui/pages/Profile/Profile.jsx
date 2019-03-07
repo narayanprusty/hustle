@@ -136,46 +136,63 @@ class Profile extends Component {
 
                 <div className="padding-left padding-bottom padding-right">
                     <div className="list">
-                        <div className="item item-avatar item-button-right">
-                            <img
-                                src={
-                                    this.state.avatar
-                                        ? this.state.avatar
-                                        : "/images/profile.png"
-                                }
-                            />
-                            <label className="custom-file-input">
-                                {this.state.fileName
-                                    ? "  " + this.state.fileName
-                                    : "  Browse"}
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    name="avatar"
-                                    id="avatar"
-                                    className="custom-file-input"
-                                    onChange={this.handleAvatarChange}
-                                    hidden={true}
+                        {!this.isDriver && (
+                            <div className="item item-avatar item-button-right">
+                                <img
+                                    src={
+                                        this.state.avatar
+                                            ? this.state.avatar
+                                            : "/images/profile.png"
+                                    }
                                 />
-                            </label>
 
-                            <LaddaButton
-                                loading={this.state.change_loader}
-                                data-color="##FFFF00"
-                                data-size={S}
-                                data-style={SLIDE_UP}
-                                data-spinner-size={30}
-                                data-spinner-color="#ddd"
-                                data-spinner-lines={12}
-                                className="button button-positive"
-                                onClick={this.tryToUpload}
-                            >
-                                Change
-                            </LaddaButton>
-                        </div>
-                        <div className="item item-icon-left item-button-right">
-                            <i className="icon fa fa-user" aria-hidden="true" />{" "}
-                            Name
+                                <label className="custom-file-input">
+                                    {this.state.fileName
+                                        ? "  " + this.state.fileName
+                                        : "  Browse"}
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        name="avatar"
+                                        id="avatar"
+                                        className="custom-file-input"
+                                        onChange={this.handleAvatarChange}
+                                        hidden={true}
+                                    />
+                                </label>
+
+                                <LaddaButton
+                                    loading={this.state.change_loader}
+                                    data-color="##FFFF00"
+                                    data-size={S}
+                                    data-style={SLIDE_UP}
+                                    data-spinner-size={30}
+                                    data-spinner-color="#ddd"
+                                    data-spinner-lines={12}
+                                    className="button button-positive"
+                                    onClick={this.tryToUpload}
+                                >
+                                    Change
+                                </LaddaButton>
+                            </div>
+                        )}
+                        <div className="item item-avatar item-icon-left item-button-right">
+                            {!this.isDriver && (
+                                <i
+                                    className="icon fa fa-user"
+                                    aria-hidden="true"
+                                />
+                            )}{" "}
+                            {this.isDriver && (
+                                <img
+                                    src={
+                                        this.state.avatar
+                                            ? this.state.avatar
+                                            : "/images/profile.png"
+                                    }
+                                />
+                            )}
+                            {!this.isDriver && " Name"}
                             <span className="item-note">
                                 {this.state.name || "Loading..."}
                             </span>
