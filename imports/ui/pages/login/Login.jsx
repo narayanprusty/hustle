@@ -4,6 +4,7 @@ import Notifications from "react-notify-toast";
 import { Redirect } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import PhoneInput from "react-phone-number-input";
+import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 
 import SmartInput from "react-phone-number-input/smart-input";
 import "react-phone-number-input/style.css";
@@ -85,7 +86,7 @@ export default class Login extends Component {
                     backgroundPositionY: "bottom",
                     backgroundRepeat: "repeat-x",
                     backgroundRepeatX: "repeat",
-                    overflow: "scroll",
+                    overflow: "scroll"
                 }}
             >
                 <Notifications />
@@ -124,7 +125,15 @@ export default class Login extends Component {
                             />
                         </label>
                         <div className="padding-top">
-                            <button
+                            <LaddaButton
+                                className="button button-block button-dark activated"
+                                data-color="##FFFF00"
+                                data-size={L}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                                loading={this.state.login_formloading}
                                 onClick={this.loginHandler.bind(this)}
                                 disabled={
                                     this.state.phone && this.state.password
@@ -134,7 +143,7 @@ export default class Login extends Component {
                                 className="button button-block button-energized activated"
                             >
                                 Login
-                            </button>
+                            </LaddaButton>
                         </div>
                     </div>
                     <span className="seperator padding-left padding-right padding-bottom">

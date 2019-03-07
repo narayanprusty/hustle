@@ -3,6 +3,8 @@ import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PhoneInput from "react-phone-number-input";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
+import LaddaButton, { L, SLIDE_UP } from "react-ladda";
+
 import Notifications from "react-notify-toast";
 import { Redirect } from "react-router-dom";
 
@@ -203,7 +205,14 @@ export default class Register extends Component {
                                 onChange={this.inputHandler.bind(this)}
                             />
                         </label>
-                        <button
+                        <LaddaButton
+                            data-color="##FFFF00"
+                            data-size={L}
+                            data-style={SLIDE_UP}
+                            data-spinner-size={30}
+                            data-spinner-color="#ddd"
+                            data-spinner-lines={12}
+                            loading={this.state.register_formloading}
                             onClick={this.createAccount.bind(this)}
                             disabled={
                                 phone && first_name && password && verification
@@ -213,7 +222,7 @@ export default class Register extends Component {
                             className="button button-block button-energized activated"
                         >
                             Register
-                        </button>
+                        </LaddaButton>
                     </div>
                     <span className="seperator padding-left padding-right padding-bottom">
                         &nbsp;&nbsp;OR&nbsp;&nbsp;
