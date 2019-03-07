@@ -11,7 +11,8 @@ const riderDetails = async userId => {
             : "Rider",
         avgUserRating: riderProfile.profile
             ? riderProfile.profile.avgRating
-            : "0"
+            : "0",
+        avatar: riderProfile.profile.avatar
     };
     return dataToSend;
 };

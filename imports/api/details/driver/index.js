@@ -9,7 +9,8 @@ const driverDetails = async userId => {
         phone: driverProfile.profile ? driverProfile.profile.phone : "-",
         carNumber: driverMeta.carNumber || "-",
         carModel: driverMeta.carModel || "-",
-        avgRating: driverMeta.avgRating || "0"
+        avgRating: driverMeta.avgRating || "0",
+        avatar: driverProfile.profile.avatar
     };
     return dataToSend;
 };
