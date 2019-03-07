@@ -139,9 +139,33 @@ class Profile extends Component {
                                 </span>
                             </div>
                         )}
+
+                        {this.isDriver && (
+                            <div class="item item-icon-left">
+                                <i
+                                    className="icon fa fa-star"
+                                    aria-hidden="true"
+                                />{" "}
+                                Avg Ratings as Driver
+                                <span className="item-note">
+                                    <Ratings
+                                        start={0}
+                                        stop={5}
+                                        emptySymbol="fa fa-star-o fa-2x empty"
+                                        fullSymbol="fa fa-star fa-2x full"
+                                        initialRating={this.state.avgUserRating}
+                                        readonly
+                                        style={{
+                                            fontSize: "10px"
+                                        }}
+                                    />
+                                </span>
+                            </div>
+                        )}
+
                         <div class="item item-icon-left">
                             <i className="icon fa fa-star" aria-hidden="true" />{" "}
-                            Avg Ratings
+                            Avg Ratings as User
                             <span className="item-note">
                                 <Ratings
                                     start={0}
