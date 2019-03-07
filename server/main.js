@@ -1,6 +1,6 @@
 import { Meteor } from "meteor/meteor";
+require("./avatar_rules");
 require("../imports/startup/server");
-
 import Verifier from "../imports/api/emails/email-validator";
 Accounts.validateLoginAttempt(function(options) {
     if (!options.allowed) {
