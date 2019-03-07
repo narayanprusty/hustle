@@ -221,7 +221,13 @@ class Bookingreq extends Component {
             items.push(
                 <div key={data._id} className="list card">
                     <div className="item item-avatar">
-                        <img src="/images/profile.png" />
+                        <img
+                            src={
+                                data.riderPic
+                                    ? data.riderPic
+                                    : "/images/profile.png"
+                            }
+                        />
                         <h2>{data.username || "unnamed"}</h2>
                         <Ratings
                             start={0}
@@ -298,7 +304,9 @@ class Bookingreq extends Component {
             );
         });
         return (
-            <div style={{direction: localizationManager.strings.textDirection}}>
+            <div
+                style={{ direction: localizationManager.strings.textDirection }}
+            >
                 <InfiniteScroll
                     pageStart={0}
                     loadMore={this.loadItems}
@@ -325,7 +333,7 @@ class Bookingreq extends Component {
                                     />
                                 </div>
                                 <div className="padding-top">
-                                {localizationManager.strings.noRequests}
+                                    {localizationManager.strings.noRequests}
                                 </div>
                             </div>
                         </div>

@@ -538,8 +538,14 @@ class CurrentBooking extends Component {
                 <div className="padding-left padding-right padding-bottom">
                     {this.state.status != "finished" && (
                         <div className="list" style={{ marginBottom: "0px" }}>
-                            <a className="item item-icon-left" href="#">
-                                <i className="icon fa fa-user-o" />
+                            <a className="item item-avatar" href="#">
+                                <img
+                                    src={
+                                        this.state.avatar
+                                            ? this.state.avatar
+                                            : "/images/profile.png"
+                                    }
+                                />
                                 {this.state.name || "-"}
                                 <span className="item-note">
                                     {localizationManager.strings.name}
@@ -701,9 +707,7 @@ class CurrentBooking extends Component {
                             data-spinner-size={30}
                             data-spinner-color="#ddd"
                             data-spinner-lines={12}
-                            disabled={
-                                !this.state.currentPosition
-                            }
+                            disabled={!this.state.currentPosition}
                         >
                             <i className="fa fa-check" aria-hidden="true" />{" "}
                             {localizationManager.strings.finishRide}

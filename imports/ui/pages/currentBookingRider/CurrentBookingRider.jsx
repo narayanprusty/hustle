@@ -876,8 +876,14 @@ class CurrentBookingRider extends Component {
                                 className="list"
                                 style={{ marginBottom: "0px" }}
                             >
-                                <a className="item item-icon-left" href="#">
-                                    <i className="icon fa fa-user-o" />
+                                <a className="item item-avatar" href="#">
+                                    <img
+                                        src={
+                                            this.state.avatar
+                                                ? this.state.avatar
+                                                : "/images/profile.png"
+                                        }
+                                    />
                                     {this.state.name || "-"}
                                     <span className="item-note">
                                         {localizationManager.strings.name}

@@ -125,6 +125,10 @@ const newBookingReq = async ({
     });
 
     BookingRecord.insert({
+        riderPic:
+            Meteor.user().profile && Meteor.user().profile.avatar
+                ? Meteor.user().profile.avatar
+                : null,
         riderRating: avgRating,
         preferredCar: preferredCar,
         username: username,
@@ -662,7 +666,7 @@ const calculateApproxBookingPrice = async (
             return {
                 success: false,
                 message: "Parameter missing"
-            }
+            };
         }
         let pricingConfig = await node.callAPI("assets/search", {
             $query: {
@@ -670,7 +674,7 @@ const calculateApproxBookingPrice = async (
                 status: "open"
             }
         });
-        console.log("pricingConfig", !!(pricingConfig));
+        console.log("pricingConfig", !!pricingConfig);
         let usePerMeterRate = true;
         if (pricingConfig) {
             if (pricingConfig.length > 0) {
@@ -718,8 +722,11 @@ const calculateApproxBookingPrice = async (
                                 !hourRuleMatched
                             ) {
                                 if (
-                                    (config.dateTime[i].fromHour < hour && config.dateTime[i].toHour > hour) || 
-                                    (config.dateTime[i].fromHour == hour) || (config.dateTime[i].toHour == hour && min == 0)
+                                    (config.dateTime[i].fromHour < hour &&
+                                        config.dateTime[i].toHour > hour) ||
+                                    config.dateTime[i].fromHour == hour ||
+                                    (config.dateTime[i].toHour == hour &&
+                                        min == 0)
                                 ) {
                                     hourRuleMatched = true;
                                     surge += parseFloat(
@@ -779,10 +786,20 @@ const calculateApproxBookingPrice = async (
                 }
                 console.log("basePrice", basePrice, "surge", surge);
                 let retVal = basePrice;
-                console.log("1. retVal", retVal, "distance", distance, "perKM", perKM);
-                retVal = parseFloat(retVal) + 
-                    parseFloat((distance / 1000) *
-                    (perKM != 0 ? perKM : config.farePerMeter * 1000));
+                console.log(
+                    "1. retVal",
+                    retVal,
+                    "distance",
+                    distance,
+                    "perKM",
+                    perKM
+                );
+                retVal =
+                    parseFloat(retVal) +
+                    parseFloat(
+                        (distance / 1000) *
+                            (perKM != 0 ? perKM : config.farePerMeter * 1000)
+                    );
                 console.log("2. retVal = distance in KM * perKM", retVal);
                 retVal = retVal * (1 + surge / 100);
                 console.log("3. retVal += surge", retVal);
@@ -824,12 +841,19 @@ const calculateFinalBookingPrice = async (
     duration
 ) => {
     try {
-        console.log("Final Pricing",fromAddress, toAddress, distance, carType, duration);
+        console.log(
+            "Final Pricing",
+            fromAddress,
+            toAddress,
+            distance,
+            carType,
+            duration
+        );
         if (!fromAddress || !toAddress || !distance || !carType || !duration) {
             return {
                 success: false,
                 message: "Parameter missing"
-            }
+            };
         }
         duration = parseFloat(duration) / 60;
         let pricingConfig = await node.callAPI("assets/search", {
@@ -838,7 +862,7 @@ const calculateFinalBookingPrice = async (
                 status: "open"
             }
         });
-        console.log("pricingConfig", !!(pricingConfig));
+        console.log("pricingConfig", !!pricingConfig);
         let usePerMeterRate = true;
         if (pricingConfig) {
             if (pricingConfig.length > 0) {
@@ -890,8 +914,11 @@ const calculateFinalBookingPrice = async (
                                 !hourRuleMatched
                             ) {
                                 if (
-                                    (config.dateTime[i].fromHour < hour && config.dateTime[i].toHour > hour) || 
-                                    (config.dateTime[i].fromHour == hour) || (config.dateTime[i].toHour == hour && min == 0)
+                                    (config.dateTime[i].fromHour < hour &&
+                                        config.dateTime[i].toHour > hour) ||
+                                    config.dateTime[i].fromHour == hour ||
+                                    (config.dateTime[i].toHour == hour &&
+                                        min == 0)
                                 ) {
                                     hourRuleMatched = true;
                                     surge += parseFloat(
@@ -951,16 +978,28 @@ const calculateFinalBookingPrice = async (
                 }
                 console.log("basePrice", basePrice, "surge", surge);
                 let retValKM = basePrice;
-                console.log("1. retValKM", retValKM, "distance", distance, "perKM", perKM);
-                retValKM = parseFloat(retValKM) + parseFloat((distance / 1000) *
-                    (perKM != 0 ? perKM : config.farePerMeter * 1000));
+                console.log(
+                    "1. retValKM",
+                    retValKM,
+                    "distance",
+                    distance,
+                    "perKM",
+                    perKM
+                );
+                retValKM =
+                    parseFloat(retValKM) +
+                    parseFloat(
+                        (distance / 1000) *
+                            (perKM != 0 ? perKM : config.farePerMeter * 1000)
+                    );
                 console.log("2. retValKM = distance * perKM", retValKM);
                 retValKM = retValKM * (1 + surge / 100);
                 console.log("3. retValKM =+ surge", retValKM);
                 retValKM = retValKM < minimumFare ? minimumFare : retValKM;
                 console.log("4. retValKM = >minimumFare", retValKM);
                 let retValMin = basePrice;
-                retValMin = parseFloat(retValMin) + parseFloat(duration * perMin);
+                retValMin =
+                    parseFloat(retValMin) + parseFloat(duration * perMin);
                 retValMin = retValMin * (1 + surge / 100);
                 retValMin = retValMin < minimumFare ? minimumFare : retValMin;
                 console.log("5. retVal Min = >minimumFare", retValMin);
