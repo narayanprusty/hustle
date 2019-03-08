@@ -52,7 +52,7 @@ class CurrentBooking extends Component {
     componentWillUnmount() {
         if (this._isMounted) {
             // clearInterval(this.state.ndIntvl);
-            clearInterval(this.setState.intvlc);
+            clearInterval(this.state.intvlc);
             this.pubnub.unsubscribe({
                 channels: [this.state.bookingId]
             });
