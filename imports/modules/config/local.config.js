@@ -26,6 +26,9 @@ module.exports = {
         ssl: true
     },
     AWS: {
+        accessKeyId: "AKIAI75BE6D54XNLGF6A",
+        secretAccessKey: "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",
+        region: "us-east-2",
         S3_BUCKET: "avatar.gohustleapp.com"
     }
 };

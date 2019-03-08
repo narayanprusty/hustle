@@ -1,6 +1,7 @@
 import { Meteor } from "meteor/meteor";
-require("./avatar_rules");
+import AWS from "aws-sdk";
 require("../imports/startup/server");
+import config from "../imports/modules/config/server";
 import Verifier from "../imports/api/emails/email-validator";
 Accounts.validateLoginAttempt(function(options) {
     if (!options.allowed) {
@@ -42,6 +43,7 @@ Accounts.onCreateUser(function(options, user) {
 
 Meteor.startup(() => {
     console.log(">>>> Server Started <<<<");
+    AWS.config.update(config.AWS);
     WebApp.rawConnectHandlers.use(function(req, res, next) {
         res.setHeader("Access-Control-Allow-Origin", "*");
         return next();

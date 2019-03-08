@@ -13,12 +13,7 @@ class Profile extends Component {
         this.state = { value: "", avgUserRating: 0, avgRating: 0 };
         this.isDriver = false;
     }
-    componentWillMount = () => {
-        Slingshot.fileRestrictions("avatar", {
-            allowedFileTypes: ["image/png", "image/jpeg", "image/gif"],
-            maxSize: 2 * 500 * 500
-        });
-    };
+
     componentDidMount = () => {
         Meteor.call("riderDetails", Meteor.userId(), (err, data) => {
             if (err) {
@@ -76,43 +71,65 @@ class Profile extends Component {
             return callback(null, data);
         });
     };
+    getBase64 = file => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
 
     tryToUpload = () => {
         this.setState({
             change_loader: true
         });
         var userId = Meteor.user()._id;
-        var metaContext = { avatarId: userId };
-        var uploader = new Slingshot.Upload("avatar", metaContext);
-        uploader.send(
-            document.getElementById("avatar").files[0],
-            function(error, downloadUrl) {
-                // you can use refs if you like
-                if (error) {
-                    this.setState({
-                        change_loader: false
-                    });
-                    // Log service detailed response
-                    console.error(
-                        "Error uploading",
-                        uploader.xhr.response,
-                        error
-                    );
-                    notify.show("Failed to upload profile picture.", "error");
-                } else {
-                    this.setState({
-                        change_loader: false
-                    });
-                    // we use $set because the user can change their avatar so it overwrites the url :)
+        var file = document.getElementById("avatar").files[0];
+        this.getBase64(file)
+            .then(fileBase => {
+                const fileName =
+                    userId +
+                    "." +
+                    document.getElementById("avatar").files[0].name.split(".")[
+                        document
+                            .getElementById("avatar")
+                            .files[0].name.split(".").length - 1
+                    ];
+
+                Meteor.call("uploadeFile", fileBase, fileName, (err, data) => {
+                    if (err) {
+                        this.setState({
+                            change_loader: false
+                        });
+                        console.log(err);
+                        notify.show(
+                            "Upload failed,please try again after sometime.",
+                            "error"
+                        );
+                        return false;
+                    }
+                    console.log(data.Location);
                     Meteor.users.update(Meteor.userId(), {
-                        $set: { "profile.avatar": downloadUrl }
+                        $set: { "profile.avatar": data.Location }
                     });
-                    this.setState({ avatar: downloadUrl });
+                    this.setState({
+                        change_loader: false,
+                        avatar: data.Location
+                    });
+
                     notify.show("Profile Picture Updated", "success");
-                }
-                // you will need this in the event the user hit the update button because it will remove the avatar url
-            }.bind(this)
-        );
+                });
+            })
+            .catch(err => {
+                this.setState({
+                    change_loader: false
+                });
+                notify.show(
+                    "Upload failed,please try again after sometime.",
+                    "error"
+                );
+            });
     };
     handleAvatarChange = e => {
         this.setState({

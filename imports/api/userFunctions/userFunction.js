@@ -1,8 +1,10 @@
+import { Meteor } from "meteor/meteor";
+import AWS from "aws-sdk";
 import { driverDetails } from "../details/driver";
 import { getSOSNumbers } from "../sos/sos";
 import { getContacts } from "../EmergencyContact/EmergencyContact";
 import { sendMessage } from "../../Messaging/send_text";
-import { Meteor } from "meteor/meteor";
+import config from "../../modules/config/server";
 
 const triggerSos = async messageElems => {
     const driver = await driverDetails(messageElems.driverId);
@@ -85,4 +87,29 @@ const changeName = (userId, newName) => {
     return true;
 };
 
-export { triggerSos, getUserProfile, changeName };
+const uploadeFile = (fileBase, fileName) => {
+    var s3Bucket = new AWS.S3({ params: { Bucket: config.AWS.S3_BUCKET } });
+    let buf = new Buffer(
+        fileBase.replace(/^data:image\/\w+;base64,/, ""),
+        "base64"
+    );
+    var data = {
+        Key: fileName,
+        Body: buf,
+        "Content-Length": buf.length,
+        ContentEncoding: "base64",
+        ContentType: "image/jpeg"
+    };
+    return s3Bucket
+        .upload(data)
+        .promise()
+        .then(data => {
+            console.log(data);
+            return data;
+        })
+        .catch(error => {
+            throw error;
+        });
+};
+
+export { triggerSos, getUserProfile, changeName, uploadeFile };
