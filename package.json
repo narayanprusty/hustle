@@ -6,8 +6,8 @@
         "test": "meteor test --once --driver-package meteortesting:mocha",
         "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
         "visualize": "meteor --production --extra-packages bundle-visualizer",
-        "build:debug": "METEOR_SETTINGS=$(cat settings-development.json) && export METEOR_SETTINGS  && echo $METEOR_SETTINGS && meteor build ../hustle-build/ --server=hustle.blockcluster.io --debug",
-        "build:production": "METEOR_SETTINGS=$(cat settings.json) && export METEOR_SETTINGS && echo $METEOR_SETTINGS && meteor build ./hustle-build/ --server=mobile.gohustle.com:80"
+        "build:debug": "meteor build ../hustle-build/ --server=hustle.blockcluster.io --debug",
+        "build:production": "meteor build ./hustle-build/ --server=mobile.gohustle.com:80"
     },
     "dependencies": {
         "@babel/runtime": "^7.1.5",
@@ -16,6 +16,7 @@
         "@fortawesome/react-fontawesome": "^0.1.3",
         "agenda": "^2.0.2",
         "await-sleep": "0.0.1",
+        "aws-sdk": "^2.417.0",
         "bcrypt": "^3.0.3",
         "bignumber.js": "^8.1.1",
         "blockcluster": "^1.1.4",
