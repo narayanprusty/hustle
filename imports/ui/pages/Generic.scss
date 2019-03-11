@@ -184,7 +184,9 @@ select {
 
 .rcw-widget-container {
     padding-bottom: 4em;
+    z-index: 10;
 }
+
 .centerIt {
     background: none;
     display: block;
