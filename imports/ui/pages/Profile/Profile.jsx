@@ -52,12 +52,13 @@ class Profile extends Component {
 
                     return notify.show("unable to update", "error");
                 }
-                this.setState({ update_loader: false });
+                this.setState({ update_loader: false, isEdit: false });
 
                 return notify.show("Updated successfully", "success");
             }
         );
     };
+
     getSignedUrl = (file, callback) => {
         console.log("here you go");
         const params = {
@@ -85,6 +86,17 @@ class Profile extends Component {
             change_loader: true
         });
         var userId = Meteor.user()._id;
+
+        document.getElementById("avatar").click();
+    };
+    handleAvatarChange = e => {
+        this.setState({
+            avatar: URL.createObjectURL(e.target.files[0]),
+            fileName: e.target.files[0].name
+        });
+
+        var userId = Meteor.user()._id;
+
         var file = document.getElementById("avatar").files[0];
         this.getBase64(file)
             .then(fileBase => {
@@ -131,12 +143,6 @@ class Profile extends Component {
                 );
             });
     };
-    handleAvatarChange = e => {
-        this.setState({
-            avatar: URL.createObjectURL(e.target.files[0]),
-            fileName: e.target.files[0].name
-        });
-    };
     render() {
         return (
             <div
@@ -151,85 +157,81 @@ class Profile extends Component {
                     </h3>
                 </div>
 
+                {!this.isDriver && (
+                    <div style={{
+                        textAlign: 'center'
+                    }}>
+                        <img
+                            style={{
+                                height: '120px',
+                                borderRadius: '120px',
+                                width: '120px'
+                            }}
+                            src={
+                                this.state.avatar
+                                    ? this.state.avatar
+                                    : "/images/profile.png"
+                            }
+                        />
+                        <br />
+                        <u>
+                            <a href="javascript:void(0);" onClick={this.tryToUpload}><i className="fa fa-edit" aria-hidden="true" /> Edit</a>
+                        </u>
+                        <br />
+                        <input
+                            type="file"
+                            accept="image/*"
+                            name="avatar"
+                            id="avatar"
+                            className="custom-file-input"
+                            onChange={this.handleAvatarChange}
+                            hidden={true}
+                        />
+                        <div style={{marginBottom: '16px'}}></div>
+                        {/*<div className="item item-avatar item-button-right">
+                            <label className="custom-file-input">
+                                {this.state.fileName
+                                    ? "  " + this.state.fileName
+                                    : "  Browse"}
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    name="avatar"
+                                    id="avatar"
+                                    className="custom-file-input"
+                                    onChange={this.handleAvatarChange}
+                                    hidden={true}
+                                />
+                            </label>
+
+                            <LaddaButton
+                                loading={this.state.change_loader}
+                                data-color="##FFFF00"
+                                data-size={S}
+                                data-style={SLIDE_UP}
+                                data-spinner-size={30}
+                                data-spinner-color="#ddd"
+                                data-spinner-lines={12}
+                                className="button button-positive"
+                                onClick={this.tryToUpload}
+                            >
+                                Change
+                            </LaddaButton>
+                        </div>*/}
+                    </div>
+                )}
+
                 <div className="padding-left padding-bottom padding-right">
-                    <div className="list">
-                        {!this.isDriver && (
-                            <div className="item item-avatar item-button-right">
-                                <img
-                                    src={
-                                        this.state.avatar
-                                            ? this.state.avatar
-                                            : "/images/profile.png"
-                                    }
-                                />
-
-                                <label className="custom-file-input">
-                                    {this.state.fileName
-                                        ? "  " + this.state.fileName
-                                        : "  Browse"}
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        name="avatar"
-                                        id="avatar"
-                                        className="custom-file-input"
-                                        onChange={this.handleAvatarChange}
-                                        hidden={true}
-                                    />
-                                </label>
-
-                                <LaddaButton
-                                    loading={this.state.change_loader}
-                                    data-color="##FFFF00"
-                                    data-size={S}
-                                    data-style={SLIDE_UP}
-                                    data-spinner-size={30}
-                                    data-spinner-color="#ddd"
-                                    data-spinner-lines={12}
-                                    className="button button-positive"
-                                    onClick={this.tryToUpload}
-                                >
-                                    Change
-                                </LaddaButton>
-                            </div>
-                        )}
-                        <div className="item item-avatar item-icon-left item-button-right">
-                            {!this.isDriver && (
-                                <i
-                                    className="icon fa fa-user"
-                                    aria-hidden="true"
-                                />
-                            )}{" "}
-                            {this.isDriver && (
-                                <img
-                                    src={
-                                        this.state.avatar
-                                            ? this.state.avatar
-                                            : "/images/profile.png"
-                                    }
-                                />
-                            )}
-                            {!this.isDriver && " Name"}
+                    <div className="list">   
+                        <div className="item item-icon-left">
+                            <i
+                                className="icon fa fa-user"
+                                aria-hidden="true"
+                            />{" "}
+                            Name
                             <span className="item-note">
                                 {this.state.name || "Loading..."}
                             </span>
-                            <button
-                                className="button button-positive"
-                                onClick={() => {
-                                    if (this.state.isEdit) {
-                                        this.setState({ isEdit: false });
-                                    } else {
-                                        this.setState({
-                                            isEdit: true,
-                                            placeholder: "name",
-                                            name_input: "name",
-                                            value: this.state.name
-                                        });
-                                    }
-                                }}
-                            >
-                                <i className="fa fa-edit" aria-hidden="true" />
-                            </button>
                         </div>
                         <div className="item item-icon-left">
                             <i
@@ -319,10 +321,34 @@ class Profile extends Component {
                             </span>
                         </div>
                     </div>
+                    
+                    {!this.state.isEdit &&
+                        <button class="button button-block button-positive" onClick={() => {
+                            if (this.state.isEdit) {
+                                this.setState({ isEdit: false });
+                            } else {
+                                this.setState({
+                                    isEdit: true,
+                                    placeholder: "name",
+                                    name_input: "name",
+                                    value: this.state.name
+                                });
+                            }
+                        }}>
+                            <i className="fa fa-edit" aria-hidden="true" /> Edit Profile
+                        </button>
+                    }
+
                     {this.state.isEdit && (
-                        <div className="list">
-                            <labl>{this.state.placeholder}</labl>
-                            <span className="item item-input">
+                        <div>
+                            <span className="seperator padding-left padding-right padding-bottom">
+                                &nbsp;&nbsp;Edit Info&nbsp;&nbsp;
+                            </span>
+                            <div style={{
+                                marginBottom: '8px'
+                            }}></div>
+                            <label className="item item-input item-stacked-label">
+                                <span className="input-label">Name</span>
                                 <input
                                     type="text"
                                     name={this.state.name_input}
@@ -336,7 +362,7 @@ class Profile extends Component {
                                         }
                                     }}
                                 />
-                            </span>
+                            </label>
                             <LaddaButton
                                 className="button button-block button-balanced"
                                 loading={this.state.update_loader}
