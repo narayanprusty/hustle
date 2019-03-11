@@ -16,7 +16,7 @@ module.exports = {
     },
     BLOCKCLUSTER: {
         host: "app-ap-south-1b.blockcluster.io",
-        instanceId: "iqszlvac"
+        instanceId: "ckgexbea"
     },
     driversWithin: 5, //in KM
     PUBNUB: {
