@@ -71,20 +71,11 @@ const newBookingReq = async ({
         droppingPoint: JSON.stringify(droppingPoint),
         start_address: start_address,
         end_address: end_address,
-        time_shown: reachAfter
-    };
-
-    const infoData = {
-        bookingId: identifier,
-        preferredCar: preferredCar,
         time_shown: reachAfter,
-        distance_shown: distance,
         usersLatLng_bookingTime: JSON.stringify(currentLocation),
         time_shown_reachAfterIfTraffic: reachAfterIfTraffic,
         total_time_in_sec: timeTaken_in_secoend,
-        timeTakenTraffic_in_secoend: timeTakenTraffic_in_secoend,
-        userId: userId,
-        createdAt: currentDate //make similar
+        timeTakenTraffic_in_secoend: timeTakenTraffic_in_secoend
     };
 
     //create booking general assets
@@ -99,29 +90,6 @@ const newBookingReq = async ({
         fromAccount: node.getWeb3().eth.accounts[0],
         identifier: identifier,
         public: data
-    });
-
-    const identifier2 =
-        "I" +
-        Date.now() +
-        "" +
-        Math.random()
-            .toString()
-            .split(".")[1];
-
-    //create booking info assets
-    await node.callAPI("assets/issueSoloAsset", {
-        assetName: config.ASSET.BookingsInfo,
-        fromAccount: node.getWeb3().eth.accounts[0],
-        toAccount: node.getWeb3().eth.accounts[0],
-        identifier: identifier2
-    });
-
-    await node.callAPI("assets/updateAssetInfo", {
-        assetName: config.ASSET.BookingsInfo,
-        fromAccount: node.getWeb3().eth.accounts[0],
-        identifier: identifier2,
-        public: infoData
     });
 
     BookingRecord.insert({

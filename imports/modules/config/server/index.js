@@ -58,7 +58,6 @@ module.exports = {
     ASSET: {
         Card: "Card",
         Bookings: "Bookings",
-        BookingsInfo: "BookingsInfo",
         SubscriptionPlans: "SubscriptionPlans",
         Subscriptions: "Subscriptions",
         Reviews: "Reviews",
