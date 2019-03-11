@@ -116,7 +116,10 @@ export default class Settings extends Component {
                         {localizationManager.strings.myCards}
                     </Link>
 
-                    <a className="item item-icon-left item-icon-right" href="tel:+966-54-961-1069">
+                    <a
+                        className="item item-icon-left item-icon-right"
+                        href="tel:+966-54-961-1069"
+                    >
                         <i className="icon ion-chatbubble-working" />
                         {localizationManager.strings.callSupport}
                         <i className="icon ion-ios-telephone-outline" />
@@ -129,7 +132,7 @@ export default class Settings extends Component {
                         {localizationManager.strings.others}
                     </div>
                     {this.state.isDriver ? (
-                        <li class="item item-icon-left item-toggle">
+                        <li className="item item-icon-left item-toggle">
                             <i className="icon fa fa-car" />
                             <span
                                 style={{
@@ -138,7 +141,7 @@ export default class Settings extends Component {
                             >
                                 {localizationManager.strings.driverMode}
                             </span>
-                            <label class="toggle toggle-dark">
+                            <label className="toggle toggle-dark">
                                 <input
                                     type="checkbox"
                                     checked={this.state.driverMode}
@@ -148,8 +151,8 @@ export default class Settings extends Component {
                                             : this.setUserMode()
                                     }
                                 />
-                                <div class="track">
-                                    <div class="handle" />
+                                <div className="track">
+                                    <div className="handle" />
                                 </div>
                             </label>
                         </li>

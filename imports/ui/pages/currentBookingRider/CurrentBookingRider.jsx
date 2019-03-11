@@ -115,6 +115,9 @@ class CurrentBookingRider extends Component {
                 if (error) {
                     return false;
                 }
+                if(bookingData.data.driverId){
+                this.setState({ driverId: bookingData.data.driverId });
+                }
                 if (bookingData && bookingData.data.rideStatus == "accepted") {
                     this.getDriverDetails(bookingData.data.driverId);
                     this.setState({
@@ -619,7 +622,7 @@ class CurrentBookingRider extends Component {
             start_address: this.state.start_address,
             end_address: this.state.end_address
         };
-        Meteor.call("triggerSos", messageElem, (err, res) => {
+        return Meteor.call("triggerSos", messageElem, (err, res) => {
             if (err) {
                 this.setState({
                     sos_loader: false
