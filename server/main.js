@@ -43,6 +43,14 @@ Accounts.onCreateUser(function(options, user) {
 
 Meteor.startup(() => {
     console.log(">>>> Server Started <<<<");
+    if (Meteor.isServer()) {
+        Push.Configure({
+            gcm: {
+                projectNumber: 937200706426,
+                apiKey: "AIzaSyA6PmzL_3n5T1qFgpv9Fnf4MyAYfVPhi_8"
+            }
+        });
+    }
     AWS.config.update(config.AWS);
     WebApp.rawConnectHandlers.use(function(req, res, next) {
         res.setHeader("Access-Control-Allow-Origin", "*");
