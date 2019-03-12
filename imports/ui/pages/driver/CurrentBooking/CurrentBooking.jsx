@@ -353,7 +353,10 @@ class CurrentBooking extends Component {
             from: "push",
             title: "Push Notification",
             text: "Push Notification text",
-            badge: 1 //optional, use it to set badge count of the receiver when the app is in background.
+            badge: 1, //optional, use it to set badge count of the receiver when the app is in background.
+            query:{
+                userId:Meteor.userId()
+            }
         });
         // if (this.isIphone()) {
         //     // incase not working try making it `q` instead of ll

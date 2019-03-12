@@ -42,6 +42,15 @@ const newBookingReq = async ({
     distance_in_meter,
     totalFare
 }) => {
+    Push.send({
+        from: "Hustle",
+        title: "Raising your request",
+        text: "oh shit stop boy",
+        badge: 1, //optional, use it to set badge count of the receiver when the app is in background.
+        query:{
+            userId:Meteor.userId()
+        }
+    });
     const username = Meteor.user().profile.name;
     const avgRating = Meteor.user().profile.avgRating
         ? Meteor.user().profile.avgRating
@@ -209,6 +218,15 @@ const onDriverAccept = async (bookingId, driverId) => {
 };
 
 const onStartRide = async (bookingId, startingPoint) => {
+    Push.send({
+        from: "Hustle",
+        title: "starting your request",
+        text: "oh shit stop boy",
+        badge: 1, //optional, use it to set badge count of the receiver when the app is in background.
+        query:{
+            userId:Meteor.userId()
+        }
+    });
     const txId = await node.callAPI("assets/updateAssetInfo", {
         assetName: config.ASSET.Bookings,
         fromAccount: node.getWeb3().eth.accounts[0],
@@ -242,6 +260,15 @@ const getShortestDistance = (p1, p2) => {
     );
 };
 const onStopRide = async (driverId, bookingId, endingPoint, p1, p2) => {
+    Push.send({
+        from: "Hustle",
+        title: "Stopping your ride man",
+        text: "oh shit stop boy",
+        badge: 1, //optional, use it to set badge count of the receiver when the app is in background.
+        query:{
+            userId:Meteor.userId()
+        }
+    });
     const bookingData = await BookingRecord.find({
         bookingId: bookingId
     }).fetch()[0];
