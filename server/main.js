@@ -43,7 +43,7 @@ Accounts.onCreateUser(function(options, user) {
 
 Meteor.startup(() => {
     console.log(">>>> Server Started <<<<");
-    if (Meteor.isServer()) {
+    if (Meteor.isServer) {
         Push.Configure({
             gcm: {
                 projectNumber: 937200706426,
