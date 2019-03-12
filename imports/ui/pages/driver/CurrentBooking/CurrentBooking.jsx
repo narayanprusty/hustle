@@ -291,7 +291,8 @@ class CurrentBooking extends Component {
                     this.state.boardingPoint.coordinates[1] +
                     "," +
                     this.state.boardingPoint.coordinates[0],
-                "_system"
+                "_system",
+                "location=no"
             );
         } else {
             open(
@@ -364,7 +365,8 @@ class CurrentBooking extends Component {
                     this.state.droppingPoint.coordinates[1] +
                     "," +
                     this.state.droppingPoint.coordinates[0],
-                "_system"
+                "_system",
+                "location=no"
             );
         } else {
             open(
@@ -372,7 +374,8 @@ class CurrentBooking extends Component {
                     this.state.droppingPoint.coordinates[1] +
                     "," +
                     this.state.droppingPoint.coordinates[0],
-                "_blank"
+                "_system",
+                "location=yes"
             );
         }
     };
