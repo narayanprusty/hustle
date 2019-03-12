@@ -115,8 +115,8 @@ class CurrentBookingRider extends Component {
                 if (error) {
                     return false;
                 }
-                if(bookingData.data.driverId){
-                this.setState({ driverId: bookingData.data.driverId });
+                if (bookingData.data.driverId) {
+                    this.setState({ driverId: bookingData.data.driverId });
                 }
                 if (bookingData && bookingData.data.rideStatus == "accepted") {
                     this.getDriverDetails(bookingData.data.driverId);
@@ -677,12 +677,6 @@ class CurrentBookingRider extends Component {
                                             ? "You are on the ride"
                                             : localizationManager.strings
                                                   .driverAcceptedYourRideRequest}
-                                        <br />
-                                        {this.state.status == "accepted" &&
-                                            this.state.timeToArrive &&
-                                            this.state.showTime &&
-                                            "Partner expected to arrive in " +
-                                                this.state.timeToArrive}
                                     </div>
                                 </div>
                             </div>
@@ -887,10 +881,26 @@ class CurrentBookingRider extends Component {
                                                 : "/images/profile.png"
                                         }
                                     />
+
                                     {this.state.name || "-"}
-                                    <span className="item-note">
-                                        {localizationManager.strings.name}
-                                    </span>
+                                    <p>
+                                        <Rating
+                                            name="rating"
+                                            {...this.props}
+                                            start={0}
+                                            stop={5}
+                                            readonly={true}
+                                            initialRating={
+                                                this.state.avgRating || 0
+                                            }
+                                            emptySymbol="fa fa-star-o fa-2x empty"
+                                            fullSymbol="fa fa-star fa-2x full"
+                                            onChange={rate => this.onRate(rate)}
+                                            style={{
+                                                fontSize: "10px"
+                                            }}
+                                        />
+                                    </p>
                                 </a>
                                 <a
                                     className="item item-icon-left"
@@ -917,31 +927,21 @@ class CurrentBookingRider extends Component {
                                         {localizationManager.strings.carNumber}
                                     </span>
                                 </a>
-                                <a className="item item-icon-left" href="#">
-                                    <i className="icon fa fa fa-smile-o" />
-                                    <Rating
-                                        name="rating"
-                                        {...this.props}
-                                        start={0}
-                                        stop={5}
-                                        readonly={true}
-                                        initialRating={
-                                            this.state.avgRating || 0
-                                        }
-                                        emptySymbol="fa fa-star-o fa-2x empty"
-                                        fullSymbol="fa fa-star fa-2x full"
-                                        onChange={rate => this.onRate(rate)}
-                                        style={{
-                                            fontSize: "10px"
-                                        }}
-                                    />
-                                    <span className="item-note">
-                                        {
-                                            localizationManager.strings
-                                                .driverReview
-                                        }
-                                    </span>
-                                </a>
+                                {this.state.status == "accepted" &&
+                                    this.state.timeToArrive &&
+                                    this.state.showTime && (
+                                        <a
+                                            className="item item-icon-left"
+                                            href="#"
+                                        >
+                                            <i className="icon fa fa fa-smile-o" />
+                                            {"Partner expected to arrive in " +
+                                                this.state.timeToArrive}
+                                            <span className="item-note">
+                                                Expected time to arrive
+                                            </span>
+                                        </a>
+                                    )}
                             </div>
                         </div>
                     )}

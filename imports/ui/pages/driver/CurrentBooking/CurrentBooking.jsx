@@ -547,9 +547,19 @@ class CurrentBooking extends Component {
                                     }
                                 />
                                 {this.state.name || "-"}
-                                <span className="item-note">
-                                    {localizationManager.strings.name}
-                                </span>
+                                <p>
+                                    <Rating
+                                        start={0}
+                                        stop={5}
+                                        emptySymbol="fa fa-star-o fa-2x empty"
+                                        fullSymbol="fa fa-star fa-2x full"
+                                        initialRating={this.state.rating}
+                                        readonly
+                                        style={{
+                                            fontSize: "10px"
+                                        }}
+                                    />
+                                </p>
                             </a>
                             <a
                                 className="item item-icon-left"
