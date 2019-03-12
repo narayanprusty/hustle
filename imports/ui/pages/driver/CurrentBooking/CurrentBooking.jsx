@@ -276,8 +276,9 @@ class CurrentBooking extends Component {
         });
         console.log(this.isIphone(), this.isAndroid());
         // if (this.isIphone()) {
+        //     console.log(">>>>>>>");
         //     open(
-        //         "maps://?ll=" +
+        //         "comgooglemaps://?ll=" +
         //             +this.state.boardingPoint.coordinates[1] +
         //             "," +
         //             this.state.boardingPoint.coordinates[0],
@@ -298,7 +299,8 @@ class CurrentBooking extends Component {
                     this.state.boardingPoint.coordinates[1] +
                     "," +
                     this.state.boardingPoint.coordinates[0],
-                "_blank"
+                "_system",
+                "location=yes"
             );
         }
         this.setState({
