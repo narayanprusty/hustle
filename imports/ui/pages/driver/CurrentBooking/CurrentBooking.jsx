@@ -349,6 +349,12 @@ class CurrentBooking extends Component {
     };
 
     navigateToDrop = () => {
+        Push.send({
+            from: "push",
+            title: "Push Notification",
+            text: "Push Notification text",
+            badge: 1 //optional, use it to set badge count of the receiver when the app is in background.
+        });
         // if (this.isIphone()) {
         //     // incase not working try making it `q` instead of ll
         //     open(
