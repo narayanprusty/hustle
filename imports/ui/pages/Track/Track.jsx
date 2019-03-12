@@ -182,6 +182,14 @@ class Track extends Component {
                     withPresence: true
                 });
                 this.setState(data);
+                if (data.driverLoc) {
+                    this.setState({
+                        driverLoc: {
+                            lat: data.driverLoc[1],
+                            lng: data.driverLoc[0]
+                        }
+                    });
+                }
                 const intRecord = setInterval(this.watchRideStatus, 5000);
                 this.setState({
                     intvl: intRecord
