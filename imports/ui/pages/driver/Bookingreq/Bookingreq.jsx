@@ -240,11 +240,11 @@ class Bookingreq extends Component {
                                 fontSize: "10px"
                             }}
                         />
-                        <p>
+                        {/* <p>
                             {data.createdAt
                                 ? moment(data.createdAt).format("LLL")
                                 : "-"}{" "}
-                        </p>
+                        </p> */}
                     </div>
 
                     <div className="item item-body">
