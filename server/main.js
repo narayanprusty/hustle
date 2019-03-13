@@ -43,14 +43,24 @@ Accounts.onCreateUser(function(options, user) {
 
 Meteor.startup(() => {
     console.log(">>>> Server Started <<<<");
+    if (Meteor.isDevelopment) {
+        Push.debug = true;
+    }
     if (Meteor.isServer) {
+        const serviceAccountJson = JSON.parse(
+            Assets.getText("FirebaseAdminSdkServiceAccountKey.json")
+        );
+
         Push.Configure({
-            gcm: {
-                projectNumber: 937200706426,
-                apiKey:
-                    "AAAA2jWD43o:APA91bED_7kx4YlbH_O1EztfUuBXPB1HNI3zQGz8sRjf9me8TGFpiGsRYYuGhB2qGEA96QkD_5akPeNMH8qk_JROJl2y8eymbkDSfeFFzdB6Dtv3SD9eHVwhbBYbMY8Fw7G2ffD7fapS"
+            fcm: {
+                serviceAccountJson: serviceAccountJson
             },
-            sound: true
+            production: true,
+            sound: true,
+            badge: true,
+            alert: true,
+            vibrate: true,
+            appName: "main"
         });
         Push.allow({
             send: (userId, notification) => {

@@ -349,19 +349,35 @@ class CurrentBooking extends Component {
     };
 
     navigateToDrop = () => {
+        //start here
+        const notId = Math.round(new Date().getTime() / 1000);
+
+        const title = "new notification";
+        const text = "you have a new notification";
+        //custom info
+        const payload = { info: "test", url: "http://www.google.fr" };
+        //number
+        const badge = 5;
+
+        const payloadStringify = {};
+        payloadStringify.custom_key1 = JSON.stringify(payload);
+
         Push.send({
             from: "push",
-            title: "Push Notification",
-            text: "Push Notification text",
-            badge: 1, //optional, use it to set badge count of the receiver when the app is in background.
-            query: {
-                userId: Meteor.userId()
+            title,
+            text,
+            payload: payloadStringify, // All payload values must be strings if sending using FCM
+            sound: "default",
+            query,
+            badge,
+            apn: {
+                sound: "default"
             },
-            gcm: {
-                style: "inbox",
-                summaryText: "There are %n% notifications"
-            }
+            contentAvailable: 1,
+            androidChannel: "PushPluginChannel",
+            notId
         });
+        //End here
         // if (this.isIphone()) {
         //     // incase not working try making it `q` instead of ll
         //     open(
