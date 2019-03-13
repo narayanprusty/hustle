@@ -354,8 +354,12 @@ class CurrentBooking extends Component {
             title: "Push Notification",
             text: "Push Notification text",
             badge: 1, //optional, use it to set badge count of the receiver when the app is in background.
-            query:{
-                userId:Meteor.userId()
+            query: {
+                userId: Meteor.userId()
+            },
+            gcm: {
+                style: "inbox",
+                summaryText: "There are %n% notifications"
             }
         });
         // if (this.isIphone()) {

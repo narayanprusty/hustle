@@ -47,8 +47,12 @@ const newBookingReq = async ({
         title: "Raising your request",
         text: "oh shit stop boy",
         badge: 1, //optional, use it to set badge count of the receiver when the app is in background.
-        query:{
-            userId:Meteor.userId()
+        query: {
+            userId: Meteor.userId()
+        },
+        gcm: {
+            style: "inbox",
+            summaryText: "There are %n% notifications"
         }
     });
     const username = Meteor.user().profile.name;
@@ -223,8 +227,12 @@ const onStartRide = async (bookingId, startingPoint) => {
         title: "starting your request",
         text: "oh shit stop boy",
         badge: 1, //optional, use it to set badge count of the receiver when the app is in background.
-        query:{
-            userId:Meteor.userId()
+        query: {
+            userId: Meteor.userId()
+        },
+        gcm: {
+            style: "inbox",
+            summaryText: "There are %n% notifications"
         }
     });
     const txId = await node.callAPI("assets/updateAssetInfo", {
@@ -265,8 +273,12 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2) => {
         title: "Stopping your ride man",
         text: "oh shit stop boy",
         badge: 1, //optional, use it to set badge count of the receiver when the app is in background.
-        query:{
-            userId:Meteor.userId()
+        query: {
+            userId: Meteor.userId()
+        },
+        gcm: {
+            style: "inbox",
+            summaryText: "There are %n% notifications"
         }
     });
     const bookingData = await BookingRecord.find({

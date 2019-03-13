@@ -1,5 +1,15 @@
+dependencies {
+        //Below my existing dependencies I added these 2:
+        classpath 'com.google.gms:google-services:4.1.0'
+        classpath 'com.google.firebase:firebase-core:11.0.1'
+}
 configurations.all {
     resolutionStrategy {
         force 'com.android.support:support-v4:28+'
     }
 }
+configurations {
+  all*.exclude group: 'com.android.support', module: 'support-v13'
+}
+
+apply plugin: 'com.google.gms.google-services'
