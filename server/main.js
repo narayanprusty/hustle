@@ -58,7 +58,11 @@ Meteor.startup(() => {
                 return true;
             }
         });
+        Push.addListener("error", err => {
+            console.error("error on push: " + err); // no error is received here
+        });
     }
+
     AWS.config.update(config.AWS);
     WebApp.rawConnectHandlers.use(function(req, res, next) {
         res.setHeader("Access-Control-Allow-Origin", "*");

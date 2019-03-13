@@ -3,6 +3,3 @@ configurations.all {
         force 'com.android.support:support-v4:28+'
     }
 }
-configurations {
-  all*.exclude group: 'com.android.support', module: 'support-v13'
-}
