@@ -21,5 +21,6 @@ Meteor.startup(() => {
             sound: true
         }
     });
+    Push.enabled(true);
     render(<App />, document.getElementById("react-target"));
 });
