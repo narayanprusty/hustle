@@ -4,6 +4,7 @@ import {
 import config from "../../modules/config/server";
 import Blockcluster from "blockcluster";
 import shortid from "shortid";
+import { getBookingById } from "../bookings/booking";
 
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
@@ -130,6 +131,29 @@ const payUsingWallet = async (amount, bookingId) => {
         return ex;
     }
 }
+
+// const returnChangeToWallet = async (fare, amountPaid, bookingId) => {
+//     try {
+//         if(fare < amountPaid){
+//             let booking = await getBookingById(bookingId);
+//             if(!booking || booking.message){
+//                 throw {
+//                     message: "Booking not found!"
+//                 }
+//             } else {
+//                 booking = booking.data;
+
+//             }
+//         } else {
+//             throw {
+//                 message: ""
+//             }
+//         }
+//     } catch(ex) {
+//         console.log(ex);
+//         return ex;
+//     }
+// }
 
 export {
     createWallet,

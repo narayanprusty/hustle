@@ -3,6 +3,11 @@ import { Meteor } from "meteor/meteor";
 
 let strings = new LocalizedStrings({
     en: {
+        wallet: "Wallet",
+        unableToGetWallet: "Unable to fetch wallet!",
+        amount: "Amount",
+        history: "History",
+        // old strings
         welcomeMessage: "Thank you for subscribing dear partner. Good things come to those who Hustle like you!",
         myCards: "My Cards",
         addCards: "Add Card",
@@ -204,6 +209,11 @@ let strings = new LocalizedStrings({
         textDirection: "ltr"
     },
     ar: {
+        wallet: "Wallet",
+        unableToGetWallet: "Unable to fetch wallet!",
+        amount: "Amount",
+        history: "History",
+        // old strings
         welcomeMessage: "تسجيل الخروج",
         myCards: "تسجيل الخروج",
         addCards: "تسجيل الخروج",
