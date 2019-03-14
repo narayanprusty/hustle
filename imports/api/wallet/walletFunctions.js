@@ -63,9 +63,9 @@ const createWallet = async () => {
     }
 }
 
-const getUserWallet = async () => {
+const getUserWallet = async (userId) => {
     try {
-        let userId = Meteor.userId();
+        userId = userId ? userId : Meteor.userId();
         console.log("Searching for user", userId);
         const res = await node.callAPI('assets/search', {
             $query: {
@@ -93,9 +93,9 @@ const getUserWallet = async () => {
     }
 }
 
-const payUsingWallet = async (amount, bookingId) => {
+const payUsingWallet = async (userId, amount, bookingId) => {
     try {
-        let userWallet = await getUserWallet();
+        let userWallet = await getUserWallet(userId);
         console.log("#3", userWallet);
         amount = parseInt(amount.toString());
         if (userWallet.success) {

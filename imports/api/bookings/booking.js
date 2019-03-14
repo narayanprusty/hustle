@@ -306,7 +306,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2) => {
         if (booking.paymentMethod != "cash") {
             console.log("Paying using wallet");
 
-            var walletTxn = await payUsingWallet(booking.totalFare, bookingId.toString());
+            var walletTxn = await payUsingWallet(booking.userId, booking.totalFare, bookingId.toString());
 
             console.log("done payment with wallet");
 
