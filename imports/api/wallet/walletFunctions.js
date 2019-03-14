@@ -95,7 +95,7 @@ const getUserWallet = async () => {
 
 const payUsingWallet = async (amount, bookingId) => {
     try {
-        let userWallet = getUserWallet();
+        let userWallet = await getUserWallet();
         console.log("#3", userWallet);
         amount = parseInt(amount.toString());
         if (userWallet.success) {
