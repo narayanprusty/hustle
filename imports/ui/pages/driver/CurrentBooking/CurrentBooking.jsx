@@ -53,6 +53,7 @@ class CurrentBooking extends Component {
         if (this._isMounted) {
             // clearInterval(this.state.ndIntvl);
             clearInterval(this.state.intvlc);
+            clearInterval(this.state.missingChatInt);
             this.pubnub.unsubscribe({
                 channels: [this.state.bookingId]
             });
@@ -118,7 +119,53 @@ class CurrentBooking extends Component {
                 );
             });
         }, 2000);
-        this.setState({ intvlc: c });
+
+        const intRecord = setInterval(() => {
+            this.pubnub.history(
+                { channel: currentRide.bookingId },
+                (status, response) => {
+                    if (response) {
+                        this.processChatsInterval(response);
+                    }
+                }
+            );
+        }, 2000);
+        this.setState({ intvlc: c, missingChatInt: intRecord });
+    };
+
+    processChatsInterval = messagesHistory => {
+        const user = Meteor.userId();
+        const allMessageEntities = messagesHistory.messages;
+        if (!allMessageEntities.length) {
+            return false;
+        }
+
+        const timeStatArr = allMessageEntities.map(messageEntity => {
+            return messageEntity.entry.time;
+        });
+        if (!timeStatArr.length) {
+            return false;
+        }
+        const messageNotRendered = lodash.difference(
+            this.state.timeArr,
+            timeStatArr
+        );
+        if (!messageNotRendered.length) {
+            return false;
+        }
+        const sortedTimes = lodash.sortBy(messageNotRendered);
+        allMessageEntities.forEach(messageEntity => {
+            if (sortedTimes.indexOf(messageEntity.entry.time) != -1) {
+                if (
+                    messageEntity.entry.user &&
+                    messageEntity.entry.user == user
+                ) {
+                    addUserMessage(messageEntity.entry.message);
+                } else if (messageEntity.entry.user) {
+                    addResponseMessage(messageEntity.entry.message);
+                }
+            }
+        });
     };
 
     callInsideRender = message => {
@@ -136,11 +183,8 @@ class CurrentBooking extends Component {
             this.state.bookingId == message.message.bookingId &&
             message.message.message
         ) {
-            let {
-                // timeArr,
-                badge
-            } = this.state;
-            // timeArr.push(message.message.time);
+            let { timeArr, badge } = this.state;
+            timeArr.push(message.message.time);
             if (message.message.user == Meteor.userId()) {
                 return false;
             }
@@ -331,6 +375,7 @@ class CurrentBooking extends Component {
                         "error"
                     );
                 }
+                clearInterval(this.state.missingChatInt);
                 this.setState({
                     status: "started",
                     startRide_loader: false

@@ -74,6 +74,7 @@ class CurrentBookingRider extends Component {
         if (this._isMounted) {
             clearInterval(this.state.intvl);
             clearInterval(this.state.intvlc);
+            clearInterval(this.state.missingChatInt);
             this.pubnub.unsubscribe({
                 channels: [this.state.bookingId]
             });
@@ -120,17 +121,23 @@ class CurrentBookingRider extends Component {
                 }
                 if (bookingData && bookingData.data.rideStatus == "accepted") {
                     this.getDriverDetails(bookingData.data.driverId);
+                    const intRecord = setInterval(
+                        this.checkForMissingMessage,
+                        2000
+                    );
+
                     this.setState({
                         showMap: true,
                         accepted: true,
-                        status: "accepted"
+                        status: "accepted",
+                        missingChatInt: intRecord
                     });
                 } else if (
                     bookingData &&
                     bookingData.data.rideStatus == "started"
                 ) {
                     this.getDriverDetails(bookingData.data.driverId);
-
+                    clearInterval(this.state.missingChatInt);
                     this.setState({
                         showTime: false,
                         showMap: true,
@@ -168,6 +175,16 @@ class CurrentBookingRider extends Component {
             this.setState(data);
         });
     };
+    checkForMissingMessage = () => {
+        this.pubnub.history(
+            { channel: currentRide.bookingId },
+            (status, response) => {
+                if (response) {
+                    this.processChatsInterval(response);
+                }
+            }
+        );
+    };
     fetchCurrentRide = () => {
         return Meteor.call(
             "currentBookingRider",
@@ -191,6 +208,13 @@ class CurrentBookingRider extends Component {
                                 }
                             }
                         );
+                        const intRecord = setInterval(
+                            this.checkForMissingMessage,
+                            2000
+                        );
+                        this.setState({
+                            missingChatInt: intRecord
+                        });
                     }
                     if (currentRide.status == "started") {
                         this.setState({
@@ -239,6 +263,41 @@ class CurrentBookingRider extends Component {
                 addUserMessage(messageEntity.entry.message);
             } else if (messageEntity.entry.user) {
                 addResponseMessage(messageEntity.entry.message);
+            }
+        });
+    };
+
+    processChatsInterval = messagesHistory => {
+        const user = Meteor.userId();
+        const allMessageEntities = messagesHistory.messages;
+        if (!allMessageEntities.length) {
+            return false;
+        }
+
+        const timeStatArr = allMessageEntities.map(messageEntity => {
+            return messageEntity.entry.time;
+        });
+        if (!timeStatArr.length) {
+            return false;
+        }
+        const messageNotRendered = lodash.difference(
+            this.state.timeArr,
+            timeStatArr
+        );
+        if (!messageNotRendered.length) {
+            return false;
+        }
+        const sortedTimes = lodash.sortBy(messageNotRendered);
+        allMessageEntities.forEach(messageEntity => {
+            if (sortedTimes.indexOf(messageEntity.entry.time) != -1) {
+                if (
+                    messageEntity.entry.user &&
+                    messageEntity.entry.user == user
+                ) {
+                    addUserMessage(messageEntity.entry.message);
+                } else if (messageEntity.entry.user) {
+                    addResponseMessage(messageEntity.entry.message);
+                }
             }
         });
     };
@@ -361,11 +420,8 @@ class CurrentBookingRider extends Component {
             this.state.bookingId == message.message.bookingId &&
             message.message.message
         ) {
-            let {
-                //  timeArr,
-                badge
-            } = this.state;
-            // timeArr.push(message.message.time);
+            let { timeArr, badge } = this.state;
+            timeArr.push(message.message.time);
             if (message.message.user == Meteor.userId()) {
                 return false;
             }
