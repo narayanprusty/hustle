@@ -120,17 +120,8 @@ class CurrentBooking extends Component {
             });
         }, 2000);
 
-        const intRecord = setInterval(() => {
-            this.pubnub.history(
-                { channel: currentRide.bookingId },
-                (status, response) => {
-                    if (response) {
-                        this.processChatsInterval(response);
-                    }
-                }
-            );
-        }, 2000);
-        this.setState({ intvlc: c, missingChatInt: intRecord });
+       
+        this.setState({ intvlc: c });
     };
 
     processChatsInterval = messagesHistory => {
@@ -261,6 +252,17 @@ class CurrentBooking extends Component {
                         channels: [currentRide.bookingId],
                         withPresence: true
                     });
+                    const intRecord = setInterval(() => {
+                        this.pubnub.history(
+                            { channel: currentRide.bookingId },
+                            (status, response) => {
+                                if (response) {
+                                    this.processChatsInterval(response);
+                                }
+                            }
+                        );
+                    }, 2000);
+                            this.setState({missingChatInt: intRecord });
 
                     this.pubnub.history(
                         { channel: currentRide.bookingId },
