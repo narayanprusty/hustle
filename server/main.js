@@ -55,6 +55,10 @@ Meteor.startup(() => {
             fcm: {
                 serviceAccountJson: serviceAccountJson
             },
+            gcm:{
+                projectNumber: 937200706426,
+                apiKey:"AAAA2jWD43o:APA91bED_7kx4YlbH_O1EztfUuBXPB1HNI3zQGz8sRjf9me8TGFpiGsRYYuGhB2qGEA96QkD_5akPeNMH8qk_JROJl2y8eymbkDSfeFFzdB6Dtv3SD9eHVwhbBYbMY8Fw7G2ffD7fapS"
+            },
             production: true,
             sound: true,
             badge: true,

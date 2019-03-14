@@ -50,6 +50,7 @@ const newBookingReq = async ({
     //custom info
     const payload = { info: "test", url: "http://www.google.fr" };
     //number
+    const query ={}
     const badge = 5;
 
     const payloadStringify = {};
@@ -247,7 +248,7 @@ const onStartRide = async (bookingId, startingPoint) => {
     const payload = { info: "test", url: "http://www.google.fr" };
     //number
     const badge = 5;
-
+    const query={};
     const payloadStringify = {};
     payloadStringify.custom_key1 = JSON.stringify(payload);
 
