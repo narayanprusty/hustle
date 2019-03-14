@@ -92,7 +92,7 @@ const getUserWallet = async () => {
 
 const payUsingWallet = async (amount, bookingId) => {
     try {
-        let userWallet = this.getUserWallet();
+        let userWallet = getUserWallet();
         amount = parseInt(amount.toString());
         if (userWallet.success) {
 
@@ -108,7 +108,7 @@ const payUsingWallet = async (amount, bookingId) => {
                 amountDeducted = balance;
                 balance = 0;
             }
-            
+
             let transactions = userWallet.wallet.transactions;
             transactions = transactions ? (transactions.length > 0 ? transactions : []) : [];
             transactions.push({
