@@ -21,7 +21,7 @@ const createWallet = async () => {
                 active: true
             }
         });
-        if (res.length == 0) {
+        if (res.length > 0) {
             throw {
                 message: "Wallet already exists!"
             }
