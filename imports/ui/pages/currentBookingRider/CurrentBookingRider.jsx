@@ -9,7 +9,12 @@ import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import Rating from "react-rating";
-import { Widget, addResponseMessage, addUserMessage } from "react-chat-widget";
+import {
+    Widget,
+    addResponseMessage,
+    addUserMessage,
+    dropMessages
+} from "react-chat-widget";
 
 import "./CurrentBooking_client.scss";
 import localizationManager from "../../localization";
@@ -67,6 +72,7 @@ class CurrentBookingRider extends Component {
     }
     componentWillUnmount() {
         if (this._isMounted) {
+            dropMessages();
             clearInterval(this.state.intvl);
             clearInterval(this.state.intvlc);
             clearInterval(this.state.missingChatInt);
@@ -77,6 +83,7 @@ class CurrentBookingRider extends Component {
     }
 
     componentDidMount = () => {
+        dropMessages();
         this.fetchCurrentRide();
         this.pubnub.addListener({
             message: message => {

@@ -7,7 +7,12 @@ import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
 import Rating from "react-rating";
-import { Widget, addResponseMessage, addUserMessage } from "react-chat-widget";
+import {
+    Widget,
+    addResponseMessage,
+    addUserMessage,
+    dropMessages
+} from "react-chat-widget";
 import LaddaButton, { S, M, L, SLIDE_UP } from "react-ladda";
 
 import config from "../../../../modules/config/client";
@@ -51,6 +56,7 @@ class CurrentBooking extends Component {
     };
     componentWillUnmount() {
         if (this._isMounted) {
+            dropMessages();
             // clearInterval(this.state.ndIntvl);
             clearInterval(this.state.intvlc);
             clearInterval(this.state.missingChatInt);
@@ -61,6 +67,7 @@ class CurrentBooking extends Component {
     }
 
     componentDidMount = () => {
+        dropMessages();
         this.fetchCurrentRide();
         this.pubnub.addListener({
             message: message => {
@@ -120,7 +127,6 @@ class CurrentBooking extends Component {
             });
         }, 2000);
 
-       
         this.setState({ intvlc: c });
     };
 
@@ -262,7 +268,7 @@ class CurrentBooking extends Component {
                             }
                         );
                     }, 2000);
-                            this.setState({missingChatInt: intRecord });
+                    this.setState({ missingChatInt: intRecord });
 
                     this.pubnub.history(
                         { channel: currentRide.bookingId },
