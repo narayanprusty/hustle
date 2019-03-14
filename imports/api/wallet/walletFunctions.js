@@ -94,7 +94,7 @@ const payUsingWallet = async (amount, bookingId) => {
             let balance = parseInt(userWallet.wallet.balance.toString());
             if (balance >= amount) {
                 balance -= amount;
-                transactions = userWallet.wallet.transactions;
+                let transactions = userWallet.wallet.transactions;
                 transactions = transactions ? (transactions.length > 0 ? transactions : []) : [];
                 transactions.push({
                     type: "Debit",
