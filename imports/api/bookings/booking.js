@@ -60,7 +60,7 @@ const newBookingReq = async ({
         from: "push",
         title,
         text,
-        payload: payloadStringify, // All payload values must be strings if sending using FCM
+        // payload: payloadStringify, // All payload values must be strings if sending using FCM
         sound: "default",
         query,
         badge,
