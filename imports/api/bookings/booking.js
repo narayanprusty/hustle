@@ -308,6 +308,8 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2) => {
 
             var walletTxn = await payUsingWallet(booking.totalFare, bookingId.toString());
 
+            console.log("done payment with wallet");
+
             if((walletTxn.success && walletTxn.remainingAmount) || !walletTxn || !walletTxn.success){
                 console.log("Paying using card", walletTxn && walletTxn.success ? walletTxn.remainingAmount : booking.totalFare);
 
