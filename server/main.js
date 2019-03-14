@@ -75,6 +75,36 @@ Meteor.startup(() => {
         Push.addListener("error", err => {
             console.error("error on push: " + err); // no error is received here
         });
+
+        //start here
+    const notId = Math.round(new Date().getTime() / 1000);
+
+    const title = "new notification";
+    const text = "you have a new notification";
+    //custom info
+    const payload = { info: "test", url: "http://www.google.fr" };
+    //number
+    const badge = 5;
+
+    const payloadStringify = {};
+    payloadStringify.custom_key1 = JSON.stringify(payload);
+
+    Push.send({
+        from: "push",
+        title,
+        text,
+        payload: payloadStringify, // All payload values must be strings if sending using FCM
+        sound: "default",
+        query:{},
+        badge,
+        apn: {
+            sound: "default"
+        },
+        contentAvailable: 1,
+        androidChannel: "PushPluginChannel",
+        notId
+    });
+    //End here
     }
 
     AWS.config.update(config.AWS);
