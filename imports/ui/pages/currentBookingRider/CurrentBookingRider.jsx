@@ -172,7 +172,7 @@ class CurrentBookingRider extends Component {
     };
     checkForMissingMessage = () => {
         this.pubnub.history(
-            { channel: currentRide.bookingId },
+            { channel: this.state.bookingId },
             (status, response) => {
                 if (response) {
                     this.processChatsInterval(response);
