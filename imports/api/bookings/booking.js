@@ -6,6 +6,7 @@ import { DriverMeta } from "../../collections/driver-meta";
 import config from "../../modules/config/server";
 import { sendMessage } from "../../notifications/index";
 import { oneClickPayment } from "../payments/payments";
+import { payUsingWallet } from '../wallet/walletFunctions';
 import { getUserSubscriptions } from "../subscriptions/subscriptions";
 import localization from "../../ui/localization";
 import moment from "moment";
@@ -303,12 +304,18 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2) => {
 
     if (booking) {
         if (booking.paymentMethod != "cash") {
-            console.log("Paying");
+            console.log("Paying using wallet");
 
-            var receipt = await oneClickPayment(
-                booking.totalFare,
-                booking.paymentMethod
-            );
+            var walletTxn = await payUsingWallet(booking.totalFare, bookingId.toString());
+
+            if((walletTxn.success && walletTxn.remainingAmount) || !walletTxn || !walletTxn.success){
+                console.log("Paying using card", walletTxn && walletTxn.success ? walletTxn.remainingAmount : booking.totalFare);
+
+                var receipt = await oneClickPayment(
+                    walletTxn && walletTxn.success ? walletTxn.remainingAmount : booking.totalFare,
+                    booking.paymentMethod
+                );
+            }
 
             console.log(receipt);
         } else {

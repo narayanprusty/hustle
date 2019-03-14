@@ -4,7 +4,9 @@ import {
 import config from "../../modules/config/server";
 import Blockcluster from "blockcluster";
 import shortid from "shortid";
-import { getBookingById } from "../bookings/booking";
+import {
+    getBookingById
+} from "../bookings/booking";
 
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
@@ -91,38 +93,46 @@ const getUserWallet = async () => {
 const payUsingWallet = async (amount, bookingId) => {
     try {
         let userWallet = this.getUserWallet();
+        amount = parseInt(amount.toString());
         if (userWallet.success) {
+
+            let remainingAmount = 0;
+            let amountDeducted = 0;
             let balance = parseInt(userWallet.wallet.balance.toString());
-            if (balance >= amount) {
+
+            if(balance >= amount){
                 balance -= amount;
-                let transactions = userWallet.wallet.transactions;
-                transactions = transactions ? (transactions.length > 0 ? transactions : []) : [];
-                transactions.push({
-                    type: "Debit",
-                    amount: amount,
-                    timestamp: +new Date(),
-                    bookingId: bookingId
-                });
-
-                const txId = await node.callAPI("assets/updateAssetInfo", {
-                    assetName: config.ASSET.Wallet,
-                    fromAccount: node.getWeb3().eth.accounts[0],
-                    identifier: userWallet.wallet.uniqueIdentifier,
-                    public: {
-                        balance: balance,
-                        transactions: JSON.stringify(transactions),
-                    }
-                });
-
-                return {
-                    success: true,
-                    txnId: txId
-                };
+                amountDeducted = amount;
             } else {
-                throw {
-                    message: "Insufficient balance!"
-                }
+                remainingAmount = amount - balance;
+                amountDeducted = balance;
+                balance = 0;
             }
+            
+            let transactions = userWallet.wallet.transactions;
+            transactions = transactions ? (transactions.length > 0 ? transactions : []) : [];
+            transactions.push({
+                type: "Debit",
+                amount: amountDeducted,
+                timestamp: +new Date(),
+                bookingId: bookingId
+            });
+
+            const txId = await node.callAPI("assets/updateAssetInfo", {
+                assetName: config.ASSET.Wallet,
+                fromAccount: node.getWeb3().eth.accounts[0],
+                identifier: userWallet.wallet.uniqueIdentifier,
+                public: {
+                    balance: balance,
+                    transactions: JSON.stringify(transactions),
+                }
+            });
+
+            return {
+                success: true,
+                txnId: txId,
+                remainingAmount: remainingAmount
+            };
         } else {
             return userWallet;
         }
