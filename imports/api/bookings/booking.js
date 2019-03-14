@@ -320,7 +320,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2) => {
         text,
         payload: payloadStringify, // All payload values must be strings if sending using FCM
         sound: "default",
-        query,
+        query:{},
         badge,
         apn: {
             sound: "default"
