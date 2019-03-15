@@ -1,6 +1,8 @@
 import React from "react";
 import { Meteor } from "meteor/meteor";
 import { render } from "react-dom";
+import { notify } from "react-notify-toast";
+
 import App from "../imports/ui/containers/app/App";
 import config from "../imports/modules/config/client";
 
@@ -28,10 +30,7 @@ Meteor.startup(() => {
     });
     Push.enabled(true);
     Push.addListener("message", function(notification) {
-        window.confirm(notification.message, "notifications", [
-            "Voir",
-            "fermer"
-        ]);
+        notify.show(notification.message, "success");
     });
     render(<App />, document.getElementById("react-target"));
 });
