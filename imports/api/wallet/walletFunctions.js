@@ -8,6 +8,7 @@ import {
     getBookingById
 } from "../bookings/booking";
 import { DriverMeta } from '../../collections/driver-meta/index';
+import localizationManager from "../../ui/localization";
 
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
@@ -27,7 +28,7 @@ const createWallet = async () => {
         });
         if (res.length > 0) {
             throw {
-                message: "Wallet already exists!"
+                message: localizationManager.strings.walletExists,
             }
         } else {
             let identifier = shortid.generate();
@@ -79,7 +80,7 @@ const getUserWallet = async (userId) => {
         console.log("#1", res);
         if (res.length == 0) {
             throw {
-                message: "Unable to find wallet!"
+                message: localizationManager.strings.unableToFindWallet,
             }
         } else {
             console.log("#2");
@@ -149,7 +150,7 @@ const payUsingWallet = async (userId, amount, bookingId) => {
             return userWallet;
         }
     } catch (ex) {
-        console.log("payusing wallet", ex);
+        console.log("pay using wallet", ex);
         return ex;
     }
 }
@@ -212,7 +213,7 @@ const returnChangeToWallet = async (fare, amountPaid, bookingId) => {
             }
         } else {
             throw {
-                message: "Amount not sufficient!"
+                message: localizationManager.strings.amountInsufficient
             }
         }
     } catch (ex) {

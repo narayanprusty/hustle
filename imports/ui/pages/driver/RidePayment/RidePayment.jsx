@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import "../../../../../node_modules/react-accessible-accordion/dist/fancy-example.css";
 import { Meteor } from "meteor/meteor";
 import moment from 'moment';
 import LaddaButton, { S, SLIDE_UP } from "react-ladda";
 import localizationManager from "../../../localization";
-import { Form, Field } from 'react-final-form';
 
 
 import "./RidePayment_client.scss";
@@ -92,7 +91,7 @@ class RidePayment extends Component {
                     if (error) {
                         console.log(error);
                         notify.show(
-                            error.reason ? error.reason : "Something went wrong!",
+                            error.reason ? error.reason : localizationManager.strings.somethingWentWrong,
                             "error"
                         );
                     } else {
@@ -138,7 +137,7 @@ class RidePayment extends Component {
             });
         } else {
             notify.show(
-                "Received less amount than the fare!!",
+                localizationManager.strings.amountLessThanFare,
                 "error"
             );
         }
@@ -275,7 +274,7 @@ class RidePayment extends Component {
                                             <b>{localizationManager.strings.totalDistance}: </b>
                                         </div>
                                         <div>
-                                            {this.state.booking.totalDistance / 1000}KM
+                                            {this.state.booking.totalDistance / 1000}{localizationManager.strings.kilimeterShort}
                                             </div>
                                     </li>
                                 </ul>
@@ -284,25 +283,19 @@ class RidePayment extends Component {
                                 {this.state.booking.paymentMethod == "cash" && !this.state.paymentDone ? (
                                     <div>
                                         <div className="padding-left padding-right padding-top">
-                                            {/* <button
-                                                className="button button-block button-energized activated"
-                                                onClick={this.paymentReceived}
-                                                disabled={this.state.booking.paymentStatus == "pending" && !this.state.loading ? false : true} >
-                                                {localizationManager.strings.paymentReceived}
-                                            </button> */}
                                             <div style={{marginTop: 10}}>
                                                 <div className="list">
                                                     <label className="item item-input item-stacked-label">
                                                         <span className="input-label">
                                                             {" "}
-                                                            {localizationManager.strings.amount}:{" "}
+                                                            {localizationManager.strings.amountReceived}:{" "}
                                                         </span>
                                                         <input
                                                             name="amountReceived"
                                                             type="number"
                                                             onChange={this.handleChange.bind(this)}
                                                             value={this.state.amountReceived}
-                                                            placeholder={localizationManager.strings.amount}
+                                                            placeholder={localizationManager.strings.amountReceived}
                                                         />
                                                     </label>
                                                 </div>
