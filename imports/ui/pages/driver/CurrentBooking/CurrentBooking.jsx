@@ -317,6 +317,7 @@ class CurrentBooking extends Component {
             "onStartRide",
             this.state.bookingId,
             this.state.currentPosition,
+            this.state.userId,
             async (error, response) => {
                 if (error) {
                     console.log(error);
@@ -433,6 +434,7 @@ class CurrentBooking extends Component {
             this.state.bookingId,
             null,
             this.state.totalFare,
+            this.state.userId,
             async (error, response) => {
                 if (error) {
                     console.log(error);
