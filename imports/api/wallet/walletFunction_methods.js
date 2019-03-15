@@ -2,6 +2,7 @@ import {
     createWallet,
     getUserWallet,
     payUsingWallet,
+    returnChangeToWallet
 } from "./walletFunctions";
 import {
     Meteor
@@ -10,6 +11,7 @@ Meteor.methods({
     createWallet,
     getUserWallet,
     payUsingWallet,
+    returnChangeToWallet
 });
 
 export {

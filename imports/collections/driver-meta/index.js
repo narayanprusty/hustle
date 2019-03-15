@@ -45,7 +45,8 @@ DriverMetaCollection.schema = new SimpleSchema({
         type: String
     },
     changeCollected: {
-        type: Number
+        type: Number,
+        defaultValue: 0
     },
     active: {
         type: Boolean

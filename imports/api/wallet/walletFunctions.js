@@ -7,6 +7,7 @@ import shortid from "shortid";
 import {
     getBookingById
 } from "../bookings/booking";
+import { DriverMeta } from '../../collections/driver-meta/index';
 
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
@@ -88,7 +89,7 @@ const getUserWallet = async (userId) => {
             }
         }
     } catch (ex) {
-        console.log("getUserWallet",ex);
+        console.log("getUserWallet", ex);
         return ex;
     }
 }
@@ -104,7 +105,7 @@ const payUsingWallet = async (userId, amount, bookingId) => {
             let amountDeducted = 0;
             let balance = parseInt(userWallet.wallet.balance.toString());
 
-            if(balance >= amount){
+            if (balance >= amount) {
                 console.log("#1.1");
                 balance -= amount;
                 amountDeducted = amount;
@@ -147,36 +148,79 @@ const payUsingWallet = async (userId, amount, bookingId) => {
             return userWallet;
         }
     } catch (ex) {
-        console.log("payusing wallet",ex);
+        console.log("payusing wallet", ex);
         return ex;
     }
 }
 
-// const returnChangeToWallet = async (fare, amountPaid, bookingId) => {
-//     try {
-//         if(fare < amountPaid){
-//             let booking = await getBookingById(bookingId);
-//             if(!booking || booking.message){
-//                 throw {
-//                     message: "Booking not found!"
-//                 }
-//             } else {
-//                 booking = booking.data;
+const returnChangeToWallet = async (fare, amountPaid, bookingId) => {
+    try {
+        if (fare < amountPaid) {
+            let booking = await getBookingById(bookingId);
+            if (!booking || booking.message) {
+                throw booking;
+            } else {
+                booking = booking.data;
+                let wallet = await getUserWallet(booking.userId);
+                if (wallet && wallet.success) {
+                    let balance = parseInt(wallet.balance.toString());
+                    amountPaid = parseInt(amountPaid.toString());
+                    fare = parseInt(fare.toString());
+                    balance += (amountPaid - fare);
 
-//             }
-//         } else {
-//             throw {
-//                 message: ""
-//             }
-//         }
-//     } catch(ex) {
-//         console.log(ex);
-//         return ex;
-//     }
-// }
+                    let transactions = wallet.transactions;
+                    transactions = transactions ? (transactions.length > 0 ? transactions : []) : [];
+                    transactions.push({
+                        type: "Credit",
+                        amount: (amountPaid - fare),
+                        timestamp: +new Date(),
+                        bookingId: bookingId
+                    });
+
+                    const txId = await node.callAPI("assets/updateAssetInfo", {
+                        assetName: config.ASSET.Wallet,
+                        fromAccount: node.getWeb3().eth.accounts[0],
+                        identifier: wallet.uniqueIdentifier,
+                        public: {
+                            balance: balance,
+                            transactions: JSON.stringify(transactions),
+                        }
+                    });
+
+                    await DriverMeta.update(
+                        {
+                            driverId: booking.driverId
+                        },
+                        {
+                            $inc: {
+                                changeCollected: (amountPaid - fare)
+                            }
+                        }
+                    );
+
+                    return {
+                        success: true,
+                        txnId: txId
+                    }
+
+                } else {
+                    throw wallet;
+                }
+            }
+        } else {
+            throw {
+                message: "Amount not sufficient!"
+            }
+        }
+    } catch (ex) {
+        console.log(ex);
+        return ex;
+    }
+}
 
 export {
     createWallet,
     getUserWallet,
     payUsingWallet,
+    returnChangeToWallet
 };
