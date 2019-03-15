@@ -42,36 +42,6 @@ const newBookingReq = async ({
     distance_in_meter,
     totalFare
 }) => {
-    //start here
-    const notId = Math.round(new Date().getTime() / 1000);
-
-    const title = "new notification";
-    const text = "you have a new notification";
-    //custom info
-    const payload = { info: "test", url: "http://www.google.fr" };
-    //number
-    const query ={}
-    const badge = 5;
-
-    const payloadStringify = {};
-    payloadStringify.custom_key1 = JSON.stringify(payload);
-
-    Push.send({
-        from: "push",
-        title,
-        text,
-        // payload: payloadStringify, // All payload values must be strings if sending using FCM
-        sound: "default",
-        query,
-        badge,
-        apn: {
-            sound: "default"
-        },
-        contentAvailable: 1,
-        androidChannel: "PushPluginChannel",
-        notId
-    });
-    //End here
     const username = Meteor.user().profile.name;
     const avgRating = Meteor.user().profile.avgRating
         ? Meteor.user().profile.avgRating
@@ -239,35 +209,6 @@ const onDriverAccept = async (bookingId, driverId) => {
 };
 
 const onStartRide = async (bookingId, startingPoint) => {
-    //start here
-    const notId = Math.round(new Date().getTime() / 1000);
-
-    const title = "new notification";
-    const text = "you have a new notification";
-    //custom info
-    const payload = { info: "test", url: "http://www.google.fr" };
-    //number
-    const badge = 5;
-    const query={};
-    const payloadStringify = {};
-    payloadStringify.custom_key1 = JSON.stringify(payload);
-
-    Push.send({
-        from: "push",
-        title,
-        text,
-        payload: payloadStringify, // All payload values must be strings if sending using FCM
-        sound: "default",
-        query,
-        badge,
-        apn: {
-            sound: "default"
-        },
-        contentAvailable: 1,
-        androidChannel: "PushPluginChannel",
-        notId
-    });
-    //End here
     const txId = await node.callAPI("assets/updateAssetInfo", {
         assetName: config.ASSET.Bookings,
         fromAccount: node.getWeb3().eth.accounts[0],
@@ -301,35 +242,6 @@ const getShortestDistance = (p1, p2) => {
     );
 };
 const onStopRide = async (driverId, bookingId, endingPoint, p1, p2) => {
-    //start here
-    const notId = Math.round(new Date().getTime() / 1000);
-
-    const title = "new notification";
-    const text = "you have a new notification";
-    //custom info
-    const payload = { info: "test", url: "http://www.google.fr" };
-    //number
-    const badge = 5;
-
-    const payloadStringify = {};
-    payloadStringify.custom_key1 = JSON.stringify(payload);
-
-    Push.send({
-        from: "push",
-        title,
-        text,
-        payload: payloadStringify, // All payload values must be strings if sending using FCM
-        sound: "default",
-        query:{},
-        badge,
-        apn: {
-            sound: "default"
-        },
-        contentAvailable: 1,
-        androidChannel: "PushPluginChannel",
-        notId
-    });
-    //End here
     const bookingData = await BookingRecord.find({
         bookingId: bookingId
     }).fetch()[0];
