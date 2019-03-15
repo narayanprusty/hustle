@@ -6,6 +6,7 @@ import { notify } from "react-notify-toast";
 import LaddaButton, { S, SLIDE_UP } from "react-ladda";
 import rp from "request-promise";
 
+import config from "../../../modules/config/client";
 import "./BecomeDriver_client.scss";
 
 export default class BecomeDriver extends Component {
@@ -19,8 +20,53 @@ export default class BecomeDriver extends Component {
             contact: ""
         };
     }
-    componentDidMount = () => {};
-    applyForDriver = () => {};
+    componentDidMount = () => {
+        Meteor.call("riderDetails", Meteor.userId(), (err, data) => {
+            if (err) {
+                return notify.show("unable to get details", "error");
+            }
+
+            this.setState({
+                contact: data.phone,
+                name: data.name
+            });
+        });
+    };
+    applyForDriver = () => {
+        this.setState({
+            becoming_driver: true
+        });
+        const { name, email, contact, msg, licence } = this.state;
+        return rp({
+            uri: config.BASE_URL + "/driver/enquiry",
+            method: "POST",
+            body: {
+                name: name,
+                email: email,
+                contact: contact,
+                msg: msg,
+                licence: licence
+            },
+            json: true
+        })
+            .then(data => {
+                this.setState({
+                    becoming_driver: false
+                });
+                console.log(data);
+                return notify.show("Request sent", "success");
+            })
+            .catch(error => {
+                this.setState({
+                    becoming_driver: false
+                });
+                console.log(error);
+                return notify.show(
+                    "Request failed, please try again later.",
+                    "error"
+                );
+            });
+    };
     onChangeHandler = e => {
         this.setState({
             [e.target.name]: e.target.value
@@ -75,22 +121,22 @@ export default class BecomeDriver extends Component {
                             />
                         </label>
                         <label className="item item-input item-stacked-label">
-                            <span className="input-label">Email</span>
-                            <input
-                                type="text"
-                                placeholder="e.g saikat.chakrabortty@email.com"
-                                name="email"
-                                value={this.state.email}
-                                onChange={this.onChangeHandler}
-                            />
-                        </label>
-                        <label className="item item-input item-stacked-label">
                             <span className="input-label">Contact</span>
                             <input
                                 type="text"
                                 placeholder="+966-0123456789"
                                 name="contact"
                                 value={this.state.contact}
+                                onChange={this.onChangeHandler}
+                            />
+                        </label>
+                        <label className="item item-input item-stacked-label">
+                            <span className="input-label">Email</span>
+                            <input
+                                type="text"
+                                placeholder="e.g saikat.chakrabortty@email.com"
+                                name="email"
+                                value={this.state.email}
                                 onChange={this.onChangeHandler}
                             />
                         </label>
@@ -134,6 +180,14 @@ export default class BecomeDriver extends Component {
                         data-spinner-size={30}
                         data-spinner-color="#ddd"
                         data-spinner-lines={12}
+                        disabled={
+                            this.state.name &&
+                            this.state.contact &&
+                            this.state.licence &&
+                            this.state.email
+                                ? false
+                                : true
+                        }
                     >
                         <i
                             className="fa fa-location-arrow"

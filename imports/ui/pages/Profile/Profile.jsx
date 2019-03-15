@@ -158,14 +158,16 @@ class Profile extends Component {
                 </div>
 
                 {!this.isDriver && (
-                    <div style={{
-                        textAlign: 'center'
-                    }}>
+                    <div
+                        style={{
+                            textAlign: "center"
+                        }}
+                    >
                         <img
                             style={{
-                                height: '120px',
-                                borderRadius: '120px',
-                                width: '120px'
+                                height: "120px",
+                                borderRadius: "120px",
+                                width: "120px"
                             }}
                             src={
                                 this.state.avatar
@@ -175,7 +177,13 @@ class Profile extends Component {
                         />
                         <br />
                         <u>
-                            <a href="javascript:void(0);" onClick={this.tryToUpload}><i className="fa fa-edit" aria-hidden="true" /> Edit</a>
+                            <a
+                                href="javascript:void(0);"
+                                onClick={this.tryToUpload}
+                            >
+                                <i className="fa fa-edit" aria-hidden="true" />{" "}
+                                Edit
+                            </a>
                         </u>
                         <br />
                         <input
@@ -187,7 +195,7 @@ class Profile extends Component {
                             onChange={this.handleAvatarChange}
                             hidden={true}
                         />
-                        <div style={{marginBottom: '16px'}}></div>
+                        <div style={{ marginBottom: "16px" }} />
                         {/*<div className="item item-avatar item-button-right">
                             <label className="custom-file-input">
                                 {this.state.fileName
@@ -222,12 +230,9 @@ class Profile extends Component {
                 )}
 
                 <div className="padding-left padding-bottom padding-right">
-                    <div className="list">   
+                    <div className="list">
                         <div className="item item-icon-left">
-                            <i
-                                className="icon fa fa-user"
-                                aria-hidden="true"
-                            />{" "}
+                            <i className="icon fa fa-user" aria-hidden="true" />{" "}
                             Name
                             <span className="item-note">
                                 {this.state.name || "Loading..."}
@@ -321,32 +326,38 @@ class Profile extends Component {
                             </span>
                         </div>
                     </div>
-                    
-                    {!this.state.isEdit &&
-                        <button class="button button-block button-positive" onClick={() => {
-                            if (this.state.isEdit) {
-                                this.setState({ isEdit: false });
-                            } else {
-                                this.setState({
-                                    isEdit: true,
-                                    placeholder: "name",
-                                    name_input: "name",
-                                    value: this.state.name
-                                });
-                            }
-                        }}>
-                            <i className="fa fa-edit" aria-hidden="true" /> Edit Profile
+
+                    {!this.state.isEdit && (
+                        <button
+                            className="button button-block button-positive"
+                            onClick={() => {
+                                if (this.state.isEdit) {
+                                    this.setState({ isEdit: false });
+                                } else {
+                                    this.setState({
+                                        isEdit: true,
+                                        placeholder: "name",
+                                        name_input: "name",
+                                        value: this.state.name
+                                    });
+                                }
+                            }}
+                        >
+                            <i className="fa fa-edit" aria-hidden="true" /> Edit
+                            Profile
                         </button>
-                    }
+                    )}
 
                     {this.state.isEdit && (
                         <div>
                             <span className="seperator padding-left padding-right padding-bottom">
                                 &nbsp;&nbsp;Edit Info&nbsp;&nbsp;
                             </span>
-                            <div style={{
-                                marginBottom: '8px'
-                            }}></div>
+                            <div
+                                style={{
+                                    marginBottom: "8px"
+                                }}
+                            />
                             <label className="item item-input item-stacked-label">
                                 <span className="input-label">Name</span>
                                 <input
