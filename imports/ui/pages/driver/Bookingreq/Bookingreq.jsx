@@ -234,7 +234,9 @@ class Bookingreq extends Component {
                             stop={5}
                             emptySymbol="fa fa-star-o fa-2x empty"
                             fullSymbol="fa fa-star fa-2x full"
-                            initialRating={data.riderRating}
+                            initialRating={
+                                data.riderRating ? data.riderRating : 0
+                            }
                             readonly
                             style={{
                                 fontSize: "10px"

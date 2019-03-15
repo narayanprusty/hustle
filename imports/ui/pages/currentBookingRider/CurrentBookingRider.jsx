@@ -18,6 +18,7 @@ import {
 
 import "./CurrentBooking_client.scss";
 import localizationManager from "../../localization";
+import Reviews from "../../components/ReviewComponent/Reviews";
 
 const Marker = ({ metaData, deg }) => (
     <div style={{ position: "absolute", transform: "translate(-50%, -50%)" }}>
@@ -556,40 +557,7 @@ class CurrentBookingRider extends Component {
             }
         );
     };
-    onReviewSubmit = () => {
-        this.setState({
-            loader: true
-        });
-        Meteor.call(
-            "rateDriver",
-            {
-                driverId: this.state.driverId,
-                message: this.state.reviewMessage,
-                rateVal: this.state.rating
-            },
-            (err, updated) => {
-                if (err) {
-                    this.setState({
-                        loader: false
-                    });
-                    notify.show(
-                        err.reason ||
-                            localizationManager.strings.failedToUpdateReview,
-                        "error"
-                    );
-                }
-                this.setState({
-                    loader: false
-                });
 
-                notify.show(
-                    localizationManager.strings.reviewSubmitted,
-                    "success"
-                );
-                this.props.history.push("/app");
-            }
-        );
-    };
     handleChange = e => {
         this.setState({
             [e.target.name]: e.target.value
@@ -828,101 +796,10 @@ class CurrentBookingRider extends Component {
                                     </span>
                                 </a>
                             </div>
-                            <div
-                                className="card padding-bottom card"
-                                style={{
-                                    marginLeft: "0px",
-                                    marginRight: "0px"
-                                }}
-                            >
-                                <div className="item item-divider">
-                                    {localizationManager.strings.rateDriver}
-                                </div>
-                                <div
-                                    className="item item-divider"
-                                    style={{ textAlign: "center" }}
-                                >
-                                    Thank you for riding with Hustle
-                                </div>
-                                <div className="item item-text-wrap">
-                                    <div
-                                        style={{
-                                            textAlign: "center"
-                                        }}
-                                    >
-                                        <Rating
-                                            name="rating"
-                                            {...this.props}
-                                            start={0}
-                                            stop={5}
-                                            initialRating={this.state.rating}
-                                            emptySymbol="fa fa-star-o fa-2x empty"
-                                            fullSymbol="fa fa-star fa-2x full"
-                                            onChange={rate => this.onRate(rate)}
-                                            style={{
-                                                fontSize: "200%"
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="padding-top padding-left padding-right">
-                                        <textarea
-                                            style={{
-                                                borderWidth: "2px",
-                                                textAlign: "center",
-                                                width: "100%",
-                                                borderStyle: "solid",
-                                                borderColor: "#e6e6e6",
-                                                padding: "14px",
-                                                borderRadius: "6px"
-                                            }}
-                                            name="reviewMessage"
-                                            placeholder={
-                                                localizationManager.strings
-                                                    .feedbackPlaceHolder
-                                            }
-                                            onChange={this.handleChange}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <LaddaButton
-                                className="button button-block button-balanced activated"
-                                loading={this.state.loader}
-                                onClick={this.onReviewSubmit}
-                                data-color="##FFFF00"
-                                data-size={L}
-                                data-style={SLIDE_UP}
-                                data-spinner-size={30}
-                                data-spinner-color="#ddd"
-                                data-spinner-lines={12}
-                            >
-                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                <i
-                                    className="fa fa-paper-plane"
-                                    aria-hidden="true"
-                                />{" "}
-                                {localizationManager.strings.submitReview}
-                            </LaddaButton>
-                            <LaddaButton
-                                className="button button-block button-calm activated"
-                                onClick={() => {
-                                    this.props.history.push("/app");
-                                }}
-                                data-color="##FFFF00"
-                                data-size={L}
-                                data-style={SLIDE_UP}
-                                data-spinner-size={30}
-                                data-spinner-color="#ddd"
-                                data-spinner-lines={12}
-                            >
-                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                <i
-                                    className="fa fa-arrow-right"
-                                    aria-hidden="true"
-                                />{" "}
-                                {localizationManager.strings.skip}
-                            </LaddaButton>
+                            <Reviews
+                                type="rider"
+                                userId={this.state.driverId}
+                            />
                         </div>
                     )}
                     {this.state.accepted && !this.state.rideFinished && (

@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import { Link, withRouter, Redirect } from "react-router-dom";
-import { withTracker } from "meteor/react-meteor-data";
+import { withRouter, Redirect } from "react-router-dom";
 import lodash from "lodash";
-import rp from "request-promise";
 import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
@@ -19,6 +17,7 @@ import config from "../../../../modules/config/client";
 import localizationManager from "../../../localization";
 
 import "react-chat-widget/lib/styles.css";
+import Reviews from "../../../components/ReviewComponent/Reviews";
 
 class CurrentBooking extends Component {
     constructor(props) {
@@ -515,39 +514,7 @@ class CurrentBooking extends Component {
             }
         );
     };
-    onReviewSubmit = () => {
-        this.setState({
-            review_loader: true
-        });
-        Meteor.call(
-            "rateRider",
-            {
-                riderId: this.state.userId,
-                message: this.state.reviewMessage,
-                rateVal: this.state.rating
-            },
-            (err, updated) => {
-                if (err) {
-                    this.setState({
-                        review_loader: false
-                    });
-                    notify.show(
-                        err.reason ||
-                            localizationManager.strings.failedToUpdateReview,
-                        "error"
-                    );
-                }
-                this.setState({
-                    review_loader: false,
-                    sendToNewReqs: true
-                });
-                notify.show(
-                    localizationManager.strings.reviewSubmitted,
-                    "success"
-                );
-            }
-        );
-    };
+
     handleChange = e => {
         this.setState({
             [e.target.name]: e.target.value
@@ -782,97 +749,7 @@ class CurrentBooking extends Component {
                         </LaddaButton>
                     )}
                     {this.state.status == "finished" && (
-                        <div>
-                            <div
-                                className="card padding-bottom card"
-                                style={{
-                                    marginLeft: "0px",
-                                    marginRight: "0px"
-                                }}
-                            >
-                                <div className="item item-divider">
-                                    {localizationManager.strings.rateRider}
-                                </div>
-                                <div className="item item-text-wrap">
-                                    <div
-                                        style={{
-                                            textAlign: "center"
-                                        }}
-                                    >
-                                        <Rating
-                                            name="rating"
-                                            {...this.props}
-                                            start={0}
-                                            stop={5}
-                                            initialRating={this.state.rating}
-                                            emptySymbol="fa fa-star-o fa-2x empty"
-                                            fullSymbol="fa fa-star fa-2x full"
-                                            onChange={rate => this.onRate(rate)}
-                                            style={{
-                                                fontSize: "200%"
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="padding-top padding-left padding-right">
-                                        <textarea
-                                            style={{
-                                                borderWidth: "2px",
-                                                textAlign: "center",
-                                                width: "100%",
-                                                borderStyle: "solid",
-                                                borderColor: "#e6e6e6",
-                                                padding: "14px",
-                                                borderRadius: "6px"
-                                            }}
-                                            name="reviewMessage"
-                                            placeholder={
-                                                localizationManager.strings
-                                                    .feedbackPlaceHolder
-                                            }
-                                            onChange={this.handleChange}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <LaddaButton
-                                className="button button-block button-balanced activated"
-                                loading={this.state.review_loader}
-                                onClick={this.onReviewSubmit}
-                                data-color="##FFFF00"
-                                data-size={L}
-                                data-style={SLIDE_UP}
-                                data-spinner-size={30}
-                                data-spinner-color="#ddd"
-                                data-spinner-lines={12}
-                            >
-                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                <i
-                                    className="fa fa-paper-plane"
-                                    aria-hidden="true"
-                                />{" "}
-                                {localizationManager.strings.submitReview}
-                            </LaddaButton>
-                            <LaddaButton
-                                className="button button-block button-calm activated"
-                                onClick={() => {
-                                    this.setState({ sendToNewReqs: true });
-                                }}
-                                data-color="##FFFF00"
-                                data-size={L}
-                                data-style={SLIDE_UP}
-                                data-spinner-size={30}
-                                data-spinner-color="#ddd"
-                                data-spinner-lines={12}
-                            >
-                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                <i
-                                    className="fa fa-arrow-right"
-                                    aria-hidden="true"
-                                />{" "}
-                                {localizationManager.strings.skip}
-                            </LaddaButton>
-                        </div>
+                        <Reviews type="driver" userId={this.state.userId} />
                     )}
                     {this.state.status == "accepted" && (
                         <Widget
