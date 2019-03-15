@@ -23,6 +23,9 @@ let strings = new LocalizedStrings({
         invalidArguments: "Invalid arguments",
         thankYouForRiding: "Thank you for riding with Hustle",
         loading: "Loading....",
+        Dabbab: "Dabbab",
+        PickupDyna: "Pickup and Dyna",
+        Taxi: "Taxi",
         // old strings
         welcomeMessage: "Thank you for subscribing dear partner. Good things come to those who Hustle like you!",
         myCards: "My Cards",
@@ -245,6 +248,9 @@ let strings = new LocalizedStrings({
         invalidArguments: "Invalid arguments",
         thankYouForRiding: "Thank you for riding with Hustle",
         loading: "Loading....",
+        Dabbab: "Dabbab",
+        PickupDyna: "Pickup and Dyna",
+        Taxi: "Taxi",
         // old strings
         welcomeMessage: "تسجيل الخروج",
         myCards: "تسجيل الخروج",
