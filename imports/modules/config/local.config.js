@@ -30,5 +30,12 @@ module.exports = {
         secretAccessKey: "w1kCMJWdPSI9AF1UWW2GFfbM3cbaI5ax0yAl2ppD",
         region: "us-east-2",
         S3_BUCKET: "avatar.gohustleapp.com"
+    },
+    PUSH_NOTIF: {
+        FCM: {
+            SENDER_ID: 937200706426,
+            SERVER_KEY:
+                "AAAA2jWD43o:APA91bED_7kx4YlbH_O1EztfUuBXPB1HNI3zQGz8sRjf9me8TGFpiGsRYYuGhB2qGEA96QkD_5akPeNMH8qk_JROJl2y8eymbkDSfeFFzdB6Dtv3SD9eHVwhbBYbMY8Fw7G2ffD7fapS"
+        }
     }
 };

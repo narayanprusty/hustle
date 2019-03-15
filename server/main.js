@@ -47,17 +47,10 @@ Meteor.startup(() => {
         Push.debug = true;
     }
     if (Meteor.isServer) {
-        const serviceAccountJson = JSON.parse(
-            Assets.getText("FirebaseAdminSdkServiceAccountKey.json")
-        );
-
         Push.Configure({
-            fcm: {
-                serviceAccountJson: serviceAccountJson
-            },
-            gcm:{
-                projectNumber: 937200706426,
-                apiKey:"AAAA2jWD43o:APA91bED_7kx4YlbH_O1EztfUuBXPB1HNI3zQGz8sRjf9me8TGFpiGsRYYuGhB2qGEA96QkD_5akPeNMH8qk_JROJl2y8eymbkDSfeFFzdB6Dtv3SD9eHVwhbBYbMY8Fw7G2ffD7fapS"
+            gcm: {
+                projectNumber: config.PUSH_NOTIF.FCM.SENDER_ID,
+                apiKey: config.PUSH_NOTIF.FCM.SERVER_KEY
             },
             production: true,
             sound: true,
@@ -76,35 +69,37 @@ Meteor.startup(() => {
             console.error("error on push: " + err); // no error is received here
         });
 
-        //start here
-    const notId = Math.round(new Date().getTime() / 1000);
+        if (Meteor.isDevelopment) {
+            //start here and send a sample notification
+            const notId = Math.round(new Date().getTime() / 1000);
 
-    const title = "new notification";
-    const text = "you have a new notification";
-    //custom info
-    const payload = { info: "test", url: "http://www.google.fr" };
-    //number
-    const badge = 5;
+            const title = "new notification";
+            const text = "you have a new notification";
+            //custom info
+            const payload = { info: "test", url: "http://www.google.fr" };
+            //number
+            const badge = 5;
 
-    const payloadStringify = {};
-    payloadStringify.custom_key1 = JSON.stringify(payload);
+            const payloadStringify = {};
+            payloadStringify.custom_key1 = JSON.stringify(payload);
 
-    Push.send({
-        from: "push",
-        title,
-        text,
-        payload: payloadStringify, // All payload values must be strings if sending using FCM
-        sound: "default",
-        query:{},
-        badge,
-        apn: {
-            sound: "default"
-        },
-        contentAvailable: 1,
-        androidChannel: "PushPluginChannel",
-        notId
-    });
-    //End here
+            Push.send({
+                from: "push",
+                title,
+                text,
+                payload: payloadStringify, // All payload values must be strings if sending using FCM
+                sound: "default",
+                query: {},
+                badge,
+                apn: {
+                    sound: "default"
+                },
+                contentAvailable: 1,
+                androidChannel: "PushPluginChannel",
+                notId
+            });
+            //End here
+        }
     }
 
     AWS.config.update(config.AWS);

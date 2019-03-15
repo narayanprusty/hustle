@@ -82,5 +82,6 @@ module.exports = {
     driversWithin: defaults.driversWithin,
     PUBNUB: defaults.PUBNUB,
     AWS: defaults.AWS,
+    PUSH_NOTIF: defaults.PUSH_NOTIF,
     env: getEnv()
 };

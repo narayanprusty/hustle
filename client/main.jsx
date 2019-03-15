@@ -2,30 +2,16 @@ import React from "react";
 import { Meteor } from "meteor/meteor";
 import { render } from "react-dom";
 import App from "../imports/ui/containers/app/App";
+import config from "../imports/modules/config/client";
 
 Meteor.startup(() => {
     if (Meteor.isDevelopment) {
         Push.debug = true;
     }
-    if (Meteor.isCordova) {
-        // PushNotification.createChannel(
-        //     function() {
-        //         console.log("Channel Created!");
-        //     },
-        //     function() {
-        //         console.log("Channel not created :(");
-        //     },
-        //     {
-        //         id: "PushPluginChannel",
-        //         description: "Channel Name Shown To Users",
-        //         importance: 3,
-        //         vibration: true
-        //     }
-        // );
-    }
+
     Push.Configure({
         android: {
-            senderID: 937200706426,
+            senderID: config.PUSH_NOTIF.FCM.SENDER_ID,
             alert: true,
             badge: true,
             sound: true,

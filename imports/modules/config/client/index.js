@@ -10,5 +10,10 @@ module.exports = {
     },
     FRONTEND_HOST: "https://hustle.blockcluster.io",
     shareText: "Hey, click the below link to see my live location.",
-    driversWithin: 5 //inKm
+    driversWithin: 5, //inKm,
+    PUSH_NOTIF: {
+        FCM: {
+            SENDER_ID: 937200706426
+        }
+    }
 };
