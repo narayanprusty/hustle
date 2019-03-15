@@ -41,11 +41,33 @@ function getEJSTemplate({ fileName }) {
         );
     });
 }
+const sendPushNotification = (title, text, userId) => {
+    const notId = Math.round(new Date().getTime() / 1000);
+
+    const query = {};
+    if (userId) {
+        query["userId"] = userId;
+    }
+    Push.send({
+        from: "hustle",
+        title,
+        text,
+        sound: "default",
+        query: query,
+        apn: {
+            sound: "default"
+        },
+        contentAvailable: 1,
+        androidChannel: "PushPluginChannel",
+        notId
+    });
+};
 
 export {
     generateRandomString,
     generateCompleteURLForEmailVerification,
     generateCompleteURLForPasswordReset,
     generateCompleteURLForUserInvite,
-    getEJSTemplate
+    getEJSTemplate,
+    sendPushNotification
 };
