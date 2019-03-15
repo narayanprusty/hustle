@@ -107,16 +107,26 @@ export default class Register extends Component {
                                         });
                                     }
                                 } else {
-                                    notify.show(
-                                        "Account created successfully!",
-                                        "success"
+                                    Meteor.call(
+                                        "createWallet", {},
+                                        (err, res) => {
+                                            if (err) {
+                                                console.log(err);
+                                                notify.show("Failed creating wallet", "error");
+                                            }
+                                            console.log(res);
+                                            notify.show(
+                                                "Account created successfully!",
+                                                "success"
+                                            );
+                                            this.setState({
+                                                register_formloading: false,
+                                                formSubmitError: "",
+                                                formSubmitSuccess: false
+                                            });
+                                            location.href = "/";
+                                        }
                                     );
-                                    this.setState({
-                                        register_formloading: false,
-                                        formSubmitError: "",
-                                        formSubmitSuccess: false
-                                    });
-                                    location.href = "/";
                                 }
                             }
                         );

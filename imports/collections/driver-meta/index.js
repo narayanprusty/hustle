@@ -44,6 +44,10 @@ DriverMetaCollection.schema = new SimpleSchema({
     carNumber: {
         type: String
     },
+    changeCollected: {
+        type: Number,
+        defaultValue: 0
+    },
     active: {
         type: Boolean
     },

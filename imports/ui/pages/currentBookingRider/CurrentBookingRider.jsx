@@ -9,23 +9,24 @@ import { notify } from "react-notify-toast";
 import PubNubReact from "pubnub-react";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import Rating from "react-rating";
-import { Widget, addResponseMessage, addUserMessage } from "react-chat-widget";
+import {
+    Widget,
+    addResponseMessage,
+    addUserMessage,
+    dropMessages
+} from "react-chat-widget";
 
 import "./CurrentBooking_client.scss";
 import localizationManager from "../../localization";
+import Reviews from "../../components/ReviewComponent/Reviews";
 
 const Marker = ({ metaData, deg }) => (
-    <div>
+    <div style={{ position: "absolute", transform: "translate(-50%, -50%)" }}>
         {metaData == "current" && (
             <span className="pulse_current" style={{ zIndex: 2 }} />
         )}
         {metaData == "cartop" && (
-            <svg
-                width="100"
-                height="100"
-                id="Capa_1"
-                transform={"rotate(" + (deg ? deg : 30) + ")"}
-            >
+            <svg width="40" height="50" id="Capa_1">
                 <g xmlns="http://www.w3.org/2000/svg">
                     <path d="M29.395,0H17.636c-3.117,0-5.643,3.467-5.643,6.584v34.804c0,3.116,2.526,5.644,5.643,5.644h11.759   c3.116,0,5.644-2.527,5.644-5.644V6.584C35.037,3.467,32.511,0,29.395,0z M34.05,14.188v11.665l-2.729,0.351v-4.806L34.05,14.188z    M32.618,10.773c-1.016,3.9-2.219,8.51-2.219,8.51H16.631l-2.222-8.51C14.41,10.773,23.293,7.755,32.618,10.773z M15.741,21.713   v4.492l-2.73-0.349V14.502L15.741,21.713z M13.011,37.938V27.579l2.73,0.343v8.196L13.011,37.938z M14.568,40.882l2.218-3.336   h13.771l2.219,3.336H14.568z M31.321,35.805v-7.872l2.729-0.355v10.048L31.321,35.805z" />
                 </g>
@@ -72,8 +73,10 @@ class CurrentBookingRider extends Component {
     }
     componentWillUnmount() {
         if (this._isMounted) {
+            dropMessages();
             clearInterval(this.state.intvl);
             clearInterval(this.state.intvlc);
+            clearInterval(this.state.missingChatInt);
             this.pubnub.unsubscribe({
                 channels: [this.state.bookingId]
             });
@@ -81,6 +84,7 @@ class CurrentBookingRider extends Component {
     }
 
     componentDidMount = () => {
+        dropMessages();
         this.fetchCurrentRide();
         this.pubnub.addListener({
             message: message => {
@@ -120,17 +124,23 @@ class CurrentBookingRider extends Component {
                 }
                 if (bookingData && bookingData.data.rideStatus == "accepted") {
                     this.getDriverDetails(bookingData.data.driverId);
+                    const intRecord = setInterval(
+                        this.checkForMissingMessage,
+                        2000
+                    );
+
                     this.setState({
                         showMap: true,
                         accepted: true,
-                        status: "accepted"
+                        status: "accepted",
+                        missingChatInt: intRecord
                     });
                 } else if (
                     bookingData &&
                     bookingData.data.rideStatus == "started"
                 ) {
                     this.getDriverDetails(bookingData.data.driverId);
-
+                    clearInterval(this.state.missingChatInt);
                     this.setState({
                         showTime: false,
                         showMap: true,
@@ -168,6 +178,16 @@ class CurrentBookingRider extends Component {
             this.setState(data);
         });
     };
+    checkForMissingMessage = () => {
+        this.pubnub.history(
+            { channel: this.state.bookingId },
+            (status, response) => {
+                if (response) {
+                    this.processChatsInterval(response);
+                }
+            }
+        );
+    };
     fetchCurrentRide = () => {
         return Meteor.call(
             "currentBookingRider",
@@ -191,6 +211,13 @@ class CurrentBookingRider extends Component {
                                 }
                             }
                         );
+                        const intRecord = setInterval(
+                            this.checkForMissingMessage,
+                            2000
+                        );
+                        this.setState({
+                            missingChatInt: intRecord
+                        });
                     }
                     if (currentRide.status == "started") {
                         this.setState({
@@ -239,6 +266,41 @@ class CurrentBookingRider extends Component {
                 addUserMessage(messageEntity.entry.message);
             } else if (messageEntity.entry.user) {
                 addResponseMessage(messageEntity.entry.message);
+            }
+        });
+    };
+
+    processChatsInterval = messagesHistory => {
+        const user = Meteor.userId();
+        const allMessageEntities = messagesHistory.messages;
+        if (!allMessageEntities.length) {
+            return false;
+        }
+
+        const timeStatArr = allMessageEntities.map(messageEntity => {
+            return messageEntity.entry.time;
+        });
+        if (!timeStatArr.length) {
+            return false;
+        }
+        const messageNotRendered = lodash.difference(
+            this.state.timeArr,
+            timeStatArr
+        );
+        if (!messageNotRendered.length) {
+            return false;
+        }
+        const sortedTimes = lodash.sortBy(messageNotRendered);
+        allMessageEntities.forEach(messageEntity => {
+            if (sortedTimes.indexOf(messageEntity.entry.time) != -1) {
+                if (
+                    messageEntity.entry.user &&
+                    messageEntity.entry.user == user
+                ) {
+                    addUserMessage(messageEntity.entry.message);
+                } else if (messageEntity.entry.user) {
+                    addResponseMessage(messageEntity.entry.message);
+                }
             }
         });
     };
@@ -361,11 +423,8 @@ class CurrentBookingRider extends Component {
             this.state.bookingId == message.message.bookingId &&
             message.message.message
         ) {
-            let {
-                //  timeArr,
-                badge
-            } = this.state;
-            // timeArr.push(message.message.time);
+            let { timeArr, badge } = this.state;
+            timeArr.push(message.message.time);
             if (message.message.user == Meteor.userId()) {
                 return false;
             }
@@ -498,40 +557,7 @@ class CurrentBookingRider extends Component {
             }
         );
     };
-    onReviewSubmit = () => {
-        this.setState({
-            loader: true
-        });
-        Meteor.call(
-            "rateDriver",
-            {
-                driverId: this.state.driverId,
-                message: this.state.reviewMessage,
-                rateVal: this.state.rating
-            },
-            (err, updated) => {
-                if (err) {
-                    this.setState({
-                        loader: false
-                    });
-                    notify.show(
-                        err.reason ||
-                            localizationManager.strings.failedToUpdateReview,
-                        "error"
-                    );
-                }
-                this.setState({
-                    loader: false
-                });
 
-                notify.show(
-                    localizationManager.strings.reviewSubmitted,
-                    "success"
-                );
-                this.props.history.push("/app");
-            }
-        );
-    };
     handleChange = e => {
         this.setState({
             [e.target.name]: e.target.value
@@ -770,101 +796,10 @@ class CurrentBookingRider extends Component {
                                     </span>
                                 </a>
                             </div>
-                            <div
-                                className="card padding-bottom card"
-                                style={{
-                                    marginLeft: "0px",
-                                    marginRight: "0px"
-                                }}
-                            >
-                                <div className="item item-divider">
-                                    {localizationManager.strings.rateDriver}
-                                </div>
-                                <div
-                                    className="item item-divider"
-                                    style={{ textAlign: "center" }}
-                                >
-                                    Thank you for riding with Hustle
-                                </div>
-                                <div className="item item-text-wrap">
-                                    <div
-                                        style={{
-                                            textAlign: "center"
-                                        }}
-                                    >
-                                        <Rating
-                                            name="rating"
-                                            {...this.props}
-                                            start={0}
-                                            stop={5}
-                                            initialRating={this.state.rating}
-                                            emptySymbol="fa fa-star-o fa-2x empty"
-                                            fullSymbol="fa fa-star fa-2x full"
-                                            onChange={rate => this.onRate(rate)}
-                                            style={{
-                                                fontSize: "200%"
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="padding-top padding-left padding-right">
-                                        <textarea
-                                            style={{
-                                                borderWidth: "2px",
-                                                textAlign: "center",
-                                                width: "100%",
-                                                borderStyle: "solid",
-                                                borderColor: "#e6e6e6",
-                                                padding: "14px",
-                                                borderRadius: "6px"
-                                            }}
-                                            name="reviewMessage"
-                                            placeholder={
-                                                localizationManager.strings
-                                                    .feedbackPlaceHolder
-                                            }
-                                            onChange={this.handleChange}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <LaddaButton
-                                className="button button-block button-balanced activated"
-                                loading={this.state.loader}
-                                onClick={this.onReviewSubmit}
-                                data-color="##FFFF00"
-                                data-size={L}
-                                data-style={SLIDE_UP}
-                                data-spinner-size={30}
-                                data-spinner-color="#ddd"
-                                data-spinner-lines={12}
-                            >
-                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                <i
-                                    className="fa fa-paper-plane"
-                                    aria-hidden="true"
-                                />{" "}
-                                {localizationManager.strings.submitReview}
-                            </LaddaButton>
-                            <LaddaButton
-                                className="button button-block button-calm activated"
-                                onClick={() => {
-                                    this.props.history.push("/app");
-                                }}
-                                data-color="##FFFF00"
-                                data-size={L}
-                                data-style={SLIDE_UP}
-                                data-spinner-size={30}
-                                data-spinner-color="#ddd"
-                                data-spinner-lines={12}
-                            >
-                                {/* <i className="fa fa-times" aria-hidden="true" />{" "} */}
-                                <i
-                                    className="fa fa-arrow-right"
-                                    aria-hidden="true"
-                                />{" "}
-                                {localizationManager.strings.skip}
-                            </LaddaButton>
+                            <Reviews
+                                type="rider"
+                                userId={this.state.driverId}
+                            />
                         </div>
                     )}
                     {this.state.accepted && !this.state.rideFinished && (

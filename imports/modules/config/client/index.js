@@ -9,6 +9,7 @@ module.exports = {
         secret: "sec-c-ODI1ZjY2MWUtMTIwNy00M2MxLWIzY2EtZDUwMjQ5MTlhNmY5"
     },
     FRONTEND_HOST: "https://hustle.blockcluster.io",
+    BASE_URL: "https://gohustleapp.com",
     shareText: "Hey, click the below link to see my live location.",
     driversWithin: 5, //inKm,
     PUSH_NOTIF: {
