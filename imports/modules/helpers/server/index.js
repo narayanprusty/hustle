@@ -61,6 +61,7 @@ const sendPushNotification = (title, text, userId) => {
         androidChannel: "PushPluginChannel",
         notId
     });
+    return true;
 };
 
 export {

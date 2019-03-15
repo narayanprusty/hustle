@@ -1,15 +1,15 @@
 import Blockcluster from "blockcluster";
 import rp from "request-promise";
+import moment from "moment";
 
 import { BookingRecord } from "../../collections/booking-record";
 import { DriverMeta } from "../../collections/driver-meta";
 import config from "../../modules/config/server";
-import { sendMessage } from "../../notifications/index";
+// import { sendMessage } from "../../notifications/index";
 import { oneClickPayment } from "../payments/payments";
 import { getUserSubscriptions } from "../subscriptions/subscriptions";
 import localization from "../../ui/localization";
-import moment from "moment";
-import { parse } from "querystring";
+import { sendPushNotification } from "../../modules/helpers/server";
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
     instanceId: config.BLOCKCLUSTER.instanceId
@@ -120,7 +120,12 @@ const newBookingReq = async ({
         active: true,
         createdAt: Date.now()
     });
-
+    //Push notification
+    sendPushNotification(
+        "Booking successfull",
+        "Your booking request raised successfully,waiting for drivers",
+        Meteor.userId()
+    );
     return {
         data: data,
         txId: txId
@@ -151,12 +156,18 @@ const onCancellation = async (
             }
         }
     );
+    //Push notification
+    sendPushNotification(
+        "Booking cancelled",
+        "Your booking cancelled by yourself",
+        Meteor.userId()
+    );
     return {
         txId: txId
     };
 };
 
-const onDriverAccept = async (bookingId, driverId) => {
+const onDriverAccept = async (bookingId, driverId, userId) => {
     const subPlan = await getUserSubscriptions(Meteor.userId());
     if (subPlan.success && subPlan.data && subPlan.data.length) {
         const BookingData = BookingRecord.find({
@@ -199,7 +210,12 @@ const onDriverAccept = async (bookingId, driverId) => {
                 }
             }
         );
-
+        //Push notification
+        sendPushNotification(
+            "Booking accepted by a driver",
+            "Driver is on the way",
+            userId
+        );
         return {
             txId: txId
         };
@@ -208,7 +224,7 @@ const onDriverAccept = async (bookingId, driverId) => {
     }
 };
 
-const onStartRide = async (bookingId, startingPoint) => {
+const onStartRide = async (bookingId, startingPoint, userId) => {
     const txId = await node.callAPI("assets/updateAssetInfo", {
         assetName: config.ASSET.Bookings,
         fromAccount: node.getWeb3().eth.accounts[0],
@@ -230,6 +246,13 @@ const onStartRide = async (bookingId, startingPoint) => {
             }
         }
     );
+    //Push notification
+    sendPushNotification(
+        "Ride has been started",
+        "you will reach your destination soon.",
+        userId
+    );
+
     return {
         txId: txId
     };
@@ -241,7 +264,7 @@ const getShortestDistance = (p1, p2) => {
             p1.lng}&destinations=${p2.lat + "," + p2.lng}&key=` + config.GAPIKEY
     );
 };
-const onStopRide = async (driverId, bookingId, endingPoint, p1, p2) => {
+const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
     const bookingData = await BookingRecord.find({
         bookingId: bookingId
     }).fetch()[0];
@@ -300,7 +323,8 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2) => {
     });
 
     booking = booking.length > 0 ? booking[0] : {};
-
+    //Push notification
+    sendPushNotification("Ride completed", "Ride has been finished.", userId);
     if (booking) {
         if (booking.paymentMethod != "cash") {
             console.log("Paying");
@@ -326,7 +350,12 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2) => {
 };
 
 //For online payment after confirmation call this
-const onConfirmPayment = async (bookingId, txId = null, paymentAmount) => {
+const onConfirmPayment = async (
+    bookingId,
+    txId = null,
+    paymentAmount,
+    userId
+) => {
     try {
         let bookings = await node.callAPI("assets/search", {
             $query: {
@@ -346,7 +375,24 @@ const onConfirmPayment = async (bookingId, txId = null, paymentAmount) => {
                     paymentReceived: paymentAmount
                 }
             });
-            sendMessage(bookings[0].driverId.toString(), "Payment Received");
+            // sendMessage(bookings[0].driverId.toString(), "Payment Received");
+            //Push notification
+            sendPushNotification(
+                "Payment Successfull",
+                "payment of " +
+                    paymentAmount +
+                    " against booking #" +
+                    bookingId,
+                userId
+            );
+            sendPushNotification(
+                "Payment received",
+                "payment received of " +
+                    paymentAmount +
+                    " against booking #" +
+                    bookingId,
+                Meteor.userId()
+            );
             return {
                 txId: Id
             };
@@ -443,7 +489,12 @@ const paymentReceived = async bookingId => {
                 });
 
                 console.log("Payment received -> status updated->", txId);
-                sendMessage(bookings[0].userId.toString(), "Payment Received!");
+                // sendMessage(bookings[0].userId.toString(), "Payment Received!");
+                sendPushNotification(
+                    "Payment Marked",
+                    "payment marked against booking #" + bookingId,
+                    Meteor.userId()
+                );
                 return {
                     success: true
                 };
