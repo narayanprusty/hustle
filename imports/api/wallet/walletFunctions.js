@@ -122,7 +122,8 @@ const payUsingWallet = async (userId, amount, bookingId) => {
                 type: "Debit",
                 amount: amountDeducted,
                 timestamp: +new Date(),
-                bookingId: bookingId
+                bookingId: bookingId,
+                type: "Payment"
             });
 
             console.log("#5");
@@ -163,6 +164,7 @@ const returnChangeToWallet = async (fare, amountPaid, bookingId) => {
                 booking = booking.data;
                 let wallet = await getUserWallet(booking.userId);
                 if (wallet && wallet.success) {
+                    wallet = wallet.wallet;
                     let balance = parseInt(wallet.balance.toString());
                     amountPaid = parseInt(amountPaid.toString());
                     fare = parseInt(fare.toString());
@@ -174,7 +176,8 @@ const returnChangeToWallet = async (fare, amountPaid, bookingId) => {
                         type: "Credit",
                         amount: (amountPaid - fare),
                         timestamp: +new Date(),
-                        bookingId: bookingId
+                        bookingId: bookingId,
+                        type: "Change"
                     });
 
                     const txId = await node.callAPI("assets/updateAssetInfo", {

@@ -4,9 +4,13 @@ import { notify } from "react-notify-toast";
 import "../../../../../node_modules/react-accessible-accordion/dist/fancy-example.css";
 import { Meteor } from "meteor/meteor";
 import moment from 'moment';
+import LaddaButton, { S, SLIDE_UP } from "react-ladda";
 import localizationManager from "../../../localization";
+import { Form, Field } from 'react-final-form';
+
 
 import "./RidePayment_client.scss";
+import Reviews from "../../../components/ReviewComponent/Reviews";
 
 class RidePayment extends Component {
     constructor(props) {
@@ -15,6 +19,7 @@ class RidePayment extends Component {
             rideId: "",
             booking: "",
             loading: false,
+            paymentDone: false,
         };
         this._isMounted = false;
         this.getBookingInfo = this.getBookingInfo.bind();
@@ -50,12 +55,10 @@ class RidePayment extends Component {
             } else {
                 if (response.data && !response.message) {
                     this.setState({ booking: response.data });
-                    if (response.data.rideStatus != "finished") {
-                        notify.show(
-                            localizationManager.strings.rideNotFinishedYet,
-                            "error"
-                        );
-                        this.props.history.push('/app/driver/newreqs');
+                    if(response.data.paymentStatus == "completed") {
+                        this.setState({
+                            paymentDone: true
+                        });
                     }
                     console.log(this.state.booking);
                 }
@@ -72,31 +75,73 @@ class RidePayment extends Component {
         });
     }
 
+    handleChange = (e) => {
+        var amount = parseInt(e.target.value);
+        this.setState({
+            amountReceived: amount
+        });
+    }
+
     paymentReceived = async () => {
         console.log(this.state.rideId);
         this.setState({ loading: true });
-        Meteor.call("paymentReceived", this.state.rideId, (error, response) => {
-            if (error) {
-                console.log(error);
-                notify.show(
-                    error.reason ? error.reason : localizationManager.strings.unableToGetBooking,
-                    "error"
-                );
-            } else {
-                if (response.success && !response.message) {
-                    this.props.history.push('/app/driver/newreqs');
-                }
-                else {
-                    if (response.message) {
+        let fare = parseInt(this.state.booking.totalFare.toString());
+        if (this.state.amountReceived >= fare) {
+            if(this.state.amountReceived > fare) {
+                Meteor.call("returnChangeToWallet", fare, this.state.amountReceived, this.state.rideId, (error, res) => {
+                    if (error) {
+                        console.log(error);
                         notify.show(
-                            response.message,
+                            error.reason ? error.reason : "Something went wrong!",
                             "error"
                         );
+                    } else {
+                        if(res && res.success){
+
+                        } else {
+                            notify.show(
+                                res.message,
+                                "error"
+                            );
+                        }
+                    }
+                });
+            }
+            Meteor.call("paymentReceived", this.state.rideId, (error, response) => {
+                if (error) {
+                    console.log(error);
+                    notify.show(
+                        error.reason ? error.reason : localizationManager.strings.unableToGetBooking,
+                        "error"
+                    );
+                } else {
+                    if (response.success && !response.message) {
+                        notify.show(
+                            localizationManager.strings.paymentMarked,
+                            "error"
+                        );
+                        this.setState({
+                            showReview: true
+                        });
+                        //this.props.history.push('/app/driver/newreqs');
+                    }
+                    else {
+                        if (response.message) {
+                            notify.show(
+                                response.message,
+                                "error"
+                            );
+                        }
                     }
                 }
-            }
-            this.setState({ loading: false });
-        });
+                this.setState({ loading: false });
+            });
+        } else {
+            notify.show(
+                "Received less amount than the fare!!",
+                "error"
+            );
+        }
     }
 
     render() {
@@ -163,82 +208,121 @@ class RidePayment extends Component {
             <div style={{direction: localizationManager.strings.textDirection}}>
                 {this.state.booking ? (
                     <div>
-                        <div className="item item-avatar">
-                            <img src='/images/completed.png' />
-                            <h2>{this.state.booking.totalFare + " " + this.state.booking.fareUnit}</h2>
-                            <p>{this.state.booking.createdAt ? moment(this.state.booking.createdAt).format("LLL") : "-"}</p>
-                        </div>
-                        <div className="item item-body">
-                            <ul className="list">
-                                <li className="item" style={{ whiteSpace: 'normal' }}>
-                                    <div style={{ marginBottom: '10px' }}>
-                                        <b>{localizationManager.strings.bookingID}:</b>
-                                    </div>
-                                    <div>
-                                        #{this.state.booking.uniqueIdentifier}
-                                    </div>
-                                </li>
-                                <li className="item" style={{ whiteSpace: 'normal' }}>
-                                    <div style={{ marginBottom: '10px' }}>
-                                        <b>{localizationManager.strings.boardingPoint}:</b>
-                                    </div>
-                                    <div>
-                                        {this.state.booking.start_address}
-                                    </div>
-                                </li>
-                                <li className="item" style={{ whiteSpace: 'normal' }}>
-                                    <div style={{ marginBottom: '10px' }}>
-                                        <b>{localizationManager.strings.droppingPoint}:</b>
-                                    </div>
-                                    <div>
-                                        {this.state.booking.end_address}
-                                    </div>
-                                </li>
-                                <li className="item">
-                                    <div style={{ marginBottom: '10px' }}>
-                                        <b>{localizationManager.strings.duration}:</b>
-                                    </div>
-                                    <div>
-                                        {this.state.booking.time_shown}
-                                    </div>
-                                </li>
-                                <li className="item">
-                                    <div style={{ marginBottom: '10px' }}>
-                                        <b>{localizationManager.strings.paymentMethod}:</b>
-                                    </div>
-                                    <div>
-                                        {this.state.booking.paymentMethod}
-                                    </div>
-                                </li>
-                                <li className="item">
-                                    <div style={{ marginBottom: '10px' }}>
-                                        <b>{localizationManager.strings.paymentStatus}:</b>
-                                    </div>
-                                    <div>
-                                        {this.state.booking.paymentStatus}
-                                    </div>
-                                </li>
-                                <li className="item">
-                                    <div style={{ marginBottom: '10px' }}>
-                                        <b>{localizationManager.strings.totalDistance}: </b>
-                                    </div>
-                                    <div>
-                                        {this.state.booking.totalDistance / 1000}KM
+                        {this.state.showReview && 
+                                        <Reviews 
+                                            type="driver" 
+                                            userId={this.state.booking.userId} 
+                                            bookingId={this.state.booking.uniqueIdentifier} />
+                        }
+                        <div style={{display: this.state.showReview ? "none" : "block"}}>
+                            <div className="item item-avatar">
+                                <img src='/images/completed.png' />
+                                <h2>{this.state.booking.totalFare + " " + this.state.booking.fareUnit}</h2>
+                                <p>{this.state.booking.createdAt ? moment(this.state.booking.createdAt).format("LLL") : "-"}</p>
+                            </div>
+                            <div className="item item-body">
+                                <ul className="list">
+                                    <li className="item" style={{ whiteSpace: 'normal' }}>
+                                        <div style={{ marginBottom: '10px' }}>
+                                            <b>{localizationManager.strings.bookingID}:</b>
                                         </div>
-                                </li>
-                                {this.state.booking.paymentMethod == "cash" ? (<li className="item">
+                                        <div>
+                                            #{this.state.booking.uniqueIdentifier}
+                                        </div>
+                                    </li>
+                                    {this.state.paymentDone && (<li className="item" style={{ whiteSpace: 'normal' }}>
+                                        <div style={{ marginBottom: '10px' }}>
+                                            <b>{localizationManager.strings.boardingPoint}:</b>
+                                        </div>
+                                        <div>
+                                            {this.state.booking.start_address}
+                                        </div>
+                                    </li>)}
+                                    {this.state.paymentDone && (<li className="item" style={{ whiteSpace: 'normal' }}>
+                                        <div style={{ marginBottom: '10px' }}>
+                                            <b>{localizationManager.strings.droppingPoint}:</b>
+                                        </div>
+                                        <div>
+                                            {this.state.booking.end_address}
+                                        </div>
+                                    </li>)}
+                                    <li className="item">
+                                        <div style={{ marginBottom: '10px' }}>
+                                            <b>{localizationManager.strings.duration}:</b>
+                                        </div>
+                                        <div>
+                                            {this.state.booking.time_shown}
+                                        </div>
+                                    </li>
+                                    <li className="item">
+                                        <div style={{ marginBottom: '10px' }}>
+                                            <b>{localizationManager.strings.paymentMethod}:</b>
+                                        </div>
+                                        <div>
+                                            {this.state.booking.paymentMethod}
+                                        </div>
+                                    </li>
+                                    {this.state.paymentDone && (<li className="item">
+                                        <div style={{ marginBottom: '10px' }}>
+                                            <b>{localizationManager.strings.paymentStatus}:</b>
+                                        </div>
+                                        <div>
+                                            {this.state.booking.paymentStatus}
+                                        </div>
+                                    </li>)}
+                                    <li className="item">
+                                        <div style={{ marginBottom: '10px' }}>
+                                            <b>{localizationManager.strings.totalDistance}: </b>
+                                        </div>
+                                        <div>
+                                            {this.state.booking.totalDistance / 1000}KM
+                                            </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                {this.state.booking.paymentMethod == "cash" && !this.state.paymentDone ? (
                                     <div>
                                         <div className="padding-left padding-right padding-top">
-                                            <button
+                                            {/* <button
                                                 className="button button-block button-energized activated"
                                                 onClick={this.paymentReceived}
                                                 disabled={this.state.booking.paymentStatus == "pending" && !this.state.loading ? false : true} >
                                                 {localizationManager.strings.paymentReceived}
-                                                    </button>
+                                            </button> */}
+                                            <div style={{marginTop: 10}}>
+                                                <div className="list">
+                                                    <label className="item item-input item-stacked-label">
+                                                        <span className="input-label">
+                                                            {" "}
+                                                            {localizationManager.strings.amount}:{" "}
+                                                        </span>
+                                                        <input
+                                                            name="amountReceived"
+                                                            type="number"
+                                                            onChange={this.handleChange.bind(this)}
+                                                            value={this.state.amountReceived}
+                                                            placeholder={localizationManager.strings.amount}
+                                                        />
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <LaddaButton
+                                                className="button button-block button-energized activated"
+                                                loading={this.state.loading}
+                                                data-color="##FFFF00"
+                                                data-spinner-size={30}
+                                                data-size={S}
+                                                data-style={SLIDE_UP}
+                                                data-spinner-color="#ddd"
+                                                data-spinner-lines={12}
+                                                onClick={this.paymentReceived}
+                                            >
+                                                <i className="fa fa-check" aria-hidden="true"></i> {localizationManager.strings.submit}
+                                            </LaddaButton>
                                         </div>
-                                    </div>
-                                </li>) : ""}
-                            </ul>
+                                    </div>) : ""}
+                            </div> 
                         </div>
                     </div>) : loader}
             </div>

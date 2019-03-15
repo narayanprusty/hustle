@@ -748,8 +748,11 @@ class CurrentBooking extends Component {
                             {localizationManager.strings.finishRide}
                         </LaddaButton>
                     )}
-                    {this.state.status == "finished" && (
+                    {this.state.status == "finished" && this.state.paymentMethod != "cash" && (
                         <Reviews type="driver" userId={this.state.userId} />
+                    )}
+                    {this.state.status == "finished" && this.state.paymentMethod == "cash" && (
+                        this.props.history.push('app/driver/ride/payment/'+this.state.bookingId)
                     )}
                     {this.state.status == "accepted" && (
                         <Widget
