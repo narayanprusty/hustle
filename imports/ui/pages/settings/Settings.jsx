@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
-import { BrowserRouter, Route, Switch, Redirect, Link } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import localizationManager from "../../localization/index";
 import { notify } from "react-notify-toast";
 
@@ -111,10 +111,7 @@ export default class Settings extends Component {
                         </Link>
                     )}
                     {!driverMode && (
-                        <Link
-                        to="/app/wallet"
-                        className="item item-icon-left"
-                        >
+                        <Link to="/app/wallet" className="item item-icon-left">
                             <i className="icon fa fa-money" />
                             {localizationManager.strings.wallet}
                         </Link>
@@ -166,6 +163,15 @@ export default class Settings extends Component {
                         </li>
                     ) : (
                         ""
+                    )}
+                    {!this.state.isDriver && (
+                        <Link
+                            to="/app/applyForDriver"
+                            className="item item-icon-left"
+                        >
+                            <i className="icon fa fa-car" />
+                            Become a partner
+                        </Link>
                     )}
 
                     <Link

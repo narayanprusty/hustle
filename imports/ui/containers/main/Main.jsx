@@ -21,6 +21,7 @@ import { notify } from "react-notify-toast";
 import DriverRideHistory from "../../pages/DriverRideHistory/DriverRideHistory";
 import EmergencyContact from "../../pages/EmergencyContacts/EmergencyContact";
 import Profile from "../../pages/Profile/Profile";
+import BecomeDriver from "../../pages/BecomeDriver/BecomeDriver";
 
 const menuColStyles = {
     padding: "0px"
@@ -102,6 +103,10 @@ export default class Main extends Component {
                     <Route path="/app/econtacts" component={EmergencyContact} />
                     <Route path="/app/profile" component={Profile} />
                     <Route path="/app/wallet" component={Wallet} />
+                    <Route
+                        path="/app/applyForDriver"
+                        component={BecomeDriver}
+                    />
                     <Route
                         path="/app/currentBooking"
                         component={CurrentBookingRider}
