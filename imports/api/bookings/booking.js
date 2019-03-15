@@ -320,12 +320,22 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2) => {
             }
 
             console.log(receipt);
+
+            onConfirmPayment(bookingId.toString(), JSON.stringify(receipt), booking.totalFare)
+            .then(res => {
+                console.log(res);
+            }).catch(err => {
+                console.log(err);
+            });
+
         } else {
-            return { totalFare: price };
+            return { 
+                totalFare: price,
+            };
         }
     } else {
         return {
-            message: localization.strings.bnp
+            message: localization.strings.unableToGetBooking
         };
     }
 
@@ -361,8 +371,50 @@ const onConfirmPayment = async (bookingId, txId = null, paymentAmount) => {
             };
         }
         throw {
-            message: localization.strings.bnf
+            message: localization.strings.unableToGetBooking
         };
+    } catch (ex) {
+        console.log(ex);
+        return ex;
+    }
+};
+
+//For Cash payments
+const paymentReceived = async bookingId => {
+    try {
+        let bookings = await node.callAPI("assets/search", {
+            $query: {
+                assetName: config.ASSET.Bookings,
+                uniqueIdentifier: bookingId.toString()
+            }
+        });
+
+        if (bookings.length > 0) {
+            if (bookings[0].rideStatus == "finished") {
+                const txId = await node.callAPI("assets/updateAssetInfo", {
+                    assetName: config.ASSET.Bookings,
+                    fromAccount: node.getWeb3().eth.accounts[0],
+                    identifier: bookingId.toString(),
+                    public: {
+                        paymentStatus: "confirmed"
+                    }
+                });
+
+                console.log("Payment received -> status updated->", txId);
+                sendMessage(bookings[0].userId.toString(), "Payment Received!");
+                return {
+                    success: true
+                };
+            } else {
+                return {
+                    message: "Ride is not finished yet!"
+                };
+            }
+        } else {
+            return {
+                message: localization.strings.unableToGetBooking
+            };
+        }
     } catch (ex) {
         console.log(ex);
         return ex;
@@ -421,49 +473,7 @@ const getBookingById = async bookingId => {
             };
         } else {
             return {
-                message: localization.strings.bnf
-            };
-        }
-    } catch (ex) {
-        console.log(ex);
-        return ex;
-    }
-};
-
-//For Cash payments
-const paymentReceived = async bookingId => {
-    try {
-        let bookings = await node.callAPI("assets/search", {
-            $query: {
-                assetName: config.ASSET.Bookings,
-                uniqueIdentifier: bookingId.toString()
-            }
-        });
-
-        if (bookings.length > 0) {
-            if (bookings[0].rideStatus == "finished") {
-                const txId = await node.callAPI("assets/updateAssetInfo", {
-                    assetName: config.ASSET.Bookings,
-                    fromAccount: node.getWeb3().eth.accounts[0],
-                    identifier: bookingId.toString(),
-                    public: {
-                        paymentStatus: "confirmed"
-                    }
-                });
-
-                console.log("Payment received -> status updated->", txId);
-                sendMessage(bookings[0].userId.toString(), "Payment Received!");
-                return {
-                    success: true
-                };
-            } else {
-                return {
-                    message: "Ride is not finished yet!"
-                };
-            }
-        } else {
-            return {
-                message: localization.strings.bnf
+                message: localization.strings.unableToGetBooking
             };
         }
     } catch (ex) {
