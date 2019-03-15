@@ -71,7 +71,7 @@ class Reviews extends Component {
         return (
             <div>
                 {!this.props.userId && !this.props.type && (
-                    <div>Loading....</div>
+                    <div>{localizationManager.strings.loading}</div>
                 )}
                 {this.props.userId && this.props.type && (
                     <div
@@ -91,7 +91,7 @@ class Reviews extends Component {
                                 className="item item-divider"
                                 style={{ textAlign: "center" }}
                             >
-                                Thank you for riding with Hustle
+                                {localizationManager.strings.thankYouForRiding}
                             </div>
                         )}
                         <div className="item item-text-wrap">

@@ -5,6 +5,7 @@ import { Meteor } from "meteor/meteor";
 var https = require("https");
 var querystring = require("querystring");
 import { sendPushNotification } from "../../modules/helpers/server";
+import localizationManager from "../../ui/localization";
 
 function request(data, callback) {}
 
@@ -26,22 +27,22 @@ const addCard = async data => {
     if (expiryMonth <= 0 || expiryMonth >= 13) {
         return {
             success: false,
-            message: "Invalid expiry month!"
+            message: localizationManager.strings.invalidExpiry
         };
     } else if (data.number <= 0 || data.number.length <= 18) {
         return {
             success: false,
-            message: "Invalid card number!"
+            message: localizationManager.strings.invalidCardNumber
         };
     } else if (!isNaN(parseInt(data.name.toString()))) {
         return {
             success: false,
-            message: "Invalid name!"
+            message: localizationManager.strings.invalidName
         };
     } else if (data.cvc <= 0) {
         return {
             success: false,
-            message: "Invalid cvv!"
+            message: localizationManager.strings.invalidCVV
         };
     }
     var currentYear = new Date().getFullYear().toString();
@@ -73,7 +74,7 @@ const addCard = async data => {
     if (cards.length > 0) {
         return {
             success: false,
-            message: "Card already exists!"
+            message: localizationManager.strings.cardExists
         };
     }
 
@@ -89,8 +90,8 @@ const addCard = async data => {
         op = await saveCardToBlockcluster(data);
         //Push notification
         sendPushNotification(
-            "Card added",
-            "your card hasbeen added",
+            localizationManager.strings.cardAddedShort,
+            localizationManager.strings.cardAddedPushNotification,
             Meteor.userId()
         );
 
@@ -102,8 +103,8 @@ const addCard = async data => {
     } else {
         //Push notification
         sendPushNotification(
-            "Card added",
-            "your card hasbeen added",
+            localizationManager.strings.cardAddedShort,
+            localizationManager.strings.cardAddedPushNotification,
             Meteor.userId()
         );
         return {
@@ -287,7 +288,7 @@ const oneClickPayment = async (amount, hyperPayId) => {
         console.log(amount, hyperPayId);
         if (!hyperPayId || !amount || isNaN(parseFloat(amount))) {
             return {
-                message: "Invalid arguments."
+                message: localizationManager.strings.invalidArguments
             };
         }
 

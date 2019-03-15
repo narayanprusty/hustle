@@ -18,24 +18,36 @@ const cartTypes = [
         value: "Micro"
     },
     {
-        name: "mini",
+        name: localizationManager.strings.Mini,
         value: "Mini"
     },
     {
-        name: "primeSedan",
+        name: localizationManager.strings.Sedan,
         value: "Sedan"
     },
     {
-        name: "primeSUV",
+        name: localizationManager.strings.SUV,
         value: "SUV"
     },
     {
-        name: "primeExec",
+        name: localizationManager.strings.Exec,
         value: "Exec"
     },
     {
         name: localizationManager.strings.primeLux,
         value: "Lux"
+    },
+    {
+        name: localizationManager.strings.Dabbab,
+        value: "Dabbab"
+    },
+    {
+        name: localizationManager.strings.PickupDyna,
+        value: "PickupDyna"
+    },
+    {
+        name: localizationManager.strings.Taxi,
+        value: "Taxi"
     }
 ];
 Geocode.setApiKey(config.GAPIKEY);
