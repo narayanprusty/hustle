@@ -90,6 +90,7 @@ class Bookingreq extends Component {
             "onDriverAccept",
             data.bookingId,
             Meteor.userId(),
+            data.userId,
             async (error, response) => {
                 if (error) {
                     console.log(error);

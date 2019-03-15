@@ -4,21 +4,21 @@ App.info({
     version: "0.0.1"
 });
 App.icons({
-  iphone_2x: 'resources/icons/iphone_2x.png',
-  iphone_3x: 'resources/icons/iphone_3x.png',
-  ipad: 'resources/icons/ipad.png',
-  ipad_2x: 'resources/icons/ipad_2x.png',
-  ipad_pro: 'resources/icons/ipad_pro.png',
-  ios_settings: 'resources/icons/ios_settings.png',
-  ios_settings_2x: 'resources/icons/ios_settings_2x.png',
-  ios_settings_3x: 'resources/icons/ios_settings_3x.png',
-  ios_spotlight: 'resources/icons/ios_spotlight.png',
-  ios_spotlight_2x: 'resources/icons/ios_spotlight_2x.png',
-  android_mdpi: 'resources/icons/android_mdpi.png',
-  android_hdpi: 'resources/icons/android_hdpi.png',
-  android_xhdpi: 'resources/icons/android_xhdpi.png',
-  android_xxhdpi: 'resources/icons/android_xxhdpi.png',
-  android_xxxhdpi: 'resources/icons/android_xxxhdpi.png',
+    iphone_2x: "resources/icons/iphone_2x.png",
+    iphone_3x: "resources/icons/iphone_3x.png",
+    ipad: "resources/icons/ipad.png",
+    ipad_2x: "resources/icons/ipad_2x.png",
+    ipad_pro: "resources/icons/ipad_pro.png",
+    ios_settings: "resources/icons/ios_settings.png",
+    ios_settings_2x: "resources/icons/ios_settings_2x.png",
+    ios_settings_3x: "resources/icons/ios_settings_3x.png",
+    ios_spotlight: "resources/icons/ios_spotlight.png",
+    ios_spotlight_2x: "resources/icons/ios_spotlight_2x.png",
+    android_mdpi: "resources/icons/android_mdpi.png",
+    android_hdpi: "resources/icons/android_hdpi.png",
+    android_xhdpi: "resources/icons/android_xhdpi.png",
+    android_xxhdpi: "resources/icons/android_xxhdpi.png",
+    android_xxxhdpi: "resources/icons/android_xxxhdpi.png"
 });
 App.launchScreens({
     // iOS splash screens
@@ -58,6 +58,11 @@ App.launchScreens({
 });
 
 App.accessRule("*");
+App.configurePlugin("phonegap-plugin-push", {
+    SENDER_ID: 937200706426
+});
+App.addResourceFile("google-services.json", "google-services.json", "android");
+
 App.appendToConfig(`
   <edit-config target="NSLocationWhenInUseUsageDescription" file="*-Info.plist" mode="merge">
     <string>My app needs access to your location for navigation purposes</string>
