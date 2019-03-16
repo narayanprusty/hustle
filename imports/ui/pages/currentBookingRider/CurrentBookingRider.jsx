@@ -767,10 +767,7 @@ class CurrentBookingRider extends Component {
                                         />
                                     </div>
                                     <div className="padding-top">
-                                        {
-                                            localizationManager.strings
-                                                .rideCompleted
-                                        }
+                                        {localizationManager.strings.thankYouForRiding}
                                     </div>
                                 </div>
                             </div>
@@ -869,11 +866,10 @@ class CurrentBookingRider extends Component {
                                             className="item item-icon-left"
                                             href="#"
                                         >
-                                            <i className="icon fa fa fa-smile-o" />
-                                            {"Partner expected to arrive in " +
-                                                this.state.timeToArrive}
+                                            <i className="icon fa fa-clock-o" />
+                                            {"In " + this.state.timeToArrive}
                                             <span className="item-note">
-                                                Expected time to arrive
+                                                Arrival Time
                                             </span>
                                         </a>
                                     )}

@@ -81,33 +81,6 @@ export default class BecomeDriver extends Component {
                         driver
                     </h3>
                 </div>
-                <div style={{ textAlign: "center" }}>
-                    <div
-                        className="grey lighten-2 valign-wrapper"
-                        style={{ height: "20vh" }}
-                    >
-                        <div id="opty_hands" className="valign">
-                            <div id="left-arm">
-                                <div className="left-hand">
-                                    <span>...</span>
-                                </div>
-                                <div className="left-shake">
-                                    <span>
-                                        _<br />_
-                                    </span>
-                                </div>
-                            </div>
-                            <div id="right-arm">
-                                <div className="right-hand">
-                                    <span>...</span>
-                                </div>
-                                <div className="right-shake" />
-                            </div>
-                        </div>
-                    </div>
-                    Earn &amp; grow with hustle
-                </div>
-                <br />
                 <div className="padding-left padding-right padding-bottom">
                     <div className="list">
                         <label className="item item-input item-stacked-label">
@@ -134,9 +107,9 @@ export default class BecomeDriver extends Component {
                             <span className="input-label">Email</span>
                             <input
                                 type="text"
-                                placeholder="e.g saikat.chakrabortty@email.com"
                                 name="email"
                                 value={this.state.email}
+                                placeholder="name@domain.com"
                                 onChange={this.onChangeHandler}
                             />
                         </label>
@@ -146,32 +119,28 @@ export default class BecomeDriver extends Component {
                             </span>
                             <input
                                 type="text"
-                                placeholder="driving lisence number"
+                                placeholder="Driving lisence number"
                                 name="licence"
                                 value={this.state.licence}
                                 onChange={this.onChangeHandler}
                             />
                         </label>
-                        <label className="item item-input item-stacked-label">
-                            <span className="input-label">Message</span>
+                        <label className="item item-input item-stacked-label" style={{
+                            height: '80px'
+                        }}>
                             <textarea
                                 style={{
-                                    borderWidth: "2px",
-                                    width: "100%",
-                                    borderStyle: "solid",
-                                    borderColor: "#e6e6e6",
-                                    padding: "14px",
-                                    borderRadius: "6px"
+                                    height: '80px'
                                 }}
                                 name="msg"
-                                placeholder="Cover Letter"
+                                placeholder="Message"
                                 value={this.state.msg}
                                 onChange={this.onChangeHandler}
                             />
                         </label>
                     </div>
                     <LaddaButton
-                        className="button button-block button-royal activated"
+                        className="button button-block button-calm activated"
                         loading={this.state.becoming_driver}
                         onClick={this.applyForDriver}
                         data-color="##FFFF00"
@@ -195,8 +164,6 @@ export default class BecomeDriver extends Component {
                         />{" "}
                         Apply
                     </LaddaButton>
-                    Note:By applying you are accepting to the terms &amp;
-                    conditions*
                 </div>
             </div>
         );

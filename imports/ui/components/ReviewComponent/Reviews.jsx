@@ -86,14 +86,6 @@ class Reviews extends Component {
                                 ? localizationManager.strings.rateRider
                                 : localizationManager.strings.rateDriver}
                         </div>
-                        {this.props.type == "rider" && (
-                            <div
-                                className="item item-divider"
-                                style={{ textAlign: "center" }}
-                            >
-                                {localizationManager.strings.thankYouForRiding}
-                            </div>
-                        )}
                         <div className="item item-text-wrap">
                             <div
                                 style={{

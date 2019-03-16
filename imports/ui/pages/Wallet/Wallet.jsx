@@ -134,10 +134,13 @@ class Wallet extends Component {
                             </h3>
                         </div>
                         <div>
-                            <center>
-                                <h3>Balance</h3>
-                                <h2>{this.state.wallet.balance}</h2>
-                            </center>
+                            <div className="padding-left padding-right">
+                                <center className='background-colorful-wallet padding-top padding-bottom'>
+                                    <h4 style={{color: 'white', marginTop: '10px', marginBottom: '0px'}}>Balance:</h4>
+                                    <h2 style={{color: 'white', marginTop: '0px'}}>{this.state.wallet.balance} SAR</h2>
+                                </center>
+                            </div>
+                            <br />
                             <div className="item item-divider">
                                 {localizationManager.strings.history}
                             </div>
