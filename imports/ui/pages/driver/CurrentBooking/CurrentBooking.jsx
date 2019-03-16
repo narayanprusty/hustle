@@ -754,7 +754,7 @@ class CurrentBooking extends Component {
                         <Reviews type="driver" userId={this.state.userId} />
                     )}
                     {this.state.status == "finished" && this.state.paymentMethod == "cash" && (
-                        this.props.history.push('app/driver/ride/payment/'+this.state.bookingId)
+                        this.props.history.push('/app/driver/ride/payment/'+this.state.bookingId)
                     )}
                     {this.state.status == "accepted" && (
                         <Widget

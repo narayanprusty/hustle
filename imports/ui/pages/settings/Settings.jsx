@@ -43,6 +43,7 @@ export default class Settings extends Component {
     }
 
     logout = () => {
+        localStorage.setItem('driverMode', "");
         Meteor.logout((err, done) => {
             if (err) {
                 notify.show(err.error, "error");
