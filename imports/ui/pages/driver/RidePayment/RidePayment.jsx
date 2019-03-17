@@ -408,6 +408,7 @@ class RidePayment extends Component {
                                                             )}
                                                             defaultValue={
                                                                 this.state
+                                                                    .booking
                                                                     .totalFare
                                                             }
                                                             value={
