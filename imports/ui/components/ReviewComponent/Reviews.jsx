@@ -82,7 +82,7 @@ class Reviews extends Component {
                         }}
                     >
                         <div className="item item-divider">
-                            {this.props.type == "rider"
+                            {this.props.type != "rider"
                                 ? localizationManager.strings.rateRider
                                 : localizationManager.strings.rateDriver}
                         </div>
