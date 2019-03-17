@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import queryString from "stringquery";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import "./email_client.scss";
 
@@ -11,7 +11,7 @@ const LinkStatus = {
     Redirecting: 5
 };
 
-export default withRouter(class EmailVerification extends Component {
+export default class EmailVerification extends Component {
     constructor(props) {
         super(props);
 
@@ -51,7 +51,7 @@ export default withRouter(class EmailVerification extends Component {
                     )
                 });
                 setTimeout(() => {
-                    this.props.history.push('/login');
+                    open("/login", "_self")
                 }, 2 * 1000);
             } else {
                 this.setState({
@@ -152,4 +152,4 @@ export default withRouter(class EmailVerification extends Component {
             </div>
         );
     }
-})
+}

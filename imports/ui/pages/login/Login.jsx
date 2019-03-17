@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
 import Notifications from "react-notify-toast";
-import { Redirect, withRouter } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import PhoneInput from "react-phone-number-input";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
@@ -11,7 +11,7 @@ import "react-phone-number-input/style.css";
 import "./Login_client.scss";
 import localizationManager from "../../localization";
 
-export default withRouter(class Login extends Component {
+export default class Login extends Component {
     constructor(props) {
         super(props);
 
@@ -22,11 +22,11 @@ export default withRouter(class Login extends Component {
             phone: null
         };
     }
-    componentDidMount = () => {
+    componentDidMount() {
         //if user logged in redirect him/her
         const user = Meteor.userId();
         if (user) {
-            this.props.history.push('/');
+          location.href = "/";
         }
     }
 
@@ -68,8 +68,7 @@ export default withRouter(class Login extends Component {
                                 formSubmitError: ""
                             });
 
-                            this.props.history.push('/');
-                            // open("https://hustle.blockcluster.io", "_self");
+                            open("/", "_self");
                         }
                     }
                 );
@@ -143,7 +142,7 @@ export default withRouter(class Login extends Component {
                                 }
                                 className="button button-block button-energized activated"
                             >
-                                Login v1
+                                Login
                             </LaddaButton>
                         </div>
                     </div>
@@ -184,4 +183,4 @@ export default withRouter(class Login extends Component {
             </div>
         );
     }
-})
+}

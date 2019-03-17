@@ -6,10 +6,10 @@ import { parsePhoneNumberFromString } from "libphonenumber-js";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 
 import Notifications from "react-notify-toast";
-import { Redirect, withRouter } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 import "./Register_client.scss";
-export default withRouter(class Register extends Component {
+export default class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -24,7 +24,7 @@ export default withRouter(class Register extends Component {
         //if user logged in redirect him/her
         const user = Meteor.userId();
         if (user) {
-            this.props.history.push('/');
+            location.href="/";
         }
     }
     sendMessage = e => {
@@ -124,7 +124,7 @@ export default withRouter(class Register extends Component {
                                                 formSubmitError: "",
                                                 formSubmitSuccess: false
                                             });
-                                            this.props.history.push('/')
+                                            location.href = "/";
                                         }
                                     );
                                 }
@@ -260,4 +260,4 @@ export default withRouter(class Register extends Component {
             </div>
         );
     }
-})
+}
