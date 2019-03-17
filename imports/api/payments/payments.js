@@ -303,7 +303,7 @@ const oneClickPayment = async (amount, hyperPayId) => {
             testMode: "EXTERNAL",
             merchantTransactionId: "8ac7a4a168c2b4360168c33a485c0567103",
             "customer.email": "ukrocks.mehta@gmail.com",
-            shopperResultUrl: "http://localhost:3000/app/home"
+            shopperResultUrl: `${config.apiHost.includes(":3000") ? 'http' : 'https'}://${config.apiHost}/app/home`
         });
         console.log(cardData);
         var options = {
