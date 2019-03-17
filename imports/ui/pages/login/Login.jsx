@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
 import Notifications from "react-notify-toast";
-import { Redirect } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import PhoneInput from "react-phone-number-input";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
@@ -11,7 +11,7 @@ import "react-phone-number-input/style.css";
 import "./Login_client.scss";
 import localizationManager from "../../localization";
 
-export default class Login extends Component {
+export default withRouter(class Login extends Component {
     constructor(props) {
         super(props);
 
@@ -22,11 +22,11 @@ export default class Login extends Component {
             phone: null
         };
     }
-    componentDidMount() {
+    componentDidMount = () => {
         //if user logged in redirect him/her
         const user = Meteor.userId();
         if (user) {
-            location.href = "/";
+            this.props.history.push('/');
         }
     }
 
@@ -68,7 +68,8 @@ export default class Login extends Component {
                                 formSubmitError: ""
                             });
 
-                            open("/", "_self");
+                            this.props.history.push('/');
+                            // open("https://hustle.blockcluster.io", "_self");
                         }
                     }
                 );
@@ -142,7 +143,7 @@ export default class Login extends Component {
                                 }
                                 className="button button-block button-energized activated"
                             >
-                                Login
+                                Login v1
                             </LaddaButton>
                         </div>
                     </div>
@@ -183,4 +184,4 @@ export default class Login extends Component {
             </div>
         );
     }
-}
+})

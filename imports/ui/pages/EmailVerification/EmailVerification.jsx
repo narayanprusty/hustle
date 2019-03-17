@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import queryString from "stringquery";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 import "./email_client.scss";
 
@@ -11,7 +11,7 @@ const LinkStatus = {
     Redirecting: 5
 };
 
-export default class EmailVerification extends Component {
+export default withRouter(class EmailVerification extends Component {
     constructor(props) {
         super(props);
 
@@ -22,7 +22,7 @@ export default class EmailVerification extends Component {
         };
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         const queries = queryString(this.props.location.search);
         sessionStorage.setItem("key", queries.key);
         if (history.pushState) {
@@ -51,7 +51,7 @@ export default class EmailVerification extends Component {
                     )
                 });
                 setTimeout(() => {
-                    open("/login", "_self");
+                    this.props.history.push('/login');
                 }, 2 * 1000);
             } else {
                 this.setState({
@@ -152,4 +152,4 @@ export default class EmailVerification extends Component {
             </div>
         );
     }
-}
+})
