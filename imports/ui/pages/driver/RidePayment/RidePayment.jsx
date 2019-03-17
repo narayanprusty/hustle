@@ -90,6 +90,7 @@ class RidePayment extends Component {
                     this.state.rideId,
                     (error, res) => {
                         if (error) {
+                            this.setState({ loading: false });
                             console.log(error);
                             notify.show(
                                 error.reason
@@ -101,6 +102,8 @@ class RidePayment extends Component {
                         } else {
                             if (res && res.success) {
                             } else {
+                                this.setState({ loading: false });
+
                                 notify.show(res.message, "error");
                             }
                         }
@@ -112,6 +115,8 @@ class RidePayment extends Component {
                 this.state.rideId,
                 (error, response) => {
                     if (error) {
+                        this.setState({ loading: false });
+
                         console.log(error);
                         notify.show(
                             error.reason
@@ -127,11 +132,13 @@ class RidePayment extends Component {
                                 "success"
                             );
                             this.setState({
+                                loading: false,
                                 showReview: true
                             });
                             //this.props.history.push('/app/driver/newreqs');
                         } else {
                             if (response.message) {
+                                this.setState({ loading: false });
                                 notify.show(response.message, "error");
                             }
                         }
@@ -140,6 +147,7 @@ class RidePayment extends Component {
                 }
             );
         } else {
+            this.setState({ loading: false });
             notify.show(
                 localizationManager.strings.amountLessThanFare,
                 "error"
@@ -434,6 +442,11 @@ class RidePayment extends Component {
                                                 data-spinner-color="#ddd"
                                                 data-spinner-lines={12}
                                                 onClick={this.paymentReceived}
+                                                disabled={
+                                                    this.state.showReview
+                                                        ? true
+                                                        : false
+                                                }
                                             >
                                                 <i
                                                     className="fa fa-check"
