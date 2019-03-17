@@ -3,10 +3,9 @@ import { withRouter } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import "../../../../../node_modules/react-accessible-accordion/dist/fancy-example.css";
 import { Meteor } from "meteor/meteor";
-import moment from 'moment';
+import moment from "moment";
 import LaddaButton, { S, SLIDE_UP } from "react-ladda";
 import localizationManager from "../../../localization";
-
 
 import "./RidePayment_client.scss";
 import Reviews from "../../../components/ReviewComponent/Reviews";
@@ -18,7 +17,7 @@ class RidePayment extends Component {
             rideId: "",
             booking: "",
             loading: false,
-            paymentDone: false,
+            paymentDone: false
         };
         this._isMounted = false;
         this.getBookingInfo = this.getBookingInfo.bind();
@@ -34,114 +33,119 @@ class RidePayment extends Component {
                 this.setState({ rideId: this.props.match.params.id });
                 this.getBookingInfo(this.props.match.params.id);
             } else {
-                return <Redirect to='/app/currentBooking' />;
+                return <Redirect to="/app/currentBooking" />;
             }
-        }
-        else {
+        } else {
             this.props.history.push("/login");
         }
-    }
+    };
 
-    getBookingInfo = async (rideId) => {
+    getBookingInfo = async rideId => {
         Meteor.call("getBookingById", rideId, (error, response) => {
             if (error) {
                 console.log(error);
                 notify.show(
-                    error.reason ? error.reason : localizationManager.strings.unableToGetBooking,
+                    error.reason
+                        ? error.reason
+                        : localizationManager.strings.unableToGetBooking,
                     "error"
                 );
-                this.props.history.push('/app/driver/newreqs');
+                this.props.history.push("/app/driver/newreqs");
             } else {
                 if (response.data && !response.message) {
                     this.setState({ booking: response.data });
-                    if(response.data.paymentStatus == "completed") {
+                    if (response.data.paymentStatus == "completed") {
                         this.setState({
                             paymentDone: true
                         });
                     }
                     console.log(this.state.booking);
-                }
-                else {
+                } else {
                     if (response.message) {
-                        notify.show(
-                            response.message,
-                            "error"
-                        );
-                        this.props.history.push('/app/driver/newreqs');
+                        notify.show(response.message, "error");
+                        this.props.history.push("/app/driver/newreqs");
                     }
                 }
             }
         });
-    }
+    };
 
-    handleChange = (e) => {
+    handleChange = e => {
         var amount = parseInt(e.target.value);
         this.setState({
             amountReceived: amount
         });
-    }
+    };
 
     paymentReceived = async () => {
         console.log(this.state.rideId);
         this.setState({ loading: true });
         let fare = parseInt(this.state.booking.totalFare.toString());
         if (this.state.amountReceived >= fare) {
-            if(this.state.amountReceived > fare) {
-                Meteor.call("returnChangeToWallet", fare, this.state.amountReceived, this.state.rideId, (error, res) => {
+            if (this.state.amountReceived > fare) {
+                Meteor.call(
+                    "returnChangeToWallet",
+                    fare,
+                    this.state.amountReceived,
+                    this.state.rideId,
+                    (error, res) => {
+                        if (error) {
+                            console.log(error);
+                            notify.show(
+                                error.reason
+                                    ? error.reason
+                                    : localizationManager.strings
+                                          .somethingWentWrong,
+                                "error"
+                            );
+                        } else {
+                            if (res && res.success) {
+                            } else {
+                                notify.show(res.message, "error");
+                            }
+                        }
+                    }
+                );
+            }
+            Meteor.call(
+                "paymentReceived",
+                this.state.rideId,
+                (error, response) => {
                     if (error) {
                         console.log(error);
                         notify.show(
-                            error.reason ? error.reason : localizationManager.strings.somethingWentWrong,
+                            error.reason
+                                ? error.reason
+                                : localizationManager.strings
+                                      .unableToGetBooking,
                             "error"
                         );
                     } else {
-                        if(res && res.success){
-
+                        if (response.success && !response.message) {
+                            notify.show(
+                                localizationManager.strings.paymentMarked,
+                                "success"
+                            );
+                            this.setState({
+                                showReview: true
+                            });
+                            //this.props.history.push('/app/driver/newreqs');
                         } else {
-                            notify.show(
-                                res.message,
-                                "error"
-                            );
+                            if (response.message) {
+                                notify.show(response.message, "error");
+                            }
                         }
                     }
-                });
-            }
-            Meteor.call("paymentReceived", this.state.rideId, (error, response) => {
-                if (error) {
-                    console.log(error);
-                    notify.show(
-                        error.reason ? error.reason : localizationManager.strings.unableToGetBooking,
-                        "error"
-                    );
-                } else {
-                    if (response.success && !response.message) {
-                        notify.show(
-                            localizationManager.strings.paymentMarked,
-                            "error"
-                        );
-                        this.setState({
-                            showReview: true
-                        });
-                        //this.props.history.push('/app/driver/newreqs');
-                    }
-                    else {
-                        if (response.message) {
-                            notify.show(
-                                response.message,
-                                "error"
-                            );
-                        }
-                    }
+                    this.setState({ loading: false });
                 }
-                this.setState({ loading: false });
-            });
+            );
         } else {
             notify.show(
                 localizationManager.strings.amountLessThanFare,
                 "error"
             );
         }
-    }
+    };
 
     render() {
         const loader = (
@@ -204,98 +208,217 @@ class RidePayment extends Component {
         );
 
         return (
-            <div style={{direction: localizationManager.strings.textDirection}}>
+            <div
+                style={{ direction: localizationManager.strings.textDirection }}
+            >
                 {this.state.booking ? (
                     <div>
-                        {this.state.showReview && 
-                                        <Reviews 
-                                            type="driver" 
-                                            userId={this.state.booking.userId} 
-                                            bookingId={this.state.booking.uniqueIdentifier} />
-                        }
-                        <div style={{display: this.state.showReview ? "none" : "block"}}>
+                        {this.state.showReview && (
+                            <Reviews
+                                type="driver"
+                                userId={this.state.booking.userId}
+                                bookingId={this.state.booking.uniqueIdentifier}
+                            />
+                        )}
+                        <div
+                            style={{
+                                display: this.state.showReview
+                                    ? "none"
+                                    : "block"
+                            }}
+                        >
                             <div className="item item-avatar">
-                                <img src='/images/completed.png' />
-                                <h2>{this.state.booking.totalFare + " " + this.state.booking.fareUnit}</h2>
-                                <p>{this.state.booking.createdAt ? moment(this.state.booking.createdAt).format("LLL") : "-"}</p>
+                                <img src="/images/completed.png" />
+                                <h2>
+                                    {this.state.booking.totalFare +
+                                        " " +
+                                        this.state.booking.fareUnit}
+                                </h2>
+                                <p>
+                                    {this.state.booking.createdAt
+                                        ? moment(
+                                              this.state.booking.createdAt
+                                          ).format("LLL")
+                                        : "-"}
+                                </p>
                             </div>
                             <div className="item item-body">
                                 <ul className="list">
-                                    <li className="item" style={{ whiteSpace: 'normal' }}>
-                                        <div style={{ marginBottom: '10px' }}>
-                                            <b>{localizationManager.strings.bookingID}:</b>
+                                    <li
+                                        className="item"
+                                        style={{ whiteSpace: "normal" }}
+                                    >
+                                        <div style={{ marginBottom: "10px" }}>
+                                            <b>
+                                                {
+                                                    localizationManager.strings
+                                                        .bookingID
+                                                }
+                                                :
+                                            </b>
                                         </div>
                                         <div>
-                                            #{this.state.booking.uniqueIdentifier}
+                                            #
+                                            {
+                                                this.state.booking
+                                                    .uniqueIdentifier
+                                            }
                                         </div>
                                     </li>
-                                    {this.state.paymentDone && (<li className="item" style={{ whiteSpace: 'normal' }}>
-                                        <div style={{ marginBottom: '10px' }}>
-                                            <b>{localizationManager.strings.boardingPoint}:</b>
-                                        </div>
-                                        <div>
-                                            {this.state.booking.start_address}
-                                        </div>
-                                    </li>)}
-                                    {this.state.paymentDone && (<li className="item" style={{ whiteSpace: 'normal' }}>
-                                        <div style={{ marginBottom: '10px' }}>
-                                            <b>{localizationManager.strings.droppingPoint}:</b>
-                                        </div>
-                                        <div>
-                                            {this.state.booking.end_address}
-                                        </div>
-                                    </li>)}
+                                    {this.state.paymentDone && (
+                                        <li
+                                            className="item"
+                                            style={{ whiteSpace: "normal" }}
+                                        >
+                                            <div
+                                                style={{ marginBottom: "10px" }}
+                                            >
+                                                <b>
+                                                    {
+                                                        localizationManager
+                                                            .strings
+                                                            .boardingPoint
+                                                    }
+                                                    :
+                                                </b>
+                                            </div>
+                                            <div>
+                                                {
+                                                    this.state.booking
+                                                        .start_address
+                                                }
+                                            </div>
+                                        </li>
+                                    )}
+                                    {this.state.paymentDone && (
+                                        <li
+                                            className="item"
+                                            style={{ whiteSpace: "normal" }}
+                                        >
+                                            <div
+                                                style={{ marginBottom: "10px" }}
+                                            >
+                                                <b>
+                                                    {
+                                                        localizationManager
+                                                            .strings
+                                                            .droppingPoint
+                                                    }
+                                                    :
+                                                </b>
+                                            </div>
+                                            <div>
+                                                {this.state.booking.end_address}
+                                            </div>
+                                        </li>
+                                    )}
                                     <li className="item">
-                                        <div style={{ marginBottom: '10px' }}>
-                                            <b>{localizationManager.strings.duration}:</b>
+                                        <div style={{ marginBottom: "10px" }}>
+                                            <b>
+                                                {
+                                                    localizationManager.strings
+                                                        .duration
+                                                }
+                                                :
+                                            </b>
                                         </div>
                                         <div>
                                             {this.state.booking.time_shown}
                                         </div>
                                     </li>
                                     <li className="item">
-                                        <div style={{ marginBottom: '10px' }}>
-                                            <b>{localizationManager.strings.paymentMethod}:</b>
+                                        <div style={{ marginBottom: "10px" }}>
+                                            <b>
+                                                {
+                                                    localizationManager.strings
+                                                        .paymentMethod
+                                                }
+                                                :
+                                            </b>
                                         </div>
                                         <div>
                                             {this.state.booking.paymentMethod}
                                         </div>
                                     </li>
-                                    {this.state.paymentDone && (<li className="item">
-                                        <div style={{ marginBottom: '10px' }}>
-                                            <b>{localizationManager.strings.paymentStatus}:</b>
-                                        </div>
-                                        <div>
-                                            {this.state.booking.paymentStatus}
-                                        </div>
-                                    </li>)}
-                                    <li className="item">
-                                        <div style={{ marginBottom: '10px' }}>
-                                            <b>{localizationManager.strings.totalDistance}: </b>
-                                        </div>
-                                        <div>
-                                            {this.state.booking.totalDistance / 1000}{localizationManager.strings.kilimeterShort}
+                                    {this.state.paymentDone && (
+                                        <li className="item">
+                                            <div
+                                                style={{ marginBottom: "10px" }}
+                                            >
+                                                <b>
+                                                    {
+                                                        localizationManager
+                                                            .strings
+                                                            .paymentStatus
+                                                    }
+                                                    :
+                                                </b>
                                             </div>
+                                            <div>
+                                                {
+                                                    this.state.booking
+                                                        .paymentStatus
+                                                }
+                                            </div>
+                                        </li>
+                                    )}
+                                    <li className="item">
+                                        <div style={{ marginBottom: "10px" }}>
+                                            <b>
+                                                {
+                                                    localizationManager.strings
+                                                        .totalDistance
+                                                }
+                                                :{" "}
+                                            </b>
+                                        </div>
+                                        <div>
+                                            {this.state.booking.totalDistance /
+                                                1000}
+                                            {
+                                                localizationManager.strings
+                                                    .kilimeterShort
+                                            }
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
                             <div>
-                                {this.state.booking.paymentMethod == "cash" && !this.state.paymentDone ? (
+                                {this.state.booking.paymentMethod == "cash" &&
+                                !this.state.paymentDone ? (
                                     <div>
                                         <div className="padding-left padding-right padding-top">
-                                            <div style={{marginTop: 10}}>
+                                            <div style={{ marginTop: 10 }}>
                                                 <div className="list">
                                                     <label className="item item-input item-stacked-label">
                                                         <span className="input-label">
                                                             {" "}
-                                                            {localizationManager.strings.amountReceived}:{" "}
+                                                            {
+                                                                localizationManager
+                                                                    .strings
+                                                                    .amountReceived
+                                                            }
+                                                            :{" "}
                                                         </span>
                                                         <input
                                                             name="amountReceived"
                                                             type="number"
-                                                            onChange={this.handleChange.bind(this)}
-                                                            value={this.state.amountReceived}
-                                                            placeholder={localizationManager.strings.amountReceived}
+                                                            onChange={this.handleChange.bind(
+                                                                this
+                                                            )}
+                                                            defaultValue={
+                                                                this.state
+                                                                    .totalFare
+                                                            }
+                                                            value={
+                                                                this.state
+                                                                    .amountReceived
+                                                            }
+                                                            placeholder={
+                                                                localizationManager
+                                                                    .strings
+                                                                    .amountReceived
+                                                            }
                                                         />
                                                     </label>
                                                 </div>
@@ -311,17 +434,29 @@ class RidePayment extends Component {
                                                 data-spinner-lines={12}
                                                 onClick={this.paymentReceived}
                                             >
-                                                <i className="fa fa-check" aria-hidden="true"></i> {localizationManager.strings.submit}
+                                                <i
+                                                    className="fa fa-check"
+                                                    aria-hidden="true"
+                                                />{" "}
+                                                {
+                                                    localizationManager.strings
+                                                        .submit
+                                                }
                                             </LaddaButton>
                                         </div>
-                                    </div>) : ""}
-                            </div> 
+                                    </div>
+                                ) : (
+                                    ""
+                                )}
+                            </div>
                         </div>
-                    </div>) : loader}
+                    </div>
+                ) : (
+                    loader
+                )}
             </div>
         );
     }
 }
-
 
 export default withRouter(RidePayment);
