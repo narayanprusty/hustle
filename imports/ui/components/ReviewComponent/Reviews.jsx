@@ -149,9 +149,11 @@ class Reviews extends Component {
                     <LaddaButton
                         className="button button-block button-calm activated"
                         onClick={() => {
-                            this.props.type == "rider"
-                                ? "/app"
-                                : "/app/driver/newreqs";
+                            this.props.history.push(
+                                this.props.type == "rider"
+                                    ? "/app"
+                                    : "/app/driver/newreqs"
+                            );
                         }}
                         data-color="##FFFF00"
                         data-size={L}
