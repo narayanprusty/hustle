@@ -466,7 +466,7 @@ let strings = new LocalizedStrings({
         tAction: "إتخاذ الإجراء",
         arau: "متواسطالتقييمكمستخدم",
         arad: "متواسطالتقييمكسائق",
-        userType: "user type",
+        userType: "نوع المستخدم",
         edit: "تعديل",
         editInfo: "تعديل المعلومات",
         update: "تحديث",
