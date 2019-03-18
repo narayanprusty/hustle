@@ -230,7 +230,13 @@ let strings = new LocalizedStrings({
         textDirection: "ltr",
         dlog: "Delivery Of Goods",
         Home: "Home",
-        tAction: "Take action"
+        tAction: "Take action",
+        arau: "Avg Ratings as User",
+        arad: "Avg Ratings as Driver",
+        userType: "User Type",
+        edit: "Edit",
+        editInfo: "Edit Info",
+        update: "Update"
     },
     ar: {
         wallet: "Wallet",
@@ -456,7 +462,13 @@ let strings = new LocalizedStrings({
         //for text direction (don`t change)
         textDirection: "rtl",
         dlog: "توصيل البضائع",
-        tAction: "إتخاذ الإجراء"
+        tAction: "إتخاذ الإجراء",
+        arau: "متواسطالتقييمكمستخدم",
+        arad: "متواسطالتقييمكسائق",
+        userType: "user type",
+        edit: "تعديل",
+        editInfo: "تعديل المعلومات",
+        update: "تحديث"
     }
 });
 

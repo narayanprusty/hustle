@@ -6,6 +6,7 @@ import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import { Meteor } from "meteor/meteor";
 import "./Profile_client.scss";
 import { S } from "react-ladda/dist/constants";
+import localizationManager from "../../localization";
 
 class Profile extends Component {
     constructor(props) {
@@ -148,7 +149,8 @@ class Profile extends Component {
             <div
                 className=""
                 style={{
-                    height: "100%"
+                    height: "100%",
+                    direction: localizationManager.strings.textDirection
                 }}
             >
                 <div className="padding">
@@ -182,7 +184,7 @@ class Profile extends Component {
                                 onClick={this.tryToUpload}
                             >
                                 <i className="fa fa-edit" aria-hidden="true" />{" "}
-                                Edit
+                                {localizationManager.strings.edit}
                             </a>
                         </u>
                         <br />
@@ -233,7 +235,7 @@ class Profile extends Component {
                     <div className="list">
                         <div className="item item-icon-left">
                             <i className="icon fa fa-user" aria-hidden="true" />{" "}
-                            Name
+                            {localizationManager.strings.name}
                             <span className="item-note">
                                 {this.state.name || "Loading..."}
                             </span>
@@ -243,7 +245,7 @@ class Profile extends Component {
                                 className="icon fa fa-phone"
                                 aria-hidden="true"
                             />{" "}
-                            Phone
+                            {localizationManager.strings.phone}
                             <span className="item-note">
                                 {this.state.phone || "Loading..."}
                             </span>
@@ -254,8 +256,10 @@ class Profile extends Component {
                                     className="icon fa fa-user"
                                     aria-hidden="true"
                                 />{" "}
-                                User Type
-                                <span className="item-note">Driver</span>
+                                {localizationManager.strings.userType}
+                                <span className="item-note">
+                                    {localizationManager.strings.userType}
+                                </span>
                             </div>
                         )}
                         {this.isDriver && (
@@ -264,7 +268,7 @@ class Profile extends Component {
                                     className="icon fa fa-car"
                                     aria-hidden="true"
                                 />{" "}
-                                Car Model
+                                {localizationManager.strings.carModel}
                                 <span className="item-note">
                                     {this.state.carModel || "Loading..."}
                                 </span>
@@ -276,7 +280,7 @@ class Profile extends Component {
                                     className="icon fa fa-text-width"
                                     aria-hidden="true"
                                 />{" "}
-                                Car Number
+                                {localizationManager.strings.carNumber}{" "}
                                 <span className="item-note">
                                     {this.state.carNumber || "Loading..."}
                                 </span>
@@ -289,7 +293,7 @@ class Profile extends Component {
                                     className="icon fa fa-star"
                                     aria-hidden="true"
                                 />{" "}
-                                Avg Ratings as Driver
+                                {localizationManager.strings.arad}
                                 <span className="item-note">
                                     <Ratings
                                         start={0}
@@ -310,7 +314,7 @@ class Profile extends Component {
 
                         <div className="item item-icon-left">
                             <i className="icon fa fa-star" aria-hidden="true" />{" "}
-                            Avg Ratings as User
+                            {localizationManager.strings.arau}
                             <span className="item-note">
                                 <Ratings
                                     start={0}
@@ -343,15 +347,17 @@ class Profile extends Component {
                                 }
                             }}
                         >
-                            <i className="fa fa-edit" aria-hidden="true" /> Edit
-                            Profile
+                            <i className="fa fa-edit" aria-hidden="true" />{" "}
+                            {localizationManager.strings.editProfile}
                         </button>
                     )}
 
                     {this.state.isEdit && (
                         <div>
                             <span className="seperator padding-left padding-right padding-bottom">
-                                &nbsp;&nbsp;Edit Info&nbsp;&nbsp;
+                                &nbsp;&nbsp;
+                                {localizationManager.strings.editInfo}
+                                &nbsp;&nbsp;
                             </span>
                             <div
                                 style={{
@@ -359,7 +365,9 @@ class Profile extends Component {
                                 }}
                             />
                             <label className="item item-input item-stacked-label">
-                                <span className="input-label">Name</span>
+                                <span className="input-label">
+                                    {localizationManager.strings.name}
+                                </span>
                                 <input
                                     type="text"
                                     name={this.state.name_input}
@@ -385,7 +393,8 @@ class Profile extends Component {
                                 data-spinner-color="#ddd"
                                 data-spinner-lines={12}
                             >
-                                <i className="icon fa fa-check" /> Update
+                                <i className="icon fa fa-check" />{" "}
+                                {localizationManager.strings.update}
                             </LaddaButton>
                         </div>
                     )}
