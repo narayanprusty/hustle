@@ -660,7 +660,7 @@ class Bookings extends Component {
     };
     render() {
         const { mapApiLoaded, mapApi } = this.state;
-        const Ride = ["Micro", "Mini", "Sedan", "SUV", "Exec", "LUX", "Taxi"];
+        const Ride = ["Micro", "Mini", "Sedan", "SUV", "Exec", "Lux", "Taxi"];
         const DeliveryOfGoods = ["Dabbab", "Pickup", "Dyna"];
 
         let conatinerClass = "list";
