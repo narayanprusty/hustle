@@ -4,7 +4,8 @@ import { withRouter, Link } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import LaddaButton, { S, SLIDE_UP } from "react-ladda";
 import localizationManager from "../../localization";
-import Modal from 'react-responsive-modal';
+import Modal from "react-responsive-modal";
+import CarLoader from "../../components/CarLoader/CarLoader";
 
 class Subscriptions extends Component {
     constructor(props) {
@@ -17,7 +18,7 @@ class Subscriptions extends Component {
             showAddCardButton: false,
             cards: [],
             paymentMethod: "",
-            showPayNowButton: false,
+            showPayNowButton: false
         };
         const driverMode = localStorage.getItem("driverMode");
         if (!driverMode) {
@@ -45,10 +46,12 @@ class Subscriptions extends Component {
                     "error"
                 );
             } else {
-                let options = [{
-                    text: "Select Card",
-                    value: ""
-                }];
+                let options = [
+                    {
+                        text: "Select Card",
+                        value: ""
+                    }
+                ];
                 for (let i = 0; i < res.cards.length; i++) {
                     options.push({
                         value: res.cards[i].hyperPayId,
@@ -59,8 +62,7 @@ class Subscriptions extends Component {
                     this.setState({
                         cards: options
                     });
-                }
-                else {
+                } else {
                     this.setState({
                         showAddCardButton: true
                     });
@@ -69,7 +71,7 @@ class Subscriptions extends Component {
                 console.log("cards loaded", this.state.cards);
             }
         });
-    }
+    };
 
     getUserSubscriptions = async () => {
         Meteor.call(
@@ -82,7 +84,8 @@ class Subscriptions extends Component {
                     notify.show(
                         error.reason
                             ? error.reason
-                            : localizationManager.strings.unableToGetSubscriptions,
+                            : localizationManager.strings
+                                  .unableToGetSubscriptions,
                         "error"
                     );
                 } else {
@@ -90,8 +93,18 @@ class Subscriptions extends Component {
                         this.setState({
                             userPlans: response.data ? response.data : [],
                             userAlreadySubscribed: response.data.length > 0,
-                            renew: response.data.length > 0 ? (response.data[0].renew ? true : false) : true,
-                            paymentMethod: response.data.length > 0 ? (response.data[0].hyperPayId ? response.data[0].hyperPayId : "") : ""
+                            renew:
+                                response.data.length > 0
+                                    ? response.data[0].renew
+                                        ? true
+                                        : false
+                                    : true,
+                            paymentMethod:
+                                response.data.length > 0
+                                    ? response.data[0].hyperPayId
+                                        ? response.data[0].hyperPayId
+                                        : ""
+                                    : ""
                         });
                     } else {
                         if (response.message) {
@@ -112,7 +125,9 @@ class Subscriptions extends Component {
                 console.log(error);
                 //Add localization support
                 notify.show(
-                    error.reason ? error.reason : localizationManager.strings.unableToGetPlans,
+                    error.reason
+                        ? error.reason
+                        : localizationManager.strings.unableToGetPlans,
                     "error"
                 );
             } else {
@@ -133,13 +148,12 @@ class Subscriptions extends Component {
         if (e.target.value) {
             this.setState({
                 paymentMethod: e.target.value,
-                showPayNowButton: true,
+                showPayNowButton: true
             });
-        }
-        else {
+        } else {
             this.setState({
                 paymentMethod: e.target.value,
-                showPayNowButton: false,
+                showPayNowButton: false
             });
         }
     };
@@ -149,7 +163,11 @@ class Subscriptions extends Component {
             this.setState({ userAlreadySubscribed: true, showloader: true });
             Meteor.call(
                 "subscribePlan",
-                { planId: planId, userId: Meteor.userId(), hyperPayId: this.state.paymentMethod },
+                {
+                    planId: planId,
+                    userId: Meteor.userId(),
+                    hyperPayId: this.state.paymentMethod
+                },
                 (error, response) => {
                     if (error) {
                         console.log(error);
@@ -167,20 +185,22 @@ class Subscriptions extends Component {
                                 notify.show(response.message, "error");
                             }
                         } else {
-                            notify.show(localizationManager.strings.planSubscribed, "success");
+                            notify.show(
+                                localizationManager.strings.planSubscribed,
+                                "success"
+                            );
                             this.onOpenModal();
                             this.getUserSubscriptions();
                             this.setState({
-                                userAlreadySubscribed: true,
+                                userAlreadySubscribed: true
                             });
-
                         }
                     }
                     this.setState({
                         userAlreadySubscribed: true,
                         showloader: false,
                         showAddCardButton: false,
-                        showPaymentOptions: false,
+                        showPaymentOptions: false
                     });
                 }
             );
@@ -198,48 +218,56 @@ class Subscriptions extends Component {
                         this.setState({
                             showloader: true
                         });
-                        Meteor.call("cancelSubscription", this.state.userPlans[0].uniqueIdentifier,
-                        (error, response) => {
-                            if (error) {
-                                console.log(error);
-                                //Add localization support
-                                notify.show(
-                                    error.reason
-                                        ? error.reason
-                                        : "Unable to subscribe!",
-                                    "error"
-                                );
-                            } else {
-                                if (response.success) {
-                                    notify.show(localizationManager.strings.subscriptionCancelled, "success");
-                                    this.getUserSubscriptions();
-                                } else {
+                        Meteor.call(
+                            "cancelSubscription",
+                            this.state.userPlans[0].uniqueIdentifier,
+                            (error, response) => {
+                                if (error) {
+                                    console.log(error);
+                                    //Add localization support
                                     notify.show(
-                                        response.message
-                                            ? response.message
-                                            : localizationManager.strings.unableToCancelSubscription,
+                                        error.reason
+                                            ? error.reason
+                                            : "Unable to subscribe!",
                                         "error"
                                     );
+                                } else {
+                                    if (response.success) {
+                                        notify.show(
+                                            localizationManager.strings
+                                                .subscriptionCancelled,
+                                            "success"
+                                        );
+                                        this.getUserSubscriptions();
+                                    } else {
+                                        notify.show(
+                                            response.message
+                                                ? response.message
+                                                : localizationManager.strings
+                                                      .unableToCancelSubscription,
+                                            "error"
+                                        );
+                                    }
                                 }
+                                this.setState({
+                                    showloader: false
+                                });
                             }
-                            this.setState({
-                                showloader: false
-                            });
-                        });
+                        );
                     } else {
                         throw {
                             message: localizationManager.strings.unexpectedError
-                        }
+                        };
                     }
                 } else {
                     throw {
                         message: localizationManager.strings.unexpectedError
-                    }
+                    };
                 }
             } else {
                 throw {
                     message: localizationManager.strings.unexpectedError
-                }
+                };
             }
         } catch (ex) {
             console.log(ex);
@@ -253,7 +281,7 @@ class Subscriptions extends Component {
                 showloader: true
             });
         }
-    }
+    };
 
     reSubscribe = async () => {
         try {
@@ -263,7 +291,9 @@ class Subscriptions extends Component {
                         this.setState({
                             showloader: true
                         });
-                        Meteor.call("reSubscribe", this.state.userPlans[0].uniqueIdentifier,
+                        Meteor.call(
+                            "reSubscribe",
+                            this.state.userPlans[0].uniqueIdentifier,
                             (error, response) => {
                                 if (error) {
                                     console.log(error);
@@ -271,18 +301,24 @@ class Subscriptions extends Component {
                                     notify.show(
                                         error.reason
                                             ? error.reason
-                                            : localizationManager.strings.unabbleToReSubscribe,
+                                            : localizationManager.strings
+                                                  .unabbleToReSubscribe,
                                         "error"
                                     );
                                 } else {
                                     if (response.success) {
-                                        notify.show(localizationManager.strings.reSubscribed, "success");
+                                        notify.show(
+                                            localizationManager.strings
+                                                .reSubscribed,
+                                            "success"
+                                        );
                                         this.getUserSubscriptions();
                                     } else {
                                         notify.show(
                                             response.message
                                                 ? response.message
-                                                : localizationManager.strings.unabbleToReSubscribe,
+                                                : localizationManager.strings
+                                                      .unabbleToReSubscribe,
                                             "error"
                                         );
                                     }
@@ -290,21 +326,22 @@ class Subscriptions extends Component {
                                 this.setState({
                                     showloader: false
                                 });
-                            });
+                            }
+                        );
                     } else {
                         throw {
                             message: localizationManager.strings.unexpectedError
-                        }
+                        };
                     }
                 } else {
                     throw {
                         message: localizationManager.strings.unexpectedError
-                    }
+                    };
                 }
             } else {
                 throw {
                     message: localizationManager.strings.unexpectedError
-                }
+                };
             }
         } catch (ex) {
             console.log(ex);
@@ -318,7 +355,7 @@ class Subscriptions extends Component {
                 showloader: true
             });
         }
-    }
+    };
 
     onOpenModal = () => {
         this.setState({ showWindow: true });
@@ -329,70 +366,25 @@ class Subscriptions extends Component {
     };
 
     render() {
-        const loader = (
-            <div className="loader" key={0}>
-                <svg
-                    className="car"
-                    width="102"
-                    height="40"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <g
-                        transform="translate(2 1)"
-                        stroke="#002742"
-                        fill="none"
-                        fillRule="evenodd"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path
-                            className="car__body"
-                            d="M47.293 2.375C52.927.792 54.017.805 54.017.805c2.613-.445 6.838-.337 9.42.237l8.381 1.863c2.59.576 6.164 2.606 7.98 4.531l6.348 6.732 6.245 1.877c3.098.508 5.609 3.431 5.609 6.507v4.206c0 .29-2.536 4.189-5.687 4.189H36.808c-2.655 0-4.34-2.1-3.688-4.67 0 0 3.71-19.944 14.173-23.902zM36.5 15.5h54.01"
-                            strokeWidth="3"
-                        />
-                        <ellipse
-                            className="car__wheel--left"
-                            strokeWidth="3.2"
-                            fill="#FFF"
-                            cx="83.493"
-                            cy="30.25"
-                            rx="6.922"
-                            ry="6.808"
-                        />
-                        <ellipse
-                            className="car__wheel--right"
-                            strokeWidth="3.2"
-                            fill="#FFF"
-                            cx="46.511"
-                            cy="30.25"
-                            rx="6.922"
-                            ry="6.808"
-                        />
-                        <path
-                            className="car__line car__line--top"
-                            d="M22.5 16.5H2.475"
-                            strokeWidth="3"
-                        />
-                        <path
-                            className="car__line car__line--middle"
-                            d="M20.5 23.5H.4755"
-                            strokeWidth="3"
-                        />
-                        <path
-                            className="car__line car__line--bottom"
-                            d="M25.5 9.5h-19"
-                            strokeWidth="3"
-                        />
-                    </g>
-                </svg>
-            </div>
-        );
+        const loader = <CarLoader />;
 
         return (
-            <div className="" style={{ height: "100%", direction: localizationManager.strings.textDirection }}>
-                <Modal open={this.state.showWindow} onClose={this.onCloseModal.bind(this)} center>
+            <div
+                className=""
+                style={{
+                    height: "100%",
+                    direction: localizationManager.strings.textDirection
+                }}
+            >
+                <Modal
+                    open={this.state.showWindow}
+                    onClose={this.onCloseModal.bind(this)}
+                    center
+                >
                     <div>
-                        <center><img src={"/images/subscribe.png"}></img></center>
+                        <center>
+                            <img src={"/images/subscribe.png"} />
+                        </center>
                         <h3>{localizationManager.strings.welcomeMessage}</h3>
                     </div>
                 </Modal>
@@ -404,14 +396,19 @@ class Subscriptions extends Component {
                                 {localizationManager.strings.subscription}
                             </h3>
                         </div>
-                        <div className="item item-body" style={{border: "none"}}>
+                        <div
+                            className="item item-body"
+                            style={{ border: "none" }}
+                        >
                             <ul className="list">
                                 <li
                                     className="item"
                                     style={{ whiteSpace: "normal" }}
                                 >
                                     <div style={{ marginBottom: "10px" }}>
-                                        <b>{localizationManager.strings.price}</b>
+                                        <b>
+                                            {localizationManager.strings.price}
+                                        </b>
                                     </div>
                                     <div>
                                         {this.state.subscriptionPlan.price} SAR
@@ -422,11 +419,17 @@ class Subscriptions extends Component {
                                     style={{ whiteSpace: "normal" }}
                                 >
                                     <div style={{ marginBottom: "10px" }}>
-                                        <b>{localizationManager.strings.renewable}</b>
+                                        <b>
+                                            {
+                                                localizationManager.strings
+                                                    .renewable
+                                            }
+                                        </b>
                                     </div>
                                     <div>
-                                    {localizationManager.strings.after} {this.state.subscriptionPlan.validity}{" "}
-                                    {localizationManager.strings.days}
+                                        {localizationManager.strings.after}{" "}
+                                        {this.state.subscriptionPlan.validity}{" "}
+                                        {localizationManager.strings.days}
                                     </div>
                                 </li>
                                 <li
@@ -434,7 +437,12 @@ class Subscriptions extends Component {
                                     style={{ whiteSpace: "normal" }}
                                 >
                                     <div style={{ marginBottom: "10px" }}>
-                                        <b>{localizationManager.strings.description}</b>
+                                        <b>
+                                            {
+                                                localizationManager.strings
+                                                    .description
+                                            }
+                                        </b>
                                     </div>
                                     <div>
                                         {
@@ -445,119 +453,143 @@ class Subscriptions extends Component {
                                 </li>
                             </ul>
                             {this.state.showAddCardButton ? (
-                                    <button
-                                        disabled={this.state.userAlreadySubscribed}
-                                        className="button button-block button-energized activated"
-                                        onClick={(e) => this.props.history.push('/app/addCards')}
+                                <button
+                                    disabled={this.state.userAlreadySubscribed}
+                                    className="button button-block button-energized activated"
+                                    onClick={e =>
+                                        this.props.history.push("/app/addCards")
+                                    }
+                                >
+                                    {localizationManager.strings.addCards}
+                                </button>
+                            ) : (
+                                <ul className="list">
+                                    <li
+                                        className="item"
+                                        style={{
+                                            whiteSpace: "normal",
+                                            paddingLeft: "0px",
+                                            paddingRight: "0px"
+                                        }}
                                     >
-                                        {localizationManager.strings.addCards}
-                                    </button>
-                                ) : (
-                                        <ul className="list">
-                                            <li
-                                                className="item"
-                                                style={{ 
-                                                    whiteSpace: "normal", 
-                                                    paddingLeft: '0px',
-                                                    paddingRight: '0px'
+                                        <div>
+                                            <select
+                                                disabled={
+                                                    this.state
+                                                        .userAlreadySubscribed
+                                                }
+                                                name="paymentMethod"
+                                                value={this.state.paymentMethod}
+                                                onChange={this.onCardSelected}
+                                                style={{
+                                                    fontSize: "16px",
+                                                    width: "96%"
                                                 }}
                                             >
-                                                <div>
-                                                    <select
-                                                        disabled={this.state.userAlreadySubscribed}
-                                                        name="paymentMethod"
-                                                        value={this.state.paymentMethod}
-                                                        onChange={this.onCardSelected}
-                                                        style={{
-                                                            fontSize: "16px",
-                                                            width: "96%"
-                                                        }}
-                                                    >
-                                                        {this.state.cards.map((card, i) => (
-                                                            <option
-                                                                value={card.value}
-                                                                key={i}
-                                                            >
-                                                                {" "}
-                                                                {card.text}{" "}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                    <i
-                                                        className="fa fa-sort-desc"
-                                                        style={{
-                                                            position: "relative",
-                                                            top: "-2px",
-                                                            left: "-12px"
-                                                        }}
-                                                    />
-                                                </div>
-                                            </li>
-                                        </ul>
-                                )
-                            }
+                                                {this.state.cards.map(
+                                                    (card, i) => (
+                                                        <option
+                                                            value={card.value}
+                                                            key={i}
+                                                        >
+                                                            {" "}
+                                                            {card.text}{" "}
+                                                        </option>
+                                                    )
+                                                )}
+                                            </select>
+                                            <i
+                                                className="fa fa-sort-desc"
+                                                style={{
+                                                    position: "relative",
+                                                    top: "-2px",
+                                                    left: "-12px"
+                                                }}
+                                            />
+                                        </div>
+                                    </li>
+                                </ul>
+                            )}
                             <div className="">
-                            {!this.state.userAlreadySubscribed ? (
-                                <LaddaButton
-                                    className="button button-block button-energized activated"
-                                    loading={this.state.showloader}
-                                    disabled={
-                                        this.state.userAlreadySubscribed || !this.state.showPayNowButton
-                                            ? true
-                                            : false
-                                    }
-                                    data-color="##FFFF00"
-                                    data-spinner-size={30}
-                                    data-size={S}
-                                    data-style={SLIDE_UP}
-                                    data-spinner-color="#ddd"
-                                    data-spinner-lines={12}
-                                    onClick={this.subscribe.bind(
-                                        this,
-                                        this.state.subscriptionPlan
-                                            .uniqueIdentifier
-                                    )}
-                                >
-                                    <i className="fa fa-check" aria-hidden="true"></i> {localizationManager.strings.subscribe}
-                            </LaddaButton> ) : (
-                                this.state.renew ? (
-                            <LaddaButton
-                            className="button button-block button-assertive activated"
-                            loading={this.state.showloader}
-                            disabled={
-                                !this.state.userAlreadySubscribed
-                            }
-                            data-color="##FFFF00"
-                            data-spinner-size={30}
-                            data-size={S}
-                            data-style={SLIDE_UP}
-                            data-spinner-color="#ddd"
-                            data-spinner-lines={12}
-                            onClick={this.cancelSubscription.bind(
-                                this
-                            )}
-                        >
-                            <i className="fa fa-times" aria-hidden="true"></i> {localizationManager.strings.cancelSubscription}
-                        </LaddaButton>) : (
-                            <LaddaButton
-                            className="button button-block button-calm activated"
-                            loading={this.state.showloader}
-                            disabled={
-                                !this.state.userAlreadySubscribed
-                            }
-                            data-color="##FFFF00"
-                            data-spinner-size={30}
-                            data-size={S}
-                            data-style={SLIDE_UP}
-                            data-spinner-color="#ddd"
-                            data-spinner-lines={12}
-                            onClick={this.reSubscribe.bind(
-                                this
-                            )}
-                        >
-                            <i className="fa fa-refresh" aria-hidden="true"></i> {localizationManager.strings.reSubscribe}
-                        </LaddaButton>)
-                            ) }
+                                {!this.state.userAlreadySubscribed ? (
+                                    <LaddaButton
+                                        className="button button-block button-energized activated"
+                                        loading={this.state.showloader}
+                                        disabled={
+                                            this.state.userAlreadySubscribed ||
+                                            !this.state.showPayNowButton
+                                                ? true
+                                                : false
+                                        }
+                                        data-color="##FFFF00"
+                                        data-spinner-size={30}
+                                        data-size={S}
+                                        data-style={SLIDE_UP}
+                                        data-spinner-color="#ddd"
+                                        data-spinner-lines={12}
+                                        onClick={this.subscribe.bind(
+                                            this,
+                                            this.state.subscriptionPlan
+                                                .uniqueIdentifier
+                                        )}
+                                    >
+                                        <i
+                                            className="fa fa-check"
+                                            aria-hidden="true"
+                                        />{" "}
+                                        {localizationManager.strings.subscribe}
+                                    </LaddaButton>
+                                ) : this.state.renew ? (
+                                    <LaddaButton
+                                        className="button button-block button-assertive activated"
+                                        loading={this.state.showloader}
+                                        disabled={
+                                            !this.state.userAlreadySubscribed
+                                        }
+                                        data-color="##FFFF00"
+                                        data-spinner-size={30}
+                                        data-size={S}
+                                        data-style={SLIDE_UP}
+                                        data-spinner-color="#ddd"
+                                        data-spinner-lines={12}
+                                        onClick={this.cancelSubscription.bind(
+                                            this
+                                        )}
+                                    >
+                                        <i
+                                            className="fa fa-times"
+                                            aria-hidden="true"
+                                        />{" "}
+                                        {
+                                            localizationManager.strings
+                                                .cancelSubscription
+                                        }
+                                    </LaddaButton>
+                                ) : (
+                                    <LaddaButton
+                                        className="button button-block button-calm activated"
+                                        loading={this.state.showloader}
+                                        disabled={
+                                            !this.state.userAlreadySubscribed
+                                        }
+                                        data-color="##FFFF00"
+                                        data-spinner-size={30}
+                                        data-size={S}
+                                        data-style={SLIDE_UP}
+                                        data-spinner-color="#ddd"
+                                        data-spinner-lines={12}
+                                        onClick={this.reSubscribe.bind(this)}
+                                    >
+                                        <i
+                                            className="fa fa-refresh"
+                                            aria-hidden="true"
+                                        />{" "}
+                                        {
+                                            localizationManager.strings
+                                                .reSubscribe
+                                        }
+                                    </LaddaButton>
+                                )}
                             </div>
                         </div>
                     </div>
