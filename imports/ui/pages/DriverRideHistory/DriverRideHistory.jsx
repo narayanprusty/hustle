@@ -215,7 +215,7 @@ class DriverRideHistory extends Component {
                                         <div>{data.totalDistance / 1000}KM</div>
                                     </li>
                                     {data.paymentMethod == "cash" &&
-                                        data.paymentStatus != "confirmed" && (
+                                        data.paymentStatus == "pending" && (
                                             <LaddaButton
                                                 className="button button-block button-energized activated"
                                                 loading={this.state.actioned}
