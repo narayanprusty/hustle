@@ -22,6 +22,7 @@ import DriverRideHistory from "../../pages/DriverRideHistory/DriverRideHistory";
 import EmergencyContact from "../../pages/EmergencyContacts/EmergencyContact";
 import Profile from "../../pages/Profile/Profile";
 import BecomeDriver from "../../pages/BecomeDriver/BecomeDriver";
+import localizationManager from "../../localization";
 
 const menuColStyles = {
     padding: "0px"
@@ -137,15 +138,15 @@ export default class Main extends Component {
                     >
                         <Link to="/app/home" className="tab-item">
                             <i className="icon ion-home" />
-                            Home
+                            {localizationManager.strings.Home}
                         </Link>
                         <Link to="/app/rides" className="tab-item">
                             <i className="icon ion-navicon-round" />
-                            Rides
+                            {localizationManager.strings.Rides}
                         </Link>
                         <Link to="/app/settings" className="tab-item">
                             <i className="icon ion-gear-a" />
-                            Settings
+                            {localizationManager.strings.Settings}
                         </Link>
                     </div>
                 )}
