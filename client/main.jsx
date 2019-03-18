@@ -18,8 +18,8 @@ Meteor.startup(() => {
             badge: true,
             sound: true,
             vibrate: true,
-            clearNotifications: true
-            // icon: '',
+            clearNotifications: true,
+            icon: "android_mdpi"
             // iconColor: ''
         },
         ios: {

@@ -92,7 +92,6 @@ Meteor.startup(() => {
                 from: "push",
                 title,
                 text,
-                icon: "android_mdpi",
                 payload: payloadStringify, // All payload values must be strings if sending using FCM
                 sound: "default",
                 query: {},
