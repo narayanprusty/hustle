@@ -661,6 +661,8 @@ class Bookings extends Component {
     };
     render() {
         const { mapApiLoaded, mapApi } = this.state;
+        const Ride = ["Micro", "Mini", "Sedan", "SUV", "Exec", "LUX", "Taxi"];
+        const DeliveryOfGoods = ["Dabbab", "Pickup", "Dyna"];
 
         let conatinerClass = "list";
 
@@ -867,6 +869,7 @@ class Bookings extends Component {
                                         </div>
                                         <div className="item item-icon-left">
                                             <i className="icon fa fa-car" />
+                                            {/* optimize this section */}
                                             <select
                                                 name="carType"
                                                 value={this.state.cartType}
@@ -880,20 +883,64 @@ class Bookings extends Component {
                                                         : false
                                                 }
                                             >
-                                                {cartTypes.map((cars, i) => (
-                                                    <option
-                                                        value={cars.value}
-                                                        key={i}
-                                                    >
-                                                        {" "}
-                                                        {
-                                                            localizationManager
-                                                                .strings[
-                                                                cars.value
-                                                            ]
-                                                        }{" "}
-                                                    </option>
-                                                ))}
+                                                <optgroup label="Ride">
+                                                    {cartTypes.map(
+                                                        (cars, i) => {
+                                                            if (
+                                                                Ride.indexOf(
+                                                                    cars.value
+                                                                ) != -1
+                                                            ) {
+                                                                return (
+                                                                    <option
+                                                                        value={
+                                                                            cars.value
+                                                                        }
+                                                                        key={i}
+                                                                    >
+                                                                        {" "}
+                                                                        {
+                                                                            localizationManager
+                                                                                .strings[
+                                                                                cars
+                                                                                    .value
+                                                                            ]
+                                                                        }{" "}
+                                                                    </option>
+                                                                );
+                                                            }
+                                                        }
+                                                    )}
+                                                </optgroup>
+                                                <optgroup label="Delivery Of Goods">
+                                                    {cartTypes.map(
+                                                        (cars, i) => {
+                                                            if (
+                                                                DeliveryOfGoods.indexOf(
+                                                                    cars.value
+                                                                ) != -1
+                                                            ) {
+                                                                return (
+                                                                    <option
+                                                                        value={
+                                                                            cars.value
+                                                                        }
+                                                                        key={i}
+                                                                    >
+                                                                        {" "}
+                                                                        {
+                                                                            localizationManager
+                                                                                .strings[
+                                                                                cars
+                                                                                    .value
+                                                                            ]
+                                                                        }{" "}
+                                                                    </option>
+                                                                );
+                                                            }
+                                                        }
+                                                    )}
+                                                </optgroup>
                                             </select>
                                             <i
                                                 className="fa fa-sort-desc"
