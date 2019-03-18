@@ -20,11 +20,11 @@ export default class Register extends Component {
         };
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         //if user logged in redirect him/her
         const user = Meteor.userId();
         if (user) {
-            location.href = "/";
+            location.href="/";
         }
     }
     sendMessage = e => {

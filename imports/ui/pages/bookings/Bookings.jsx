@@ -42,8 +42,12 @@ const cartTypes = [
         value: "Dabbab"
     },
     {
-        name: localizationManager.strings.PickupDyna,
-        value: "PickupDyna"
+        name: localizationManager.strings.Pickup,
+        value: "Pickup"
+    },
+    {
+        name: localizationManager.strings.Dyna,
+        value: "Dyna"
     },
     {
         name: localizationManager.strings.Taxi,

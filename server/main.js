@@ -43,6 +43,11 @@ Accounts.onCreateUser(function(options, user) {
 
 Meteor.startup(() => {
     console.log(">>>> Server Started <<<<");
+
+    WebApp.rawConnectHandlers.use(function(req, res, next) {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        return next();
+    });
     if (Meteor.isDevelopment) {
         Push.debug = true;
     }
@@ -103,8 +108,4 @@ Meteor.startup(() => {
     }
 
     AWS.config.update(config.AWS);
-    WebApp.rawConnectHandlers.use(function(req, res, next) {
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        return next();
-    });
 });

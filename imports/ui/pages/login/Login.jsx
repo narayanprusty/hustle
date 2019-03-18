@@ -26,7 +26,7 @@ export default class Login extends Component {
         //if user logged in redirect him/her
         const user = Meteor.userId();
         if (user) {
-            location.href = "/";
+          location.href = "/";
         }
     }
 

@@ -24,7 +24,8 @@ let strings = new LocalizedStrings({
         thankYouForRiding: "Thank you for riding with Hustle",
         loading: "Loading....",
         Dabbab: "Dabbab",
-        PickupDyna: "Pickup and Dyna",
+        Pickup: "Pickup",
+        Dyna: "Dyna",
         Taxi: "Taxi",
         // old strings
         welcomeMessage: "Thank you for subscribing dear partner. Good things come to those who Hustle like you!",
@@ -249,7 +250,8 @@ let strings = new LocalizedStrings({
         thankYouForRiding: "Thank you for riding with Hustle",
         loading: "Loading....",
         Dabbab: "Dabbab",
-        PickupDyna: "Pickup and Dyna",
+        Pickup: "Pickup",
+        Dyna: "Dyna",
         Taxi: "Taxi",
         // old strings
         welcomeMessage: "تسجيل الخروج",

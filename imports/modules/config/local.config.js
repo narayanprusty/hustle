@@ -5,7 +5,7 @@ module.exports = {
         pass: "saikat95"
     },
     MONGO_URL: "mongodb://saikatharryc:saikat95@ds145303.mlab.com:45303/hustle",
-    apiHost: "localhost:3000",
+    apiHost: process.env.ROOT_URL || "localhost:3000",
     GAPIKEY: "AIzaSyAs2LAkFCJr8p4EzgIVtk169Qreykfi74Q",
     // GAPIKEY: "AIzaSyBnjRZAHqrP5Flir8iuhmBmJlOr7qKlSTE",
     SMS: {

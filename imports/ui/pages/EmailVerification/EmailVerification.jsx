@@ -22,7 +22,7 @@ export default class EmailVerification extends Component {
         };
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         const queries = queryString(this.props.location.search);
         sessionStorage.setItem("key", queries.key);
         if (history.pushState) {
@@ -51,7 +51,7 @@ export default class EmailVerification extends Component {
                     )
                 });
                 setTimeout(() => {
-                    open("/login", "_self");
+                    open("/login", "_self")
                 }, 2 * 1000);
             } else {
                 this.setState({
