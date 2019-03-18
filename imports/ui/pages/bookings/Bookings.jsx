@@ -999,118 +999,123 @@ class Bookings extends Component {
                             )}
                         </div>
                     )}
-                    <div
-                        className="mapView padding-left padding-right padding-bottom"
-                        style={{ height: "65%", paddingBottom: "2em" }}
-                    >
-                        {this._isMounted && !this.state.loading_cards && (
-                            <GoogleMapReact
-                                options={
-                                    this.isAndroid()
-                                        ? {
-                                              ...mapOptions,
-                                              fullscreenControl: true,
-                                              zoomControl: false
-                                          }
-                                        : {
-                                              ...mapOptions,
-                                              fullscreenControl: true
-                                          }
-                                }
-                                bootstrapURLKeys={{
-                                    key: config.GAPIKEY,
-                                    libraries: ["places"]
-                                }}
-                                initialCenter={this.state.fields.location}
-                                center={this.state.fields.location}
-                                defaultZoom={15}
-                                zoom={this.state.zoom}
-                                layerTypes={["TrafficLayer", "TransitLayer"]}
-                                heat={true}
-                                gestureHandling="greedy"
-                                onClick={t => this.onChangeBoarding(t)}
-                                yesIWantToUseGoogleMapApiInternals
-                                onGoogleApiLoaded={({ map, maps }) =>
-                                    this.apiHasLoaded(map, maps)
-                                }
-                            >
-                                {this.state.mapInstance && (
-                                    <MapControl
-                                        map={this.state.mapInstance || null}
-                                        controlPosition={
-                                            this.state.mapApi
-                                                ? this.state.mapApi
-                                                      .ControlPosition
-                                                      .RIGHT_CENTER
-                                                : null
-                                        }
-                                    >
-                                        <button
-                                            className="centerIt"
-                                            onClick={
-                                                this.changeBoardingToCurrent
-                                            }
-                                            disabled={
-                                                this.state.submitted
-                                                    ? true
-                                                    : false
+                    {!this.state.loading_cards && (
+                        <div
+                            className="mapView padding-left padding-right padding-bottom"
+                            style={{ height: "65%", paddingBottom: "2em" }}
+                        >
+                            {this._isMounted && !this.state.loading_cards && (
+                                <GoogleMapReact
+                                    options={
+                                        this.isAndroid()
+                                            ? {
+                                                  ...mapOptions,
+                                                  fullscreenControl: true,
+                                                  zoomControl: false
+                                              }
+                                            : {
+                                                  ...mapOptions,
+                                                  fullscreenControl: true
+                                              }
+                                    }
+                                    bootstrapURLKeys={{
+                                        key: config.GAPIKEY,
+                                        libraries: ["places"]
+                                    }}
+                                    initialCenter={this.state.fields.location}
+                                    center={this.state.fields.location}
+                                    defaultZoom={15}
+                                    zoom={this.state.zoom}
+                                    layerTypes={[
+                                        "TrafficLayer",
+                                        "TransitLayer"
+                                    ]}
+                                    heat={true}
+                                    gestureHandling="greedy"
+                                    onClick={t => this.onChangeBoarding(t)}
+                                    yesIWantToUseGoogleMapApiInternals
+                                    onGoogleApiLoaded={({ map, maps }) =>
+                                        this.apiHasLoaded(map, maps)
+                                    }
+                                >
+                                    {this.state.mapInstance && (
+                                        <MapControl
+                                            map={this.state.mapInstance || null}
+                                            controlPosition={
+                                                this.state.mapApi
+                                                    ? this.state.mapApi
+                                                          .ControlPosition
+                                                          .RIGHT_CENTER
+                                                    : null
                                             }
                                         >
-                                            <i className="fa fa-location-arrow" />{" "}
-                                        </button>
-                                    </MapControl>
-                                )}
+                                            <button
+                                                className="centerIt"
+                                                onClick={
+                                                    this.changeBoardingToCurrent
+                                                }
+                                                disabled={
+                                                    this.state.submitted
+                                                        ? true
+                                                        : false
+                                                }
+                                            >
+                                                <i className="fa fa-location-arrow" />{" "}
+                                            </button>
+                                        </MapControl>
+                                    )}
 
-                                {this.state.droppingPoint && (
+                                    {this.state.droppingPoint && (
+                                        <Marker
+                                            lat={this.state.droppingPoint.lat}
+                                            lng={this.state.droppingPoint.lng}
+                                            metaData="drop"
+                                        />
+                                    )}
                                     <Marker
-                                        lat={this.state.droppingPoint.lat}
-                                        lng={this.state.droppingPoint.lng}
-                                        metaData="drop"
+                                        lat={
+                                            this.state.currentLocation.lat
+                                                ? this.state.currentLocation.lat
+                                                : this.state.fields.lat
+                                        }
+                                        lng={
+                                            this.state.currentLocation.lng
+                                                ? this.state.currentLocation.lng
+                                                : this.state.fields.lng
+                                        }
+                                        metaData="current"
                                     />
-                                )}
-                                <Marker
-                                    lat={
-                                        this.state.currentLocation.lat
-                                            ? this.state.currentLocation.lat
-                                            : this.state.fields.lat
-                                    }
-                                    lng={
-                                        this.state.currentLocation.lng
-                                            ? this.state.currentLocation.lng
-                                            : this.state.fields.lng
-                                    }
-                                    metaData="current"
-                                />
-                                <Marker
-                                    lat={
-                                        this.state.boardingPoint.lat
-                                            ? this.state.boardingPoint.lat
-                                            : this.state.currentLocation.lat
-                                    }
-                                    lng={
-                                        this.state.boardingPoint.lng
-                                            ? this.state.boardingPoint.lng
-                                            : this.state.currentLocation.lng
-                                    }
-                                    metaData="board"
-                                />
+                                    <Marker
+                                        lat={
+                                            this.state.boardingPoint.lat
+                                                ? this.state.boardingPoint.lat
+                                                : this.state.currentLocation.lat
+                                        }
+                                        lng={
+                                            this.state.boardingPoint.lng
+                                                ? this.state.boardingPoint.lng
+                                                : this.state.currentLocation.lng
+                                        }
+                                        metaData="board"
+                                    />
 
-                                {this.state.allDrivers &&
-                                    this.state.allDrivers.length &&
-                                    this.state.allDrivers.map((e, i) => {
-                                        return (
-                                            <Marker
-                                                lat={e.currentLocation[1]}
-                                                lng={e.currentLocation[0]}
-                                                metaData="cartop"
-                                                deg={e.heading}
-                                                key={i}
-                                            />
-                                        );
-                                    })}
-                            </GoogleMapReact>
-                        )}
-                    </div>
+                                    {this.state.allDrivers &&
+                                        this.state.allDrivers.length &&
+                                        this.state.allDrivers.map((e, i) => {
+                                            return (
+                                                <Marker
+                                                    lat={e.currentLocation[1]}
+                                                    lng={e.currentLocation[0]}
+                                                    metaData="cartop"
+                                                    deg={e.heading}
+                                                    key={i}
+                                                />
+                                            );
+                                        })}
+                                </GoogleMapReact>
+                            )}
+                        </div>
+                    )}
                 </Fragment>
                 {this.state.redirectToCurrentBooking && (
                     <Redirect to="/app/currentBooking" />

@@ -13,6 +13,7 @@ import "../../../../node_modules/react-accessible-accordion/dist/fancy-example.c
 import "./Rides_client.scss";
 import { Meteor } from "meteor/meteor";
 import localizationManager from "../../localization";
+import CarLoader from "../../components/CarLoader/CarLoader";
 
 export default class Rides extends Component {
     state = {
