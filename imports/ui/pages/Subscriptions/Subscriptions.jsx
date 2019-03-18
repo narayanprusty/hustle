@@ -445,10 +445,7 @@ class Subscriptions extends Component {
                                         </b>
                                     </div>
                                     <div>
-                                        {
-                                            this.state.subscriptionPlan
-                                                .description
-                                        }
+                                        {this.state.subscriptionPlan.desDetails}
                                     </div>
                                 </li>
                             </ul>

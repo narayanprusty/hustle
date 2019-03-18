@@ -136,6 +136,7 @@ let strings = new LocalizedStrings({
         after: "After",
         days: "days",
         description: "Description",
+        desDetails: "with this subscription partners can accept rides",
         callSupport: "Call Support",
         others: "Others",
         driverMode: "Partner Mode",
@@ -295,7 +296,7 @@ let strings = new LocalizedStrings({
         unexpectedError: "تسجيل الخروج",
         unabbleToReSubscribe: "تسجيل الخروج",
         reSubscribed: "تسجيل الخروج",
-        cancelSubscription: "تسجيل الخروج",
+        cancelSubscription: "إلغاءالاشتراك",
         reSubscribe: "تسجيل الخروج",
         newMessage: "تسجيل الخروج",
         failedToUpdateReview: "تسجيل الخروج",
@@ -317,8 +318,8 @@ let strings = new LocalizedStrings({
         sos: "تسجيل الخروج",
         unableToFetchDriverDetails: "تسجيل الخروج",
         accept: "تسجيل الخروج",
-        rideRequests: "تسجيل الخروج",
-        noRequests: "تسجيل الخروج",
+        rideRequests: "المشاويرالمطلوبة",
+        noRequests: "يوجدطلباتقريبة",
         unknownError: "تسجيل الخروج",
         ongoingBooking: "تسجيل الخروج",
         from: "تسجيل الخروج",
@@ -369,7 +370,7 @@ let strings = new LocalizedStrings({
         price: "السعر",
         renewable: "قابل للتجديد",
         after: "بعد",
-        days: "ايام",
+        days: "يوم",
         description: "الوصف",
         callSupport: "الاتصال بالدعم",
         others: "اخرى",
@@ -468,7 +469,8 @@ let strings = new LocalizedStrings({
         userType: "user type",
         edit: "تعديل",
         editInfo: "تعديل المعلومات",
-        update: "تحديث"
+        update: "تحديث",
+        desDetails: "معالاشتراكيمكنللشركاءاستقبالالمشاوير"
     }
 });
 
