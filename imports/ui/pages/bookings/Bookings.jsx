@@ -114,7 +114,6 @@ class Bookings extends Component {
         boardingPlace: {},
         carType: "Micro",
         boardsearch: "",
-        boardvalue: "",
         dropsearch: "",
         dropvalue: ""
     };
@@ -710,6 +709,10 @@ class Bookings extends Component {
                                         <input
                                             type="text"
                                             name="boardingPointInput"
+                                            defaultValue={
+                                                this.state.boardingPlace
+                                                    .formatted_address
+                                            }
                                             value={this.state.boardvalue}
                                             placeholder={
                                                 localizationManager.strings
