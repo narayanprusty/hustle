@@ -51,6 +51,7 @@ const sendPushNotification = (title, text, userId) => {
     Push.send({
         from: "hustle",
         title,
+        icon: "android_mdpi",
         text,
         sound: "default",
         query: query,
