@@ -3,7 +3,7 @@ import React, { Component, Fragment } from "react";
 export default class CarLoader extends Component {
     render() {
         return (
-            <div className="loader" key={0}>
+            <div className="loader" key={0} style={{ overflow: "hidden" }}>
                 <svg
                     className="car"
                     width="102"
