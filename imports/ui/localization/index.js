@@ -28,7 +28,8 @@ let strings = new LocalizedStrings({
         Dyna: "Dyna",
         Taxi: "Taxi",
         // old strings
-        welcomeMessage: "Thank you for subscribing dear partner. Good things come to those who Hustle like you!",
+        welcomeMessage:
+            "Thank you for subscribing dear partner. Good things come to those who Hustle like you!",
         myCards: "My Cards",
         addCards: "Add Card",
         addNewCard: "Add new card",
@@ -226,7 +227,10 @@ let strings = new LocalizedStrings({
         redirectionToLogin:
             "If not redirected in 5 seconds, <Link to='/login'>Click here to login</Link>",
         //for text direction (don`t change)
-        textDirection: "ltr"
+        textDirection: "ltr",
+        dlog: "Delivery Of Goods",
+
+        tAction: "Take action"
     },
     ar: {
         wallet: "Wallet",
@@ -384,8 +388,7 @@ let strings = new LocalizedStrings({
         bookingID: "هوية الحجز",
         paymentReceived: "تم أستلام المبلغ",
         rideNotFinished: "لالمشوار لم ينتهي بعد",
-        verifyYourEmailAddress:
-            "زر الرابط التالي للتحقق من بريدك الألكتروني",
+        verifyYourEmailAddress: "زر الرابط التالي للتحقق من بريدك الألكتروني",
         confirm: "تأكيد",
         on: "علي",
         enterLocation: "ادخل موقعك",
@@ -409,12 +412,14 @@ let strings = new LocalizedStrings({
             "انتظر اقرب سائق لقبول طلب رحلتك",
         driverAcceptedYourRideRequest: "قبل السائق طلب مشوارك",
         unableToFetchDriversNearby: "غير قادر للصول علي سائق قريب",
-        unableToFetchYourCurrentLocation: "غير قادر علي الحصول علي موقعك الحالي",
+        unableToFetchYourCurrentLocation:
+            "غير قادر علي الحصول علي موقعك الحالي",
         directionsRequestFailedDueTo: "فشل طلب الاتجاه بسسب",
         unableToCreateRequest: "غير قادر علي الطلب",
         unableToCancelRequest: "غير قادر علي الغاء الطلب",
         unableToMarkPaymentForTheRide: "غير قادر علي دفع قيمة المشوار",
-        emailVeried: "تهانينا ،تم  التحقق من ايميلك.سوف توجه أليا الي صفحة الدخول خلال 5 ثوان . اخر <a href='/login'>  اضغط هنا  </a>",
+        emailVeried:
+            "تهانينا ،تم  التحقق من ايميلك.سوف توجه أليا الي صفحة الدخول خلال 5 ثوان . اخر <a href='/login'>  اضغط هنا  </a>",
         linkExpired:
             "هوية البريد الإلكتروني غير مرتبة او انتهت صلاحية الرابط. من فضلك حاول مجددا...",
         waitForValidation: "انتظر التحقق من صلاحية البريد الالكتروني",
@@ -448,7 +453,9 @@ let strings = new LocalizedStrings({
         redirectionToLogin:
             "إن لم يكن إعادة توجيه في 5 ثوان, <Link to='/login'>اضغط هنا للدخولn</Link>",
         //for text direction (don`t change)
-        textDirection: "rtl"
+        textDirection: "rtl",
+        dlog: "توصيل البضائع",
+        tAction: "إتخاذ الإجراء"
     }
 });
 

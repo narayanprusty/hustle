@@ -883,7 +883,12 @@ class Bookings extends Component {
                                                         : false
                                                 }
                                             >
-                                                <optgroup label="Ride">
+                                                <optgroup
+                                                    label={
+                                                        localizationManager
+                                                            .strings.Ride
+                                                    }
+                                                >
                                                     {cartTypes.map(
                                                         (cars, i) => {
                                                             if (
@@ -912,7 +917,12 @@ class Bookings extends Component {
                                                         }
                                                     )}
                                                 </optgroup>
-                                                <optgroup label="Delivery Of Goods">
+                                                <optgroup
+                                                    label={
+                                                        localizationManager
+                                                            .strings.dlog
+                                                    }
+                                                >
                                                     {cartTypes.map(
                                                         (cars, i) => {
                                                             if (

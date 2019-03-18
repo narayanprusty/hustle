@@ -230,7 +230,10 @@ class DriverRideHistory extends Component {
                                                 data-spinner-color="#ddd"
                                                 data-spinner-lines={12}
                                             >
-                                                Take action{" "}
+                                                {
+                                                    localizationManager.strings
+                                                        .tAction
+                                                }{" "}
                                                 <i
                                                     className="fa fa-arrow-right"
                                                     aria-hidden="true"
