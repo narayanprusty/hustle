@@ -54,7 +54,11 @@ class RidePayment extends Component {
                 this.props.history.push("/app/driver/newreqs");
             } else {
                 if (response.data && !response.message) {
-                    this.setState({ booking: response.data });
+                    this.setState({
+                        booking: response.data,
+                        amountReceived: response.data.totalFare
+                    });
+
                     if (response.data.paymentStatus == "completed") {
                         this.setState({
                             paymentDone: true
