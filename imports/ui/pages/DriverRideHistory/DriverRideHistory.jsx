@@ -1,4 +1,6 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+
 import { notify } from "react-notify-toast";
 import InfiniteScroll from "react-infinite-scroller";
 import moment from "moment";
@@ -15,8 +17,9 @@ import "../../../../node_modules/react-accessible-accordion/dist/fancy-example.c
 import "./DriverRideHistory_client.scss";
 import { Meteor } from "meteor/meteor";
 import CarLoader from "../../components/CarLoader/CarLoader";
+import LaddaButton, { S, SLIDE_UP } from "react-ladda";
 
-export default class DriverRideHistory extends Component {
+class DriverRideHistory extends Component {
     state = {
         datas: [],
         hasMoreItems: true
@@ -31,7 +34,9 @@ export default class DriverRideHistory extends Component {
                 if (error) {
                     //Add localization support
                     notify.show(
-                        error.reason ? error.reason : localizationManager.strings.unableToFetch,
+                        error.reason
+                            ? error.reason
+                            : localizationManager.strings.unableToFetch,
                         "error"
                     );
                 }
@@ -50,6 +55,20 @@ export default class DriverRideHistory extends Component {
             }
         );
     };
+
+    action = bookingId => {
+        this.setState({
+            actioned: true
+        });
+        try {
+            this.props.history.push("/app/driver/ride/payment/" + bookingId);
+        } catch (error) {
+            this.setState({
+                actioned: false
+            });
+        }
+    };
+
     render() {
         const loader = <CarLoader />;
 
@@ -66,7 +85,7 @@ export default class DriverRideHistory extends Component {
             } else if (data.rideStatus == "finished") {
                 status = "/images/completed.png";
             } else if (data.rideStatus == "cancelled") {
-                status = "/images/cancelled.png"
+                status = "/images/cancelled.png";
             }
             items.push(
                 <div
@@ -95,7 +114,13 @@ export default class DriverRideHistory extends Component {
                                         style={{ whiteSpace: "normal" }}
                                     >
                                         <div style={{ marginBottom: "10px" }}>
-                                            <b>{localizationManager.strings.bookingID}:</b>
+                                            <b>
+                                                {
+                                                    localizationManager.strings
+                                                        .bookingID
+                                                }
+                                                :
+                                            </b>
                                         </div>
                                         <div>#{data.uniqueIdentifier}</div>
                                     </li>
@@ -104,7 +129,13 @@ export default class DriverRideHistory extends Component {
                                         style={{ whiteSpace: "normal" }}
                                     >
                                         <div style={{ marginBottom: "10px" }}>
-                                            <b>{localizationManager.strings.boardingPoint}:</b>
+                                            <b>
+                                                {
+                                                    localizationManager.strings
+                                                        .boardingPoint
+                                                }
+                                                :
+                                            </b>
                                         </div>
                                         <div>{data.start_address}</div>
                                     </li>
@@ -113,34 +144,99 @@ export default class DriverRideHistory extends Component {
                                         style={{ whiteSpace: "normal" }}
                                     >
                                         <div style={{ marginBottom: "10px" }}>
-                                            <b>{localizationManager.strings.droppingPoint}:</b>
+                                            <b>
+                                                {
+                                                    localizationManager.strings
+                                                        .droppingPoint
+                                                }
+                                                :
+                                            </b>
                                         </div>
                                         <div>{data.end_address}</div>
                                     </li>
                                     <li className="item">
                                         <div style={{ marginBottom: "10px" }}>
-                                            <b>{localizationManager.strings.duration}:</b>
+                                            <b>
+                                                {
+                                                    localizationManager.strings
+                                                        .duration
+                                                }
+                                                :
+                                            </b>
                                         </div>
                                         <div>{data.time_shown}</div>
                                     </li>
                                     <li className="item">
                                         <div style={{ marginBottom: "10px" }}>
-                                            <b>{localizationManager.strings.paymentMethod}:</b>
+                                            <b>
+                                                {
+                                                    localizationManager.strings
+                                                        .paymentMethod
+                                                }
+                                                :
+                                            </b>
                                         </div>
-                                        <div>{localizationManager.strings[data.paymentMethod]}</div>
+                                        <div>
+                                            {
+                                                localizationManager.strings[
+                                                    data.paymentMethod
+                                                ]
+                                            }
+                                        </div>
                                     </li>
                                     <li className="item">
                                         <div style={{ marginBottom: "10px" }}>
-                                            <b>{localizationManager.strings.paymentStatus}:</b>
+                                            <b>
+                                                {
+                                                    localizationManager.strings
+                                                        .paymentStatus
+                                                }
+                                                :
+                                            </b>
                                         </div>
-                                        <div>{localizationManager.strings[data.paymentStatus]}</div>
+                                        <div>
+                                            {
+                                                localizationManager.strings[
+                                                    data.paymentStatus
+                                                ]
+                                            }
+                                        </div>
                                     </li>
                                     <li className="item">
                                         <div style={{ marginBottom: "10px" }}>
-                                            <b>{localizationManager.strings.totalDistance}: </b>
+                                            <b>
+                                                {
+                                                    localizationManager.strings
+                                                        .totalDistance
+                                                }
+                                                :{" "}
+                                            </b>
                                         </div>
                                         <div>{data.totalDistance / 1000}KM</div>
                                     </li>
+                                    {data.paymentMethod == "cash" &&
+                                        data.paymentStatus != "completed" && (
+                                            <LaddaButton
+                                                className="button button-block button-energized activated"
+                                                loading={this.state.actioned}
+                                                onClick={this.action.bind(
+                                                    this,
+                                                    data.uniqueIdentifier
+                                                )}
+                                                data-color="##FFFF00"
+                                                data-size={S}
+                                                data-style={SLIDE_UP}
+                                                data-spinner-size={30}
+                                                data-spinner-color="#ddd"
+                                                data-spinner-lines={12}
+                                            >
+                                                Take action{" "}
+                                                <i
+                                                    className="fa fa-arrow-right"
+                                                    aria-hidden="true"
+                                                />
+                                            </LaddaButton>
+                                        )}
                                 </ul>
                             </div>
                         </AccordionItemBody>
@@ -157,9 +253,14 @@ export default class DriverRideHistory extends Component {
                 loader={loader}
                 useWindow={false}
             >
-                <div className="padding-top padding-right padding-left padding-bottom" style={{direction: localizationManager.strings.textDirection}}>
+                <div
+                    className="padding-top padding-right padding-left padding-bottom"
+                    style={{
+                        direction: localizationManager.strings.textDirection
+                    }}
+                >
                     <h3 className="padding">
-                        <i className="fa fa-road" aria-hidden="true" /> 
+                        <i className="fa fa-road" aria-hidden="true" />
                         {localizationManager.strings.yourRides}
                     </h3>
                     <Accordion>{items}</Accordion>
@@ -168,3 +269,4 @@ export default class DriverRideHistory extends Component {
         );
     }
 }
+export default withRouter(DriverRideHistory);
