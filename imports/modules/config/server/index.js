@@ -84,5 +84,6 @@ module.exports = {
     PUBNUB: defaults.PUBNUB,
     AWS: defaults.AWS,
     PUSH_NOTIF: defaults.PUSH_NOTIF,
+    MAX_DISTANCE_FOR_AVAIL: defaults.MAX_DISTANCE_FOR_AVAIL,
     env: getEnv()
 };

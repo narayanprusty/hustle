@@ -627,7 +627,7 @@ const fetchBookingReq = async ({ lat, lng, carType, page }) => {
                             coordinates: [lng, lat]
                         },
                         distanceField: "boardingPoint",
-                        maxDistance: 5000, //in meter
+                        maxDistance: config.MAX_DISTANCE_FOR_AVAIL * 1000, //in meter we have to pass
                         distanceMultiplier: 0.000621371,
                         includeLocs: "boardingPoint",
                         spherical: true,
