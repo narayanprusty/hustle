@@ -12,7 +12,8 @@ const riderDetails = async userId => {
         avgUserRating: riderProfile.profile
             ? riderProfile.profile.avgRating
             : "0",
-        avatar: riderProfile.profile.avatar
+        avatar: riderProfile.profile.avatar,
+        riderEmail: riderProfile.profile ? riderProfile.profile.email : null
     };
     return dataToSend;
 };

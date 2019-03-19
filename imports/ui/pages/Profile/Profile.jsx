@@ -32,7 +32,10 @@ class Profile extends Component {
                                 "error"
                             );
                         }
-                        this.setState(driverData);
+                        this.setState({
+                            ...driverData,
+                            riderEmail: data.riderEmail
+                        });
                     }
                 );
             } else {
@@ -44,9 +47,10 @@ class Profile extends Component {
     handleClickAction = () => {
         this.setState({ update_loader: true });
         Meteor.call(
-            "changeName",
+            "changeNameAndEmail",
             Meteor.userId(),
             this.state.name,
+            this.state.riderEmail,
             (err, data) => {
                 if (err) {
                     this.setState({ update_loader: false });
@@ -250,6 +254,17 @@ class Profile extends Component {
                                 {this.state.phone || "Loading..."}
                             </span>
                         </div>
+                        <div className="item item-icon-left">
+                            <i className="icon fa fa-at" aria-hidden="true" />{" "}
+                            {localizationManager.strings.email}
+                            <span className="item-note">
+                                {this.state.riderEmail
+                                    ? this.state.riderEmail
+                                    : this.state.riderEmail == null
+                                    ? "-"
+                                    : "Loading..."}
+                            </span>
+                        </div>
                         {this.isDriver && (
                             <div className="item item-icon-left">
                                 <i
@@ -373,6 +388,24 @@ class Profile extends Component {
                                     name={this.state.name_input}
                                     placeholder={this.state.placeholder}
                                     defaultValue={this.state.value}
+                                    onChange={e => {
+                                        if (e.target.value.length > 0) {
+                                            this.setState({
+                                                [e.target.name]: e.target.value
+                                            });
+                                        }
+                                    }}
+                                />
+                            </label>
+                            <label className="item item-input item-stacked-label">
+                                <span className="input-label">
+                                    {localizationManager.strings.email}
+                                </span>
+                                <input
+                                    type="text"
+                                    name="riderEmail"
+                                    placeholder="User Email"
+                                    defaultValue={this.state.riderEmail}
                                     onChange={e => {
                                         if (e.target.value.length > 0) {
                                             this.setState({

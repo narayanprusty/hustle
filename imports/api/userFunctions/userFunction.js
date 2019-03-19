@@ -73,14 +73,15 @@ const getUserProfile = () => {
     return { ...userProfile.profile, id: Meteor.userId() };
 };
 
-const changeName = (userId, newName) => {
+const changeNameAndEmail = (userId, newName, newEmail) => {
     Meteor.users.update(
         {
             _id: userId
         },
         {
             $set: {
-                "profile.name": newName
+                "profile.name": newName,
+                "profile.email": newEmail
             }
         }
     );
@@ -112,4 +113,4 @@ const uploadeFile = (fileBase, fileName) => {
         });
 };
 
-export { triggerSos, getUserProfile, changeName, uploadeFile };
+export { triggerSos, getUserProfile, changeNameAndEmail, uploadeFile };

@@ -239,7 +239,8 @@ let strings = new LocalizedStrings({
         editInfo: "Edit Info",
         update: "Update",
         balance: "Balance",
-        profile: "Profile"
+        profile: "Profile",
+        email: "Email"
     },
     ar: {
         profile: "الملف الشخصي",
@@ -474,7 +475,8 @@ let strings = new LocalizedStrings({
         edit: "تعديل",
         editInfo: "تعديل المعلومات",
         update: "تحديث",
-        desDetails: "معالاشتراكيمكنللشركاءاستقبالالمشاوير"
+        desDetails: "معالاشتراكيمكنللشركاءاستقبالالمشاوير",
+        email: "Email"
     }
 });
 

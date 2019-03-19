@@ -1,10 +1,10 @@
 import {
     triggerSos,
     getUserProfile,
-    changeName,
+    changeNameAndEmail,
     uploadeFile
 } from "./userFunction";
 import { Meteor } from "meteor/meteor";
-Meteor.methods({ triggerSos, getUserProfile, changeName, uploadeFile });
+Meteor.methods({ triggerSos, getUserProfile, changeNameAndEmail, uploadeFile });
 
 export {};
