@@ -42,7 +42,8 @@ const newBookingReq = async ({
     end_address,
     start_address,
     distance_in_meter,
-    totalFare
+    totalFare,
+    governmentFee
 }) => {
     const username = Meteor.user().profile.name;
     const avgRating = Meteor.user().profile.avgRating
@@ -77,7 +78,8 @@ const newBookingReq = async ({
         usersLatLng_bookingTime: JSON.stringify(currentLocation),
         time_shown_reachAfterIfTraffic: reachAfterIfTraffic,
         total_time_in_sec: timeTaken_in_secoend,
-        timeTakenTraffic_in_secoend: timeTakenTraffic_in_secoend
+        timeTakenTraffic_in_secoend: timeTakenTraffic_in_secoend,
+        governmentFee: governmentFee
     };
 
     //create booking general assets
@@ -912,7 +914,8 @@ const calculateApproxBookingPrice = async (
                 console.log("5. retVal = Round", retVal);
                 return {
                     success: true,
-                    price: retVal
+                    price: retVal,
+                    governmentFee: config.governmentFee
                 };
             } else {
                 console.log("Dynamic config not found!");
@@ -1110,7 +1113,8 @@ const calculateFinalBookingPrice = async (
                 console.log("Final retVal", retVal);
                 return {
                     success: true,
-                    price: retVal
+                    price: retVal,
+                    governmentFee: config.governmentFee
                 };
             } else {
                 console.log("Dynamic config not found!");
