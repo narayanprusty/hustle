@@ -453,7 +453,8 @@ class Bookings extends Component {
                 }
                 if (priceData.price) {
                     this.setState({
-                        totalFare: priceData.price
+                        totalFare: priceData.price,
+                        governmentFee: priceData.governmentFee
                     });
                 } else {
                     console.log(priceData);
@@ -603,7 +604,8 @@ class Bookings extends Component {
             end_address: this.state.end_address,
             start_address: this.state.start_address,
             distance_in_meter: this.state.distance_in_meter,
-            totalFare: this.state.totalFare
+            totalFare: this.state.totalFare,
+            governmentFee: this.state.governmentFee
         };
         Meteor.call("newBookingReq", data, (error, response) => {
             if (error) {
