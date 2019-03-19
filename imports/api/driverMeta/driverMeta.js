@@ -202,9 +202,13 @@ const iterateOverDrivers = () => {
             .fetch()[0];
         //send mail function to be called here with above data and send mail to
         //driverDoc.driverEmail
-        let finalHTML;
         let emailSub;
-        const LangPref = Meteor.user().profile.langPref || "en";
+        const LangPref = profile.langPref || "en";
+        if (LangPref == "ar") {
+            emailSub = "[HUSTLE] Your monthly report is here";
+        } else {
+            emailSub = "[HUSTLE] Your monthly report is here";
+        }
         const ejsTemplate = await getEJSTemplate({
             fileName: "email-driver-monthly-report-" + LangPref + ".ejs"
         });

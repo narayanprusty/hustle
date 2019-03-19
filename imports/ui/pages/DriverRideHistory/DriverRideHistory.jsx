@@ -4,6 +4,8 @@ import { withRouter } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import InfiniteScroll from "react-infinite-scroller";
 import moment from "moment";
+import "moment/locale/ar";
+
 import localizationManager from "../../localization";
 
 import {
@@ -101,7 +103,11 @@ class DriverRideHistory extends Component {
                                 <h2>{data.totalFare + " " + data.fareUnit}</h2>
                                 <p>
                                     {data.createdAt
-                                        ? moment(data.createdAt).format("LLL")
+                                        ? moment(data.createdAt)
+                                              .locale(
+                                                  localizationManager.getLanguage()
+                                              )
+                                              .format("LLL")
                                         : "-"}
                                 </p>
                             </div>

@@ -4,6 +4,8 @@ import { notify } from "react-notify-toast";
 import "../../../../../node_modules/react-accessible-accordion/dist/fancy-example.css";
 import { Meteor } from "meteor/meteor";
 import moment from "moment";
+import "moment/locale/ar";
+
 import LaddaButton, { S, SLIDE_UP } from "react-ladda";
 import localizationManager from "../../../localization";
 
@@ -190,9 +192,11 @@ class RidePayment extends Component {
                                 </h2>
                                 <p>
                                     {this.state.booking.createdAt
-                                        ? moment(
-                                              this.state.booking.createdAt
-                                          ).format("LLL")
+                                        ? moment(this.state.booking.createdAt)
+                                              .locale(
+                                                  localizationManager.getLanguage()
+                                              )
+                                              .format("LLL")
                                         : "-"}
                                 </p>
                             </div>

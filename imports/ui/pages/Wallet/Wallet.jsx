@@ -5,6 +5,8 @@ import { notify } from "react-notify-toast";
 import LaddaButton, { S, SLIDE_UP } from "react-ladda";
 import localizationManager from "../../localization";
 import moment from "moment";
+import "moment/locale/ar";
+
 import CarLoader from "../../components/CarLoader/CarLoader";
 
 class Wallet extends Component {
@@ -138,7 +140,11 @@ class Wallet extends Component {
                                                           new Date(
                                                               txn.timestamp
                                                           )
-                                                      ).fromNow()}
+                                                      )
+                                                          .locale(
+                                                              localizationManager.getLanguage()
+                                                          )
+                                                          .fromNow()}
                                                   </div>
                                               </li>
                                           );
