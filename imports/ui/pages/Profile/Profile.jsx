@@ -149,13 +149,13 @@ class Profile extends Component {
             <div
                 className=""
                 style={{
-                    height: "100%",
-                    direction: localizationManager.strings.textDirection
+                    height: "100%"
                 }}
             >
                 <div className="padding">
                     <h3 className="padding">
-                        <i className="fa fa-user" aria-hidden="true" /> Profile
+                        <i className="fa fa-user" aria-hidden="true" />{" "}
+                        {localizationManager.strings.profile}
                     </h3>
                 </div>
 

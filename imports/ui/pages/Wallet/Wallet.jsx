@@ -86,7 +86,7 @@ class Wallet extends Component {
                                         marginBottom: "0px"
                                     }}
                                 >
-                                    Balance:
+                                    {localizationManager.strings.balance}:
                                 </h4>
                                 <h2
                                     style={{
