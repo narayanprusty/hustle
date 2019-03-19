@@ -910,6 +910,7 @@ const calculateApproxBookingPrice = async (
                 console.log("3. retVal += surge", retVal);
                 retVal = retVal < minimumFare ? minimumFare : retVal;
                 console.log("4. retVal = >minimum?", retVal);
+                retVal += parseFloat(config.governmentFee ? config.governmentFee.toString() : 0);
                 retVal = Math.round(retVal);
                 console.log("5. retVal = Round", retVal);
                 return {
@@ -1102,14 +1103,21 @@ const calculateFinalBookingPrice = async (
                 retValKM = retValKM * (1 + surge / 100);
                 console.log("3. retValKM =+ surge", retValKM);
                 retValKM = retValKM < minimumFare ? minimumFare : retValKM;
+
+                retValKM += parseFloat(config.governmentFee ? config.governmentFee.toString() : 0);
+
                 console.log("4. retValKM = >minimumFare", retValKM);
                 let retValMin = basePrice;
                 retValMin =
                     parseFloat(retValMin) + parseFloat(duration * perMin);
                 retValMin = retValMin * (1 + surge / 100);
                 retValMin = retValMin < minimumFare ? minimumFare : retValMin;
+
+                retValMin += parseFloat(config.governmentFee ? config.governmentFee.toString() : 0);
+
                 console.log("5. retVal Min = >minimumFare", retValMin);
                 let retVal = retValKM > retValMin ? retValKM : retValMin;
+                retVal = Math.round(retVal);
                 console.log("Final retVal", retVal);
                 return {
                     success: true,
