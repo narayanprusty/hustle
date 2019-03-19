@@ -2,6 +2,7 @@ import { DriverMeta } from "../../collections/driver-meta";
 import { getDriverBookingData } from "../bookings/booking";
 import { sendEmail } from "../emails/email-sender";
 import moment from "moment";
+import { getEJSTemplate } from "../../modules/helpers/server";
 
 const markAvailable = driverId => {
     return DriverMeta.update(
@@ -204,36 +205,22 @@ const iterateOverDrivers = () => {
         let finalHTML;
         let emailSub;
         const LangPref = Meteor.user().profile.langPref || "en";
-        if (LangPref == "ar") {
-            //add arabic transtaltion here
-            emailSub = `[HUSTLE] Monthly report`;
-            finalHTML = `
-        <div>
-        Cash Earnins: ${earningsInCash}<br />
-        Earnings Non-Cash: ${earningsOnline}<br/>
-       Total: ${totalEarnings}<br/>
-       total time spent on ride:  ${totalTimeOnRide / 60} minutes<br/>
-        total disatbnce covered in ride: ${totalDistanceOnRide / 1000} KM,
-        total no of ride: ${totalRides}
-        </div>
-        `;
-        } else {
-            emailSub = `[HUSTLE] Monthly report`;
-            finalHTML = `
-        <div>
-        Cash Earnins: ${earningsInCash}<br />
-        Earnings Non-Cash: ${earningsOnline}<br/>
-       Total: ${totalEarnings}<br/>
-       total time spent on ride:  ${totalTimeOnRide / 60} minutes<br/>
-        total disatbnce covered in ride: ${totalDistanceOnRide / 1000} KM,
-        total no of ride: ${totalRides}
-        </div>
-        `;
-        }
+        const ejsTemplate = await getEJSTemplate({
+            fileName: "email-driver-monthly-report-" + LangPref + ".ejs"
+        });
+        const finalHTML = ejsTemplate({
+            earningsInCash: earningsInCash,
+            earningsOnline: earningsOnline,
+            totalEarnings: totalEarnings,
+            totalTimeOnRide: totalTimeOnRide / 60, //minute
+            totalDistanceOnRide: totalDistanceOnRide / 1000, //KM
+            totalRides: totalRides
+        });
+
         const emailOptions = {
             from: {
-                email: "saikat.chakrabortty@blockcluster.io",
-                name: "Saikat from Blockcluster"
+                email: "no-reply@hustle.io",
+                name: "Hustle"
             },
             to: driverDoc.driverEmail,
             subject: emailSub,

@@ -5,11 +5,15 @@ import Config from "../../config/server";
 const EmailVerificationTemplate = require("../../template/email-verification");
 const EmailUserReceiptTemplateEn = require("../../template/user-receipt.en");
 const EmailUserReceiptTemplateAr = require("../../template/user-receipt.ar");
+const EmailDriverMonthlyReportEn = require("../../template/driver-monthly-report.en");
+const EmailDriverMonthlyReportAr = require("../../template/driver-monthly-report.ar");
 
 const EJSMapping = {
     "email-verification.ejs": EmailVerificationTemplate,
     "email-receipt-en.ejs": EmailUserReceiptTemplateEn,
-    "email-receipt-ar.ejs": EmailUserReceiptTemplateAr
+    "email-receipt-ar.ejs": EmailUserReceiptTemplateAr,
+    "email-driver-monthly-report-en.ejs": EmailDriverMonthlyReportEn,
+    "email-driver-monthly-report-ar.ejs": EmailDriverMonthlyReportAr
 };
 
 function generateRandomString(placeholder, salt = "hustleThing") {
