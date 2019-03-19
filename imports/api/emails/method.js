@@ -8,6 +8,20 @@ const verificationMessage = async phone => {
     return true;
 };
 
+const verifyNumberAndSendMessage = async phone => {
+    const user = Meteor.users
+        .find({
+            "emails.address": phone.number
+        })
+        .fetch()[0];
+    if (!user) {
+        throw new Meteor.Error("error", "user not found");
+    } else {
+        await sendMessage(phone);
+        return user._id;
+    }
+};
+
 const verifyCode = phone => {
     return verifyPhone(phone)
         .then(data => {
@@ -20,6 +34,7 @@ const verifyCode = phone => {
 
 Meteor.methods({
     verificationMessage: verificationMessage,
-    verifyCode: verifyCode
+    verifyCode: verifyCode,
+    verifyNumberAndSendMessage: verifyNumberAndSendMessage
 });
-export { verificationMessage, verifyCode };
+export { verificationMessage, verifyCode, verifyNumberAndSendMessage };

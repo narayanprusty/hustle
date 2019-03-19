@@ -26,7 +26,7 @@ export default class Login extends Component {
         //if user logged in redirect him/her
         const user = Meteor.userId();
         if (user) {
-          location.href = "/";
+            location.href = "/";
         }
     }
 
@@ -153,7 +153,7 @@ export default class Login extends Component {
                         <div className="col col-60">
                             <button
                                 onClick={() => {
-                                    this.setState({ toRegister: true });
+                                    this.setState({ toForgot: true });
                                 }}
                                 className="button button-block button-light activated"
                             >
@@ -180,6 +180,7 @@ export default class Login extends Component {
 
                 <Notifications />
                 {this.state.toRegister && <Redirect to="/signup" />}
+                {this.state.toForgot && <Redirect to="/forgotPassword" />}
             </div>
         );
     }

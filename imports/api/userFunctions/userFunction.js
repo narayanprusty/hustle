@@ -150,10 +150,21 @@ const sendReceiptEmail = async (
     }
 };
 
+const resetPass = (userId, password) => {
+    Accounts.setPassword(userId, password, error => {
+        if (error) {
+            throw error;
+        } else {
+            return true;
+        }
+    });
+};
+
 export {
     triggerSos,
     getUserProfile,
     changeNameAndEmail,
     uploadeFile,
-    sendReceiptEmail
+    sendReceiptEmail,
+    resetPass
 };

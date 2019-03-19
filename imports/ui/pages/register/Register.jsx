@@ -24,9 +24,9 @@ export default class Register extends Component {
         //if user logged in redirect him/her
         const user = Meteor.userId();
         if (user) {
-            location.href="/";
+            location.href = "/";
         }
-    }
+    };
     sendMessage = e => {
         const phoneParsed = parsePhoneNumberFromString(this.state.phone);
         Meteor.call(
@@ -108,11 +108,15 @@ export default class Register extends Component {
                                     }
                                 } else {
                                     Meteor.call(
-                                        "createWallet", {},
+                                        "createWallet",
+                                        {},
                                         (err, res) => {
                                             if (err) {
                                                 console.log(err);
-                                                notify.show("Failed creating wallet", "error");
+                                                notify.show(
+                                                    "Failed creating wallet",
+                                                    "error"
+                                                );
                                             }
                                             console.log(res);
                                             notify.show(
