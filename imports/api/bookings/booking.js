@@ -11,6 +11,7 @@ import { payUsingWallet } from "../wallet/walletFunctions";
 import { getUserSubscriptions } from "../subscriptions/subscriptions";
 import localization from "../../ui/localization";
 import { sendPushNotification } from "../../modules/helpers/server";
+import { sendReceiptEmail } from "../userFunctions/userFunction";
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
     instanceId: config.BLOCKCLUSTER.instanceId
@@ -326,6 +327,8 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
     booking = booking.length > 0 ? booking[0] : {};
     //Push notification
     sendPushNotification("Ride completed", "Ride has been finished.", userId);
+    //send receipt email
+    sendReceiptEmail(booking, userId, distance, rideDuration, price);
     if (booking) {
         if (booking.paymentMethod != "cash") {
             console.log("Paying using wallet");

@@ -4,12 +4,15 @@ import { driverDetails } from "../details/driver";
 import { getSOSNumbers } from "../sos/sos";
 import { getContacts } from "../EmergencyContact/EmergencyContact";
 import { sendMessage } from "../../Messaging/send_text";
+import { sendEmail } from "../emails/email-sender";
+import { getEJSTemplate } from "../../modules/helpers/server";
 import config from "../../modules/config/server";
 
 const triggerSos = async messageElems => {
     const driver = await driverDetails(messageElems.driverId);
     let message;
     const LangPref = Meteor.user().profile.langPref || "en";
+
     if (LangPref == "ar") {
         //this needs to be changed
         message = `[HUSTLE]\n${
@@ -113,4 +116,44 @@ const uploadeFile = (fileBase, fileName) => {
         });
 };
 
-export { triggerSos, getUserProfile, changeNameAndEmail, uploadeFile };
+const sendReceiptEmail = async (
+    booking,
+    userId,
+    ditanceCovered,
+    timeTaken,
+    totalFare
+) => {
+    const user = Meteor.users.find({ _id: userId }).fetch()[0];
+    if (user && user.profile && user.profile.email) {
+        const LangPref = user.profile.langPref || "en";
+        const ejsTemplate = await getEJSTemplate({
+            fileName: "email-receipt-" + LangPref + ".ejs"
+        });
+        const finalHTML = ejsTemplate({
+            user: userId.profile,
+            ditanceCovered: ditanceCovered,
+            timeTaken: timeTaken,
+            totalFare: totalFare
+        });
+
+        const emailProps = {
+            from: { email: "no-reply@hustle.io", name: "Hustle" },
+            to: user.profile.email,
+            subject: `[HUSTLE] Receipt for your recent ride, booking ${
+                booking.uniqueIdentifier
+            }`,
+            html: finalHTML
+        };
+        return await sendEmail(emailProps);
+    } else {
+        return false;
+    }
+};
+
+export {
+    triggerSos,
+    getUserProfile,
+    changeNameAndEmail,
+    uploadeFile,
+    sendReceiptEmail
+};

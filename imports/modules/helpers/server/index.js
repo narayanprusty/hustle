@@ -3,9 +3,13 @@ import ejs from "ejs";
 import Config from "../../config/server";
 
 const EmailVerificationTemplate = require("../../template/email-verification");
+const EmailUserReceiptTemplateEn = require("../../template/user-receipt.en");
+const EmailUserReceiptTemplateAr = require("../../template/user-receipt.ar");
 
 const EJSMapping = {
-    "email-verification.ejs": EmailVerificationTemplate
+    "email-verification.ejs": EmailVerificationTemplate,
+    "email-receipt-en.ejs": EmailUserReceiptTemplateEn,
+    "email-receipt-ar.ejs": EmailUserReceiptTemplateAr
 };
 
 function generateRandomString(placeholder, salt = "hustleThing") {
