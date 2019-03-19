@@ -77,8 +77,8 @@ export default class BecomeDriver extends Component {
             <div>
                 <div className="padding">
                     <h3 className="padding">
-                        <i className="fa fa-car" aria-hidden="true" /> Become a
-                        driver
+                        <i className="fa fa-car" aria-hidden="true" />{" "}
+                        {localizationManager.strings.becomePartner}
                     </h3>
                 </div>
                 <div className="padding-left padding-right padding-bottom">
@@ -97,7 +97,9 @@ export default class BecomeDriver extends Component {
                             />
                         </label>
                         <label className="item item-input item-stacked-label">
-                            <span className="input-label">Contact</span>
+                            <span className="input-label">
+                                {localizationManager.strings.contact}
+                            </span>
                             <input
                                 type="text"
                                 placeholder="+966-0123456789"
@@ -114,17 +116,17 @@ export default class BecomeDriver extends Component {
                                 type="text"
                                 name="email"
                                 value={this.state.email}
-                                placeholder="name@domain.com"
+                                placeholder="saikatchakrabortty2@gmail.com"
                                 onChange={this.onChangeHandler}
                             />
                         </label>
                         <label className="item item-input item-stacked-label">
                             <span className="input-label">
-                                Driving license number
+                                {localizationManager.strings.dln}
                             </span>
                             <input
                                 type="text"
-                                placeholder="Driving lisence number"
+                                placeholder={localizationManager.strings.dln}
                                 name="licence"
                                 value={this.state.licence}
                                 onChange={this.onChangeHandler}
@@ -170,7 +172,7 @@ export default class BecomeDriver extends Component {
                             className="fa fa-location-arrow"
                             aria-hidden="true"
                         />{" "}
-                        Apply
+                        {localizationManager.strings.apply}
                     </LaddaButton>
                 </div>
             </div>

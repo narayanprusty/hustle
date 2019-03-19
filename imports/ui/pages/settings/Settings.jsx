@@ -43,7 +43,7 @@ export default class Settings extends Component {
     }
 
     logout = () => {
-        localStorage.setItem('driverMode', "");
+        localStorage.setItem("driverMode", "");
         Meteor.logout((err, done) => {
             if (err) {
                 notify.show(err.error, "error");
@@ -171,7 +171,7 @@ export default class Settings extends Component {
                             className="item item-icon-left"
                         >
                             <i className="icon fa fa-car" />
-                            Become a partner
+                            {localizationManager.strings.becomePartner}
                         </Link>
                     )}
 
