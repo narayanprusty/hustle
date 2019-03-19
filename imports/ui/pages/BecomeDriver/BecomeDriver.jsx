@@ -84,7 +84,10 @@ export default class BecomeDriver extends Component {
                 <div className="padding-left padding-right padding-bottom">
                     <div className="list">
                         <label className="item item-input item-stacked-label">
-                            <span className="input-label"> Name</span>
+                            <span className="input-label">
+                                {" "}
+                                {localizationManager.strings.name}
+                            </span>
                             <input
                                 type="text"
                                 name="name"
@@ -104,7 +107,9 @@ export default class BecomeDriver extends Component {
                             />
                         </label>
                         <label className="item item-input item-stacked-label">
-                            <span className="input-label">Email</span>
+                            <span className="input-label">
+                                {localizationManager.strings.email}
+                            </span>
                             <input
                                 type="text"
                                 name="email"
@@ -115,7 +120,7 @@ export default class BecomeDriver extends Component {
                         </label>
                         <label className="item item-input item-stacked-label">
                             <span className="input-label">
-                                Driving licence number
+                                Driving license number
                             </span>
                             <input
                                 type="text"
@@ -125,12 +130,15 @@ export default class BecomeDriver extends Component {
                                 onChange={this.onChangeHandler}
                             />
                         </label>
-                        <label className="item item-input item-stacked-label" style={{
-                            height: '80px'
-                        }}>
+                        <label
+                            className="item item-input item-stacked-label"
+                            style={{
+                                height: "80px"
+                            }}
+                        >
                             <textarea
                                 style={{
-                                    height: '80px'
+                                    height: "80px"
                                 }}
                                 name="msg"
                                 placeholder="Message"
