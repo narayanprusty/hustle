@@ -1,4 +1,3 @@
-
 /*
 emailOptions
 {
@@ -10,20 +9,25 @@ emailOptions
 }
 */
 
-import nodemailer from 'nodemailer';
-import config from '../../modules/config/server'
+import nodemailer from "nodemailer";
+import config from "../../modules/config/server";
 const transporter = nodemailer.createTransport({
-	host: config.SMTP.host,
-	port: 465,
-	secure: true, // true for 465, false for other ports
-	auth: {
-		user: config.SMTP.user, // generated ethereal user
-		pass: config.SMTP.pass // generated ethereal password
-	}
+    host: config.SMTP.host,
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    auth: {
+        user: config.SMTP.user, // generated ethereal user
+        pass: config.SMTP.pass // generated ethereal password
+    }
 });
 
-const sendEmail = async(emailOptions) =>{
-return await transporter.sendMail({textEncoding:'base64',...emailOptions});
+const sendEmail = async emailOptions => {
+    console.log("#In8");
+
+    return await transporter.sendMail({
+        textEncoding: "base64",
+        ...emailOptions
+    });
 };
 
 export { sendEmail };

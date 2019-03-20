@@ -330,7 +330,14 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
     //Push notification
     sendPushNotification("Ride completed", "Ride has been finished.", userId);
     //send receipt email
-    sendReceiptEmail(booking, userId, distance, rideDuration, price);
+    const sendingSTat = await sendReceiptEmail(
+        booking,
+        userId,
+        distance,
+        rideDuration,
+        price
+    );
+    console.log(sendingSTat, ">>>>>>>>>>>>>");
     if (booking) {
         if (booking.paymentMethod != "cash") {
             console.log("Paying using wallet");
@@ -910,7 +917,9 @@ const calculateApproxBookingPrice = async (
                 console.log("3. retVal += surge", retVal);
                 retVal = retVal < minimumFare ? minimumFare : retVal;
                 console.log("4. retVal = >minimum?", retVal);
-                retVal += parseFloat(config.governmentFee ? config.governmentFee.toString() : 0);
+                retVal += parseFloat(
+                    config.governmentFee ? config.governmentFee.toString() : 0
+                );
                 retVal = Math.round(retVal);
                 console.log("5. retVal = Round", retVal);
                 return {
@@ -1104,7 +1113,9 @@ const calculateFinalBookingPrice = async (
                 console.log("3. retValKM =+ surge", retValKM);
                 retValKM = retValKM < minimumFare ? minimumFare : retValKM;
 
-                retValKM += parseFloat(config.governmentFee ? config.governmentFee.toString() : 0);
+                retValKM += parseFloat(
+                    config.governmentFee ? config.governmentFee.toString() : 0
+                );
 
                 console.log("4. retValKM = >minimumFare", retValKM);
                 let retValMin = basePrice;
@@ -1113,7 +1124,9 @@ const calculateFinalBookingPrice = async (
                 retValMin = retValMin * (1 + surge / 100);
                 retValMin = retValMin < minimumFare ? minimumFare : retValMin;
 
-                retValMin += parseFloat(config.governmentFee ? config.governmentFee.toString() : 0);
+                retValMin += parseFloat(
+                    config.governmentFee ? config.governmentFee.toString() : 0
+                );
 
                 console.log("5. retVal Min = >minimumFare", retValMin);
                 let retVal = retValKM > retValMin ? retValKM : retValMin;

@@ -450,6 +450,7 @@ class CurrentBooking extends Component {
             this.state.currentPosition,
             p1,
             this.state.currentPosition,
+            this.state.userId,
             async (error, response) => {
                 if (error) {
                     console.log(error);
@@ -580,7 +581,7 @@ class CurrentBooking extends Component {
                                         stop={5}
                                         emptySymbol="fa fa-star-o fa-2x empty"
                                         fullSymbol="fa fa-star fa-2x full"
-                                        initialRating={this.state.rating}
+                                        initialRating={this.state.avgUserRating}
                                         readonly
                                         style={{
                                             fontSize: "10px"
@@ -750,12 +751,15 @@ class CurrentBooking extends Component {
                             {localizationManager.strings.finishRide}
                         </LaddaButton>
                     )}
-                    {this.state.status == "finished" && this.state.paymentMethod != "cash" && (
-                        <Reviews type="driver" userId={this.state.userId} />
-                    )}
-                    {this.state.status == "finished" && this.state.paymentMethod == "cash" && (
-                        this.props.history.push('/app/driver/ride/payment/'+this.state.bookingId)
-                    )}
+                    {this.state.status == "finished" &&
+                        this.state.paymentMethod != "cash" && (
+                            <Reviews type="driver" userId={this.state.userId} />
+                        )}
+                    {this.state.status == "finished" &&
+                        this.state.paymentMethod == "cash" &&
+                        this.props.history.push(
+                            "/app/driver/ride/payment/" + this.state.bookingId
+                        )}
                     {this.state.status == "accepted" && (
                         <Widget
                             badge={this.state.badge}

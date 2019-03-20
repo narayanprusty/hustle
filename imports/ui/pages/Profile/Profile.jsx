@@ -315,9 +315,7 @@ class Profile extends Component {
                                         stop={5}
                                         emptySymbol="fa fa-star-o fa-2x empty"
                                         fullSymbol="fa fa-star fa-2x full"
-                                        initialRating={Number(
-                                            this.state.avgUserRating
-                                        )}
+                                        initialRating={this.state.avgRating}
                                         readonly
                                         style={{
                                             fontSize: "10px"
@@ -336,7 +334,9 @@ class Profile extends Component {
                                     stop={5}
                                     emptySymbol="fa fa-star-o fa-2x empty"
                                     fullSymbol="fa fa-star fa-2x full"
-                                    initialRating={Number(this.state.avgRating)}
+                                    initialRating={Number(
+                                        this.state.avgUserRating
+                                    )}
                                     readonly
                                     style={{
                                         fontSize: "10px"

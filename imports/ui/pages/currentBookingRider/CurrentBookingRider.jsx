@@ -767,7 +767,10 @@ class CurrentBookingRider extends Component {
                                         />
                                     </div>
                                     <div className="padding-top">
-                                        {localizationManager.strings.thankYouForRiding}
+                                        {
+                                            localizationManager.strings
+                                                .thankYouForRiding
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -821,7 +824,7 @@ class CurrentBookingRider extends Component {
                                             {...this.props}
                                             start={0}
                                             stop={5}
-                                            readonly={true}
+                                            readonly
                                             initialRating={
                                                 this.state.avgRating || 0
                                             }

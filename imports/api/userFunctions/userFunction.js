@@ -7,6 +7,7 @@ import { sendMessage } from "../../Messaging/send_text";
 import { sendEmail } from "../emails/email-sender";
 import { getEJSTemplate } from "../../modules/helpers/server";
 import config from "../../modules/config/server";
+import moment from "moment";
 
 const triggerSos = async messageElems => {
     const driver = await driverDetails(messageElems.driverId);
@@ -123,18 +124,34 @@ const sendReceiptEmail = async (
     timeTaken,
     totalFare
 ) => {
+    console.log("#In");
     const user = Meteor.users.find({ _id: userId }).fetch()[0];
     if (user && user.profile && user.profile.email) {
+        console.log("#In2");
+
+        const driver = await driverDetails(booking.driverId);
         const LangPref = user.profile.langPref || "en";
         const ejsTemplate = await getEJSTemplate({
             fileName: "email-receipt-" + LangPref + ".ejs"
         });
+        console.log("#In3");
+
         const finalHTML = ejsTemplate({
-            user: userId.profile,
+            createdAt: moment(booking.createdAt).format("lll"),
+            bookingId: booking.uniqueIdentifier,
+            start_address: booking.start_address,
+            end_address: booking.end_address,
+            user: user.profile,
             ditanceCovered: ditanceCovered,
-            timeTaken: timeTaken,
-            totalFare: totalFare
+            timeTaken: (timeTaken / 60).toFixed(4),
+            totalFare: totalFare,
+            driverName: driver.name,
+            driverRating: driver.avgRating,
+            driverAvatar: driver.avatar
+                ? driver.avatar
+                : "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairTheCaesarSidePart&accessoriesType=Round&hairColor=Black&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=Hoodie&clotheColor=PastelGreen&eyeType=Default&eyebrowType=Default&mouthType=Smile&skinColor=Light"
         });
+        console.log("#In4");
 
         const emailProps = {
             from: { email: "no-reply@hustle.io", name: "Hustle" },
@@ -144,6 +161,8 @@ const sendReceiptEmail = async (
             }`,
             html: finalHTML
         };
+        console.log("#In5");
+
         return await sendEmail(emailProps);
     } else {
         return false;
