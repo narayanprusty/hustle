@@ -277,7 +277,7 @@ class RidePayment extends Component {
                                         </li>
                                     )}
                                     {!this.state.paymentDone &&
-                                        this.state.booking.cashToBeCollected && (
+                                        this.state.booking.cashToBeCollected != undefined && (
                                             <li
                                                 className="item"
                                                 style={{ whiteSpace: "normal" }}
