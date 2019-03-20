@@ -146,7 +146,9 @@ const sendReceiptEmail = async (
             timeTaken: (timeTaken / 60).toFixed(4),
             totalFare: totalFare,
             driverName: driver.name,
-            driverRating: driver.avgRating,
+            driverRating: driver.avgRating
+                ? driver.avgRating.toFixed(2)
+                : driver.avgRating,
             driverAvatar: driver.avatar
                 ? driver.avatar
                 : "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairTheCaesarSidePart&accessoriesType=Round&hairColor=Black&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=Hoodie&clotheColor=PastelGreen&eyeType=Default&eyebrowType=Default&mouthType=Smile&skinColor=Light"
