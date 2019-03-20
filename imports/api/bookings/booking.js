@@ -415,7 +415,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
 
             console.log("remainingAmount:", finalFare);
 
-            if (finalFare > 0) {
+
                 await BookingRecord.update(
                     {
                         bookingId: bookingId
@@ -440,7 +440,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                         totalFare: price
                     }
                 });
-            }
+            
 
             console.log({
                 totalFare: booking.totalFare,
