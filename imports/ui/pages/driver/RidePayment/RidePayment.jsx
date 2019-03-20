@@ -58,7 +58,9 @@ class RidePayment extends Component {
                 if (response.data && !response.message) {
                     this.setState({
                         booking: response.data,
-                        amountReceived: response.data.totalFare
+                        amountReceived: response.data.cashToBeCollected ? 
+                            response.data.cashToBeCollected :response.data.totalFare,
+                        cashToCollect: response.data.cashToBeCollected
                     });
 
                     if (response.data.paymentStatus == "completed") {
@@ -87,7 +89,8 @@ class RidePayment extends Component {
     paymentReceived = async () => {
         console.log(this.state.rideId);
         this.setState({ loading: true });
-        let fare = parseInt(this.state.booking.totalFare.toString());
+        let fare = this.state.cashToCollect > 0 ? parseInt(this.state.cashToCollect.toString()) 
+        : parseInt(this.state.booking.totalFare.toString());
         if (this.state.amountReceived >= fare) {
             if (this.state.amountReceived > fare) {
                 Meteor.call(
@@ -270,6 +273,27 @@ class RidePayment extends Component {
                                             </div>
                                         </li>
                                     )}
+                                    {!this.state.paymentDone && this.state.cashToCollect && (
+                                        <li
+                                            className="item"
+                                            style={{ whiteSpace: "normal" }}
+                                        >
+                                            <div
+                                                style={{ marginBottom: "10px" }}
+                                            >
+                                                <b>
+                                                    {
+                                                        localizationManager
+                                                            .strings.cashToBeCollected
+                                                    }
+                                                    :
+                                                </b>
+                                            </div>
+                                            <div>
+                                                {this.state.cashToCollect}
+                                            </div>
+                                        </li>
+                                    )}
                                     <li className="item">
                                         <div style={{ marginBottom: "10px" }}>
                                             <b>
@@ -364,11 +388,6 @@ class RidePayment extends Component {
                                                             onChange={this.handleChange.bind(
                                                                 this
                                                             )}
-                                                            defaultValue={
-                                                                this.state
-                                                                    .booking
-                                                                    .totalFare
-                                                            }
                                                             value={
                                                                 this.state
                                                                     .amountReceived

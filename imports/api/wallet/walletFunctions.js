@@ -106,6 +106,8 @@ const payUsingWallet = async (userId, amount, bookingId) => {
             let amountDeducted = 0;
             let balance = parseInt(userWallet.wallet.balance.toString());
 
+            console.log("Wallet balance:", balance, "Amount to pay:", amount);
+
             if (balance >= amount) {
                 console.log("#1.1");
                 balance -= amount;
@@ -139,12 +141,13 @@ const payUsingWallet = async (userId, amount, bookingId) => {
                 }
             });
 
-            console.log("#6");
+            console.log("#6", remainingAmount);
 
             return {
                 success: true,
                 txnId: txId,
-                remainingAmount: remainingAmount
+                remainingAmount: remainingAmount,
+                amountDeducted: amountDeducted
             };
         } else {
             return userWallet;
