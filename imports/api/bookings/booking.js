@@ -862,6 +862,7 @@ const calculateApproxBookingPrice = async (
                         minimumFare = config.basePrice[carType].minimumFare ?
                             config.basePrice[carType].minimumFare :
                             0;
+                        minimumFare = parseFloat(minimumFare.toString());
                         perKM = config.basePrice[carType].perKM ?
                             config.basePrice[carType].perKM :
                             0;
