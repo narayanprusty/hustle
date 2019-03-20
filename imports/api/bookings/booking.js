@@ -2,30 +2,16 @@ import Blockcluster from "blockcluster";
 import rp from "request-promise";
 import moment from "moment";
 
-import {
-    BookingRecord
-} from "../../collections/booking-record";
-import {
-    DriverMeta
-} from "../../collections/driver-meta";
+import { BookingRecord } from "../../collections/booking-record";
+import { DriverMeta } from "../../collections/driver-meta";
 import config from "../../modules/config/server";
 // import { sendMessage } from "../../notifications/index";
-import {
-    oneClickPayment
-} from "../payments/payments";
-import {
-    payUsingWallet
-} from "../wallet/walletFunctions";
-import {
-    getUserSubscriptions
-} from "../subscriptions/subscriptions";
+import { oneClickPayment } from "../payments/payments";
+import { payUsingWallet } from "../wallet/walletFunctions";
+import { getUserSubscriptions } from "../subscriptions/subscriptions";
 import localization from "../../ui/localization";
-import {
-    sendPushNotification
-} from "../../modules/helpers/server";
-import {
-    sendReceiptEmail
-} from "../userFunctions/userFunction";
+import { sendPushNotification } from "../../modules/helpers/server";
+import { sendReceiptEmail } from "../userFunctions/userFunction";
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
     instanceId: config.BLOCKCLUSTER.instanceId
@@ -60,9 +46,9 @@ const newBookingReq = async ({
     governmentFee
 }) => {
     const username = Meteor.user().profile.name;
-    const avgRating = Meteor.user().profile.avgRating ?
-        Meteor.user().profile.avgRating :
-        5;
+    const avgRating = Meteor.user().profile.avgRating
+        ? Meteor.user().profile.avgRating
+        : 5;
     console.log(end_address, start_address);
     const currentDate = Date.now();
     const identifier =
@@ -70,8 +56,8 @@ const newBookingReq = async ({
         Date.now() +
         "" +
         Math.random()
-        .toString()
-        .split(".")[1]; //this is the Booking Id
+            .toString()
+            .split(".")[1]; //this is the Booking Id
     const data = {
         createdAt: currentDate,
         riderName: username,
@@ -111,8 +97,10 @@ const newBookingReq = async ({
     });
 
     BookingRecord.insert({
-        riderPic: Meteor.user().profile && Meteor.user().profile.avatar ?
-            Meteor.user().profile.avatar : null,
+        riderPic:
+            Meteor.user().profile && Meteor.user().profile.avatar
+                ? Meteor.user().profile.avatar
+                : null,
         riderRating: avgRating,
         preferredCar: preferredCar,
         username: username,
@@ -161,14 +149,17 @@ const onCancellation = async (
             cancel_reason: cancel_reason
         }
     });
-    await BookingRecord.update({
-        bookingId: bookingId
-    }, {
-        $set: {
-            active: false,
-            status: "cancelled"
+    await BookingRecord.update(
+        {
+            bookingId: bookingId
+        },
+        {
+            $set: {
+                active: false,
+                status: "cancelled"
+            }
         }
-    });
+    );
     //Push notification
     sendPushNotification(
         "Booking cancelled",
@@ -199,24 +190,30 @@ const onDriverAccept = async (bookingId, driverId, userId) => {
                 driverId: driverId
             }
         });
-        await BookingRecord.update({
-            bookingId: bookingId
-        }, {
-            $set: {
-                driverId: driverId,
-                status: "accepted"
-            }
-        });
-        await DriverMeta.update({
-            driverId: driverId
-        }, {
-            $set: {
-                onRide: true
+        await BookingRecord.update(
+            {
+                bookingId: bookingId
             },
-            $inc: {
-                totalNumberOfRide: 1
+            {
+                $set: {
+                    driverId: driverId,
+                    status: "accepted"
+                }
             }
-        });
+        );
+        await DriverMeta.update(
+            {
+                driverId: driverId
+            },
+            {
+                $set: {
+                    onRide: true
+                },
+                $inc: {
+                    totalNumberOfRide: 1
+                }
+            }
+        );
         //Push notification
         sendPushNotification(
             "Booking accepted by a driver",
@@ -242,14 +239,17 @@ const onStartRide = async (bookingId, startingPoint, userId) => {
             actualStartingPoint: startingPoint
         }
     });
-    await BookingRecord.update({
-        bookingId: bookingId
-    }, {
-        $set: {
-            startedAt: moment().valueOf(),
-            status: "started"
+    await BookingRecord.update(
+        {
+            bookingId: bookingId
+        },
+        {
+            $set: {
+                startedAt: moment().valueOf(),
+                status: "started"
+            }
         }
-    });
+    );
     //Push notification
     sendPushNotification(
         "Ride has been started",
@@ -285,38 +285,44 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
         rideDuration
     );
     let price = 0;
-    if(!priceOp.success){
+    if (!priceOp.success) {
         throw new Meteor.Error(priceOp.message);
     }
     price = priceOp.price;
     console.log("Final Price: " + price);
-    const txId = await node.callAPI("assets/updateAssetInfo", {
-        assetName: config.ASSET.Bookings,
-        fromAccount: node.getWeb3().eth.accounts[0],
-        identifier: bookingId,
-        public: {
-            rideStatus: "finished",
-            actualEndingPoint: endingPoint,
-            rideDuration: rideDuration,
-            totalFare: price
+    // const txId = await node.callAPI("assets/updateAssetInfo", {
+    //     assetName: config.ASSET.Bookings,
+    //     fromAccount: node.getWeb3().eth.accounts[0],
+    //     identifier: bookingId,
+    //     public: {
+    //         rideStatus: "finished",
+    //         actualEndingPoint: endingPoint,
+    //         rideDuration: rideDuration,
+    //         totalFare: price
+    //     }
+    // });
+    await BookingRecord.update(
+        {
+            bookingId: bookingId
+        },
+        {
+            $set: {
+                status: "finished",
+                totalFare: price,
+                active: false
+            }
         }
-    });
-    await BookingRecord.update({
-        bookingId: bookingId
-    }, {
-        $set: {
-            status: "finished",
-            totalFare: price,
-            active: false
+    );
+    await DriverMeta.update(
+        {
+            driverId: driverId
+        },
+        {
+            $set: {
+                onRide: false
+            }
         }
-    });
-    await DriverMeta.update({
-        driverId: driverId
-    }, {
-        $set: {
-            onRide: false
-        }
-    });
+    );
 
     let booking = await node.callAPI("assets/search", {
         $query: {
@@ -349,15 +355,15 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
             ) {
                 console.log(
                     "Paying using card",
-                    walletTxn && walletTxn.success ?
-                    walletTxn.remainingAmount :
-                    booking.totalFare
+                    walletTxn && walletTxn.success
+                        ? walletTxn.remainingAmount
+                        : booking.totalFare
                 );
 
                 var receipt = await oneClickPayment(
-                    walletTxn && walletTxn.success ?
-                    walletTxn.remainingAmount :
-                    booking.totalFare,
+                    walletTxn && walletTxn.success
+                        ? walletTxn.remainingAmount
+                        : booking.totalFare,
                     booking.paymentMethod
                 );
             }
@@ -365,10 +371,10 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
             console.log(receipt);
 
             onConfirmPayment(
-                    bookingId.toString(),
-                    JSON.stringify(receipt),
-                    booking.totalFare
-                )
+                bookingId.toString(),
+                JSON.stringify(receipt),
+                booking.totalFare
+            )
                 .then(res => {
                     console.log(res);
                 })
@@ -376,22 +382,22 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                     console.log(err);
                 });
 
-                await node.callAPI("assets/updateAssetInfo", {
-                    assetName: config.ASSET.Bookings,
-                    fromAccount: node.getWeb3().eth.accounts[0],
-                    identifier: bookingId,
-                    public: {
-                        rideStatus: "finished",
-                        actualEndingPoint: endingPoint,
-                        rideDuration: rideDuration,
-                        totalFare: price
-                    }
-                });
-
-                return {
-                    success: true,
-                    amountDeductedFromWallet: walletTxn.amountDeducted
+            await node.callAPI("assets/updateAssetInfo", {
+                assetName: config.ASSET.Bookings,
+                fromAccount: node.getWeb3().eth.accounts[0],
+                identifier: bookingId,
+                public: {
+                    rideStatus: "finished",
+                    actualEndingPoint: endingPoint,
+                    rideDuration: rideDuration,
+                    totalFare: price
                 }
+            });
+
+            return {
+                success: true,
+                amountDeductedFromWallet: walletTxn.amountDeducted
+            };
         } else {
             var walletTxn = await payUsingWallet(
                 booking.userId,
@@ -401,19 +407,25 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
 
             console.log("done payment with wallet");
 
-            let finalFare = walletTxn ?
-                (walletTxn.remainingAmount ? walletTxn.remainingAmount : 0) : booking.totalFare;
+            let finalFare = walletTxn
+                ? walletTxn.remainingAmount
+                    ? walletTxn.remainingAmount
+                    : 0
+                : booking.totalFare;
 
             console.log("remainingAmount:", finalFare);
 
             if (finalFare > 0) {
-                await BookingRecord.update({
-                    bookingId: bookingId
-                }, {
-                    $set: {
-                        totalFare: finalFare,
+                await BookingRecord.update(
+                    {
+                        bookingId: bookingId
+                    },
+                    {
+                        $set: {
+                            totalFare: finalFare
+                        }
                     }
-                });
+                );
 
                 await node.callAPI("assets/updateAssetInfo", {
                     assetName: config.ASSET.Bookings,
@@ -421,7 +433,11 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                     identifier: bookingId,
                     public: {
                         cashToBeCollected: finalFare,
-                        amountDeductedFromWallet: walletTxn.amountDeducted
+                        amountDeductedFromWallet: walletTxn.amountDeducted,
+                        rideStatus: "finished",
+                        actualEndingPoint: endingPoint,
+                        rideDuration: rideDuration,
+                        totalFare: price
                     }
                 });
             }
@@ -443,10 +459,6 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
             message: localization.strings.unableToGetBooking
         };
     }
-
-    return {
-        txId: txId
-    };
 };
 
 //For online payment after confirmation call this
@@ -480,17 +492,17 @@ const onConfirmPayment = async (
             sendPushNotification(
                 "Payment Successfull",
                 "payment of " +
-                paymentAmount +
-                " against booking #" +
-                bookingId,
+                    paymentAmount +
+                    " against booking #" +
+                    bookingId,
                 userId
             );
             sendPushNotification(
                 "Payment received",
                 "payment received of " +
-                paymentAmount +
-                " against booking #" +
-                bookingId,
+                    paymentAmount +
+                    " against booking #" +
+                    bookingId,
                 Meteor.userId()
             );
             return {
@@ -656,7 +668,7 @@ const paymentReceived = async bookingId => {
     }
 };
 
-const rad = function (x) {
+const rad = function(x) {
     return (x * Math.PI) / 180;
 };
 
@@ -668,9 +680,9 @@ const getDistance = (driverLoc, boardingPoint) => {
     const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(rad(driverLoc.lat())) *
-        Math.cos(rad(boardingPoint.lat())) *
-        Math.sin(dLong / 2) *
-        Math.sin(dLong / 2);
+            Math.cos(rad(boardingPoint.lat())) *
+            Math.sin(dLong / 2) *
+            Math.sin(dLong / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c;
     return d; // d is the distance in meter
@@ -678,15 +690,11 @@ const getDistance = (driverLoc, boardingPoint) => {
 
 //for more exact u can pass mapApi obj from frontend only and do calculation
 //mapApi.geometry.spherical.computeDistanceBetween (latLngA, latLngB); //return values in Meter
-const fetchBookingReq = async ({
-    lat,
-    lng,
-    carType,
-    page
-}) => {
+const fetchBookingReq = async ({ lat, lng, carType, page }) => {
     const data = await BookingRecord.rawCollection()
         .aggregate(
-            [{
+            [
+                {
                     $geoNear: {
                         near: {
                             type: "Point",
@@ -716,7 +724,8 @@ const fetchBookingReq = async ({
                 {
                     $skip: page * 10 - 10
                 }
-            ], {
+            ],
+            {
                 cursor: {
                     batchSize: 0
                 }
@@ -772,17 +781,14 @@ const getDriverBookingData = async (period, driverId) => {
     }
 };
 
-const fetchLocationwithKeyword = ({
-    lat,
-    lng,
-    keyWord
-}) => {
+const fetchLocationwithKeyword = ({ lat, lng, keyWord }) => {
     return rp(
-            `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${keyWord}&location=${lng},${lat}&key=` +
-            config.GAPIKEY, {
-                json: true
-            }
-        )
+        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${keyWord}&location=${lng},${lat}&key=` +
+            config.GAPIKEY,
+        {
+            json: true
+        }
+    )
         .then(data => {
             return data;
         })
@@ -856,16 +862,16 @@ const calculateApproxBookingPrice = async (
                 let surge = 0;
                 if (config.basePrice) {
                     if (config.basePrice[carType]) {
-                        basePrice = config.basePrice[carType].basePrice ?
-                            config.basePrice[carType].basePrice :
-                            0;
-                        minimumFare = config.basePrice[carType].minimumFare ?
-                            config.basePrice[carType].minimumFare :
-                            0;
+                        basePrice = config.basePrice[carType].basePrice
+                            ? config.basePrice[carType].basePrice
+                            : 0;
+                        minimumFare = config.basePrice[carType].minimumFare
+                            ? config.basePrice[carType].minimumFare
+                            : 0;
                         minimumFare = parseFloat(minimumFare.toString());
-                        perKM = config.basePrice[carType].perKM ?
-                            config.basePrice[carType].perKM :
-                            0;
+                        perKM = config.basePrice[carType].perKM
+                            ? config.basePrice[carType].perKM
+                            : 0;
                     }
                 }
                 if (config.dateTime) {
@@ -969,14 +975,16 @@ const calculateApproxBookingPrice = async (
                     parseFloat(retVal) +
                     parseFloat(
                         (distance / 1000) *
-                        (perKM != 0 ? perKM : config.farePerMeter * 1000)
+                            (perKM != 0 ? perKM : config.farePerMeter * 1000)
                     );
                 console.log("2. retVal = distance in KM * perKM", retVal);
                 retVal = retVal * (1 + surge / 100);
                 console.log("3. retVal += surge", retVal);
                 retVal = retVal < minimumFare ? minimumFare : retVal;
                 console.log("4. retVal = >minimum?", retVal);
-                retVal += parseFloat(config.governmentFee ? config.governmentFee.toString() : 0);
+                retVal += parseFloat(
+                    config.governmentFee ? config.governmentFee.toString() : 0
+                );
                 retVal = Math.round(retVal);
                 console.log("5. retVal = Round", retVal);
                 return {
@@ -1014,16 +1022,20 @@ const calculateFinalBookingPrice = async (
     duration
 ) => {
     try {
-        console.log(
-            "Final Pricing", {
-                fromAddress: fromAddress,
-                toAddress: toAddress,
-                distance: distance,
-                carType: carType,
-                duration: duration
-            }
-        );
-        if (!fromAddress || !toAddress || distance == undefined || !carType || !duration) {
+        console.log("Final Pricing", {
+            fromAddress: fromAddress,
+            toAddress: toAddress,
+            distance: distance,
+            carType: carType,
+            duration: duration
+        });
+        if (
+            !fromAddress ||
+            !toAddress ||
+            distance == undefined ||
+            !carType ||
+            !duration
+        ) {
             console.log("Parameter missing");
             return {
                 success: false,
@@ -1051,19 +1063,19 @@ const calculateFinalBookingPrice = async (
                 let surge = 0;
                 if (config.basePrice) {
                     if (config.basePrice[carType]) {
-                        basePrice = config.basePrice[carType].basePrice ?
-                            config.basePrice[carType].basePrice :
-                            0;
-                        minimumFare = config.basePrice[carType].minimumFare ?
-                            config.basePrice[carType].minimumFare :
-                            0;
+                        basePrice = config.basePrice[carType].basePrice
+                            ? config.basePrice[carType].basePrice
+                            : 0;
+                        minimumFare = config.basePrice[carType].minimumFare
+                            ? config.basePrice[carType].minimumFare
+                            : 0;
                         minimumFare = parseFloat(minimumFare.toString());
-                        perKM = config.basePrice[carType].perKM ?
-                            config.basePrice[carType].perKM :
-                            0;
-                        perMin = config.basePrice[carType].perMin ?
-                            config.basePrice[carType].perMin :
-                            0;
+                        perKM = config.basePrice[carType].perKM
+                            ? config.basePrice[carType].perKM
+                            : 0;
+                        perMin = config.basePrice[carType].perMin
+                            ? config.basePrice[carType].perMin
+                            : 0;
                     }
                 }
                 if (config.dateTime) {
@@ -1167,14 +1179,16 @@ const calculateFinalBookingPrice = async (
                     parseFloat(retValKM) +
                     parseFloat(
                         (distance / 1000) *
-                        (perKM != 0 ? perKM : config.farePerMeter * 1000)
+                            (perKM != 0 ? perKM : config.farePerMeter * 1000)
                     );
                 console.log("2. retValKM = distance * perKM", retValKM);
                 retValKM = retValKM * (1 + surge / 100);
                 console.log("3. retValKM =+ surge", retValKM);
                 retValKM = retValKM < minimumFare ? minimumFare : retValKM;
 
-                retValKM += parseFloat(config.governmentFee ? config.governmentFee.toString() : 0);
+                retValKM += parseFloat(
+                    config.governmentFee ? config.governmentFee.toString() : 0
+                );
 
                 console.log("4. retValKM = >minimumFare", retValKM);
                 let retValMin = basePrice;
@@ -1183,7 +1197,9 @@ const calculateFinalBookingPrice = async (
                 retValMin = retValMin * (1 + surge / 100);
                 retValMin = retValMin < minimumFare ? minimumFare : retValMin;
 
-                retValMin += parseFloat(config.governmentFee ? config.governmentFee.toString() : 0);
+                retValMin += parseFloat(
+                    config.governmentFee ? config.governmentFee.toString() : 0
+                );
 
                 console.log("5. retVal Min = >minimumFare", retValMin);
                 let retVal = retValKM > retValMin ? retValKM : retValMin;
