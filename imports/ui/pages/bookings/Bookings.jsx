@@ -1074,32 +1074,42 @@ class Bookings extends Component {
                                             metaData="drop"
                                         />
                                     )}
-                                    <Marker
-                                        lat={
-                                            this.state.currentLocation.lat
-                                                ? this.state.currentLocation.lat
-                                                : this.state.fields.lat
-                                        }
-                                        lng={
-                                            this.state.currentLocation.lng
-                                                ? this.state.currentLocation.lng
-                                                : this.state.fields.lng
-                                        }
-                                        metaData="current"
-                                    />
-                                    <Marker
-                                        lat={
-                                            this.state.boardingPoint.lat
-                                                ? this.state.boardingPoint.lat
-                                                : this.state.currentLocation.lat
-                                        }
-                                        lng={
-                                            this.state.boardingPoint.lng
-                                                ? this.state.boardingPoint.lng
-                                                : this.state.currentLocation.lng
-                                        }
-                                        metaData="board"
-                                    />
+                                    {this.state.mapApiLoaded && (
+                                        <Marker
+                                            lat={
+                                                this.state.currentLocation.lat
+                                                    ? this.state.currentLocation
+                                                          .lat
+                                                    : this.state.fields.lat
+                                            }
+                                            lng={
+                                                this.state.currentLocation.lng
+                                                    ? this.state.currentLocation
+                                                          .lng
+                                                    : this.state.fields.lng
+                                            }
+                                            metaData="current"
+                                        />
+                                    )}
+                                    {this.state.mapApiLoaded && (
+                                        <Marker
+                                            lat={
+                                                this.state.boardingPoint.lat
+                                                    ? this.state.boardingPoint
+                                                          .lat
+                                                    : this.state.currentLocation
+                                                          .lat
+                                            }
+                                            lng={
+                                                this.state.boardingPoint.lng
+                                                    ? this.state.boardingPoint
+                                                          .lng
+                                                    : this.state.currentLocation
+                                                          .lng
+                                            }
+                                            metaData="board"
+                                        />
+                                    )}
 
                                     {this.state.allDrivers &&
                                         this.state.allDrivers.length &&
