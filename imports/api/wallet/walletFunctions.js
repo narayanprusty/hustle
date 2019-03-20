@@ -119,33 +119,35 @@ const payUsingWallet = async (userId, amount, bookingId) => {
                 balance = 0;
             }
 
-            let transactions = userWallet.wallet.transactions;
-            transactions = transactions ? (transactions.length > 0 ? transactions : []) : [];
-            transactions.push({
-                type: "Debit",
-                amount: amountDeducted,
-                timestamp: +new Date(),
-                bookingId: bookingId,
-                type: "Payment"
-            });
+            if(amountDeducted != 0) {
+                let transactions = userWallet.wallet.transactions;
+                transactions = transactions ? (transactions.length > 0 ? transactions : []) : [];
+                transactions.push({
+                    type: "Debit",
+                    amount: amountDeducted,
+                    timestamp: +new Date(),
+                    bookingId: bookingId,
+                    type: "Payment"
+                });
 
-            console.log("#5");
 
-            const txId = await node.callAPI("assets/updateAssetInfo", {
-                assetName: config.ASSET.Wallet,
-                fromAccount: node.getWeb3().eth.accounts[0],
-                identifier: userWallet.wallet.uniqueIdentifier,
-                public: {
-                    balance: balance,
-                    transactions: JSON.stringify(transactions),
-                }
-            });
+                console.log("#5");
+
+                const txId = await node.callAPI("assets/updateAssetInfo", {
+                    assetName: config.ASSET.Wallet,
+                    fromAccount: node.getWeb3().eth.accounts[0],
+                    identifier: userWallet.wallet.uniqueIdentifier,
+                    public: {
+                        balance: balance,
+                        transactions: JSON.stringify(transactions),
+                    }
+                });
+            }
 
             console.log("#6", remainingAmount);
 
             return {
                 success: true,
-                txnId: txId,
                 remainingAmount: remainingAmount,
                 amountDeducted: amountDeducted
             };
