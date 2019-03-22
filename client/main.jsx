@@ -32,5 +32,8 @@ Meteor.startup(() => {
     Push.addListener("message", function(notification) {
         notify.show(notification.message, "success");
     });
+    cordova.plugins.backgroundMode.on('activate',()=>{
+        cordova.plugins.backgroundMode.disableWebViewOptimizations();
+    })
     render(<App />, document.getElementById("react-target"));
 });
