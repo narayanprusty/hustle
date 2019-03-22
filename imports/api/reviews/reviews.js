@@ -70,7 +70,6 @@ const updateReviewRider = async (riderId, rateVal) => {
  * @param {String} message
  * @param {Number} rateVal
  */
-
 const rateRider = async ({ riderId, message, rateVal }) => {
     const userId = Meteor.userId();
     const identifier = Date.now() + shortid.generate();
@@ -97,6 +96,7 @@ const rateRider = async ({ riderId, message, rateVal }) => {
 
     return { txId: txId };
 };
+
 const fetchAvgRatingDriver = async driverId => {
     const driverData = getDriver(driverId);
     return {
@@ -119,6 +119,7 @@ const fetchAvgRatingRider = async riderId => {
         totalRides: profile.totalNumberOfRide ? profile.totalNumberOfRide : 0
     };
 };
+
 const fetchRatingsDriver = async ({ page, driverId }) => {
     const data = await node.callAPI("assets/search", {
         $query: {
@@ -133,6 +134,7 @@ const fetchRatingsDriver = async ({ page, driverId }) => {
     });
     return data;
 };
+
 const fetchRatingsRider = async ({ page, userId }) => {
     const data = await node.callAPI("assets/search", {
         $query: {
@@ -147,6 +149,7 @@ const fetchRatingsRider = async ({ page, userId }) => {
     });
     return data;
 };
+
 export {
     rateDriver,
     rateRider,

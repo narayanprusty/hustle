@@ -106,6 +106,7 @@ const getDriversWithin = async ({ lat, lng }) => {
 const getDriver = async driverId => {
     return await DriverMeta.find({ driverId: driverId }).fetch()[0];
 };
+
 const updateReview = async (driverId, rateVal) => {
     const driverObj = await getDriver(driverId);
     let currentRating;
@@ -126,7 +127,6 @@ const updateReview = async (driverId, rateVal) => {
 };
 
 /**  Driver monthly report functions are below  */
-
 /**
  *  Get summery of a driver of a month
  * @param {*} driverId

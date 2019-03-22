@@ -754,6 +754,7 @@ const currentBookingRider = userId => {
     }).fetch()[0];
     return data;
 };
+
 /**
  *
  * @param {gte:Date,lt:Date} period

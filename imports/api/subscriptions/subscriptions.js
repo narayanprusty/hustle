@@ -6,6 +6,7 @@ import {
 import {
     start
 } from "repl";
+import localizationManager from "../../ui/localization";
 
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
@@ -27,7 +28,7 @@ const getSubscriptionPlans = async () => {
             };
         } else {
             throw {
-                message: "No subscription plans available!"
+                message: localizationManager.strings.subscriptionPlansNotAvailable
             };
         }
 
@@ -124,7 +125,7 @@ const subscribePlan = async ({
             };
         }
         throw {
-            message: "Plan not found!"
+            message: localizationManager.strings.planNotFound
         }
     } catch (ex) {
         console.log(ex);
