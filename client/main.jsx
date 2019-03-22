@@ -32,7 +32,7 @@ Meteor.startup(() => {
     Push.addListener("message", function(notification) {
         notify.show(notification.message, "success");
     });
-    if (cordova) {
+    if (window.cordova) {
         cordova.plugins.backgroundMode.on("activate", () => {
             cordova.plugins.backgroundMode.disableWebViewOptimizations();
         });
