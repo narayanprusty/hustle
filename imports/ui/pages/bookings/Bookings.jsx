@@ -715,6 +715,7 @@ class Bookings extends Component {
                                                 this.state.boardingPlace
                                                     .formatted_address
                                             }
+                                            onClick={e => e.target.select()}
                                             value={this.state.boardvalue}
                                             placeholder={
                                                 localizationManager.strings
@@ -756,6 +757,7 @@ class Bookings extends Component {
                                             type="text"
                                             name="droppingPointInput"
                                             value={this.state.dropvalue}
+                                            onClick={e => e.target.select()}
                                             placeholder={
                                                 localizationManager.strings
                                                     .selectLocation
