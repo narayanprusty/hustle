@@ -33,6 +33,7 @@ class Profile extends Component {
                             );
                         }
                         this.setState({
+                            ...data,
                             ...driverData,
                             riderEmail: data.riderEmail
                         });
