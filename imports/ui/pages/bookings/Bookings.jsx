@@ -1029,6 +1029,7 @@ class Bookings extends Component {
                     )}
                     {!this.state.loading_cards && (
                         <div
+                            style={{direction: "ltr !important"}}
                             className="mapView padding-left padding-right padding-bottom"
                             style={{ height: "65%", paddingBottom: "2em" }}
                         >
