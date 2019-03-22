@@ -221,9 +221,9 @@ let strings = new LocalizedStrings({
         verificationCode: "Verification Code",
         unableToFetch: "Unable to fetch!",
         phoneVerificationCode: "Hi, Your phone verification code is",
-        changeLanguage: "Switch to ",
-        english: "English",
-        arabic: "Arabic",
+        changeLanguage: "تغيير الي",
+        english: "الأنجليزي",
+        arabic: "العربي",
         invalidVerificationLink:
             "Oooppsss... <br />Seems like the verification link is invalid. <br />",
         redirectionToLogin:
@@ -465,9 +465,9 @@ let strings = new LocalizedStrings({
         verificationCode: "رمز التحقق",
         unableToFetch: "غير قادر علي الوصول",
         phoneVerificationCode: "مرحبا رمز تحقق تلفونك هو",
-        changeLanguage: "تغيير الي",
-        english: "الأنجليزي",
-        arabic: "العربي",
+        changeLanguage: "Switch to ",
+        english: "English",
+        arabic: "Arabic",
         invalidVerificationLink: "اووو يبدو أن رابط التحقق غير صالح",
         redirectionToLogin:
             "إن لم يكن إعادة توجيه في 5 ثوان, <Link to='/login'>اضغط هنا للدخولn</Link>",
