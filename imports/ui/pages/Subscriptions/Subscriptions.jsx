@@ -446,8 +446,7 @@ class Subscriptions extends Component {
                                     </div>
                                     <div>
                                         {
-                                            this.state.subscriptionPlan
-                                                .description
+                                            this.state.subscriptionPlan["description_" + localizationManager.getLanguage()]
                                         }
                                     </div>
                                 </li>

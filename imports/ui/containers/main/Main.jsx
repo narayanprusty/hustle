@@ -160,15 +160,15 @@ export default class Main extends Component {
                     >
                         <Link to="/app/driver/newreqs" className="tab-item">
                             <i className="icon ion-home" />
-                            Home
+                            {localizationManager.strings.Home}
                         </Link>
                         <Link to="/app/driver/rides" className="tab-item">
                             <i className="icon ion-navicon-round" />
-                            Rides
+                            {localizationManager.strings.Rides}
                         </Link>
                         <Link to="/app/settings" className="tab-item">
                             <i className="icon ion-gear-a" />
-                            Settings
+                            {localizationManager.strings.Settings}
                         </Link>
                     </div>
                 )}
