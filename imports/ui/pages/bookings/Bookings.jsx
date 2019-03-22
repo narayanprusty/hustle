@@ -523,18 +523,32 @@ class Bookings extends Component {
         }
         Geocode.fromLatLng(t.lat, t.lng).then(response => {
             const address = response.results[0];
-
-            this.setState({
-                boardingPoint: {
-                    lat: t.lat,
-                    lng: t.lng
-                },
-                boardingPlace: address,
-                boardvalue: address.formatted_address
-            });
-            if (this.state.droppingPoint) {
-                this.changeRoute();
-                this.calculateApproxBookingPrice();
+            if (!this.state.droppingFocus) {
+                this.setState({
+                    boardingPoint: {
+                        lat: t.lat,
+                        lng: t.lng
+                    },
+                    boardingPlace: address,
+                    boardvalue: address.formatted_address
+                });
+                if (this.state.droppingPoint) {
+                    this.changeRoute();
+                    this.calculateApproxBookingPrice();
+                }
+            } else {
+                this.setState({
+                    droppingPoint: {
+                        lat: t.lat,
+                        lng: t.lng
+                    },
+                    droppingPlace: address,
+                    dropvalue: address.formatted_address
+                });
+                if (this.state.boardingPoint) {
+                    this.changeRoute();
+                    this.calculateApproxBookingPrice();
+                }
             }
         });
     };
@@ -715,7 +729,12 @@ class Bookings extends Component {
                                                 this.state.boardingPlace
                                                     .formatted_address
                                             }
-                                            onClick={e => e.target.select()}
+                                            onClick={e => {
+                                                e.target.select();
+                                                this.setState({
+                                                    droppingFocus: false
+                                                });
+                                            }}
                                             value={this.state.boardvalue}
                                             placeholder={
                                                 localizationManager.strings
@@ -757,7 +776,12 @@ class Bookings extends Component {
                                             type="text"
                                             name="droppingPointInput"
                                             value={this.state.dropvalue}
-                                            onClick={e => e.target.select()}
+                                            onClick={e => {
+                                                e.target.select();
+                                                this.setState({
+                                                    droppingFocus: true
+                                                });
+                                            }}
                                             placeholder={
                                                 localizationManager.strings
                                                     .selectLocation
