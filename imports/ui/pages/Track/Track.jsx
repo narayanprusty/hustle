@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import { withRouter } from "react-router-dom";

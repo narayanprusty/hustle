@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import config from "../../../modules/config/client";
 import { mapOptions } from "../../../modules/config/client/mapOptions";
 import lodash from "lodash";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import GoogleMapReact from "google-map-react";
 import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";

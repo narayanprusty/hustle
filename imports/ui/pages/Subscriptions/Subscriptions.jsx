@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import LaddaButton, { S, SLIDE_UP } from "react-ladda";
 import localizationManager from "../../localization";
@@ -446,7 +446,10 @@ class Subscriptions extends Component {
                                     </div>
                                     <div>
                                         {
-                                            this.state.subscriptionPlan["description_" + localizationManager.getLanguage()]
+                                            this.state.subscriptionPlan[
+                                                "description_" +
+                                                    localizationManager.getLanguage()
+                                            ]
                                         }
                                     </div>
                                 </li>

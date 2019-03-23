@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
-import { Accounts } from "meteor/accounts-base";
 
 import { notify } from "react-notify-toast";
 import PhoneInput from "react-phone-number-input";

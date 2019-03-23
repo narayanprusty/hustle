@@ -9,7 +9,6 @@ import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import SmartInput from "react-phone-number-input/smart-input";
 import "react-phone-number-input/style.css";
 import "./Login_client.scss";
-import localizationManager from "../../localization";
 
 export default class Login extends Component {
     constructor(props) {

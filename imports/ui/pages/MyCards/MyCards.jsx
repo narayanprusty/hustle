@@ -1,14 +1,8 @@
-import React, { Component, Fragment } from "react";
-import Card from "./Card";
+import React, { Component } from "react";
 import localizationManager from "../../localization/index";
 import { notify } from "react-notify-toast";
 import { Link } from "react-router-dom";
-import {
-    Accordion,
-    AccordionItem,
-    AccordionItemTitle,
-    AccordionItemBody
-} from "react-accessible-accordion";
+
 import "../../../../node_modules/react-accessible-accordion/dist/fancy-example.css";
 import "./MyCards_client.scss";
 import { Meteor } from "meteor/meteor";

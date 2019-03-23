@@ -1,6 +1,5 @@
-import React, { Component, Fragment } from "react";
-import config from "../../../modules/config/client";
-import { Link, withRouter } from "react-router-dom";
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import { notify } from "react-notify-toast";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
@@ -48,14 +47,21 @@ class EmergencyContact extends Component {
                 this.setState({
                     load_existing: false
                 });
-                notify.show(error.reason || localizationManager.strings.unableToGetContacts, "error");
+                notify.show(
+                    error.reason ||
+                        localizationManager.strings.unableToGetContacts,
+                    "error"
+                );
                 return false;
             } else if (allData && !allData.econtacts) {
                 this.setState({
                     load_existing: false,
                     maxNumbers: allData.count || 5
                 });
-                return notify.show(localizationManager.strings.noExistingContactFound, "warning");
+                return notify.show(
+                    localizationManager.strings.noExistingContactFound,
+                    "warning"
+                );
             }
             console.log(allData);
             const numbersArr = allData.econtacts;
@@ -86,16 +92,27 @@ class EmergencyContact extends Component {
             if (error) {
                 console.log(error);
                 this.setState({ update_loader: false });
-                notify.show(error.reason || localizationManager.strings.internalError , "error");
+                notify.show(
+                    error.reason || localizationManager.strings.internalError,
+                    "error"
+                );
                 return false;
             }
             this.setState({ update_loader: false });
-            return notify.show(localizationManager.strings.contactsUpdated, "success");
+            return notify.show(
+                localizationManager.strings.contactsUpdated,
+                "success"
+            );
         });
     };
     render() {
         return (
-            <div style={{ height: "100%", direction: localizationManager.strings.textDirection }}>
+            <div
+                style={{
+                    height: "100%",
+                    direction: localizationManager.strings.textDirection
+                }}
+            >
                 <div className="padding">
                     <h3 className="padding">
                         <i className="fa fa-phone" aria-hidden="true" />
@@ -115,13 +132,19 @@ class EmergencyContact extends Component {
                                 {this.state.inputs[0] == input && (
                                     <span className="item item-input item-stacked-label">
                                         <span className="input-label">
-                                            {localizationManager.strings.phoneNumber}
+                                            {
+                                                localizationManager.strings
+                                                    .phoneNumber
+                                            }
                                         </span>
                                         <PhoneInput
                                             key={input}
                                             name={input}
                                             inputComponent={SmartInput}
-                                            placeholder={localizationManager.strings.enterPhoneNumber}
+                                            placeholder={
+                                                localizationManager.strings
+                                                    .enterPhoneNumber
+                                            }
                                             value={this.state[input]}
                                             onChange={phone =>
                                                 this.setState({
@@ -147,13 +170,20 @@ class EmergencyContact extends Component {
                                         >
                                             <span className="item item-input item-stacked-label">
                                                 <span className="input-label">
-                                                    {localizationManager.strings.phoneNumber}
+                                                    {
+                                                        localizationManager
+                                                            .strings.phoneNumber
+                                                    }
                                                 </span>
                                                 <PhoneInput
                                                     key={input}
                                                     name={input}
                                                     inputComponent={SmartInput}
-                                                    placeholder={localizationManager.strings.enterPhoneNumber}
+                                                    placeholder={
+                                                        localizationManager
+                                                            .strings
+                                                            .enterPhoneNumber
+                                                    }
                                                     value={this.state[input]}
                                                     onChange={phone =>
                                                         this.setState({

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { notify } from "react-notify-toast";
 import InfiniteScroll from "react-infinite-scroller";
 import moment from "moment";

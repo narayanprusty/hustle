@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
 import { withRouter, Link } from "react-router-dom";
 import { notify } from "react-notify-toast";
-import LaddaButton, { S, SLIDE_UP } from "react-ladda";
 import localizationManager from "../../localization";
 import moment from "moment";
 import "moment/locale/ar";
