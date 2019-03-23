@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import Ratings from "react-rating";
 import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import { Meteor } from "meteor/meteor";
 import "./Profile_client.scss";
-import { S } from "react-ladda/dist/constants";
 import localizationManager from "../../localization";
 import CarLoader from "../../components/CarLoader";
 
