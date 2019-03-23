@@ -604,7 +604,7 @@ class CurrentBooking extends Component {
                                 <i className="icon fa fa-clock-o" />
                                 {this.state.totalDuration}
                                 <span className="item-note">
-                                    {localizationManager.strings.Time}
+                                    {localizationManager.strings.time}
                                 </span>
                             </a>
 

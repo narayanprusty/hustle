@@ -17,6 +17,7 @@ import {
     getDriverLocation,
     calculateApproxBookingPrice,
     calculateFinalBookingPrice,
+    getPricingConfig,
 } from "./booking.js";
 import { Meteor } from "meteor/meteor";
 
@@ -39,5 +40,6 @@ Meteor.methods({
     getDriverLocation,
     calculateApproxBookingPrice,
     calculateFinalBookingPrice,
+    getPricingConfig,
 });
 export {};

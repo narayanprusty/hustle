@@ -3,6 +3,12 @@ import { Meteor } from "meteor/meteor";
 
 let strings = new LocalizedStrings({
     en: {
+        pricingConfig: "Pricing Configuration",
+        dateTimeRules: "Date & Time rules",
+        locationRules: "Location based rules",
+        month: "Month",
+        day: "Day",
+        hour: "Hour",
         wallet: "Wallet",
         unableToGetWallet: "Unable to fetch wallet!",
         amount: "Amount",
@@ -150,7 +156,7 @@ let strings = new LocalizedStrings({
         Card: "Card",
         book: "Book",
         bookRide: "Book Ride",
-        Time: "Time",
+        time: "Time",
         paymentMethod: "Payment Method",
         rideBooked: "Ride Booked",
         rideCompleted: "Ride completed",
@@ -248,6 +254,12 @@ let strings = new LocalizedStrings({
         apply: "Apply"
     },
     ar: {
+        pricingConfig: "Pricing Configuration",
+        dateTimeRules: "Date & Time rules",
+        locationRules: "Location based rules",
+        month: "Month",
+        day: "Day",
+        hour: "Hour",
         profile: "الملف الشخصي",
         wallet: "المحفظة",
         balance: "الرصيد",
@@ -395,7 +407,7 @@ let strings = new LocalizedStrings({
         Card: "بطاقة",
         book: "أحجز",
         bookRide: "أحجز مشوارك",
-        Time: "الزمن",
+        time: "الزمن",
         paymentMethod: "طريقة الدفع",
         rideBooked: "تم حجز المشوار",
         rideCompleted: "أكتمل المشوار",
