@@ -6,7 +6,7 @@ import LaddaButton, { L, SLIDE_UP } from "react-ladda";
 import { Meteor } from "meteor/meteor";
 import "./Profile_client.scss";
 import localizationManager from "../../localization";
-import CarLoader from "../../components/CarLoader";
+import CarLoader from "../../components/CarLoader/CarLoader";
 
 class Profile extends Component {
     constructor(props) {

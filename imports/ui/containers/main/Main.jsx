@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
-import { BrowserRouter, Route, Switch, Redirect, Link } from "react-router-dom";
-import { withTracker } from "meteor/react-meteor-data";
+import { Route, Link } from "react-router-dom";
 import Settings from "../../pages/settings/Settings";
 import Notifications from "react-notify-toast";
 import Bookings from "../../pages/bookings/Bookings";
 import Rides from "../../pages/Rides/Rides";
 import Bookingreq from "../../pages/driver/Bookingreq/Bookingreq";
-import Dashboard from "../../pages/driver/Dashboard/Dashboard";
 import CurrentBooking from "../../pages/driver/CurrentBooking/CurrentBooking";
 import CurrentBookingRider from "../../pages/currentBookingRider/CurrentBookingRider";
 import RidePayment from "../../pages/driver/RidePayment/RidePayment";
@@ -112,7 +110,6 @@ export default class Main extends Component {
                         path="/app/currentBooking"
                         component={CurrentBookingRider}
                     />
-                    <Route path="/app/driver/dash" component={Dashboard} />
                     <Route path="/app/driver/newreqs" component={Bookingreq} />
                     <Route
                         path="/app/driver/currentBooking"
