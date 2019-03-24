@@ -165,6 +165,15 @@ export default class Settings extends Component {
                     ) : (
                         ""
                     )}
+                    {this.state.isDriver && (
+                        <Link
+                            to="/app/driver/pricingConfig"
+                            className="item item-icon-left"
+                        >
+                            <i className="icon fa fa-bolt" />
+                            {localizationManager.strings.pricingConfig}
+                        </Link>
+                    )}
                     {!this.state.isDriver && (
                         <Link
                             to="/app/applyForDriver"

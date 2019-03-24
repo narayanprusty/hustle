@@ -13,6 +13,7 @@ import Subscriptions from "../../pages/Subscriptions/Subscriptions";
 import MyCards from "../../pages/MyCards/MyCards";
 import AddCard from "../../pages/AddCard/AddCard";
 import Wallet from "../../pages/Wallet/Wallet";
+import pricingConfig from "../../pages/driver/pricingConfig/pricingConfig";
 
 import { notify } from "react-notify-toast";
 // import pubnub from "../../notifications/index";
@@ -118,6 +119,10 @@ export default class Main extends Component {
                     <Route
                         path="/app/driver/ride/payment/:id"
                         component={RidePayment}
+                    />
+                    <Route
+                        path="/app/driver/pricingConfig"
+                        component={pricingConfig}
                     />
                     <Route
                         path="/app/driver/rides"

@@ -1229,6 +1229,27 @@ const calculateFinalBookingPrice = async (
     }
 };
 
+const getPricingConfig = async () => {
+    try {
+        let pricingConfig = await node.callAPI("assets/search", {
+            $query: {
+                assetName: config.ASSET.dynamicPricing,
+                status: "open"
+            }
+        });
+
+        return {
+            success: true,
+            config: pricingConfig.length > 0 ? pricingConfig[0] : ""
+        }
+        
+    } catch (ex) {
+        console.log(ex);
+        return ex;
+    }
+}
+
+
 export {
     newBookingReq,
     onDriverAccept,
@@ -1248,5 +1269,6 @@ export {
     getBookingFromDb,
     getDriverLocation,
     calculateApproxBookingPrice,
-    calculateFinalBookingPrice
+    calculateFinalBookingPrice,
+    getPricingConfig
 };
