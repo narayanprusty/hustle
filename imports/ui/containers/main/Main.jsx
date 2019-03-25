@@ -14,8 +14,6 @@ import MyCards from "../../pages/MyCards/MyCards";
 import AddCard from "../../pages/AddCard/AddCard";
 import Wallet from "../../pages/Wallet/Wallet";
 import pricingConfig from "../../pages/driver/pricingConfig/pricingConfig";
-
-import { notify } from "react-notify-toast";
 // import pubnub from "../../notifications/index";
 import DriverRideHistory from "../../pages/DriverRideHistory/DriverRideHistory";
 import EmergencyContact from "../../pages/EmergencyContacts/EmergencyContact";
