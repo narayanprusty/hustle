@@ -1,8 +1,16 @@
-App.info({
-    id: "com.hustle.block.io",
-    name: "Hustle",
-    version: "0.0.1"
-});
+if (this.process.env.NODE_ENV === "production") {
+    App.info({
+        id: "com.hustle.io",
+        name: "Hustle",
+        version: "1.0.0" //version Major.Minor.patch //also put `-` *rc/alpha/beta whatever if needed
+    });
+} else {
+    App.info({
+        id: "com.hustle.block.io",
+        name: "Hustle",
+        version: "0.0.1"
+    });
+}
 App.icons({
     iphone_2x: "resources/icons/iphone_2x.png",
     iphone_3x: "resources/icons/iphone_3x.png",
