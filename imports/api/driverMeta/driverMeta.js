@@ -213,6 +213,7 @@ const iterateOverDrivers = () => {
             fileName: "email-driver-monthly-report-" + LangPref + ".ejs"
         });
         const finalHTML = ejsTemplate({
+            username: profile.name,
             earningsInCash: earningsInCash,
             earningsOnline: earningsOnline,
             totalEarnings: totalEarnings,
