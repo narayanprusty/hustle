@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
+import { Link } from "react-router-dom";
 import { notify } from "react-notify-toast";
 import PhoneInput from "react-phone-number-input";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
@@ -153,6 +154,8 @@ export default class Register extends Component {
             password,
             verification,
             isSent,
+            accept,
+            register_formloading,
             sendable
         } = this.state;
         return (
@@ -219,6 +222,38 @@ export default class Register extends Component {
                                 onChange={this.inputHandler.bind(this)}
                             />
                         </label>
+                        <div className="kei-chart__buttons">
+                            <label className="kei-chart__buttons__btn">
+                                <input
+                                    type="checkbox"
+                                    checked={accept || false}
+                                    disabled={register_formloading}
+                                    onChange={() =>
+                                        this.setState({
+                                            accept: accept ? false : true
+                                        })
+                                    }
+                                />
+                                <div
+                                    className="kei-chart__buttons__fake-checkbox"
+                                    style={{
+                                        borderColor: "green",
+                                        backgroundColor: "green"
+                                    }}
+                                >
+                                    ✔
+                                </div>
+                                I agree
+                            </label>
+                        </div>
+                        By agreeing you accepting Terms &amp; Conditions and{" "}
+                        <a
+                            href="https://gohustleapp.com/privacy_policy.html"
+                            target="_blank"
+                        >
+                            {" "}
+                            *Privacy Policy.
+                        </a>
                         <LaddaButton
                             data-color="##FFFF00"
                             data-size={L}
@@ -229,13 +264,17 @@ export default class Register extends Component {
                             loading={this.state.register_formloading}
                             onClick={this.createAccount.bind(this)}
                             disabled={
-                                phone && first_name && password && verification
+                                phone &&
+                                first_name &&
+                                password &&
+                                verification &&
+                                accept
                                     ? false
                                     : true
                             }
                             className="button button-block button-energized activated"
                         >
-                            Register
+                            Create Account
                         </LaddaButton>
                     </div>
                     <span className="seperator padding-left padding-right padding-bottom">

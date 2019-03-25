@@ -1,1 +1,56 @@
-@import '../Generic.scss';
+@import "../Generic.scss";
+
+.kei-chart__buttons {
+    display: flex;
+}
+
+.kei-chart__buttons input[type="checkbox"] {
+    display: none;
+}
+
+.kei-chart__buttons__btn {
+    align-items: center;
+    border: 1px solid lightgray;
+    border-radius: 15px;
+    cursor: pointer;
+    display: flex;
+    font-family: "Verdana", sans-serif;
+    font-size: 12px;
+    height: 30px;
+    margin: 10px 6px 0 0;
+    padding: 0 12px;
+    user-select: none;
+}
+
+.kei-chart__buttons__fake-checkbox {
+    align-items: center;
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 1px;
+    color: white;
+    display: flex;
+    font-size: 9px;
+    /* font-weight: bold; */
+    height: 16px;
+    justify-content: center;
+    margin: 0 7px 0 -5px;
+    width: 16px;
+}
+
+input:not(:checked) ~ .kei-chart__buttons__fake-checkbox {
+    background-color: white !important;
+}
+
+input:disabled ~ .kei-chart__buttons__fake-checkbox {
+    background-color: lightgray !important;
+    border-color: lightgray !important;
+    color: lightgray;
+}
+
+input:disabled ~ .kei-chart__buttons__text {
+    color: lightgray;
+}
+
+input:checked:disabled ~ .kei-chart__buttons__fake-checkbox {
+    color: white;
+}
