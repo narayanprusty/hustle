@@ -1,5 +1,11 @@
 module.exports = {
     en: {
+        pricingConfig: "Pricing Configuration",
+        dateTimeRules: "Date & Time rules",
+        locationRules: "Location based rules",
+        month: "Month",
+        day: "Day",
+        hour: "Hour",
         wallet: "Wallet",
         unableToGetWallet: "Unable to fetch wallet!",
         amount: "Amount",
@@ -25,8 +31,7 @@ module.exports = {
         Dyna: "Dyna",
         Taxi: "Taxi",
         cashToBeCollected: "Cash to be collected",
-        welcomeMessage:
-            "Thank you for subscribing dear partner. Good things come to those who Hustle like you!",
+        welcomeMessage: "Thank you for subscribing dear partner. Good things come to those who Hustle like you!",
         myCards: "My Cards",
         addCards: "Add Card",
         addNewCard: "Add new card",
@@ -46,8 +51,7 @@ module.exports = {
         Exec: "Prime Exec",
         Lux: "Prime Lux",
         unableToLoadCards: "Unable to load cards!",
-        canNotChangeLocation:
-            "Cant change location while raising booking request.",
+        canNotChangeLocation: "Cant change location while raising booking request.",
         kindlySubscribe: "kindly subscribe to book ride",
         defaultLocation: "Default is current location",
         selectLocation: "Select Location",
@@ -146,7 +150,7 @@ module.exports = {
         Card: "Card",
         book: "Book",
         bookRide: "Book Ride",
-        Time: "Time",
+        time: "Time",
         paymentMethod: "Payment Method",
         rideBooked: "Ride Booked",
         rideCompleted: "Ride completed",
@@ -158,8 +162,7 @@ module.exports = {
         bookingID: "Booking ID",
         paymentReceived: "Payment Received",
         rideNotFinished: "Ride is not finished yet!",
-        verifyYourEmailAddress:
-            "Visit the following link to verify your email address.",
+        verifyYourEmailAddress: "Visit the following link to verify your email address.",
         confirm: "Confirm",
         on: "on",
         planNotFound: "Plan not found!",
@@ -178,23 +181,18 @@ module.exports = {
         unabletoAcceptTheRide: "Unable to accept the ride!",
         unableToGetBooking: "Unable to get booking!",
         rideNotFinishedYet: "Ride not finished yet!",
-        waitingForNearbyDriversToAcceptYourRideRequest:
-            "Waiting for nearby partner to accept your ride request",
+        waitingForNearbyDriversToAcceptYourRideRequest: "Waiting for nearby partner to accept your ride request",
         driverAcceptedYourRideRequest: "Partner accepted your ride request",
         unableToFetchDriversNearby: "unable to fetch partner nearby",
-        unableToFetchYourCurrentLocation:
-            "Unable to fetch your current location",
+        unableToFetchYourCurrentLocation: "Unable to fetch your current location",
         directionsRequestFailedDueTo: "Directions request failed due to",
         unableToCreateRequest: "Unable to create request!",
         unableToCancelRequest: "unable to cancel request",
         unableToMarkPaymentForTheRide: "Unable to mark payment for the ride!",
-        emailVeried:
-            "Congrats...!!! Your email has been verified. You would be automatically redirected to login page in 5 seconds. Else <a href='/login'> Click here </a>",
-        linkExpired:
-            "Email id does not match or the link has expired. Kindly try again...",
+        emailVeried: "Congrats...!!! Your email has been verified. You would be automatically redirected to login page in 5 seconds. Else <a href='/login'> Click here </a>",
+        linkExpired: "Email id does not match or the link has expired. Kindly try again...",
         waitForValidation: "Hold on... We are validating the email id...",
-        emailVerified:
-            "Congrats...!!! Your email has been verified. Redirecting you to login page...",
+        emailVerified: "Congrats...!!! Your email has been verified. Redirecting you to login page...",
         someErrorOccured: "Some Error Occured!",
         anErrorOccuredTryAgain: "An error occured.please try again.",
         loginSuccessful: "Login successful!",
@@ -220,10 +218,8 @@ module.exports = {
         changeLanguage: "تغيير الى اللغة",
         english: "الأنجليزية",
         arabic: "العربية",
-        invalidVerificationLink:
-            "Oooppsss... <br />Seems like the verification link is invalid. <br />",
-        redirectionToLogin:
-            "If not redirected in 5 seconds, <Link to='/login'>Click here to login</Link>",
+        invalidVerificationLink: "Oooppsss... <br />Seems like the verification link is invalid. <br />",
+        redirectionToLogin: "If not redirected in 5 seconds, <Link to='/login'>Click here to login</Link>",
         textDirection: "ltr",
         dlog: "Delivery Of Goods",
         Home: "Home",
@@ -243,6 +239,12 @@ module.exports = {
         apply: "Apply"
     },
     ar: {
+        pricingConfig: "إعدادات الاسعار ",
+        dateTimeRules: "إعدادات التاريخ و الوقت",
+        locationRules: " إعدادات المواقع ",
+        month: "شهر",
+        day: "يوم",
+        hour: "ساعة",
         profile: "الملف الشخصي",
         wallet: "المحفظة",
         balance: "الرصيد",
@@ -270,8 +272,7 @@ module.exports = {
         Dyna: "Dyna",
         Taxi: "Taxi",
         cashToBeCollected: "سيتم جمع المبلغ",
-        welcomeMessage:
-            "شكرا لك لاشتراكك عزيزي الشريك ،الاشياءالجيدة تأتي لهؤلاء الذين يشتهدون مثلك",
+        welcomeMessage: "شكرا لك لاشتراكك عزيزي الشريك ،الاشياءالجيدة تأتي لهؤلاء الذين يشتهدون مثلك",
         myCards: "بطاقاتي",
         addCards: "إضافة بطاقة",
         addNewCard: "أضف بطاقة جديدة",
@@ -390,7 +391,7 @@ module.exports = {
         Card: "بطاقة",
         book: "أحجز",
         bookRide: "أحجز مشوارك",
-        Time: "الزمن",
+        time: "الزمن",
         paymentMethod: "طريقة الدفع",
         rideBooked: "تم حجز المشوار",
         rideCompleted: "أكتمل المشوار",
@@ -422,8 +423,7 @@ module.exports = {
         unabletoAcceptTheRide: "غير قادر على قبول الرحلة !",
         unableToGetBooking: "غير قادر على الحصول على حجز",
         rideNotFinishedYet: "الرحلة لم تنتهي بعد",
-        waitingForNearbyDriversToAcceptYourRideRequest:
-            "انتظر اقرب سائق لقبول طلب رحلتك",
+        waitingForNearbyDriversToAcceptYourRideRequest: "انتظر اقرب سائق لقبول طلب رحلتك",
         driverAcceptedYourRideRequest: " السائق طلب مشوارك",
         unableToFetchDriversNearby: "غير قادر للحصول على سائق قريب",
         unableToFetchYourCurrentLocation: "غير قادر  للحصول على موقعك الحالي",
@@ -431,13 +431,10 @@ module.exports = {
         unableToCreateRequest: "غير قادر على الطلب",
         unableToCancelRequest: "غير قادر على إلغاء الطلب",
         unableToMarkPaymentForTheRide: "غير قادر على دفع قيمة المشوار",
-        emailVeried:
-            "تهانينا ،تم  التحقق من بريدك الالكتروني سيتم توجيهك تلقائيا لصفحة التسجيل  في غضون 5 ثواني . <a href='/login'>  اضغط هنا  </a>",
-        linkExpired:
-            "البريد الإلكتروني غير مطابق او انتهت صلاحية الرابط.  فضلا حاول مرة اخرى...",
+        emailVeried: "تهانينا ،تم  التحقق من بريدك الالكتروني سيتم توجيهك تلقائيا لصفحة التسجيل  في غضون 5 ثواني . <a href='/login'>  اضغط هنا  </a>",
+        linkExpired: "البريد الإلكتروني غير مطابق او انتهت صلاحية الرابط.  فضلا حاول مرة اخرى...",
         waitForValidation: "انتظر التحقق من صلاحية البريد الالكتروني",
-        emailVerified:
-            "تهانينا لقد تم التحقق من بريدك الالكتروني سيتم توجيهك لصفحة تسجيل الدخول",
+        emailVerified: "تهانينا لقد تم التحقق من بريدك الالكتروني سيتم توجيهك لصفحة تسجيل الدخول",
         someErrorOccured: "حدث خطأ",
         anErrorOccuredTryAgain: "حدث خطأ رجاء حاول مره اخري",
         loginSuccessful: "تم تسجيل الدخول بنجاح",
@@ -463,8 +460,7 @@ module.exports = {
         english: "English",
         arabic: "Arabic",
         invalidVerificationLink: " رابط التحقق غير صالح",
-        redirectionToLogin:
-            " إعادة توجيه في 5 ثوان, <Link to='/login'>اضغط هنا للدخولn</Link>",
+        redirectionToLogin: " إعادة توجيه في 5 ثوان, <Link to='/login'>اضغط هنا للدخولn</Link>",
         textDirection: "rtl",
         dlog: "توصيل البضائع",
         tAction: "إتخاذ الإجراء",
