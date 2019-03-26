@@ -8,7 +8,7 @@ module.exports = {
         process.env.MONGO_URL ||
         "mongodb://saikatharryc:saikat95@ds145303.mlab.com:45303/hustle",
     apiHost: process.env.ROOT_URL || "localhost:3000",
-    GAPIKEY: "AIzaSyAs2LAkFCJr8p4EzgIVtk169Qreykfi74Q",
+    GAPIKEY: process.env.GAPIKEY || "AIzaSyAs2LAkFCJr8p4EzgIVtk169Qreykfi74Q",
     // GAPIKEY: "AIzaSyBnjRZAHqrP5Flir8iuhmBmJlOr7qKlSTE",
     SMS: {
         apiKey: process.env.TWILIO_APIKEY || "MJicpcEuLaUG5gQ57O4Xa5MORszWXsOd",
