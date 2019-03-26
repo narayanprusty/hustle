@@ -7,7 +7,7 @@
         "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
         "visualize": "meteor --production --extra-packages bundle-visualizer",
         "build:debug": "meteor build ../hustle-build/ --server=https://hustle.blockcluster.io --debug",
-        "build:production": "NODE_ENV=production meteor build ./hustle-build/ --server=https://book.gohustle.com:80"
+        "build:production": "NODE_ENV=production meteor build ../hustle-build/ --server=https://book.gohustle.com:80"
     },
     "dependencies": {
         "@babel/runtime": "^7.1.5",
