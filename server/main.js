@@ -1,9 +1,11 @@
-import { Meteor } from "meteor/meteor";
+import {
+    Meteor
+} from "meteor/meteor";
 import AWS from "aws-sdk";
 require("../imports/startup/server");
 import config from "../imports/modules/config/server";
 import Verifier from "../imports/api/emails/email-validator";
-Accounts.validateLoginAttempt(function(options) {
+Accounts.validateLoginAttempt(function (options) {
     if (!options.allowed) {
         return false;
     }
@@ -23,7 +25,7 @@ Accounts.validateLoginAttempt(function(options) {
     // }
 });
 
-Accounts.onCreateUser(function(options, user) {
+Accounts.onCreateUser(function (options, user) {
     user.firstLogin = false;
     user.profile = options.profile || {};
 
@@ -44,7 +46,7 @@ Accounts.onCreateUser(function(options, user) {
 Meteor.startup(() => {
     console.log(">>>> Server Started <<<<");
 
-    WebApp.rawConnectHandlers.use(function(req, res, next) {
+    WebApp.rawConnectHandlers.use(function (req, res, next) {
         res.setHeader("Access-Control-Allow-Origin", "*");
         return next();
     });
@@ -53,6 +55,13 @@ Meteor.startup(() => {
     }
     if (Meteor.isServer) {
         Push.Configure({
+            apn: {
+                certData: Assets.getText('hustle-cert-prod.pem'),
+                keyData: Assets.getText('hustle-key-prod.pem'),
+                passphrase: 'Hustle@123',
+                production: true,
+                gateway: 'gateway.push.apple.com',
+            },
             gcm: {
                 projectNumber: config.PUSH_NOTIF.FCM.SENDER_ID,
                 apiKey: config.PUSH_NOTIF.FCM.SERVER_KEY
