@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "618953691604",
-    "firebase_url": "https://hustlepushnew.firebaseio.com",
-    "project_id": "hustlepushnew",
-    "storage_bucket": "hustlepushnew.appspot.com"
+    "project_number": "937200706426",
+    "firebase_url": "https://hustleblock-1b2ec.firebaseio.com",
+    "project_id": "hustleblock-1b2ec",
+    "storage_bucket": "hustleblock-1b2ec.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:618953691604:android:8c5e16ea722df1d9",
+        "mobilesdk_app_id": "1:937200706426:android:9f5236739ffa37bd",
         "android_client_info": {
-          "package_name": "com.gohustleapp.hustle"
+          "package_name": "com.hustle.block.io"
         }
       },
       "oauth_client": [
         {
-          "client_id": "618953691604-i4qemdu9juh7b1btl817bn8uv8dug0uh.apps.googleusercontent.com",
+          "client_id": "937200706426-8a1c0locrol74l1b50qnkabgi9j6pjk6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBe_h_mUWk5zuiGez-2GjaAvh2nfcR7kwA"
+          "current_key": "AIzaSyBeId0eaHZs5MwoBInRJ_jS2TO5KWciSdk"
         }
       ],
       "services": {

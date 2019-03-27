@@ -69,7 +69,19 @@ App.accessRule("*");
 App.configurePlugin("phonegap-plugin-push", {
     SENDER_ID: 937200706426
 });
-App.addResourceFile("google-services.json", "google-services.json", "android");
+if (this.process.env.NODE_ENV === "production") {
+    App.addResourceFile(
+        "google-services.json",
+        "google-services.json",
+        "android"
+    );
+} else {
+    App.addResourceFile(
+        "google-services.dev.json",
+        "google-services.json",
+        "android"
+    );
+}
 
 App.appendToConfig(`
   <edit-config target="NSLocationWhenInUseUsageDescription" file="*-Info.plist" mode="merge">
