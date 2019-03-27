@@ -1,12 +1,12 @@
 if (this.process.env.NODE_ENV === "production") {
     App.info({
-        id: "com.hustle.io",
+        id: "com.gohustleapp.hustle",
         name: "Hustle",
         version: "1.0.0" //version Major.Minor.patch //also put `-` *rc/alpha/beta whatever if needed
     });
 } else {
     App.info({
-        id: "com.hustle.block.io",
+        id: "com.gohustleapp.hustle.dev",
         name: "Hustle",
         version: "0.0.1"
     });
