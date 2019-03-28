@@ -128,7 +128,7 @@ module.exports = `<!DOCTYPE html>
                 </tr>
                  <tr>
                   <td class="sm-inline-block" style="color: #8795a1;" width="50%">Trip Time</td>
-                  <td class="sm-inline-block" style="font-weight: 600; text-align: right;" width="50%" align="right"><%= timeTaken %></td>
+                  <td class="sm-inline-block" style="font-weight: 600; text-align: right;" width="50%" align="right"><%= timeTaken %> Minutes</td>
                 </tr>
                 <tr>
                   <td class="sm-inline-block" style="color: #8795a1;" width="50%">Distance</td>
@@ -207,7 +207,7 @@ module.exports = `<!DOCTYPE html>
                 <tr>
                   <td style="color: #8795a1;line-height: 17px;" width="70%">
                      <p class="all-font-roboto" style="margin: 0; margin-bottom: 4px; color: #b8c2cc; font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">You rode with</p>
-                      <p class="all-font-roboto" style="font-weight: 600; margin: 0; color: #22292f;"><%= driverName %></p><p style=" margin: 0;color: #999" class="all-font-roboto" ><%= driverRating %>  &star;  Rating</p>
+                      <p class="all-font-roboto" style="font-weight: 600; margin: 0; color: #22292f;"><%= driverName %></p><p style=" margin: 0;color: #999" class="all-font-roboto" ><%= driverRating %>  &#9733;  Rating</p>
                       <div style="padding: 2px;"></div>
                   </td>
                   <td style="font-weight: 600; text-align: right;" width="30%" align="right">

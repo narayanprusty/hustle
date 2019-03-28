@@ -143,7 +143,7 @@ const sendReceiptEmail = async (
             end_address: booking.end_address,
             user: user.profile,
             ditanceCovered: ditanceCovered,
-            timeTaken: (timeTaken / 60).toFixed(4),
+            timeTaken: (timeTaken / 60).toFixed(2), //minutes
             totalFare: totalFare,
             driverName: driver.name,
             driverRating: driver.avgRating
