@@ -275,7 +275,10 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
     const distanceObject = await getShortestDistance(p1, p2);
     const distance = JSON.parse(distanceObject).rows[0].elements[0].distance
         .value;
-    const rideDuration = moment().diff(bookingData.startedAt, "seconds"); //in secoends
+    const rideDuration = moment().diff(
+        moment(bookingData.startedAt),
+        "seconds"
+    ); //in secoends
     console.log("Duration Total:" + rideDuration);
     const priceOp = await calculateFinalBookingPrice(
         bookingData.start_address,
