@@ -182,7 +182,7 @@ const saveCardToHyperPay = data => {
     });
     var options = {
         port: 443,
-        host: "test.oppwa.com",
+        host: config.HYPERPAY.host,
         path: path,
         method: "POST",
         headers: {

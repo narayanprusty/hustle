@@ -66,17 +66,7 @@ module.exports = {
         dynamicPricing: "dynamicPricing",
         Wallet: "Wallet"
     },
-    HYPERPAY: {
-        UserId: "8ac7a4c86783997f0167971a1b65109d",
-        Password: "9ZJzxaHtPc",
-        EntityId: "8ac7a4c86783997f0167971bc49010a1",
-        Currency: "SAR",
-        PaymentType: "DB",
-        PaymentMethods: {
-            VISA: "VISA",
-            MASTERCARD: "MASTER"
-        }
-    },
+    HYPERPAY: defaults.HYPERPAY,
     GAPIKEY: defaults.GAPIKEY,
     farePerMeter: 0.04,
     fareUnit: "SAR",
