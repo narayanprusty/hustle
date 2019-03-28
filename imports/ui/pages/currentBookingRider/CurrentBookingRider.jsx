@@ -460,7 +460,7 @@ class CurrentBookingRider extends Component {
             if (window.cordova) {
                 cordova.plugins.notification.local.schedule({
                     id: 1,
-                    title: localizationManager.str.newMessage,
+                    title: localizationManager.strings.newMessage,
                     message: message.message.message,
                     at: new Date()
                 });
