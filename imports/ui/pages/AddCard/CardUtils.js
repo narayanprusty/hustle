@@ -1,11 +1,12 @@
 import Payment from 'payment'
+import localizationManager from '../../localization/index';
 
 function clearNumber(value = '') {
     return value.replace(/\D+/g, '')
 }
 
 export function formatCreditCardNumber(value) {
-    if (!value) {
+    if (!value || localizationManager.strings.textDirection == 'rtl') {
         return value
     }
 
