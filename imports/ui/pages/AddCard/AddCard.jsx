@@ -70,13 +70,15 @@ export default class AddCard extends Component {
                             return (
                                 <div className="list padding-bottom">
                                     <form onSubmit={handleSubmit}>
-                                        <Card
-                                            number={values.number || ''}
-                                            name={values.name || ''}
-                                            expiry={values.expiry || ''}
-                                            cvc={values.cvc || ''}
-                                            focused={active}
-                                        />
+                                        <div style={{direction: 'ltr'}}>
+                                            <Card
+                                                number={values.number || ''}
+                                                name={values.name || ''}
+                                                expiry={values.expiry || ''}
+                                                cvc={values.cvc || ''}
+                                                focused={active}
+                                            />
+                                        </div>
                                         <div style={{marginTop: 10}}>
                                             <div className="list">
                                                 <label className="item item-input item-stacked-label">
@@ -84,6 +86,7 @@ export default class AddCard extends Component {
                                                         {" "}
                                                         {localizationManager.strings.cardNumber}:{" "}
                                                     </span>
+                                                    <div style={{textAlign: localizationManager.strings.textDirection == 'ltr' ? 'left' : 'right'}}>
                                                     <Field
                                                         name="number"
                                                         component="input"
@@ -92,6 +95,7 @@ export default class AddCard extends Component {
                                                         placeholder={localizationManager.strings.cardNumber}
                                                         format={formatCreditCardNumber}
                                                     />
+                                                    </div>
                                                 </label>
                                             </div>
                                         </div>
