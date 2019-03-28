@@ -345,7 +345,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
 
             var walletTxn = await payUsingWallet(
                 booking.userId,
-                booking.totalFare,
+                price,
                 bookingId.toString()
             );
 
@@ -360,13 +360,13 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                     "Paying using card",
                     walletTxn && walletTxn.success
                         ? walletTxn.remainingAmount
-                        : booking.totalFare
+                        : price
                 );
 
                 var receipt = await oneClickPayment(
                     walletTxn && walletTxn.success
                         ? walletTxn.remainingAmount
-                        : booking.totalFare,
+                        : price,
                     booking.paymentMethod
                 );
             }
@@ -376,7 +376,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
             onConfirmPayment(
                 bookingId.toString(),
                 JSON.stringify(receipt),
-                booking.totalFare
+                price
             )
                 .then(res => {
                     console.log(res);
@@ -404,7 +404,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
         } else {
             var walletTxn = await payUsingWallet(
                 booking.userId,
-                booking.totalFare,
+                price,
                 bookingId.toString()
             );
 
@@ -414,7 +414,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                 ? walletTxn.remainingAmount
                     ? walletTxn.remainingAmount
                     : 0
-                : booking.totalFare;
+                : price;
 
             console.log("remainingAmount:", finalFare);
 
@@ -444,13 +444,13 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
             });
 
             console.log({
-                totalFare: booking.totalFare,
+                totalFare: price,
                 finalFare: finalFare,
                 payUsingCash: finalFare > 0 ? true : false
             });
 
             return {
-                totalFare: booking.totalFare,
+                totalFare: price,
                 finalFare: finalFare,
                 payUsingCash: finalFare > 0 ? true : false
             };
