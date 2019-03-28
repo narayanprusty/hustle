@@ -128,7 +128,7 @@ module.exports = `<!DOCTYPE html>
                 </tr>
                  <tr>
                   <td class="sm-inline-block" style="color: #8795a1;" width="50%">Trip Time</td>
-                  <td class="sm-inline-block" style="font-weight: 600; text-align: right;" width="50%" align="right"><%= timeTaken %></td>
+                  <td class="sm-inline-block" style="font-weight: 600; text-align: right;" width="50%" align="right"><%= timeTaken %> Minutes</td>
                 </tr>
                 <tr>
                   <td class="sm-inline-block" style="color: #8795a1;" width="50%">Distance</td>

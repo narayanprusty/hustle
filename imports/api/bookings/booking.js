@@ -275,7 +275,10 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
     const distanceObject = await getShortestDistance(p1, p2);
     const distance = JSON.parse(distanceObject).rows[0].elements[0].distance
         .value;
-    const rideDuration = moment().diff(moment(bookingData.startedAt)) / 1000; //in secoends
+    const rideDuration = moment().diff(
+        moment(bookingData.startedAt),
+        "secoends"
+    ); //in secoends
     console.log("Duration Total:" + rideDuration);
     const priceOp = await calculateFinalBookingPrice(
         bookingData.start_address,
@@ -415,32 +418,30 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
 
             console.log("remainingAmount:", finalFare);
 
-
-                await BookingRecord.update(
-                    {
-                        bookingId: bookingId
-                    },
-                    {
-                        $set: {
-                            totalFare: finalFare
-                        }
+            await BookingRecord.update(
+                {
+                    bookingId: bookingId
+                },
+                {
+                    $set: {
+                        totalFare: finalFare
                     }
-                );
+                }
+            );
 
-                await node.callAPI("assets/updateAssetInfo", {
-                    assetName: config.ASSET.Bookings,
-                    fromAccount: node.getWeb3().eth.accounts[0],
-                    identifier: bookingId,
-                    public: {
-                        cashToBeCollected: finalFare,
-                        amountDeductedFromWallet: walletTxn.amountDeducted,
-                        rideStatus: "finished",
-                        actualEndingPoint: endingPoint,
-                        rideDuration: rideDuration,
-                        totalFare: price
-                    }
-                });
-            
+            await node.callAPI("assets/updateAssetInfo", {
+                assetName: config.ASSET.Bookings,
+                fromAccount: node.getWeb3().eth.accounts[0],
+                identifier: bookingId,
+                public: {
+                    cashToBeCollected: finalFare,
+                    amountDeductedFromWallet: walletTxn.amountDeducted,
+                    rideStatus: "finished",
+                    actualEndingPoint: endingPoint,
+                    rideDuration: rideDuration,
+                    totalFare: price
+                }
+            });
 
             console.log({
                 totalFare: booking.totalFare,
@@ -1241,14 +1242,12 @@ const getPricingConfig = async () => {
         return {
             success: true,
             config: pricingConfig.length > 0 ? pricingConfig[0] : ""
-        }
-        
+        };
     } catch (ex) {
         console.log(ex);
         return ex;
     }
-}
-
+};
 
 export {
     newBookingReq,
