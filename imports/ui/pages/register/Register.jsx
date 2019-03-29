@@ -248,6 +248,11 @@ export default class Register extends Component {
                         </div>
                         By agreeing you accepting Terms &amp; Conditions and{" "}
                         <a
+                            style={{
+                                color: "blue",
+                                textDecoration: "underline",
+                                textDecorationColor: "blue"
+                            }}
                             href="https://gohustleapp.com/privacy_policy.html"
                             target="_blank"
                         >
