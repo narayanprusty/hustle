@@ -28,6 +28,18 @@ class Bookingreq extends Component {
         });
         this.pubnub.init(this);
     }
+    isIphone = () => {
+        if (typeof device !== "undefined" && device.platform == "iOS") {
+            return true;
+        }
+        return false;
+    };
+    isAndroid = () => {
+        if (typeof device !== "undefined" && device.platform == "Android") {
+            return true;
+        }
+        return false;
+    };
     componentWillUnmount = () => {
         if (this.state.invl) {
             clearInterval(this.state.invl);
@@ -213,6 +225,37 @@ class Bookingreq extends Component {
         );
     };
 
+    navigateNow = data => e => {
+        e.preventDefault();
+        console.log(this.isIphone(), this.isAndroid());
+        // if (this.isIphone()) {
+        //     console.log(">>>>>>>");
+        //     open(
+        //         "comgooglemaps://?ll=" +
+        //             +this.state.boardingPoint.coordinates[1] +
+        //             "," +
+        //             this.state.boardingPoint.coordinates[0],
+        //         "_system"
+        //     );
+        // } else
+        if (this.isAndroid()) {
+            open(
+                "geo:0,0?q=" + data.coordinates[1] + "," + data.coordinates[0],
+                "_system",
+                "location=no"
+            );
+        } else {
+            open(
+                "https://www.google.com/maps?q=loc:" +
+                    data.coordinates[1] +
+                    "," +
+                    data.coordinates[0],
+                "_system",
+                "location=yes"
+            );
+        }
+    };
+
     render() {
         const loader = <CarLoader />;
 
@@ -267,14 +310,26 @@ class Bookingreq extends Component {
                                     {data.totalDuration}
                                     <i className="icon fa fa-clock-o" />
                                 </a>
-                                <a className="item item-icon-right" href="#">
+                                <a
+                                    className="item item-icon-right"
+                                    onClick={this.navigateNow(
+                                        data.boardingPoint
+                                    )}
+                                    href="#"
+                                >
                                     {data.start_address || "Unknown"}
                                     <i
                                         className="icon fa fa-map-marker"
                                         style={{ color: "green" }}
                                     />
                                 </a>
-                                <a className="item item-icon-right" href="#">
+                                <a
+                                    className="item item-icon-right"
+                                    onClick={this.navigateNow(
+                                        data.droppingPoint
+                                    )}
+                                    href="#"
+                                >
                                     {data.end_address || "Unknown"}
                                     <i
                                         className="icon fa fa-map-marker"
