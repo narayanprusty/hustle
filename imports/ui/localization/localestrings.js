@@ -1,5 +1,6 @@
 module.exports = {
     en: {
+        cardNotSupported: "Card not supported",
         pricingConfig: "Pricing Configuration",
         dateTimeRules: "Date & Time rules",
         locationRules: "Location based rules",
@@ -249,6 +250,7 @@ module.exports = {
         apply: "Apply"
     },
     ar: {
+        cardNotSupported: "Card not supported",
         pricingConfig: "إعدادات الاسعار ",
         dateTimeRules: "إعدادات التاريخ و الوقت",
         locationRules: " إعدادات المواقع ",
