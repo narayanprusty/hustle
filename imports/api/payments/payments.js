@@ -1,15 +1,19 @@
 import Blockcluster from "blockcluster";
 import config from "../../modules/config/server";
 import Payment from "payment";
-import { Meteor } from "meteor/meteor";
+import {
+    Meteor
+} from "meteor/meteor";
 var https = require("https");
 var querystring = require("querystring");
-import { sendPushNotification } from "../../modules/helpers/server";
+import {
+    sendPushNotification
+} from "../../modules/helpers/server";
 import localizationManager from "../../ui/localization";
 
 function request(data, callback) {}
 
-request(function(responseData) {
+request(function (responseData) {
     console.log(responseData);
 });
 
@@ -21,9 +25,9 @@ const node = new Blockcluster.Dynamo({
 const addCard = async data => {
     console.log("Card info:", data);
     var expiryMonth =
-        data.expiry && data.expiry.indexOf("/") != -1
-            ? data.expiry.split("/")[0]
-            : "";
+        data.expiry && data.expiry.indexOf("/") != -1 ?
+        data.expiry.split("/")[0] :
+        "";
     if (expiryMonth <= 0 || expiryMonth >= 13) {
         return {
             success: false,
@@ -48,12 +52,12 @@ const addCard = async data => {
     var currentYear = new Date().getFullYear().toString();
 
     var expiryYear =
-        data.expiry && data.expiry.indexOf("/") != -1
-            ? data.expiry.split("/")[1] > currentYear.slice(2, 4)
-                ? currentYear.slice(0, 2) + data.expiry.split("/")[1]
-                : (parseInt(currentYear.slice(0, 2)) + 1).toString() +
-                  data.expiry.split("/")[1]
-            : "";
+        data.expiry && data.expiry.indexOf("/") != -1 ?
+        data.expiry.split("/")[1] > currentYear.slice(2, 4) ?
+        currentYear.slice(0, 2) + data.expiry.split("/")[1] :
+        (parseInt(currentYear.slice(0, 2)) + 1).toString() +
+        data.expiry.split("/")[1] :
+        "";
 
     expiryYear = expiryYear.length == 4 ? expiryYear : "";
 
@@ -79,12 +83,21 @@ const addCard = async data => {
     }
 
     var op = await saveCardToHyperPay(data);
+
     console.log(
         "output",
-        op,
-        op.result.description.indexOf("successfully") == -1
+        op
     );
 
+    if(op.message && op.success == false){
+        sendPushNotification(
+            localizationManager.strings.failedAddingCard,
+            op.message,
+            Meteor.userId()
+        );
+        return op;
+    }
+    
     if (op.id && op.result.description.indexOf("successfully") != -1) {
         data["hyperPayId"] = op.id;
         op = await saveCardToBlockcluster(data);
@@ -103,8 +116,8 @@ const addCard = async data => {
     } else {
         //Push notification
         sendPushNotification(
-            localizationManager.strings.cardAddedShort,
-            localizationManager.strings.cardAddedPushNotification,
+            localizationManager.strings.failedAddingCard,
+            "",
             Meteor.userId()
         );
         return {
@@ -121,8 +134,8 @@ const saveCardToBlockcluster = async data => {
             Date.now() +
             "" +
             Math.random()
-                .toString()
-                .split(".")[1];
+            .toString()
+            .split(".")[1];
         console.log("identifier", identifier, {
             nameOnCard: data.name,
             expiry: data.expiry,
@@ -166,46 +179,50 @@ const saveCardToBlockcluster = async data => {
 const saveCardToHyperPay = data => {
     var path = "/v1/registrations";
     let cardBrand = Payment.fns.cardType(data.number);
-    var cardData = querystring.stringify({
-        "authentication.userId": config.HYPERPAY.UserId,
-        "authentication.password": config.HYPERPAY.Password,
-        "authentication.entityId": config.HYPERPAY.EntityId,
-        paymentBrand:
-            cardBrand == "visa"
-                ? config.HYPERPAY.PaymentMethods.VISA
-                : config.HYPERPAY.PaymentMethods.MASTERCARD,
-        "card.number": data.number || "",
-        "card.holder": data.name || "",
-        "card.expiryMonth": data.expiryMonth || "",
-        "card.expiryYear": data.expiryYear || "",
-        "card.cvv": data.cvc || ""
-    });
-    var options = {
-        port: 443,
-        host: config.HYPERPAY.host,
-        path: path,
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Content-Length": cardData.length
-        }
-    };
-    return new Promise(async (resolve, reject) => {
-        try {
-            var postRequest = https.request(options, function(res) {
-                res.setEncoding("utf8");
-                res.on("data", function(chunk) {
-                    jsonRes = JSON.parse(chunk);
-                    resolve(jsonRes);
+    if (cardBrand == 'visa' || cardBrand == "master" || cardBrand == "mada") {
+        var cardData = querystring.stringify({
+            "authentication.userId": config.HYPERPAY.UserId,
+            "authentication.password": config.HYPERPAY.Password,
+            "authentication.entityId": config.HYPERPAY.EntityId,
+            paymentBrand: cardBrand.toUpperCase(),
+            "card.number": data.number || "",
+            "card.holder": data.name || "",
+            "card.expiryMonth": data.expiryMonth || "",
+            "card.expiryYear": data.expiryYear || "",
+            "card.cvv": data.cvc || ""
+        });
+        var options = {
+            port: 443,
+            host: config.HYPERPAY.host,
+            path: path,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Content-Length": cardData.length
+            }
+        };
+        return new Promise(async (resolve, reject) => {
+            try {
+                var postRequest = https.request(options, function (res) {
+                    res.setEncoding("utf8");
+                    res.on("data", function (chunk) {
+                        jsonRes = JSON.parse(chunk);
+                        resolve(jsonRes);
+                    });
                 });
-            });
-            postRequest.write(cardData);
-            postRequest.end();
-        } catch (ex) {
-            console.log(ex);
-            reject(ex);
+                postRequest.write(cardData);
+                postRequest.end();
+            } catch (ex) {
+                console.log(ex);
+                reject(ex);
+            }
+        });
+    } else {
+        return {
+            success: false,
+            message: localizationManager.strings.cardNotSupported
         }
-    });
+    }
 };
 
 const getCards = async () => {
@@ -242,8 +259,8 @@ const getCardsForPayment = async () => {
                 cards[i].cardNumber.toString().slice(0, 4) +
                 " XXXX XXXX " +
                 cards[i].cardNumber
-                    .toString()
-                    .slice(cards[i].cardNumber.toString().length - 4);
+                .toString()
+                .slice(cards[i].cardNumber.toString().length - 4);
             console.log(cardNumber);
             cardslist.push({
                 nameOnCard: cards[i].nameOnCard,
@@ -298,9 +315,8 @@ const oneClickPayment = async (amount, hyperPayId) => {
             "authentication.password": config.HYPERPAY.Password,
             "authentication.entityId": config.HYPERPAY.EntityId,
             amount: amount,
-            currency: "SAR",
+            currency: config.HYPERPAY.Currency,
             paymentType: config.HYPERPAY.PaymentType,
-            testMode: "EXTERNAL",
             merchantTransactionId: "8ac7a4a168c2b4360168c33a485c0567103",
             "customer.email": "ukrocks.mehta@gmail.com",
             shopperResultUrl: `${config.apiHost.includes(":3000") ? 'http' : 'https'}://${config.apiHost}/app/home`
@@ -308,7 +324,7 @@ const oneClickPayment = async (amount, hyperPayId) => {
         console.log(cardData);
         var options = {
             port: 443,
-            host: "test.oppwa.com",
+            host: config.HYPERPAY.host,
             path: path,
             method: "POST",
             headers: {
@@ -318,9 +334,9 @@ const oneClickPayment = async (amount, hyperPayId) => {
         };
         return new Promise(async (resolve, reject) => {
             try {
-                var postRequest = https.request(options, function(res) {
+                var postRequest = https.request(options, function (res) {
                     res.setEncoding("utf8");
-                    res.on("data", function(chunk) {
+                    res.on("data", function (chunk) {
                         jsonRes = JSON.parse(chunk);
                         resolve(jsonRes);
                     });
@@ -337,4 +353,10 @@ const oneClickPayment = async (amount, hyperPayId) => {
     }
 };
 
-export { addCard, getCards, removeCard, getCardsForPayment, oneClickPayment };
+export {
+    addCard,
+    getCards,
+    removeCard,
+    getCardsForPayment,
+    oneClickPayment
+};
