@@ -124,7 +124,7 @@ export default class Settings extends Component {
 
                     <a
                         className="item item-icon-left item-icon-right"
-                        href="tel:+966-54-961-1069"
+                        href="tel:+966-582085037"
                     >
                         <i className="icon ion-chatbubble-working" />
                         {localizationManager.strings.callSupport}
