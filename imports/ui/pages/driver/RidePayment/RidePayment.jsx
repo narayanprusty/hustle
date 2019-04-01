@@ -277,7 +277,8 @@ class RidePayment extends Component {
                                         </li>
                                     )}
                                     {!this.state.paymentDone &&
-                                        this.state.booking.cashToBeCollected != undefined && (
+                                        this.state.booking.cashToBeCollected !=
+                                            undefined && (
                                             <li
                                                 className="item"
                                                 style={{ whiteSpace: "normal" }}
@@ -398,10 +399,14 @@ class RidePayment extends Component {
                                                             onChange={this.handleChange.bind(
                                                                 this
                                                             )}
-                                                            value={
+                                                            defaultValue={
                                                                 this.state
                                                                     .booking
                                                                     .cashToBeCollected
+                                                            }
+                                                            value={
+                                                                this.state
+                                                                    .amountReceived
                                                             }
                                                             placeholder={
                                                                 localizationManager
