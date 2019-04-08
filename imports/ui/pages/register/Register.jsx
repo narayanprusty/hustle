@@ -29,6 +29,9 @@ export default class Register extends Component {
         }
     };
     sendMessage = e => {
+        this.setState({
+            sendingCode: true
+        });
         const phoneParsed = parsePhoneNumberFromString(this.state.phone);
         Meteor.call(
             "verificationMessage",
@@ -39,12 +42,16 @@ export default class Register extends Component {
             (err, res) => {
                 if (err) {
                     console.log(err);
+                    this.setState({
+                        sendingCode: false
+                    });
                     return notify.show("Failed sending code.", "error");
                 }
                 notify.show("Verification code sent!", "success");
                 this.setState({
                     isSent: true,
-                    sendable: true
+                    sendable: true,
+                    sendingCode: false
                 });
                 setTimeout(() => this.setState({ sendable: false }), 5000);
             }
@@ -193,15 +200,22 @@ export default class Register extends Component {
                                 onChange={phone => this.setState({ phone })}
                             />
                         </span>
-                        <button
+                        <LaddaButton
+                            data-color="##FFFF00"
+                            data-size={L}
+                            data-style={SLIDE_UP}
+                            data-spinner-size={30}
+                            data-spinner-color="#ddd"
+                            data-spinner-lines={12}
                             className="button button-block button-energized activated"
+                            loading={this.state.sendingCode}
                             onClick={this.sendMessage.bind(this)}
                             disabled={
                                 phone ? (isSent ? sendable : false) : true
                             }
                         >
                             {isSent ? "Resend" : "Verify"}
-                        </button>
+                        </LaddaButton>
                         <label className="item item-input item-stacked-label">
                             <span className="input-label">
                                 Verification Code
