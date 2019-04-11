@@ -11,7 +11,7 @@ import {
 } from "../../modules/helpers/server";
 import localizationManager from "../../ui/localization";
 
-function request(data, callback) {}
+function request(data, callback) { }
 
 request(function (responseData) {
     console.log(responseData);
@@ -26,8 +26,8 @@ const addCard = async data => {
     console.log("Card info:", data);
     var expiryMonth =
         data.expiry && data.expiry.indexOf("/") != -1 ?
-        data.expiry.split("/")[0] :
-        "";
+            data.expiry.split("/")[0] :
+            "";
     if (expiryMonth <= 0 || expiryMonth >= 13) {
         return {
             success: false,
@@ -53,11 +53,11 @@ const addCard = async data => {
 
     var expiryYear =
         data.expiry && data.expiry.indexOf("/") != -1 ?
-        data.expiry.split("/")[1] > currentYear.slice(2, 4) ?
-        currentYear.slice(0, 2) + data.expiry.split("/")[1] :
-        (parseInt(currentYear.slice(0, 2)) + 1).toString() +
-        data.expiry.split("/")[1] :
-        "";
+            data.expiry.split("/")[1] > currentYear.slice(2, 4) ?
+                currentYear.slice(0, 2) + data.expiry.split("/")[1] :
+                (parseInt(currentYear.slice(0, 2)) + 1).toString() +
+                data.expiry.split("/")[1] :
+            "";
 
     expiryYear = expiryYear.length == 4 ? expiryYear : "";
 
@@ -89,7 +89,7 @@ const addCard = async data => {
         op
     );
 
-    if(op.message && op.success == false){
+    if (op.message && op.success == false) {
         sendPushNotification(
             localizationManager.strings.failedAddingCard,
             op.message,
@@ -97,7 +97,7 @@ const addCard = async data => {
         );
         return op;
     }
-    
+
     if (op.id && op.result.description.indexOf("successfully") != -1) {
         data["hyperPayId"] = op.id;
         op = await saveCardToBlockcluster(data);
@@ -134,8 +134,8 @@ const saveCardToBlockcluster = async data => {
             Date.now() +
             "" +
             Math.random()
-            .toString()
-            .split(".")[1];
+                .toString()
+                .split(".")[1];
         console.log("identifier", identifier, {
             nameOnCard: data.name,
             expiry: data.expiry,
@@ -190,7 +190,7 @@ const saveCardToHyperPay = data => {
             "card.expiryMonth": data.expiryMonth || "",
             "card.expiryYear": data.expiryYear || "",
             "card.cvv": data.cvc || "",
-            "recurringType":"INITIAL",
+            "recurringType": "INITIAL",
         });
         var options = {
             port: 443,
@@ -260,8 +260,8 @@ const getCardsForPayment = async () => {
                 cards[i].cardNumber.toString().slice(0, 4) +
                 " XXXX XXXX " +
                 cards[i].cardNumber
-                .toString()
-                .slice(cards[i].cardNumber.toString().length - 4);
+                    .toString()
+                    .slice(cards[i].cardNumber.toString().length - 4);
             console.log(cardNumber);
             cardslist.push({
                 nameOnCard: cards[i].nameOnCard,
@@ -315,7 +315,7 @@ const oneClickPayment = async (amount, hyperPayId) => {
             "authentication.userId": config.HYPERPAY.UserId,
             "authentication.password": config.HYPERPAY.Password,
             "authentication.entityId": config.HYPERPAY.EntityId,
-            recurringType:"REPEATED",
+            recurringType: "REPEATED",
             amount: amount,
             currency: config.HYPERPAY.Currency,
             paymentType: config.HYPERPAY.PaymentType,
@@ -354,6 +354,54 @@ const oneClickPayment = async (amount, hyperPayId) => {
         return ex;
     }
 };
+
+const checkPaymentStatus = (id) => {
+    try {
+        console.log(amount, hyperPayId);
+        if (!id) {
+            return {
+                message: localizationManager.strings.invalidArguments
+            };
+        }
+
+        var path = "/v1/checkouts/" + id.toString() + "/payment";
+        path += "?authentication.userId=" + config.HYPERPAY.UserId;
+	    path +=	"&authentication.password=" + config.HYPERPAY.Password;
+        path +=	"&authentication.entityId=" + config.HYPERPAY.EntityId;
+        
+        var options = {
+            port: 443,
+            host: config.HYPERPAY.host,
+            path: path,
+            method: "GET",
+        };
+        return new Promise(async (resolve, reject) => {
+            try {
+                var postRequest = https.request(options, function (res) {
+                    res.setEncoding("utf8");
+                    res.on("data", function (chunk) {
+                        jsonRes = JSON.parse(chunk);
+                        let code = jsonRes.result.code;
+                        var patt1 = new RegExp("/^(000\.000\.|000\.100\.1|000\.[36])/");
+                        var patt2 = new RegExp("/^(000\.400\.0|000\.400\.100)/");
+                        if (patt1.test(code) || patt2.test(code)) {
+                            jsonRes["status"] = 'ACK';
+                        } else {
+                            jsonRes["status"] = 'NAK';
+                        }
+                        resolve(jsonRes);
+                    });
+                });
+                postRequest.end();
+            } catch (ex) {
+                console.log(ex);
+                reject(ex);
+            }
+        });
+    } catch (ex) {
+        return ex;
+    }
+}
 
 export {
     addCard,
