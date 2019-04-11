@@ -2,7 +2,7 @@ if (this.process.env.NODE_ENV === "production") {
     App.info({
         id: "com.gohustleapp.hustle",
         name: "Hustle",
-        version: "1.0.5" //version Major.Minor.patch //also put `-` *rc/alpha/beta whatever if needed
+        version: "1.0.8" //version Major.Minor.patch //also put `-` *rc/alpha/beta whatever if needed
     });
 } else {
     App.info({
@@ -85,7 +85,7 @@ if (this.process.env.NODE_ENV === "production") {
 
 App.appendToConfig(`
   <edit-config target="NSLocationWhenInUseUsageDescription" file="*-Info.plist" mode="merge">
-    <string>My app needs access to your location for navigation purposes</string>
+    <string>Hustle needs access to your location for navigation purposes</string>
   </edit-config>
 `);
 App.setPreference("AutoHideSplashScreen", "true");

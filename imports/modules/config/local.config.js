@@ -47,9 +47,9 @@ module.exports = {
     HYPERPAY: {
         UserId: process.env.HYPERPAY_USERID || "8ac7a4c86783997f0167971a1b65109d",
         Password: process.env.HYPERPAY_PASSWORD || "9ZJzxaHtPc",
-        EntityId: process.env.HYPERPAY_ENTITY_ID || "8ac7a4c86783997f0167971bc49010a1",
+        EntityId: process.env.HYPERPAY_ENTITY_ID || "8ac7a4c967cba199016804c97cb83f25",
         Currency: process.env.HYPERPAY_CURRENCY || "SAR",
-        PaymentType: process.env.HYPERPAY_PAYMENT_TYPE || "DB",
+        PaymentType: process.env.HYPERPAY_PAYMENT_TYPE || "PA",
         host: process.env.HYPERPAY_HOST || "test.oppwa.com",
         PaymentMethods: {
             VISA: "VISA",
