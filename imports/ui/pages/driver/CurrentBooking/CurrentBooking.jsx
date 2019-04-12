@@ -471,7 +471,7 @@ class CurrentBooking extends Component {
                     status: "finished",
                     finishRide_loader: false
                 });
-                notify.show(
+                return notify.show(
                     localizationManager.strings.rideCompleted,
                     "success"
                 );

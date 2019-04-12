@@ -5,7 +5,7 @@ import moment from "moment";
 import { BookingRecord } from "../../collections/booking-record";
 import { DriverMeta } from "../../collections/driver-meta";
 import config from "../../modules/config/server";
-// import { sendMessage } from "../../notifications/index";
+import { sendMessage } from "../../Messaging/send_text";
 import { oneClickPayment } from "../payments/payments";
 import { payUsingWallet } from "../wallet/walletFunctions";
 import { getUserSubscriptions } from "../subscriptions/subscriptions";
@@ -326,8 +326,6 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
     booking = booking.length > 0 ? booking[0] : {};
     //Push notification
     sendPushNotification("Ride completed", "Ride has been finished.", userId);
-    //send receipt email
-    sendReceiptEmail(booking, userId, distance, rideDuration, price);
     if (booking) {
         if (booking.paymentMethod != "cash") {
             console.log("Paying using wallet");
@@ -359,15 +357,31 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                         booking.paymentMethod
                     );
                 } catch (ex) {
-                    if (ex.error && ex.reason) {
-                        throw new Meteor.Error(ex.error, ex.reason);
-                    } else {
-                        console.log(ex);
-                        throw new Meteor.Error(
-                            "Internal Error",
-                            "Payment failed!"
-                        );
-                    }
+                    console.log(ex);
+                    // if (ex.error && ex.reason) {
+                    //     throw new Meteor.Error(ex.error, ex.reason);
+                    // } else {
+                    //     console.log(ex);
+                    //     throw new Meteor.Error(
+                    //         "Internal Error",
+                    //         "Payment failed!"
+                    //     );
+                    // }
+                    sendPushNotification(
+                        "Payment failed",
+                        "we are unable to charge you card.\nPlease pay using cash.",
+                        userId
+                    );
+
+                    return await payUsingCash(
+                        booking,
+                        price,
+                        bookingId,
+                        walletTxn,
+                        endingPoint,
+                        rideDuration,
+                        "cash"
+                    );
                 }
             }
 
@@ -408,80 +422,126 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                     }
                 }
             );
+            //send receipt email
+            sendReceiptEmail(booking, userId, distance, rideDuration, price);
+
             return {
                 success: true,
                 amountDeductedFromWallet: walletTxn.amountDeducted
             };
         } else {
-            var walletTxn = await payUsingWallet(
-                booking.userId,
+            return await payUsingCash(
+                booking,
                 price,
-                bookingId.toString()
+                bookingId,
+                walletTxn,
+                endingPoint,
+                rideDuration,
+                distance,
+                userId
             );
-
-            console.log("done payment with wallet");
-
-            let finalFare = walletTxn
-                ? walletTxn.remainingAmount
-                    ? walletTxn.remainingAmount
-                    : 0
-                : price;
-
-            console.log("remainingAmount:", finalFare);
-
-            await BookingRecord.update(
-                {
-                    bookingId: bookingId
-                },
-                {
-                    $set: {
-                        totalFare: finalFare
-                    }
-                }
-            );
-
-            await node.callAPI("assets/updateAssetInfo", {
-                assetName: config.ASSET.Bookings,
-                fromAccount: node.getWeb3().eth.accounts[0],
-                identifier: bookingId,
-                public: {
-                    cashToBeCollected: finalFare,
-                    amountDeductedFromWallet: walletTxn.amountDeducted,
-                    rideStatus: "finished",
-                    actualEndingPoint: endingPoint,
-                    rideDuration: rideDuration,
-                    totalFare: price
-                }
-            });
-
-            console.log({
-                totalFare: price,
-                finalFare: finalFare,
-                payUsingCash: finalFare > 0 ? true : false
-            });
-            await BookingRecord.update(
-                {
-                    bookingId: bookingId
-                },
-                {
-                    $set: {
-                        status: "finished",
-                        totalFare: price,
-                        active: false
-                    }
-                }
-            );
-            return {
-                totalFare: price,
-                finalFare: finalFare,
-                payUsingCash: finalFare > 0 ? true : false
-            };
         }
     } else {
         return {
             message: localization.strings.unableToGetBooking
         };
     }
+};
+
+const payUsingCash = async (
+    booking,
+    price,
+    bookingId,
+    walletTxn,
+    endingPoint,
+    rideDuration,
+    distance,
+    userId,
+    cameByError = false
+) => {
+    var walletTxn = await payUsingWallet(
+        booking.userId,
+        price,
+        bookingId.toString()
+    );
+
+    console.log("done payment with wallet");
+
+    let finalFare = walletTxn
+        ? walletTxn.remainingAmount
+            ? walletTxn.remainingAmount
+            : 0
+        : price;
+
+    console.log("remainingAmount:", finalFare);
+    const BookingSetQuery = {
+        totalFare: finalFare
+    };
+    const assetPublic = {
+        cashToBeCollected: finalFare,
+        amountDeductedFromWallet: walletTxn.amountDeducted,
+        rideStatus: "finished",
+        actualEndingPoint: endingPoint,
+        rideDuration: rideDuration,
+        totalFare: price
+    };
+    if (cameByError) {
+        BookingSetQuery["paymentMethod"] = "cash";
+        assetPublic["paymentMethod"] = "cash";
+    }
+    await BookingRecord.update(
+        {
+            bookingId: bookingId
+        },
+        {
+            $set: BookingSetQuery
+        }
+    );
+
+    await node.callAPI("assets/updateAssetInfo", {
+        assetName: config.ASSET.Bookings,
+        fromAccount: node.getWeb3().eth.accounts[0],
+        identifier: bookingId,
+        public: assetPublic
+    });
+
+    console.log({
+        totalFare: price,
+        finalFare: finalFare,
+        payUsingCash: finalFare > 0 ? true : false
+    });
+    await BookingRecord.update(
+        {
+            bookingId: bookingId
+        },
+        {
+            $set: {
+                status: "finished",
+                totalFare: price,
+                active: false
+            }
+        }
+    );
+    //send receipt email
+    sendReceiptEmail(booking, userId, distance, rideDuration, price);
+    //send user a message
+    if (cameByError) {
+        const userDetails = Meteor.users.find({ _id: userId }).fetch()[0];
+        if (userDetails && userDetails.profile && userDetails.profile.phone) {
+            sendMessage(
+                [userDetails.profile.phone],
+                `[HUSTLE]\nHi ${
+                    userDetails.profile.name
+                },\nwe are unable to charge your card,\n please pay ${finalFare} SAR by cash.\n `
+            );
+        }
+    }
+    return {
+        totalFare: price,
+        finalFare: finalFare,
+        payUsingCash: finalFare > 0 ? true : false,
+        paymentMethod: "cash"
+    };
 };
 
 //For online payment after confirmation call this
