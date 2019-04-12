@@ -3,6 +3,7 @@
     "private": true,
     "scripts": {
         "start": "MONGO_URL=mongodb://saikatharryc:saikat95@ds145303.mlab.com:45303/hustle meteor --settings settings-development.json",
+        "debug": "MONGO_URL=mongodb://saikatharryc:saikat95@ds145303.mlab.com:45303/hustle meteor run --inspect-brk=9229",
         "test": "meteor test --once --driver-package meteortesting:mocha",
         "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
         "visualize": "meteor --production --extra-packages bundle-visualizer",
