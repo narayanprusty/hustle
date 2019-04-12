@@ -451,7 +451,7 @@ class CurrentBooking extends Component {
             p1,
             this.state.currentPosition,
             this.state.userId,
-            async (error, response) => {
+            (error, response) => {
                 if (error) {
                     console.log(error);
                     this.setState({
@@ -459,7 +459,7 @@ class CurrentBooking extends Component {
                     });
                     //Add localization support
 
-                    notify.show(
+                    return notify.show(
                         error.reason
                             ? error.reason
                             : localizationManager.strings.unableToFinishTheRide,
@@ -581,7 +581,7 @@ class CurrentBooking extends Component {
                                         stop={5}
                                         emptySymbol="fa fa-star-o fa-2x empty"
                                         fullSymbol="fa fa-star fa-2x full"
-                                        initialRating={this.state.avgUserRating}
+                                        initialRating={this.state.riderRating}
                                         readonly
                                         style={{
                                             fontSize: "10px"

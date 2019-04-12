@@ -195,11 +195,11 @@ const saveCardToHyperPay = data => {
                 "Content-Length": cardData.length
             }
         };
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             try {
-                var postRequest = https.request(options, function(res) {
+                var postRequest = https.request(options, res => {
                     res.setEncoding("utf8");
-                    res.on("data", function(chunk) {
+                    res.on("data", chunk => {
                         jsonRes = JSON.parse(chunk);
                         resolve(jsonRes);
                     });
@@ -329,13 +329,31 @@ const oneClickPayment = async (amount, hyperPayId) => {
                 "Content-Length": cardData.length
             }
         };
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             try {
-                var postRequest = https.request(options, function(res) {
+                var postRequest = https.request(options, res => {
                     res.setEncoding("utf8");
-                    res.on("data", function(chunk) {
+                    res.on("data", async chunk => {
                         jsonRes = JSON.parse(chunk);
-                        resolve(jsonRes);
+                        if (jsonRes.id) {
+                            const { status } = await checkPaymentStatus(
+                                jsonRes.id
+                            );
+                            if (status == "ACK") {
+                                resolve(jsonRes);
+                            } else {
+                                reject({
+                                    error: "Payment failed",
+                                    reason: "Payment declined by the server"
+                                });
+                            }
+                        } else {
+                            console.log("JsonRes>>", jsonRes);
+                            reject({
+                                error: "Payment failed",
+                                reason: "Internal Error"
+                            });
+                        }
                     });
                 });
                 postRequest.write(cardData);
@@ -352,7 +370,6 @@ const oneClickPayment = async (amount, hyperPayId) => {
 
 const checkPaymentStatus = id => {
     try {
-        console.log(amount, hyperPayId);
         if (!id) {
             return {
                 message: localizationManager.strings.invalidArguments
@@ -370,13 +387,14 @@ const checkPaymentStatus = id => {
             path: path,
             method: "GET"
         };
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             try {
-                var postRequest = https.request(options, function(res) {
+                var postRequest = https.request(options, res => {
                     res.setEncoding("utf8");
-                    res.on("data", function(chunk) {
+                    res.on("data", chunk => {
                         jsonRes = JSON.parse(chunk);
                         let code = jsonRes.result.code;
+                        console.log(code);
                         var patt1 = new RegExp(
                             "^(000.000.|000.100.1|000.[36])"
                         );

@@ -304,18 +304,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
     //         totalFare: price
     //     }
     // });
-    await BookingRecord.update(
-        {
-            bookingId: bookingId
-        },
-        {
-            $set: {
-                status: "finished",
-                totalFare: price,
-                active: false
-            }
-        }
-    );
+
     await DriverMeta.update(
         {
             driverId: driverId
@@ -362,13 +351,24 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                         ? walletTxn.remainingAmount
                         : price
                 );
-
-                var receipt = await oneClickPayment(
-                    walletTxn && walletTxn.success
-                        ? walletTxn.remainingAmount
-                        : price,
-                    booking.paymentMethod
-                );
+                try {
+                    var receipt = await oneClickPayment(
+                        walletTxn && walletTxn.success
+                            ? walletTxn.remainingAmount
+                            : price,
+                        booking.paymentMethod
+                    );
+                } catch (ex) {
+                    if (ex.error && ex.reason) {
+                        throw new Meteor.Error(ex.error, ex.reason);
+                    } else {
+                        console.log(ex);
+                        throw new Meteor.Error(
+                            "Internal Error",
+                            "Payment failed!"
+                        );
+                    }
+                }
             }
 
             console.log(receipt);
@@ -396,7 +396,18 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                     totalFare: price
                 }
             });
-
+            await BookingRecord.update(
+                {
+                    bookingId: bookingId
+                },
+                {
+                    $set: {
+                        status: "finished",
+                        totalFare: price,
+                        active: false
+                    }
+                }
+            );
             return {
                 success: true,
                 amountDeductedFromWallet: walletTxn.amountDeducted
@@ -448,7 +459,18 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                 finalFare: finalFare,
                 payUsingCash: finalFare > 0 ? true : false
             });
-
+            await BookingRecord.update(
+                {
+                    bookingId: bookingId
+                },
+                {
+                    $set: {
+                        status: "finished",
+                        totalFare: price,
+                        active: false
+                    }
+                }
+            );
             return {
                 totalFare: price,
                 finalFare: finalFare,
