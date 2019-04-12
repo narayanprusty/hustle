@@ -394,7 +394,7 @@ const checkPaymentStatus = id => {
                     res.on("data", chunk => {
                         jsonRes = JSON.parse(chunk);
                         let code = jsonRes.result.code;
-                        console.log(code);
+                        console.log(jsonRes);
                         var patt1 = new RegExp(
                             "^(000.000.|000.100.1|000.[36])"
                         );

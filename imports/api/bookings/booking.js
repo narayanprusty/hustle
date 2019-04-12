@@ -475,20 +475,22 @@ const payUsingCash = async (
 
     console.log("remainingAmount:", finalFare);
     const BookingSetQuery = {
-        totalFare: finalFare
+        totalFare: finalFare,
+        paymentMethod: "cash"
     };
     const assetPublic = {
         cashToBeCollected: finalFare,
         amountDeductedFromWallet: walletTxn.amountDeducted,
         rideStatus: "finished",
+        paymentMethod: "cash",
         actualEndingPoint: endingPoint,
         rideDuration: rideDuration,
         totalFare: price
     };
-    if (cameByError) {
-        BookingSetQuery["paymentMethod"] = "cash";
-        assetPublic["paymentMethod"] = "cash";
-    }
+    // if (cameByError) {
+    //     BookingSetQuery["paymentMethod"] = "cash";
+    //     assetPublic["paymentMethod"] = "cash";
+    // }
     await BookingRecord.update(
         {
             bookingId: bookingId
@@ -528,6 +530,7 @@ const payUsingCash = async (
     if (cameByError) {
         const userDetails = Meteor.users.find({ _id: userId }).fetch()[0];
         if (userDetails && userDetails.profile && userDetails.profile.phone) {
+            console.log("<<<<<Here you go sendig", userDetails);
             sendMessage(
                 [userDetails.profile.phone],
                 `[HUSTLE]\nHi ${
