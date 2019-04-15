@@ -380,7 +380,9 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                         walletTxn,
                         endingPoint,
                         rideDuration,
-                        "cash"
+                        distance,
+                        userId,
+                        true
                     );
                 }
             }
