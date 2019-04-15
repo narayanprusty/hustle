@@ -336,10 +336,23 @@ const oneClickPayment = async (amount, hyperPayId, merchantTransactionId) => {
                     res.on("data", async chunk => {
                         jsonRes = JSON.parse(chunk);
                         if (jsonRes.id) {
-                            const { status } = await checkPaymentStatus(
-                                jsonRes.id
+                            let code = jsonRes.result.code;
+                            console.log(jsonRes);
+                            var patt1 = new RegExp(
+                                "^(000.000.|000.100.1|000.[36])"
                             );
-                            if (status == "ACK") {
+                            var patt2 = new RegExp(
+                                "/^(000.400.0|000.400.100)/"
+                            );
+                            if (patt1.test(code) || patt2.test(code)) {
+                                jsonRes["status"] = "ACK";
+                            } else {
+                                jsonRes["status"] = "NAK";
+                            }
+                            // const { status } = await checkPaymentStatus(
+                            //     jsonRes.id
+                            // );
+                            if (jsonRes.status == "ACK") {
                                 resolve(jsonRes);
                             } else {
                                 reject({
