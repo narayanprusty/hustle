@@ -354,7 +354,8 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                         walletTxn && walletTxn.success
                             ? walletTxn.remainingAmount
                             : price,
-                        booking.paymentMethod
+                        booking.paymentMethod,
+                        bookingId.toString()
                     );
                 } catch (ex) {
                     console.log(ex);
