@@ -338,12 +338,10 @@ const oneClickPayment = async (amount, hyperPayId, merchantTransactionId) => {
                         if (jsonRes.id) {
                             let code = jsonRes.result.code;
                             console.log(jsonRes);
-                            var patt1 = new RegExp(
-                                "^(000.000.|000.100.1|000.[36])"
-                            );
-                            var patt2 = new RegExp(
-                                "/^(000.400.0|000.400.100)/"
-                            );
+                            var patt1 = /(000.000.|000.100.1|000.[36])/;
+
+                            var patt2 = /(000.400.0[^3]|000.400.100)/;
+
                             if (patt1.test(code) || patt2.test(code)) {
                                 jsonRes["status"] = "ACK";
                             } else {
@@ -408,11 +406,12 @@ const checkPaymentStatus = id => {
                         jsonRes = JSON.parse(chunk);
                         let code = jsonRes.result.code;
                         console.log(jsonRes);
-                        var patt1 = new RegExp(
-                            "^(000.000.|000.100.1|000.[36])"
-                        );
-                        var patt2 = new RegExp("/^(000.400.0|000.400.100)/");
-                        if (patt1.test(code) || patt2.test(code)) {
+                        const successPattern = /^(000\.000\.|000\.100\.1|000\.[36])/;
+                        const manuallPattern = /^(000\.400\.0[^3]|000\.400\.100)/;
+                        if (
+                            successPattern.test(code) ||
+                            manuallPattern.test(code)
+                        ) {
                             jsonRes["status"] = "ACK";
                         } else {
                             jsonRes["status"] = "NAK";
