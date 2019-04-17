@@ -183,11 +183,11 @@ class DriverRideHistory extends Component {
                                             </b>
                                         </div>
                                         <div>
-                                            {
-                                                localizationManager.strings[
-                                                    data.paymentMethod
-                                                ]
-                                            }
+                                            {data.paymentMethod == "cash"
+                                                ? localizationManager.strings
+                                                      .cash
+                                                : localizationManager.strings
+                                                      .Card}
                                         </div>
                                     </li>
                                     <li className="item">
