@@ -3,6 +3,7 @@ import {
     getCards,
     removeCard,
     getCardsForPayment,
+    getCheckoutId
 } from "./payments";
 import {
     Meteor
@@ -13,5 +14,6 @@ Meteor.methods({
     getCards,
     removeCard,
     getCardsForPayment,
+    getCheckoutId
 });
 export {};
