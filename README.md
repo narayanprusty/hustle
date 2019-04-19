@@ -13,3 +13,6 @@ Clone and start doing below commands:
 
 1> `npm i`
 2> Run the app:  `MONGO_URL=mongodb://saikatharryc:saikat95@ds145303.mlab.com:45303/hustle meteor`
+
+Error: Device type "com.apple.CoreSimulator.SimDeviceType.undefined" could not be found.
+Resolve: cd .meteor/local/cordova-build/platforms/ios/cordova && meteor npm install ios-sim@latest

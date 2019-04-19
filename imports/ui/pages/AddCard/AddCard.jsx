@@ -83,20 +83,21 @@ export default class AddCard extends Component {
     // }
 
     renderPaymentform = () => {
-        console.log('Loading ')
+        /*console.log('Loading ')
         const script = document.createElement("script");
+
+        console.log(this.state.checkoutId)
 
         script.src = `https://test.oppwa.com/v1/paymentWidgets.js?checkoutId=${this.state.checkoutId}`;
         script.async = true;
 
-        document.head.appendChild(script);
+        document.head.appendChild(script);*/
 
-        const form = document.createElement("form")
+        /*const form = document.createElement("form")
         form.action = "http://localhost:3000/result";
         form.setAttribute("class", "paymentWidgets");
         form.setAttribute("data-brands", "VISA MASTER AMEX")
-        document.getElementById("checkoutFormDiv").appendChild(form);
-
+        document.getElementById("checkoutFormDiv").appendChild(form);*/
     }
 
     render() {
