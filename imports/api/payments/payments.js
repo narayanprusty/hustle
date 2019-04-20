@@ -19,7 +19,33 @@ const node = new Blockcluster.Dynamo({
     instanceId: config.BLOCKCLUSTER.instanceId
 });
 
-const addCard = async (data, op, userId) => {
+
+
+function resultRequest(resourcePath, callback) {
+    var path = resourcePath;
+    path += '?authentication.userId='+config.HYPERPAY.UserId
+    path += '&authentication.password='+config.HYPERPAY.Password
+    path += '&authentication.entityId='+config.HYPERPAY.EntityId
+    var options = {
+        port: 443,
+        host: process.env.NODE_ENV =='production' ? 'oppwa.com':'test.oppwa.com',
+        path: path,
+        method: 'GET',
+    };
+    var postRequest = https.request(options, function (res) {
+        res.setEncoding('utf8');
+        res.on('data', function (chunk) {
+            jsonRes = JSON.parse(chunk);
+            return callback(jsonRes);
+        });
+    });
+    postRequest.end();
+}
+
+const addCard = async (data, op, userId,resourcePath) => {
+    resultRequest(resourcePath,responseData=>{
+        console.log(responseData);
+
     console.log("Card info:", data);
     var expiryMonth =
         data.expiry && data.expiry.indexOf("/") != -1
@@ -119,6 +145,7 @@ const addCard = async (data, op, userId) => {
             message: op.result.description
         };
     }
+});
 };
 
 const saveCardToBlockcluster = async data => {
@@ -389,8 +416,8 @@ const checkout = () => {
         "authentication.entityId":
             config.HYPERPAY.EntityId || "8a8294174d0595bb014d05d82e5b01d2",
         amount: "1.00",
-        currency: "SAR",
-        paymentType: "PA",
+        currency: config.HYPERPAY.Currency,
+        paymentType: config.HYPERPAY.PaymentType,
         createRegistration: true,
         recurringType: "INITIAL"
     });

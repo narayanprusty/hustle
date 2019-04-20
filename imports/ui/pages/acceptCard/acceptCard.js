@@ -33,16 +33,24 @@ export default class AcceptCard extends Component {
             },
             id: quries.id
         };
-        Meteor.call("addCard", data, op, quries.user, (err, data) => {
-            this.setState({ finished: true });
-            if (err) {
-                this.setState({
-                    message:
-                        "we cnnot process your card, please try again later."
-                });
+        Meteor.call(
+            "addCard",
+            data,
+            op,
+            quries.user,
+            decodeURIComponent(quries.resourcePath),
+            (err, data) => {
+                this.setState({ finished: true });
+                if (err) {
+                    this.setState({
+                        message:
+                            "we cnnot process your card, please try again later."
+                    });
+                }
             }
-        });
+        );
     };
+
     render() {
         return (
             <div>
