@@ -26,10 +26,7 @@ function resultRequest(resourcePath, callback) {
     path += "&authentication.entityId=" + config.HYPERPAY.EntityId;
     var options = {
         port: 443,
-        host:
-            process.env.NODE_ENV == "production"
-                ? "oppwa.com"
-                : "test.oppwa.com",
+        host: config.env == "production" ? "oppwa.com" : "test.oppwa.com",
         path: path,
         method: "GET"
     };
@@ -424,10 +421,7 @@ const checkout = () => {
     });
     var options = {
         port: 443,
-        host:
-            process.env.NODE_ENV == "production"
-                ? "oppwa.com"
-                : "test.oppwa.com",
+        host: config.env == "production" ? "oppwa.com" : "test.oppwa.com",
         path: path,
         method: "POST",
         headers: {
