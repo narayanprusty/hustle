@@ -19,7 +19,7 @@ const node = new Blockcluster.Dynamo({
     instanceId: config.BLOCKCLUSTER.instanceId
 });
 
-const addCard = async data => {
+const addCard = async (data, op, userId) => {
     console.log("Card info:", data);
     var expiryMonth =
         data.expiry && data.expiry.indexOf("/") != -1
@@ -79,7 +79,7 @@ const addCard = async data => {
         };
     }
 
-    var op = await saveCardToHyperPay(data);
+    // var op = await saveCardToHyperPay(data);
 
     console.log("output", op);
 
@@ -87,7 +87,7 @@ const addCard = async data => {
         sendPushNotification(
             localizationManager.strings.failedAddingCard,
             op.message,
-            Meteor.userId()
+            userId()
         );
         return op;
     }
@@ -99,7 +99,7 @@ const addCard = async data => {
         sendPushNotification(
             localizationManager.strings.cardAddedShort,
             localizationManager.strings.cardAddedPushNotification,
-            Meteor.userId()
+            userId
         );
 
         if (op.success)
@@ -112,7 +112,7 @@ const addCard = async data => {
         sendPushNotification(
             localizationManager.strings.failedAddingCard,
             "",
-            Meteor.userId()
+            userId
         );
         return {
             success: false,
