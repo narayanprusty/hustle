@@ -19,22 +19,23 @@ const node = new Blockcluster.Dynamo({
     instanceId: config.BLOCKCLUSTER.instanceId
 });
 
-
-
 function resultRequest(resourcePath, callback) {
     var path = resourcePath;
-    path += '?authentication.userId='+config.HYPERPAY.UserId
-    path += '&authentication.password='+config.HYPERPAY.Password
-    path += '&authentication.entityId='+config.HYPERPAY.EntityId
+    path += "?authentication.userId=" + config.HYPERPAY.UserId;
+    path += "&authentication.password=" + config.HYPERPAY.Password;
+    path += "&authentication.entityId=" + config.HYPERPAY.EntityId;
     var options = {
         port: 443,
-        host: process.env.NODE_ENV =='production' ? 'oppwa.com':'test.oppwa.com',
+        host:
+            process.env.NODE_ENV == "production"
+                ? "oppwa.com"
+                : "test.oppwa.com",
         path: path,
-        method: 'GET',
+        method: "GET"
     };
-    var postRequest = https.request(options, function (res) {
-        res.setEncoding('utf8');
-        res.on('data', function (chunk) {
+    var postRequest = https.request(options, function(res) {
+        res.setEncoding("utf8");
+        res.on("data", function(chunk) {
             jsonRes = JSON.parse(chunk);
             return callback(jsonRes);
         });
@@ -42,110 +43,110 @@ function resultRequest(resourcePath, callback) {
     postRequest.end();
 }
 
-const addCard = async (data, op, userId,resourcePath) => {
-    resultRequest(resourcePath,responseData=>{
+const addCard = async (data, op, userId, resourcePath) => {
+    resultRequest(resourcePath, async responseData => {
         console.log(responseData);
 
-    console.log("Card info:", data);
-    var expiryMonth =
-        data.expiry && data.expiry.indexOf("/") != -1
-            ? data.expiry.split("/")[0]
-            : "";
-    if (expiryMonth <= 0 || expiryMonth >= 13) {
-        return {
-            success: false,
-            message: localizationManager.strings.invalidExpiry
-        };
-    } else if (data.number <= 0 || data.number.length <= 18) {
-        return {
-            success: false,
-            message: localizationManager.strings.invalidCardNumber
-        };
-    } else if (!isNaN(parseInt(data.name.toString()))) {
-        return {
-            success: false,
-            message: localizationManager.strings.invalidName
-        };
-    } else if (data.cvc <= 0) {
-        return {
-            success: false,
-            message: localizationManager.strings.invalidCVV
-        };
-    }
-    var currentYear = new Date().getFullYear().toString();
+        console.log("Card info:", data);
+        var expiryMonth =
+            data.expiry && data.expiry.indexOf("/") != -1
+                ? data.expiry.split("/")[0]
+                : "";
+        if (expiryMonth <= 0 || expiryMonth >= 13) {
+            return {
+                success: false,
+                message: localizationManager.strings.invalidExpiry
+            };
+        } else if (data.number <= 0 || data.number.length <= 18) {
+            return {
+                success: false,
+                message: localizationManager.strings.invalidCardNumber
+            };
+        } else if (!isNaN(parseInt(data.name.toString()))) {
+            return {
+                success: false,
+                message: localizationManager.strings.invalidName
+            };
+        } else if (data.cvc <= 0) {
+            return {
+                success: false,
+                message: localizationManager.strings.invalidCVV
+            };
+        }
+        var currentYear = new Date().getFullYear().toString();
 
-    var expiryYear =
-        data.expiry && data.expiry.indexOf("/") != -1
-            ? data.expiry.split("/")[1] > currentYear.slice(2, 4)
-                ? currentYear.slice(0, 2) + data.expiry.split("/")[1]
-                : (parseInt(currentYear.slice(0, 2)) + 1).toString() +
-                  data.expiry.split("/")[1]
-            : "";
+        var expiryYear =
+            data.expiry && data.expiry.indexOf("/") != -1
+                ? data.expiry.split("/")[1] > currentYear.slice(2, 4)
+                    ? currentYear.slice(0, 2) + data.expiry.split("/")[1]
+                    : (parseInt(currentYear.slice(0, 2)) + 1).toString() +
+                      data.expiry.split("/")[1]
+                : "";
 
-    expiryYear = expiryYear.length == 4 ? expiryYear : "";
+        expiryYear = expiryYear.length == 4 ? expiryYear : "";
 
-    data["expiryYear"] = expiryYear;
-    data["expiryMonth"] = expiryMonth;
-    data["number"] = data.number.toString().replace(/ /g, "");
+        data["expiryYear"] = expiryYear;
+        data["expiryMonth"] = expiryMonth;
+        data["number"] = data.number.toString().replace(/ /g, "");
 
-    var cards = await node.callAPI("assets/search", {
-        $query: {
-            assetName: config.ASSET.Card,
-            cardNumber: parseInt(data.number.toString()),
-            status: "open"
+        var cards = await node.callAPI("assets/search", {
+            $query: {
+                assetName: config.ASSET.Card,
+                cardNumber: parseInt(data.number.toString()),
+                status: "open"
+            }
+        });
+
+        console.log("found:", cards.length > 0);
+
+        if (cards.length > 0) {
+            return {
+                success: false,
+                message: localizationManager.strings.cardExists
+            };
+        }
+
+        // var op = await saveCardToHyperPay(data);
+
+        console.log("output", op);
+
+        if (op.message && op.success == false) {
+            sendPushNotification(
+                localizationManager.strings.failedAddingCard,
+                op.message,
+                userId()
+            );
+            return op;
+        }
+
+        if (op.id && op.result.description.indexOf("successfully") != -1) {
+            data["hyperPayId"] = op.id;
+            op = await saveCardToBlockcluster(data);
+            //Push notification
+            sendPushNotification(
+                localizationManager.strings.cardAddedShort,
+                localizationManager.strings.cardAddedPushNotification,
+                userId
+            );
+
+            if (op.success)
+                return {
+                    success: true,
+                    data: data
+                };
+        } else {
+            //Push notification
+            sendPushNotification(
+                localizationManager.strings.failedAddingCard,
+                "",
+                userId
+            );
+            return {
+                success: false,
+                message: op.result.description
+            };
         }
     });
-
-    console.log("found:", cards.length > 0);
-
-    if (cards.length > 0) {
-        return {
-            success: false,
-            message: localizationManager.strings.cardExists
-        };
-    }
-
-    // var op = await saveCardToHyperPay(data);
-
-    console.log("output", op);
-
-    if (op.message && op.success == false) {
-        sendPushNotification(
-            localizationManager.strings.failedAddingCard,
-            op.message,
-            userId()
-        );
-        return op;
-    }
-
-    if (op.id && op.result.description.indexOf("successfully") != -1) {
-        data["hyperPayId"] = op.id;
-        op = await saveCardToBlockcluster(data);
-        //Push notification
-        sendPushNotification(
-            localizationManager.strings.cardAddedShort,
-            localizationManager.strings.cardAddedPushNotification,
-            userId
-        );
-
-        if (op.success)
-            return {
-                success: true,
-                data: data
-            };
-    } else {
-        //Push notification
-        sendPushNotification(
-            localizationManager.strings.failedAddingCard,
-            "",
-            userId
-        );
-        return {
-            success: false,
-            message: op.result.description
-        };
-    }
-});
 };
 
 const saveCardToBlockcluster = async data => {
@@ -423,7 +424,10 @@ const checkout = () => {
     });
     var options = {
         port: 443,
-        host: process.env.NODE_ENV =='production' ? 'oppwa.com':'test.oppwa.com',
+        host:
+            process.env.NODE_ENV == "production"
+                ? "oppwa.com"
+                : "test.oppwa.com",
         path: path,
         method: "POST",
         headers: {
