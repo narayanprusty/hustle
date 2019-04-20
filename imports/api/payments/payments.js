@@ -423,7 +423,7 @@ const checkout = () => {
     });
     var options = {
         port: 443,
-        host: "test.oppwa.com",
+        host: process.env.NODE_ENV =='production' ? 'oppwa.com':'test.oppwa.com',
         path: path,
         method: "POST",
         headers: {
