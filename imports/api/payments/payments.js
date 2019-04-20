@@ -8,9 +8,9 @@ import { sendPushNotification } from "../../modules/helpers/server";
 import localizationManager from "../../ui/localization";
 import { rejects } from "assert";
 
-function request(data, callback) { }
+function request(data, callback) {}
 
-request(function (responseData) {
+request(function(responseData) {
     console.log(responseData);
 });
 
@@ -53,7 +53,7 @@ const addCard = async data => {
             ? data.expiry.split("/")[1] > currentYear.slice(2, 4)
                 ? currentYear.slice(0, 2) + data.expiry.split("/")[1]
                 : (parseInt(currentYear.slice(0, 2)) + 1).toString() +
-                data.expiry.split("/")[1]
+                  data.expiry.split("/")[1]
             : "";
 
     expiryYear = expiryYear.length == 4 ? expiryYear : "";
@@ -317,7 +317,7 @@ const oneClickPayment = async (amount, hyperPayId, merchantTransactionId) => {
             //"customer.email": "ukrocks.mehta@gmail.com",
             shopperResultUrl: `${
                 config.apiHost.includes(":3000") ? "http" : "https"
-                }://${config.apiHost}/app/home`
+            }://${config.apiHost}/app/home`
         });
         console.log(cardData);
         var options = {
@@ -381,31 +381,33 @@ const oneClickPayment = async (amount, hyperPayId, merchantTransactionId) => {
 };
 
 const checkout = () => {
-    var path = '/v1/checkouts';
+    var path = "/v1/checkouts";
     var data = querystring.stringify({
-        'authentication.userId': '8a8294174d0595bb014d05d829e701d1',
-        'authentication.password': '9TnJPc2n9h',
-        'authentication.entityId': '8a8294174d0595bb014d05d82e5b01d2',
-        'amount': '92.00',
-        'currency': 'EUR',
-        'paymentType': 'DB'
+        "authentication.userId": "8a8294174d0595bb014d05d829e701d1",
+        "authentication.password": "9TnJPc2n9h",
+        "authentication.entityId": "8a8294174d0595bb014d05d82e5b01d2",
+        amount: "1.00",
+        currency: "SAR",
+        paymentType: "PA",
+        createRegistration: true,
+        recurringType: "INITIAL"
     });
     var options = {
         port: 443,
-        host: 'test.oppwa.com',
+        host: "test.oppwa.com",
         path: path,
-        method: 'POST',
+        method: "POST",
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': data.length
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Length": data.length
         }
     };
 
     return new Promise((resolve, reject) => {
         try {
-            var postRequest = https.request(options, function (res) {
-                res.setEncoding('utf8');
-                res.on('data', function (chunk) {
+            var postRequest = https.request(options, function(res) {
+                res.setEncoding("utf8");
+                res.on("data", function(chunk) {
                     jsonRes = JSON.parse(chunk);
                     resolve(jsonRes);
                 });
@@ -416,7 +418,7 @@ const checkout = () => {
             reject(ex);
         }
     });
-}
+};
 
 const getCheckoutId = async () => {
     try {
@@ -426,7 +428,7 @@ const getCheckoutId = async () => {
         console.log(ex);
         return ex;
     }
-}
+};
 
 const checkPaymentStatus = id => {
     try {
@@ -479,4 +481,11 @@ const checkPaymentStatus = id => {
     }
 };
 
-export { addCard, getCards, removeCard, getCardsForPayment, oneClickPayment, getCheckoutId };
+export {
+    addCard,
+    getCards,
+    removeCard,
+    getCardsForPayment,
+    oneClickPayment,
+    getCheckoutId
+};
