@@ -383,9 +383,11 @@ const oneClickPayment = async (amount, hyperPayId, merchantTransactionId) => {
 const checkout = () => {
     var path = "/v1/checkouts";
     var data = querystring.stringify({
-        "authentication.userId": "8a8294174d0595bb014d05d829e701d1",
-        "authentication.password": "9TnJPc2n9h",
-        "authentication.entityId": "8a8294174d0595bb014d05d82e5b01d2",
+        "authentication.userId":
+            config.HYPERPAY.UserId || "8a8294174d0595bb014d05d829e701d1",
+        "authentication.password": config.HYPERPAY.Password || "9TnJPc2n9h",
+        "authentication.entityId":
+            config.HYPERPAY.EntityId || "8a8294174d0595bb014d05d82e5b01d2",
         amount: "1.00",
         currency: "SAR",
         paymentType: "PA",
