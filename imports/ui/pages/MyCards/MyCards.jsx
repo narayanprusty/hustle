@@ -53,7 +53,7 @@ export default class MyCards extends Component {
             }
             console.log("info:", res, err);
             open(
-                `http://localhost:3001/checkout?id=${
+                `https://hustle-pay.gohustleapp.com/checkout?id=${
                     res.op.id
                 }&user=${Meteor.userId()}`,
                 "_system",
