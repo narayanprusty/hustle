@@ -29,7 +29,8 @@ export default class AcceptCard extends Component {
         const op = {
             success: true,
             result: {
-                description: "successfully processed"
+                description:
+                    "successfully processed, \nplease wait this window will close automatically."
             },
             id: quries.id
         };
@@ -40,11 +41,14 @@ export default class AcceptCard extends Component {
             quries.user,
             decodeURIComponent(quries.resourcePath),
             (err, data) => {
+                setTimeout(function() {
+                    close();
+                }, 3000);
                 this.setState({ finished: true });
                 if (err) {
                     this.setState({
                         message:
-                            "we cnnot process your card, please try again later."
+                            "we cnnot process your card, please try again later.\nplease wait this window will close automatically."
                     });
                 }
             }
@@ -53,7 +57,7 @@ export default class AcceptCard extends Component {
 
     render() {
         return (
-            <div>
+            <div style={{ textAlign: "center" }}>
                 <p>{this.state.message ? this.state.message : "Hi,"}</p>
                 {this.state.finished
                     ? "please close this window."
