@@ -41,7 +41,7 @@ function resultRequest(resourcePath, callback) {
 }
 
 const revarsalReq = paymentId => {
-    var path = "/v1/payments/" + paymentId + "/";
+    var path = "/v1/payments/" + paymentId;
     var data = querystring.stringify({
         "authentication.userId":
             config.HYPERPAY.UserId || "8a8294174d0595bb014d05d829e701d1",
@@ -86,7 +86,20 @@ const addCard = async (op, userId, resourcePath) => {
             if (!responseData.card) {
                 return Promise.reject("not able to process");
             } else {
-                await revarsalReq(responseData.id);
+                const revarsalDetail = await revarsalReq(responseData.id);
+                if (
+                    revarsalDetail &&
+                    revarsalDetail.resultDetails &&
+                    revarsalDetail.resultDetails.ExtendedDescription !=
+                        "Approved"
+                ) {
+                    //log this to somewhere
+                    console.log(
+                        responseData.id,
+                        responseData.registrationId,
+                        revarsalDetail
+                    );
+                }
             }
             // var expiryMonth =
             //     data.expiry && data.expiry.indexOf("/") != -1
