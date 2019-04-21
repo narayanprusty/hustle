@@ -26,7 +26,7 @@ function resultRequest(resourcePath, callback) {
     path += "&authentication.entityId=" + config.HYPERPAY.EntityId;
     var options = {
         port: 443,
-        host: config.env == "production" ? "oppwa.com" : "test.oppwa.com",
+        host: config.HYPERPAY.host,
         path: path,
         method: "GET"
     };
@@ -424,7 +424,7 @@ const checkout = () => {
     });
     var options = {
         port: 443,
-        host: config.env == "production" ? "oppwa.com" : "test.oppwa.com",
+        host: config.HYPERPAY.host,
         path: path,
         method: "POST",
         headers: {
