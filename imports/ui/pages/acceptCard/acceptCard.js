@@ -62,6 +62,10 @@ export default class AcceptCard extends Component {
                         <button onClick={this.processIt}>Next</button>
                     </p>
                 )}
+                <p>
+                    incase any amount deducted by the system will be refunded
+                    within 1-5 business days.
+                </p>
             </div>
         );
     }
