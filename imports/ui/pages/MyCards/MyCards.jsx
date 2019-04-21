@@ -45,6 +45,23 @@ export default class MyCards extends Component {
         });
     };
 
+    checkout = () => {
+        Meteor.call("getCheckoutId", (err, res) => {
+            if (err) {
+                console.log(err);
+                // notify.show(localizationManager.strings.failedAddingCard, "error");
+            }
+            console.log("info:", res, err);
+            open(
+                `https://hustle-pay.gohustleapp.com/checkout?id=${
+                    res.op.id
+                }&user=${Meteor.userId()}`,
+                "_system",
+                "location=yes"
+            );
+        });
+    };
+
     render() {
         const loader = <CarLoader />;
 
@@ -89,13 +106,13 @@ export default class MyCards extends Component {
                     )}
                 </div>
                 <div className="padding-left padding-right">
-                    <Link
-                        to="/app/addCards"
+                    <a
+                        onClick={this.checkout}
                         className="button button-block button-positive"
                     >
                         <i className="icon fa fa-plus" />{" "}
                         {localizationManager.strings.addCards}
-                    </Link>
+                    </a>
                 </div>
             </div>
         );

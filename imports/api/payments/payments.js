@@ -8,9 +8,9 @@ import { sendPushNotification } from "../../modules/helpers/server";
 import localizationManager from "../../ui/localization";
 import { rejects } from "assert";
 
-function request(data, callback) { }
+function request(data, callback) {}
 
-request(function (responseData) {
+request(function(responseData) {
     console.log(responseData);
 });
 
@@ -19,105 +19,192 @@ const node = new Blockcluster.Dynamo({
     instanceId: config.BLOCKCLUSTER.instanceId
 });
 
-const addCard = async data => {
-    console.log("Card info:", data);
-    var expiryMonth =
-        data.expiry && data.expiry.indexOf("/") != -1
-            ? data.expiry.split("/")[0]
-            : "";
-    if (expiryMonth <= 0 || expiryMonth >= 13) {
-        return {
-            success: false,
-            message: localizationManager.strings.invalidExpiry
-        };
-    } else if (data.number <= 0 || data.number.length <= 18) {
-        return {
-            success: false,
-            message: localizationManager.strings.invalidCardNumber
-        };
-    } else if (!isNaN(parseInt(data.name.toString()))) {
-        return {
-            success: false,
-            message: localizationManager.strings.invalidName
-        };
-    } else if (data.cvc <= 0) {
-        return {
-            success: false,
-            message: localizationManager.strings.invalidCVV
-        };
-    }
-    var currentYear = new Date().getFullYear().toString();
+function resultRequest(resourcePath, callback) {
+    var path = resourcePath;
+    path += "?authentication.userId=" + config.HYPERPAY.UserId;
+    path += "&authentication.password=" + config.HYPERPAY.Password;
+    path += "&authentication.entityId=" + config.HYPERPAY.EntityId;
+    var options = {
+        port: 443,
+        host: config.HYPERPAY.host,
+        path: path,
+        method: "GET"
+    };
+    var postRequest = https.request(options, function(res) {
+        res.setEncoding("utf8");
+        res.on("data", function(chunk) {
+            jsonRes = JSON.parse(chunk);
+            return callback(jsonRes);
+        });
+    });
+    postRequest.end();
+}
 
-    var expiryYear =
-        data.expiry && data.expiry.indexOf("/") != -1
-            ? data.expiry.split("/")[1] > currentYear.slice(2, 4)
-                ? currentYear.slice(0, 2) + data.expiry.split("/")[1]
-                : (parseInt(currentYear.slice(0, 2)) + 1).toString() +
-                data.expiry.split("/")[1]
-            : "";
+const revarsalReq = paymentId => {
+    var path = "/v1/payments/" + paymentId;
+    var data = querystring.stringify({
+        "authentication.userId":
+            config.HYPERPAY.UserId || "8a8294174d0595bb014d05d829e701d1",
+        "authentication.password": config.HYPERPAY.Password || "9TnJPc2n9h",
+        "authentication.entityId":
+            config.HYPERPAY.EntityId || "8a8294174d0595bb014d05d82e5b01d2",
+        paymentType: "RV"
+    });
+    var options = {
+        port: 443,
+        host: config.HYPERPAY.host,
+        path: path,
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Length": data.length
+        }
+    };
 
-    expiryYear = expiryYear.length == 4 ? expiryYear : "";
-
-    data["expiryYear"] = expiryYear;
-    data["expiryMonth"] = expiryMonth;
-    data["number"] = data.number.toString().replace(/ /g, "");
-
-    var cards = await node.callAPI("assets/search", {
-        $query: {
-            assetName: config.ASSET.Card,
-            cardNumber: parseInt(data.number.toString()),
-            status: "open"
+    return new Promise((resolve, reject) => {
+        try {
+            var postRequest = https.request(options, function(res) {
+                res.setEncoding("utf8");
+                res.on("data", function(chunk) {
+                    jsonRes = JSON.parse(chunk);
+                    resolve(jsonRes);
+                });
+            });
+            postRequest.write(data);
+            postRequest.end();
+        } catch (ex) {
+            reject(ex);
         }
     });
+};
 
-    console.log("found:", cards.length > 0);
+const addCard = async (op, userId, resourcePath) => {
+    console.log("lets try to revarse the deducted thing ");
+    try {
+        resultRequest(resourcePath, async responseData => {
+            console.log(responseData);
+            if (!responseData.card) {
+                return Promise.reject("not able to process");
+            } else {
+                const revarsalDetail = await revarsalReq(responseData.id);
+                if (
+                    revarsalDetail &&
+                    revarsalDetail.resultDetails &&
+                    revarsalDetail.resultDetails.ExtendedDescription !=
+                        "Approved"
+                ) {
+                    //log this to somewhere
+                    console.log(
+                        responseData.id,
+                        responseData.registrationId,
+                        revarsalDetail
+                    );
+                }
+            }
+            // var expiryMonth =
+            //     data.expiry && data.expiry.indexOf("/") != -1
+            //         ? data.expiry.split("/")[0]
+            //         : "";
+            // if (expiryMonth <= 0 || expiryMonth >= 13) {
+            //     return {
+            //         success: false,
+            //         message: localizationManager.strings.invalidExpiry
+            //     };
+            // } else if (data.number <= 0 || data.number.length <= 18) {
+            //     return {
+            //         success: false,
+            //         message: localizationManager.strings.invalidCardNumber
+            //     };
+            // } else if (!isNaN(parseInt(data.name.toString()))) {
+            //     return {
+            //         success: false,
+            //         message: localizationManager.strings.invalidName
+            //     };
+            // } else if (data.cvc <= 0) {
+            //     return {
+            //         success: false,
+            //         message: localizationManager.strings.invalidCVV
+            //     };
+            // }
+            // var currentYear = new Date().getFullYear().toString();
 
-    if (cards.length > 0) {
-        return {
-            success: false,
-            message: localizationManager.strings.cardExists
-        };
-    }
+            // var expiryYear =
+            //     data.expiry && data.expiry.indexOf("/") != -1
+            //         ? data.expiry.split("/")[1] > currentYear.slice(2, 4)
+            //             ? currentYear.slice(0, 2) + data.expiry.split("/")[1]
+            //             : (parseInt(currentYear.slice(0, 2)) + 1).toString() +
+            //               data.expiry.split("/")[1]
+            //         : "";
 
-    var op = await saveCardToHyperPay(data);
+            // expiryYear = expiryYear.length == 4 ? expiryYear : "";
 
-    console.log("output", op);
+            data["expiryYear"] = responseData.card.expiryYear;
+            data["expiryMonth"] = responseData.card.expiryMonth;
+            data["number"] =
+                responseData.card.bin + "XXXX" + responseData.card.last4Digits;
+            data["name"] = responseData.card.holder;
+            data["paymentBrand"] = responseData.paymentBrand;
+            var cards = await node.callAPI("assets/search", {
+                $query: {
+                    assetName: config.ASSET.Card,
+                    cardNumber: parseInt(data.number.toString()),
+                    status: "open"
+                }
+            });
 
-    if (op.message && op.success == false) {
-        sendPushNotification(
-            localizationManager.strings.failedAddingCard,
-            op.message,
-            Meteor.userId()
-        );
-        return op;
-    }
+            // console.log("found:", cards.length > 0);
 
-    if (op.id && op.result.description.indexOf("successfully") != -1) {
-        data["hyperPayId"] = op.id;
-        op = await saveCardToBlockcluster(data);
-        //Push notification
-        sendPushNotification(
-            localizationManager.strings.cardAddedShort,
-            localizationManager.strings.cardAddedPushNotification,
-            Meteor.userId()
-        );
+            if (cards.length > 0) {
+                return {
+                    success: false,
+                    message: localizationManager.strings.cardExists
+                };
+            }
 
-        if (op.success)
-            return {
-                success: true,
-                data: data
-            };
-    } else {
-        //Push notification
-        sendPushNotification(
-            localizationManager.strings.failedAddingCard,
-            "",
-            Meteor.userId()
-        );
-        return {
-            success: false,
-            message: op.result.description
-        };
+            // var op = await saveCardToHyperPay(data);
+
+            console.log("output", op);
+
+            if (op.message && op.success == false) {
+                sendPushNotification(
+                    localizationManager.strings.failedAddingCard,
+                    op.message,
+                    userId()
+                );
+                return op;
+            }
+
+            if (op.id && op.result.description.indexOf("successfully") != -1) {
+                data["hyperPayId"] = responseData.registrationId;
+                op = await saveCardToBlockcluster(data);
+                //Push notification
+                sendPushNotification(
+                    localizationManager.strings.cardAddedShort,
+                    localizationManager.strings.cardAddedPushNotification,
+                    userId
+                );
+
+                if (op.success)
+                    return {
+                        success: true,
+                        data: data
+                    };
+            } else {
+                //Push notification
+                sendPushNotification(
+                    localizationManager.strings.failedAddingCard,
+                    "",
+                    userId
+                );
+                return {
+                    success: false,
+                    message: op.result.description
+                };
+            }
+        });
+    } catch (ex) {
+        console.log(ex);
+        return Promise.reject("Unknown error");
     }
 };
 
@@ -317,7 +404,7 @@ const oneClickPayment = async (amount, hyperPayId, merchantTransactionId) => {
             //"customer.email": "ukrocks.mehta@gmail.com",
             shopperResultUrl: `${
                 config.apiHost.includes(":3000") ? "http" : "https"
-                }://${config.apiHost}/app/home`
+            }://${config.apiHost}/app/home`
         });
         console.log(cardData);
         var options = {
@@ -381,31 +468,35 @@ const oneClickPayment = async (amount, hyperPayId, merchantTransactionId) => {
 };
 
 const checkout = () => {
-    var path = '/v1/checkouts';
+    var path = "/v1/checkouts";
     var data = querystring.stringify({
-        'authentication.userId': '8a8294174d0595bb014d05d829e701d1',
-        'authentication.password': '9TnJPc2n9h',
-        'authentication.entityId': '8a8294174d0595bb014d05d82e5b01d2',
-        'amount': '92.00',
-        'currency': 'EUR',
-        'paymentType': 'DB'
+        "authentication.userId":
+            config.HYPERPAY.UserId || "8a8294174d0595bb014d05d829e701d1",
+        "authentication.password": config.HYPERPAY.Password || "9TnJPc2n9h",
+        "authentication.entityId":
+            config.HYPERPAY.EntityId || "8a8294174d0595bb014d05d82e5b01d2",
+        amount: "1.00",
+        currency: config.HYPERPAY.Currency,
+        paymentType: config.HYPERPAY.PaymentType,
+        createRegistration: true,
+        recurringType: "INITIAL"
     });
     var options = {
         port: 443,
-        host: 'test.oppwa.com',
+        host: config.HYPERPAY.host,
         path: path,
-        method: 'POST',
+        method: "POST",
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': data.length
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Length": data.length
         }
     };
 
     return new Promise((resolve, reject) => {
         try {
-            var postRequest = https.request(options, function (res) {
-                res.setEncoding('utf8');
-                res.on('data', function (chunk) {
+            var postRequest = https.request(options, function(res) {
+                res.setEncoding("utf8");
+                res.on("data", function(chunk) {
                     jsonRes = JSON.parse(chunk);
                     resolve(jsonRes);
                 });
@@ -416,7 +507,7 @@ const checkout = () => {
             reject(ex);
         }
     });
-}
+};
 
 const getCheckoutId = async () => {
     try {
@@ -426,7 +517,7 @@ const getCheckoutId = async () => {
         console.log(ex);
         return ex;
     }
-}
+};
 
 const checkPaymentStatus = id => {
     try {
@@ -479,4 +570,11 @@ const checkPaymentStatus = id => {
     }
 };
 
-export { addCard, getCards, removeCard, getCardsForPayment, oneClickPayment, getCheckoutId };
+export {
+    addCard,
+    getCards,
+    removeCard,
+    getCardsForPayment,
+    oneClickPayment,
+    getCheckoutId
+};

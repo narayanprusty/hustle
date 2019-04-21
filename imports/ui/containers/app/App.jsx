@@ -9,6 +9,7 @@ import EmailVerification from "../../pages/EmailVerification/EmailVerification";
 import Login from "../../pages/login/Login";
 import Track from "../../pages/Track/Track";
 import ForgotPassword from "../../pages/ForgotPassword/ForgotPassword";
+import AcceptCard from "../../pages/acceptCard/acceptCard";
 
 requireAuth = RouteComponent => {
     return () => {
@@ -47,6 +48,7 @@ const App = () => (
                 path="/signup"
                 render={this.requireNotLoggedIn(Register)}
             />
+            <Route exact path="/accept" component={AcceptCard} />
             <Route
                 exact
                 path="/forgotpassword"
