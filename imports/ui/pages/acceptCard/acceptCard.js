@@ -20,12 +20,6 @@ export default class AcceptCard extends Component {
     processIt = () => {
         this.setState({ processing: true });
         const quries = queryString(this.props.location.search);
-        const data = {
-            expiry: "02/21",
-            number: "400555" + Date.now(),
-            cvc: "123",
-            name: "Mario"
-        };
         const op = {
             success: true,
             result: {
@@ -36,7 +30,6 @@ export default class AcceptCard extends Component {
         };
         Meteor.call(
             "addCard",
-            data,
             op,
             quries.user,
             decodeURIComponent(quries.resourcePath),

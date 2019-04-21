@@ -40,52 +40,55 @@ function resultRequest(resourcePath, callback) {
     postRequest.end();
 }
 
-const addCard = async (data, op, userId, resourcePath) => {
+const addCard = async (op, userId, resourcePath) => {
     resultRequest(resourcePath, async responseData => {
         console.log(responseData);
-
-        console.log("Card info:", data);
-        var expiryMonth =
-            data.expiry && data.expiry.indexOf("/") != -1
-                ? data.expiry.split("/")[0]
-                : "";
-        if (expiryMonth <= 0 || expiryMonth >= 13) {
-            return {
-                success: false,
-                message: localizationManager.strings.invalidExpiry
-            };
-        } else if (data.number <= 0 || data.number.length <= 18) {
-            return {
-                success: false,
-                message: localizationManager.strings.invalidCardNumber
-            };
-        } else if (!isNaN(parseInt(data.name.toString()))) {
-            return {
-                success: false,
-                message: localizationManager.strings.invalidName
-            };
-        } else if (data.cvc <= 0) {
-            return {
-                success: false,
-                message: localizationManager.strings.invalidCVV
-            };
+        if (!responseData.card) {
+            return Promise.reject("not able to process");
         }
-        var currentYear = new Date().getFullYear().toString();
+        // var expiryMonth =
+        //     data.expiry && data.expiry.indexOf("/") != -1
+        //         ? data.expiry.split("/")[0]
+        //         : "";
+        // if (expiryMonth <= 0 || expiryMonth >= 13) {
+        //     return {
+        //         success: false,
+        //         message: localizationManager.strings.invalidExpiry
+        //     };
+        // } else if (data.number <= 0 || data.number.length <= 18) {
+        //     return {
+        //         success: false,
+        //         message: localizationManager.strings.invalidCardNumber
+        //     };
+        // } else if (!isNaN(parseInt(data.name.toString()))) {
+        //     return {
+        //         success: false,
+        //         message: localizationManager.strings.invalidName
+        //     };
+        // } else if (data.cvc <= 0) {
+        //     return {
+        //         success: false,
+        //         message: localizationManager.strings.invalidCVV
+        //     };
+        // }
+        // var currentYear = new Date().getFullYear().toString();
 
-        var expiryYear =
-            data.expiry && data.expiry.indexOf("/") != -1
-                ? data.expiry.split("/")[1] > currentYear.slice(2, 4)
-                    ? currentYear.slice(0, 2) + data.expiry.split("/")[1]
-                    : (parseInt(currentYear.slice(0, 2)) + 1).toString() +
-                      data.expiry.split("/")[1]
-                : "";
+        // var expiryYear =
+        //     data.expiry && data.expiry.indexOf("/") != -1
+        //         ? data.expiry.split("/")[1] > currentYear.slice(2, 4)
+        //             ? currentYear.slice(0, 2) + data.expiry.split("/")[1]
+        //             : (parseInt(currentYear.slice(0, 2)) + 1).toString() +
+        //               data.expiry.split("/")[1]
+        //         : "";
 
-        expiryYear = expiryYear.length == 4 ? expiryYear : "";
+        // expiryYear = expiryYear.length == 4 ? expiryYear : "";
 
-        data["expiryYear"] = expiryYear;
-        data["expiryMonth"] = expiryMonth;
-        data["number"] = data.number.toString().replace(/ /g, "");
-
+        data["expiryYear"] = responseData.card.expiryYear;
+        data["expiryMonth"] = responseData.card.expiryMonth;
+        data["number"] =
+            responseData.card.bin + "XXXX" + responseData.card.last4Digits;
+        data["name"] = responseData.card.holder;
+        data["paymentBrand"] = responseData.paymentBrand;
         var cards = await node.callAPI("assets/search", {
             $query: {
                 assetName: config.ASSET.Card,
@@ -94,7 +97,7 @@ const addCard = async (data, op, userId, resourcePath) => {
             }
         });
 
-        console.log("found:", cards.length > 0);
+        // console.log("found:", cards.length > 0);
 
         if (cards.length > 0) {
             return {
@@ -117,7 +120,7 @@ const addCard = async (data, op, userId, resourcePath) => {
         }
 
         if (op.id && op.result.description.indexOf("successfully") != -1) {
-            data["hyperPayId"] = op.id;
+            data["hyperPayId"] = responseData.registrationId;
             op = await saveCardToBlockcluster(data);
             //Push notification
             sendPushNotification(
