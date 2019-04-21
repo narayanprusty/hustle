@@ -40,113 +40,159 @@ function resultRequest(resourcePath, callback) {
     postRequest.end();
 }
 
-const addCard = async (op, userId, resourcePath) => {
-    resultRequest(resourcePath, async responseData => {
-        console.log(responseData);
-        if (!responseData.card) {
-            return Promise.reject("not able to process");
+const revarsalReq = paymentId => {
+    var path = "/v1/payments/" + paymentId + "/";
+    var data = querystring.stringify({
+        "authentication.userId":
+            config.HYPERPAY.UserId || "8a8294174d0595bb014d05d829e701d1",
+        "authentication.password": config.HYPERPAY.Password || "9TnJPc2n9h",
+        "authentication.entityId":
+            config.HYPERPAY.EntityId || "8a8294174d0595bb014d05d82e5b01d2",
+        paymentType: "RV"
+    });
+    var options = {
+        port: 443,
+        host: config.HYPERPAY.host,
+        path: path,
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Length": data.length
         }
-        // var expiryMonth =
-        //     data.expiry && data.expiry.indexOf("/") != -1
-        //         ? data.expiry.split("/")[0]
-        //         : "";
-        // if (expiryMonth <= 0 || expiryMonth >= 13) {
-        //     return {
-        //         success: false,
-        //         message: localizationManager.strings.invalidExpiry
-        //     };
-        // } else if (data.number <= 0 || data.number.length <= 18) {
-        //     return {
-        //         success: false,
-        //         message: localizationManager.strings.invalidCardNumber
-        //     };
-        // } else if (!isNaN(parseInt(data.name.toString()))) {
-        //     return {
-        //         success: false,
-        //         message: localizationManager.strings.invalidName
-        //     };
-        // } else if (data.cvc <= 0) {
-        //     return {
-        //         success: false,
-        //         message: localizationManager.strings.invalidCVV
-        //     };
-        // }
-        // var currentYear = new Date().getFullYear().toString();
+    };
 
-        // var expiryYear =
-        //     data.expiry && data.expiry.indexOf("/") != -1
-        //         ? data.expiry.split("/")[1] > currentYear.slice(2, 4)
-        //             ? currentYear.slice(0, 2) + data.expiry.split("/")[1]
-        //             : (parseInt(currentYear.slice(0, 2)) + 1).toString() +
-        //               data.expiry.split("/")[1]
-        //         : "";
-
-        // expiryYear = expiryYear.length == 4 ? expiryYear : "";
-
-        data["expiryYear"] = responseData.card.expiryYear;
-        data["expiryMonth"] = responseData.card.expiryMonth;
-        data["number"] =
-            responseData.card.bin + "XXXX" + responseData.card.last4Digits;
-        data["name"] = responseData.card.holder;
-        data["paymentBrand"] = responseData.paymentBrand;
-        var cards = await node.callAPI("assets/search", {
-            $query: {
-                assetName: config.ASSET.Card,
-                cardNumber: parseInt(data.number.toString()),
-                status: "open"
-            }
-        });
-
-        // console.log("found:", cards.length > 0);
-
-        if (cards.length > 0) {
-            return {
-                success: false,
-                message: localizationManager.strings.cardExists
-            };
-        }
-
-        // var op = await saveCardToHyperPay(data);
-
-        console.log("output", op);
-
-        if (op.message && op.success == false) {
-            sendPushNotification(
-                localizationManager.strings.failedAddingCard,
-                op.message,
-                userId()
-            );
-            return op;
-        }
-
-        if (op.id && op.result.description.indexOf("successfully") != -1) {
-            data["hyperPayId"] = responseData.registrationId;
-            op = await saveCardToBlockcluster(data);
-            //Push notification
-            sendPushNotification(
-                localizationManager.strings.cardAddedShort,
-                localizationManager.strings.cardAddedPushNotification,
-                userId
-            );
-
-            if (op.success)
-                return {
-                    success: true,
-                    data: data
-                };
-        } else {
-            //Push notification
-            sendPushNotification(
-                localizationManager.strings.failedAddingCard,
-                "",
-                userId
-            );
-            return {
-                success: false,
-                message: op.result.description
-            };
+    return new Promise((resolve, reject) => {
+        try {
+            var postRequest = https.request(options, function(res) {
+                res.setEncoding("utf8");
+                res.on("data", function(chunk) {
+                    jsonRes = JSON.parse(chunk);
+                    resolve(jsonRes);
+                });
+            });
+            postRequest.write(data);
+            postRequest.end();
+        } catch (ex) {
+            reject(ex);
         }
     });
+};
+
+const addCard = async (op, userId, resourcePath) => {
+    console.log("lets try to revarse the deducted thing ");
+    try {
+        resultRequest(resourcePath, async responseData => {
+            console.log(responseData);
+            if (!responseData.card) {
+                return Promise.reject("not able to process");
+            } else {
+                await revarsalReq(responseData.id);
+            }
+            // var expiryMonth =
+            //     data.expiry && data.expiry.indexOf("/") != -1
+            //         ? data.expiry.split("/")[0]
+            //         : "";
+            // if (expiryMonth <= 0 || expiryMonth >= 13) {
+            //     return {
+            //         success: false,
+            //         message: localizationManager.strings.invalidExpiry
+            //     };
+            // } else if (data.number <= 0 || data.number.length <= 18) {
+            //     return {
+            //         success: false,
+            //         message: localizationManager.strings.invalidCardNumber
+            //     };
+            // } else if (!isNaN(parseInt(data.name.toString()))) {
+            //     return {
+            //         success: false,
+            //         message: localizationManager.strings.invalidName
+            //     };
+            // } else if (data.cvc <= 0) {
+            //     return {
+            //         success: false,
+            //         message: localizationManager.strings.invalidCVV
+            //     };
+            // }
+            // var currentYear = new Date().getFullYear().toString();
+
+            // var expiryYear =
+            //     data.expiry && data.expiry.indexOf("/") != -1
+            //         ? data.expiry.split("/")[1] > currentYear.slice(2, 4)
+            //             ? currentYear.slice(0, 2) + data.expiry.split("/")[1]
+            //             : (parseInt(currentYear.slice(0, 2)) + 1).toString() +
+            //               data.expiry.split("/")[1]
+            //         : "";
+
+            // expiryYear = expiryYear.length == 4 ? expiryYear : "";
+
+            data["expiryYear"] = responseData.card.expiryYear;
+            data["expiryMonth"] = responseData.card.expiryMonth;
+            data["number"] =
+                responseData.card.bin + "XXXX" + responseData.card.last4Digits;
+            data["name"] = responseData.card.holder;
+            data["paymentBrand"] = responseData.paymentBrand;
+            var cards = await node.callAPI("assets/search", {
+                $query: {
+                    assetName: config.ASSET.Card,
+                    cardNumber: parseInt(data.number.toString()),
+                    status: "open"
+                }
+            });
+
+            // console.log("found:", cards.length > 0);
+
+            if (cards.length > 0) {
+                return {
+                    success: false,
+                    message: localizationManager.strings.cardExists
+                };
+            }
+
+            // var op = await saveCardToHyperPay(data);
+
+            console.log("output", op);
+
+            if (op.message && op.success == false) {
+                sendPushNotification(
+                    localizationManager.strings.failedAddingCard,
+                    op.message,
+                    userId()
+                );
+                return op;
+            }
+
+            if (op.id && op.result.description.indexOf("successfully") != -1) {
+                data["hyperPayId"] = responseData.registrationId;
+                op = await saveCardToBlockcluster(data);
+                //Push notification
+                sendPushNotification(
+                    localizationManager.strings.cardAddedShort,
+                    localizationManager.strings.cardAddedPushNotification,
+                    userId
+                );
+
+                if (op.success)
+                    return {
+                        success: true,
+                        data: data
+                    };
+            } else {
+                //Push notification
+                sendPushNotification(
+                    localizationManager.strings.failedAddingCard,
+                    "",
+                    userId
+                );
+                return {
+                    success: false,
+                    message: op.result.description
+                };
+            }
+        });
+    } catch (ex) {
+        console.log(ex);
+        return Promise.reject("Unknown error");
+    }
 };
 
 const saveCardToBlockcluster = async data => {
