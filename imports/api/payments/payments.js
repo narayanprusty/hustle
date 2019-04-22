@@ -8,9 +8,9 @@ import { sendPushNotification } from "../../modules/helpers/server";
 import localizationManager from "../../ui/localization";
 import { rejects } from "assert";
 
-function request(data, callback) {}
+function request(data, callback) { }
 
-request(function(responseData) {
+request(function (responseData) {
     console.log(responseData);
 });
 
@@ -20,6 +20,8 @@ const node = new Blockcluster.Dynamo({
 });
 
 function resultRequest(resourcePath, callback) {
+    return new Promise((resolve, reject) => {
+        try {
     var path = resourcePath;
     path += "?authentication.userId=" + config.HYPERPAY.UserId;
     path += "&authentication.password=" + config.HYPERPAY.Password;
@@ -30,14 +32,18 @@ function resultRequest(resourcePath, callback) {
         path: path,
         method: "GET"
     };
-    var postRequest = https.request(options, function(res) {
+            var postRequest = https.request(options, function (res) {
         res.setEncoding("utf8");
-        res.on("data", function(chunk) {
+                res.on("data", function (chunk) {
             jsonRes = JSON.parse(chunk);
-            return callback(jsonRes);
+                    resolve(jsonRes);
         });
     });
     postRequest.end();
+        } catch (ex){
+            reject(ex);
+}
+    });
 }
 
 const revarsalReq = paymentId => {
@@ -63,9 +69,9 @@ const revarsalReq = paymentId => {
 
     return new Promise((resolve, reject) => {
         try {
-            var postRequest = https.request(options, function(res) {
+            var postRequest = https.request(options, function (res) {
                 res.setEncoding("utf8");
-                res.on("data", function(chunk) {
+                res.on("data", function (chunk) {
                     jsonRes = JSON.parse(chunk);
                     resolve(jsonRes);
                 });
@@ -82,7 +88,7 @@ const addCard = async (op, userId, resourcePath) => {
     let data = {};
     console.log("lets try to revarse the deducted thing ");
     try {
-        resultRequest(resourcePath, async responseData => {
+        let responseData = await resultRequest(resourcePath);
             console.log(responseData);
             if (!responseData.card) {
                 return Promise.reject("not able to process");
@@ -143,7 +149,7 @@ const addCard = async (op, userId, resourcePath) => {
             data["expiryMonth"] = responseData.card.expiryMonth;
             data["number"] =
                 responseData.card.bin +
-                "XXXXXXXX" +
+                "X".repeat(12 - responseData.card.bin.length) +
                 responseData.card.last4Digits;
             data["name"] = responseData.card.holder;
             data["paymentBrand"] = responseData.paymentBrand;
@@ -204,12 +210,11 @@ const addCard = async (op, userId, resourcePath) => {
                     message: op.result.description
                 };
             }
-        });
     } catch (ex) {
         console.log(ex);
         return Promise.reject("Unknown error");
     }
-};
+}
 
 const saveCardToBlockcluster = async (data, userId) => {
     try {
@@ -497,9 +502,9 @@ const checkout = () => {
 
     return new Promise((resolve, reject) => {
         try {
-            var postRequest = https.request(options, function(res) {
+            var postRequest = https.request(options, function (res) {
                 res.setEncoding("utf8");
-                res.on("data", function(chunk) {
+                res.on("data", function (chunk) {
                     jsonRes = JSON.parse(chunk);
                     resolve(jsonRes);
                 });

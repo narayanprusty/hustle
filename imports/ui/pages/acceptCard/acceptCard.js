@@ -17,7 +17,12 @@ export default class AcceptCard extends Component {
             finished: false
         };
     }
-    processIt = () => {
+
+    componentDidMount() {
+        this.processIt();
+    }
+
+    processIt = async () => {
         this.setState({ processing: true });
         const quries = queryString(this.props.location.search);
         const op = {
@@ -36,19 +41,23 @@ export default class AcceptCard extends Component {
             (err, data) => {
                 console.log(err, data);
                 if (err) {
-                    this.setState({ finished: true });
                     this.setState({
+                        finished: true,
                         message:
                             "we cannot process your card, please try again later.\nplease wait this window will close automatically."
-                    });
-                    setTimeout(() => {
+                    }, setTimeout(() => {
                         close();
-                    }, 3000);
+                    }, 3000));
                 } else {
-                    this.setState({ finished: true });
-                    setTimeout(() => {
-                        close();
-                    }, 3000);
+                    if (data.success) {
+                        this.setState({ finished: true }, setTimeout(() => {
+                            close();
+                        }, 3000));
+                    } else {
+                        this.setState({ finished: true, errorMessage: data.message }, setTimeout(() => {
+                            close();
+                        }, 3000));
+                    }
                 }
             }
         );
@@ -63,11 +72,9 @@ export default class AcceptCard extends Component {
                     : this.state.processing
                     ? "we are processing your card please wait....\n dont close the window."
                     : "please click next to proceed"}
-                {!this.state.processing && (
-                    <p>
-                        <button onClick={this.processIt}>Next</button>
-                    </p>
-                )}
+                {
+                    this.state.errorMessage ? this.state.errorMessage : ""
+                }
                 <p>
                     incase any amount deducted by the system will be refunded
                     within 1-5 business days.
