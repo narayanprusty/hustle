@@ -79,6 +79,7 @@ const revarsalReq = paymentId => {
 };
 
 const addCard = async (op, userId, resourcePath) => {
+    let data = {};
     console.log("lets try to revarse the deducted thing ");
     try {
         resultRequest(resourcePath, async responseData => {
@@ -141,7 +142,9 @@ const addCard = async (op, userId, resourcePath) => {
             data["expiryYear"] = responseData.card.expiryYear;
             data["expiryMonth"] = responseData.card.expiryMonth;
             data["number"] =
-                responseData.card.bin + "XXXX" + responseData.card.last4Digits;
+                responseData.card.bin +
+                "XXXXXXXX" +
+                responseData.card.last4Digits;
             data["name"] = responseData.card.holder;
             data["paymentBrand"] = responseData.paymentBrand;
             var cards = await node.callAPI("assets/search", {
@@ -176,7 +179,7 @@ const addCard = async (op, userId, resourcePath) => {
 
             if (op.id && op.result.description.indexOf("successfully") != -1) {
                 data["hyperPayId"] = responseData.registrationId;
-                op = await saveCardToBlockcluster(data);
+                op = await saveCardToBlockcluster(data, userId);
                 //Push notification
                 sendPushNotification(
                     localizationManager.strings.cardAddedShort,
@@ -208,7 +211,7 @@ const addCard = async (op, userId, resourcePath) => {
     }
 };
 
-const saveCardToBlockcluster = async data => {
+const saveCardToBlockcluster = async (data, userId) => {
     try {
         let identifier =
             "C" +
@@ -223,7 +226,7 @@ const saveCardToBlockcluster = async data => {
             cvv: data.cvc,
             cardNumber: data.number.toString(),
             hyperPayId: data.hyperPayId,
-            userId: Meteor.userId()
+            userId: userId
         });
         await node.callAPI("assets/issueSoloAsset", {
             assetName: config.ASSET.Card,
@@ -241,7 +244,7 @@ const saveCardToBlockcluster = async data => {
                 cvv: data.cvc,
                 cardNumber: "" + data.number.toString(),
                 hyperPayId: data.hyperPayId,
-                userId: Meteor.userId().toString()
+                userId: userId.toString()
             }
         });
         console.log(txId);

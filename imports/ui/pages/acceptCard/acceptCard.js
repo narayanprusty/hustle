@@ -34,15 +34,21 @@ export default class AcceptCard extends Component {
             quries.user,
             decodeURIComponent(quries.resourcePath),
             (err, data) => {
-                setTimeout(function() {
-                    close();
-                }, 3000);
-                this.setState({ finished: true });
+                console.log(err, data);
                 if (err) {
+                    this.setState({ finished: true });
                     this.setState({
                         message:
                             "we cnnot process your card, please try again later.\nplease wait this window will close automatically."
                     });
+                    setTimeout(() => {
+                        close();
+                    }, 3000);
+                } else {
+                    this.setState({ finished: true });
+                    setTimeout(() => {
+                        close();
+                    }, 3000);
                 }
             }
         );
