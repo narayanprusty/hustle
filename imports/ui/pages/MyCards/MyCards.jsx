@@ -7,7 +7,7 @@ import "../../../../node_modules/react-accessible-accordion/dist/fancy-example.c
 import "./MyCards_client.scss";
 import { Meteor } from "meteor/meteor";
 import CarLoader from "../../components/CarLoader/CarLoader";
-
+import config from "../../../modules/config/client";
 export default class MyCards extends Component {
     state = {
         hasMoreItems: false
@@ -45,6 +45,13 @@ export default class MyCards extends Component {
         });
     };
 
+    reloadCards = () => {
+        this.setState({
+            cards: undefined
+        });
+        this.loadCards();
+    }
+
     checkout = () => {
         Meteor.call("getCheckoutId", (err, res) => {
             if (err) {
@@ -52,8 +59,10 @@ export default class MyCards extends Component {
                 // notify.show(localizationManager.strings.failedAddingCard, "error");
             }
             console.log("info:", res, err);
+            //https://hustle-pay.gohustleapp.com
+            //http://localhost:3001
             open(
-                `https://hustle-pay.gohustleapp.com/checkout?id=${
+                `${config.HUSTLE_PAY_BASE}/checkout?id=${
                     res.op.id
                 }&user=${Meteor.userId()}`,
                 "_system",
@@ -73,6 +82,7 @@ export default class MyCards extends Component {
                 <h3 className="padding  padding-right padding-left">
                     <i className="fa fa-credit-card-alt" aria-hidden="true" />{" "}
                     {localizationManager.strings.yourCards}
+                    <i onClick={this.reloadCards} style={{float: "right"}} className="fa fa-refresh" aria-hidden="true" />{" "}
                 </h3>
 
                 <div className="list padding-bottom">
@@ -81,7 +91,7 @@ export default class MyCards extends Component {
                             <div className="list">
                                 {this.state.cards.map((data, i) => {
                                     return (
-                                        <a className="item" href="#">
+                                        <a key={i} className="item" href="#">
                                             <h2>{data.cardNumber || ""}</h2>
                                             <p>
                                                 {data.nameOnCard || ""} -{" "}

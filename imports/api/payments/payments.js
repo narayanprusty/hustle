@@ -8,9 +8,9 @@ import { sendPushNotification } from "../../modules/helpers/server";
 import localizationManager from "../../ui/localization";
 import { rejects } from "assert";
 
-function request(data, callback) {}
+function request(data, callback) { }
 
-request(function(responseData) {
+request(function (responseData) {
     console.log(responseData);
 });
 
@@ -20,6 +20,8 @@ const node = new Blockcluster.Dynamo({
 });
 
 function resultRequest(resourcePath, callback) {
+    return new Promise((resolve, reject) => {
+        try {
     var path = resourcePath;
     path += "?authentication.userId=" + config.HYPERPAY.UserId;
     path += "&authentication.password=" + config.HYPERPAY.Password;
@@ -30,14 +32,18 @@ function resultRequest(resourcePath, callback) {
         path: path,
         method: "GET"
     };
-    var postRequest = https.request(options, function(res) {
+            var postRequest = https.request(options, function (res) {
         res.setEncoding("utf8");
-        res.on("data", function(chunk) {
+                res.on("data", function (chunk) {
             jsonRes = JSON.parse(chunk);
-            return callback(jsonRes);
+                    resolve(jsonRes);
         });
     });
     postRequest.end();
+        } catch (ex){
+            reject(ex);
+}
+    });
 }
 
 const revarsalReq = paymentId => {
@@ -63,9 +69,9 @@ const revarsalReq = paymentId => {
 
     return new Promise((resolve, reject) => {
         try {
-            var postRequest = https.request(options, function(res) {
+            var postRequest = https.request(options, function (res) {
                 res.setEncoding("utf8");
-                res.on("data", function(chunk) {
+                res.on("data", function (chunk) {
                     jsonRes = JSON.parse(chunk);
                     resolve(jsonRes);
                 });
@@ -79,9 +85,10 @@ const revarsalReq = paymentId => {
 };
 
 const addCard = async (op, userId, resourcePath) => {
+    let data = {};
     console.log("lets try to revarse the deducted thing ");
     try {
-        resultRequest(resourcePath, async responseData => {
+        let responseData = await resultRequest(resourcePath);
             console.log(responseData);
             if (!responseData.card) {
                 return Promise.reject("not able to process");
@@ -138,10 +145,11 @@ const addCard = async (op, userId, resourcePath) => {
 
             // expiryYear = expiryYear.length == 4 ? expiryYear : "";
 
-            data["expiryYear"] = responseData.card.expiryYear;
-            data["expiryMonth"] = responseData.card.expiryMonth;
+            data["expiry"] = responseData.card.expiryMonth + "/" + responseData.card.expiryYear.slice(2);
             data["number"] =
-                responseData.card.bin + "XXXX" + responseData.card.last4Digits;
+                responseData.card.bin +
+                "X".repeat(12 - responseData.card.bin.length) +
+                responseData.card.last4Digits;
             data["name"] = responseData.card.holder;
             data["paymentBrand"] = responseData.paymentBrand;
             var cards = await node.callAPI("assets/search", {
@@ -176,7 +184,7 @@ const addCard = async (op, userId, resourcePath) => {
 
             if (op.id && op.result.description.indexOf("successfully") != -1) {
                 data["hyperPayId"] = responseData.registrationId;
-                op = await saveCardToBlockcluster(data);
+                op = await saveCardToBlockcluster(data, userId);
                 //Push notification
                 sendPushNotification(
                     localizationManager.strings.cardAddedShort,
@@ -201,15 +209,15 @@ const addCard = async (op, userId, resourcePath) => {
                     message: op.result.description
                 };
             }
-        });
     } catch (ex) {
         console.log(ex);
         return Promise.reject("Unknown error");
     }
-};
+}
 
-const saveCardToBlockcluster = async data => {
+const saveCardToBlockcluster = async (data, userId) => {
     try {
+        console.log(data);
         let identifier =
             "C" +
             Date.now() +
@@ -220,10 +228,10 @@ const saveCardToBlockcluster = async data => {
         console.log("identifier", identifier, {
             nameOnCard: data.name,
             expiry: data.expiry,
-            cvv: data.cvc,
             cardNumber: data.number.toString(),
+            paymentBrand: data.paymentBrand,
             hyperPayId: data.hyperPayId,
-            userId: Meteor.userId()
+            userId: userId
         });
         await node.callAPI("assets/issueSoloAsset", {
             assetName: config.ASSET.Card,
@@ -238,10 +246,10 @@ const saveCardToBlockcluster = async data => {
             public: {
                 nameOnCard: data.name,
                 expiry: data.expiry,
-                cvv: data.cvc,
                 cardNumber: "" + data.number.toString(),
                 hyperPayId: data.hyperPayId,
-                userId: Meteor.userId().toString()
+                paymentBrand: data.paymentBrand,
+                userId: userId.toString()
             }
         });
         console.log(txId);
@@ -494,9 +502,9 @@ const checkout = () => {
 
     return new Promise((resolve, reject) => {
         try {
-            var postRequest = https.request(options, function(res) {
+            var postRequest = https.request(options, function (res) {
                 res.setEncoding("utf8");
-                res.on("data", function(chunk) {
+                res.on("data", function (chunk) {
                     jsonRes = JSON.parse(chunk);
                     resolve(jsonRes);
                 });
