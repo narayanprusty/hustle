@@ -145,8 +145,7 @@ const addCard = async (op, userId, resourcePath) => {
 
             // expiryYear = expiryYear.length == 4 ? expiryYear : "";
 
-            data["expiryYear"] = responseData.card.expiryYear;
-            data["expiryMonth"] = responseData.card.expiryMonth;
+            data["expiry"] = responseData.card.expiryMonth + "/" + responseData.card.expiryYear.slice(2);
             data["number"] =
                 responseData.card.bin +
                 "X".repeat(12 - responseData.card.bin.length) +
@@ -218,6 +217,7 @@ const addCard = async (op, userId, resourcePath) => {
 
 const saveCardToBlockcluster = async (data, userId) => {
     try {
+        console.log(data);
         let identifier =
             "C" +
             Date.now() +
@@ -228,8 +228,8 @@ const saveCardToBlockcluster = async (data, userId) => {
         console.log("identifier", identifier, {
             nameOnCard: data.name,
             expiry: data.expiry,
-            cvv: data.cvc,
             cardNumber: data.number.toString(),
+            paymentBrand: data.paymentBrand,
             hyperPayId: data.hyperPayId,
             userId: userId
         });
@@ -246,9 +246,9 @@ const saveCardToBlockcluster = async (data, userId) => {
             public: {
                 nameOnCard: data.name,
                 expiry: data.expiry,
-                cvv: data.cvc,
                 cardNumber: "" + data.number.toString(),
                 hyperPayId: data.hyperPayId,
+                paymentBrand: data.paymentBrand,
                 userId: userId.toString()
             }
         });
