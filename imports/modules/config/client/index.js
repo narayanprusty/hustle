@@ -22,5 +22,6 @@ module.exports = {
         FCM: {
             SENDER_ID: process.env.PUSH_FCM_SENDER_ID || 937200706426
         }
-    }
+    },
+    HUSTLE_PAY_BASE: process.env.HUSTLE_PAY_BASE || "http://localhost:3001"
 };

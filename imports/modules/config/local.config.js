@@ -67,5 +67,6 @@ module.exports = {
             MASTERCARD: "MASTER"
         }
     },
+
     MAX_DISTANCE_FOR_AVAIL: 5 //in km
 };
