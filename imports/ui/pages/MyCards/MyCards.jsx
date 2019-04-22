@@ -45,6 +45,13 @@ export default class MyCards extends Component {
         });
     };
 
+    reloadCards = () => {
+        this.setState({
+            cards: undefined
+        });
+        this.loadCards();
+    }
+
     checkout = () => {
         Meteor.call("getCheckoutId", (err, res) => {
             if (err) {
@@ -75,6 +82,7 @@ export default class MyCards extends Component {
                 <h3 className="padding  padding-right padding-left">
                     <i className="fa fa-credit-card-alt" aria-hidden="true" />{" "}
                     {localizationManager.strings.yourCards}
+                    <i onClick={this.reloadCards} style={{float: "right"}} className="fa fa-refresh" aria-hidden="true" />{" "}
                 </h3>
 
                 <div className="list padding-bottom">
@@ -83,7 +91,7 @@ export default class MyCards extends Component {
                             <div className="list">
                                 {this.state.cards.map((data, i) => {
                                     return (
-                                        <a className="item" href="#">
+                                        <a key={i} className="item" href="#">
                                             <h2>{data.cardNumber || ""}</h2>
                                             <p>
                                                 {data.nameOnCard || ""} -{" "}

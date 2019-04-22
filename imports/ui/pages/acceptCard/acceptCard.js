@@ -39,7 +39,7 @@ export default class AcceptCard extends Component {
                     this.setState({ finished: true });
                     this.setState({
                         message:
-                            "we cnnot process your card, please try again later.\nplease wait this window will close automatically."
+                            "we cannot process your card, please try again later.\nplease wait this window will close automatically."
                     });
                     setTimeout(() => {
                         close();
