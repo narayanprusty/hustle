@@ -16,3 +16,6 @@ Clone and start doing below commands:
 
 Error: Device type "com.apple.CoreSimulator.SimDeviceType.undefined" could not be found.
 Resolve: cd .meteor/local/cordova-build/platforms/ios/cordova && meteor npm install ios-sim@latest
+
+For android build make sure you have pushed things to branch [android](https://github.com/BlockClusterApp/hustle/tree/android).
+and do build from there.
