@@ -1002,7 +1002,7 @@ class Bookings extends Component {
 
                                     <div className="padding-left padding-right padding-top">
                                         <LaddaButton
-                                            className="button button-block button-energized activated"
+                                            className="button button-block button-balanced activated"
                                             loading={this.state.submitted}
                                             onClick={this.raiseBookingReq}
                                             data-color="##FFFF00"

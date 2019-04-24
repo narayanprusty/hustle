@@ -126,7 +126,7 @@ export default class Login extends Component {
                         <div className="padding-top">
                             <LaddaButton
                                 className="button button-block button-dark activated"
-                                data-color="##FFFF00"
+                                data-color="#FFFF00"
                                 data-size={L}
                                 data-style={SLIDE_UP}
                                 data-spinner-size={30}
@@ -139,7 +139,7 @@ export default class Login extends Component {
                                         ? false
                                         : true
                                 }
-                                className="button button-block button-energized activated"
+                                className="button button-block button-balanced activated"
                             >
                                 Login
                             </LaddaButton>
