@@ -1089,9 +1089,10 @@ const calculateApproxBookingPrice = async (
             console.log("Unable to get dynamic config from blockcluster");
         }
         if (usePerMeterRate) {
+            let perMeterPrice = distance * config.farePerMeter;
             return {
                 success: true,
-                price: distance * config.farePerMeter
+                price: Math.round(isNaN(perMeterPrice) ? 0 : perMeterPrice)
             };
         }
     } catch (ex) {
@@ -1307,9 +1308,10 @@ const calculateFinalBookingPrice = async (
             console.log("Unable to get dynamic config from blockcluster");
         }
         if (usePerMeterRate) {
+            let perMeterPrice = distance * config.farePerMeter;
             return {
                 success: true,
-                price: distance * config.farePerMeter
+                price: Math.round(isNaN(perMeterPrice) ? 0 : perMeterPrice)
             };
         }
     } catch (ex) {
