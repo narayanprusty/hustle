@@ -95,7 +95,7 @@ class Wallet extends Component {
                                         marginTop: "0px"
                                     }}
                                 >
-                                    {this.state.wallet.balance} SAR
+                                    {this.state.wallet ? (this.state.wallet.balance || 0) : 0} SAR
                                 </h2>
                             </center>
                         </div>

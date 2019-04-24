@@ -195,7 +195,7 @@ class Bookings extends Component {
                     "error"
                 );
             }
-            if (res.message || !res.cards) {
+            if (res && (res.message || !res.cards)) {
                 notify.show(
                     res.message
                         ? res.message
@@ -1002,7 +1002,7 @@ class Bookings extends Component {
 
                                     <div className="padding-left padding-right padding-top">
                                         <LaddaButton
-                                            className="button button-block button-energized activated"
+                                            className="button button-block button-balanced activated"
                                             loading={this.state.submitted}
                                             onClick={this.raiseBookingReq}
                                             data-color="##FFFF00"
@@ -1029,7 +1029,7 @@ class Bookings extends Component {
                     )}
                     {!this.state.loading_cards && (
                         <div
-                            style={{direction: "ltr !important"}}
+                            style={{ direction: "ltr !important" }}
                             className="mapView padding-left padding-right padding-bottom"
                             style={{ height: "65%", paddingBottom: "2em" }}
                         >

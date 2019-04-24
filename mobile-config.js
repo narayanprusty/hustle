@@ -91,4 +91,4 @@ App.appendToConfig(`
 App.setPreference("AutoHideSplashScreen", "true");
 App.setPreference("Orientation", "default");
 App.setPreference("Orientation", "all", "ios");
-App.setPreference("DisallowOverscroll", "true");
+App.setPreference("DisallowOverscroll", "false");
