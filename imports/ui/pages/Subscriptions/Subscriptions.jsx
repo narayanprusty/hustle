@@ -459,7 +459,7 @@ class Subscriptions extends Component {
                                     disabled={this.state.userAlreadySubscribed}
                                     className="button button-block button-energized activated"
                                     onClick={e =>
-                                        this.props.history.push("/app/addCards")
+                                        this.props.history.push("/app/myCards")
                                     }
                                 >
                                     {localizationManager.strings.addCards}
