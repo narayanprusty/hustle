@@ -50,7 +50,7 @@ export default class MyCards extends Component {
             cards: undefined
         });
         this.loadCards();
-    }
+    };
 
     checkout = () => {
         Meteor.call("getCheckoutId", (err, res) => {
@@ -65,7 +65,7 @@ export default class MyCards extends Component {
                 `${config.HUSTLE_PAY_BASE}/checkout?id=${
                     res.op.id
                 }&user=${Meteor.userId()}`,
-                "_system",
+                "_blank",
                 "location=yes"
             );
         });
@@ -82,7 +82,12 @@ export default class MyCards extends Component {
                 <h3 className="padding  padding-right padding-left">
                     <i className="fa fa-credit-card-alt" aria-hidden="true" />{" "}
                     {localizationManager.strings.yourCards}
-                    <i onClick={this.reloadCards} style={{float: "right"}} className="fa fa-refresh" aria-hidden="true" />{" "}
+                    <i
+                        onClick={this.reloadCards}
+                        style={{ float: "right" }}
+                        className="fa fa-refresh"
+                        aria-hidden="true"
+                    />{" "}
                 </h3>
 
                 <div className="list padding-bottom">
