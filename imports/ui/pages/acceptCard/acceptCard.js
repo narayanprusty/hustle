@@ -41,31 +41,22 @@ export default class AcceptCard extends Component {
             (err, data) => {
                 console.log(err, data);
                 if (err) {
-                    this.setState(
-                        {
-                            finished: true,
-                            message:
-                                "we cannot process your card, please try again later.\nplease wait this window will close automatically."
-                        },
-                        setTimeout(() => {
-                            self.close();
-                        }, 3000)
-                    );
+                    this.setState({
+                        finished: true,
+                        message:
+                            "we cannot process your card, please try again later.\nplease wait this window will close automatically."
+                    });
+                    self.close();
                 } else {
                     if (data.success) {
-                        this.setState(
-                            { finished: true },
-                            setTimeout(() => {
-                                self.close();
-                            }, 3000)
-                        );
+                        this.setState({ finished: true });
+                        self.close();
                     } else {
-                        this.setState(
-                            { finished: true, errorMessage: data.message },
-                            setTimeout(() => {
-                                self.close();
-                            }, 3000)
-                        );
+                        this.setState({
+                            finished: true,
+                            errorMessage: data.message
+                        });
+                        self.close();
                     }
                 }
             }
