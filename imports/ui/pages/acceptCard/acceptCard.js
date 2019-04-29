@@ -46,17 +46,17 @@ export default class AcceptCard extends Component {
                         message:
                             "we cannot process your card, please try again later."
                     });
-                    self.close();
+                    window.shouldClose = true;
                 } else {
                     if (data.success) {
                         this.setState({ finished: true });
-                        self.close();
+                        window.shouldClose = true;
                     } else {
                         this.setState({
                             finished: true,
                             errorMessage: data.message
                         });
-                        self.close();
+                        window.shouldClose = true;
                     }
                 }
             }
