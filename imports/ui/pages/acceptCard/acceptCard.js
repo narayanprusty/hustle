@@ -72,6 +72,7 @@ export default class AcceptCard extends Component {
                     : this.state.processing
                     ? "we are processing your card please wait....\n dont close the window."
                     : "please click next to proceed"}
+                <br />
                 {this.state.errorMessage ? this.state.errorMessage : ""}
                 <p>
                     incase any amount deducted by the system will be refunded
