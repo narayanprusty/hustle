@@ -44,7 +44,7 @@ export default class AcceptCard extends Component {
                     this.setState({
                         finished: true,
                         message:
-                            "we cannot process your card, please try again later.\nplease wait this window will close automatically."
+                            "we cannot process your card, please try again later."
                     });
                     self.close();
                 } else {
@@ -68,7 +68,7 @@ export default class AcceptCard extends Component {
             <div style={{ textAlign: "center" }}>
                 <p>{this.state.message ? this.state.message : "Hi,"}</p>
                 {this.state.finished
-                    ? "please close this window."
+                    ? "please close this window manually. incase not closed automatically!"
                     : this.state.processing
                     ? "we are processing your card please wait....\n dont close the window."
                     : "please click next to proceed"}
