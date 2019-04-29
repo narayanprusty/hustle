@@ -62,27 +62,23 @@ export default class MyCards extends Component {
             //https://hustle-pay.gohustleapp.com
             //http://localhost:3001
             if (window.cordova) {
-                const win = window.cordova.InAppBrowser.open(
+                const win = open(
                     `${config.HUSTLE_PAY_BASE}/checkout?id=${
                         res.op.id
                     }&user=${Meteor.userId()}`,
                     "_blank",
                     "location=yes"
                 );
-                win.addEventListener("loadstop", function() {
-                    var loop = window.setInterval(function() {
-                        win.executeScript(
-                            {
-                                code: "window.shouldClose"
-                            },
-                            function(values) {
-                                if (values[0]) {
-                                    win.close();
-                                    window.clearInterval(loop);
-                                }
-                            }
-                        );
-                    }, 100);
+
+                win.addEventListener("loadstart", function(event) {
+                    if (
+                        event.url &&
+                        event.url
+                            .split("/")
+                            .indexOf("booking.gohustleapp.com") > -1
+                    ) {
+                        win.close();
+                    }
                 });
             } else {
                 open(
