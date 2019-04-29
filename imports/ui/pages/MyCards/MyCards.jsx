@@ -62,7 +62,7 @@ export default class MyCards extends Component {
             //https://hustle-pay.gohustleapp.com
             //http://localhost:3001
             if (window.cordova) {
-                const win = open(
+                const win = window.cordova.InAppBrowser.open(
                     `${config.HUSTLE_PAY_BASE}/checkout?id=${
                         res.op.id
                     }&user=${Meteor.userId()}`,
