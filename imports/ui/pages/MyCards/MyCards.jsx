@@ -50,7 +50,7 @@ export default class MyCards extends Component {
             cards: undefined
         });
         this.loadCards();
-    }
+    };
 
     checkout = () => {
         Meteor.call("getCheckoutId", (err, res) => {
@@ -61,13 +61,34 @@ export default class MyCards extends Component {
             console.log("info:", res, err);
             //https://hustle-pay.gohustleapp.com
             //http://localhost:3001
-            open(
-                `${config.HUSTLE_PAY_BASE}/checkout?id=${
-                    res.op.id
-                }&user=${Meteor.userId()}`,
-                "_system",
-                "location=yes"
-            );
+            if (window.cordova) {
+                const win = window.cordova.InAppBrowser.open(
+                    `${config.HUSTLE_PAY_BASE}/checkout?id=${
+                        res.op.id
+                    }&user=${Meteor.userId()}`,
+                    "_blank",
+                    "location=yes"
+                );
+
+                win.addEventListener("loadstart", function(event) {
+                    if (
+                        event.url &&
+                        event.url
+                            .split("/")
+                            .indexOf("booking.gohustleapp.com") > -1
+                    ) {
+                        win.close();
+                    }
+                });
+            } else {
+                open(
+                    `${config.HUSTLE_PAY_BASE}/checkout?id=${
+                        res.op.id
+                    }&user=${Meteor.userId()}`,
+                    "_blank",
+                    "location=yes"
+                );
+            }
         });
     };
 
@@ -82,7 +103,12 @@ export default class MyCards extends Component {
                 <h3 className="padding  padding-right padding-left">
                     <i className="fa fa-credit-card-alt" aria-hidden="true" />{" "}
                     {localizationManager.strings.yourCards}
-                    <i onClick={this.reloadCards} style={{float: "right"}} className="fa fa-refresh" aria-hidden="true" />{" "}
+                    <i
+                        onClick={this.reloadCards}
+                        style={{ float: "right" }}
+                        className="fa fa-refresh"
+                        aria-hidden="true"
+                    />{" "}
                 </h3>
 
                 <div className="list padding-bottom">

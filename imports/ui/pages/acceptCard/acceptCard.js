@@ -44,19 +44,29 @@ export default class AcceptCard extends Component {
                     this.setState({
                         finished: true,
                         message:
-                            "we cannot process your card, please try again later.\nplease wait this window will close automatically."
-                    }, setTimeout(() => {
+                            "we cannot process your card, please try again later."
+                    });
+                    if (window.cordova) {
+                        window.shouldClose = true;
+                    } else {
                         close();
-                    }, 3000));
+                    }
                 } else {
                     if (data.success) {
-                        this.setState({ finished: true }, setTimeout(() => {
-                            close();
-                        }, 3000));
+                        this.setState({ finished: true });
+                        if (window.cordova) {
+                            window.shouldClose = true;
+                        }
                     } else {
-                        this.setState({ finished: true, errorMessage: data.message }, setTimeout(() => {
+                        this.setState({
+                            finished: true,
+                            errorMessage: data.message
+                        });
+                        if (window.cordova) {
+                            window.shouldClose = true;
+                        } else {
                             close();
-                        }, 3000));
+                        }
                     }
                 }
             }
@@ -68,13 +78,12 @@ export default class AcceptCard extends Component {
             <div style={{ textAlign: "center" }}>
                 <p>{this.state.message ? this.state.message : "Hi,"}</p>
                 {this.state.finished
-                    ? "please close this window."
+                    ? "please close this window manually. incase not closed automatically!"
                     : this.state.processing
                     ? "we are processing your card please wait....\n dont close the window."
                     : "please click next to proceed"}
-                {
-                    this.state.errorMessage ? this.state.errorMessage : ""
-                }
+                <br />
+                {this.state.errorMessage ? this.state.errorMessage : ""}
                 <p>
                     incase any amount deducted by the system will be refunded
                     within 1-5 business days.
