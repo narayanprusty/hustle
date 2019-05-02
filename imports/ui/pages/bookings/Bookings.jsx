@@ -704,7 +704,10 @@ class Bookings extends Component {
                     {!this.state.loading_cards && (
                         <div className={conatinerClass}>
                             <label className="item item-input item-stacked-label">
-                                <span className="input-label">
+                                <span
+                                    className="input-label"
+                                    style={{ margingRight: "10px" }}
+                                >
                                     {" "}
                                     {
                                         localizationManager.strings
@@ -730,7 +733,10 @@ class Bookings extends Component {
                                                     .formatted_address
                                             }
                                             onClick={e => {
-                                                e.target.select();
+                                                e.target.setSelectionRange(
+                                                    0,
+                                                    e.target.value.length
+                                                );
                                                 this.setState({
                                                     droppingFocus: false
                                                 });
@@ -777,7 +783,10 @@ class Bookings extends Component {
                                             name="droppingPointInput"
                                             value={this.state.dropvalue}
                                             onClick={e => {
-                                                e.target.select();
+                                                e.target.setSelectionRange(
+                                                    0,
+                                                    e.target.value.length
+                                                );
                                                 this.setState({
                                                     droppingFocus: true
                                                 });
