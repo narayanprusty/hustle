@@ -67,7 +67,8 @@ class Wallet extends Component {
                 className=""
                 style={{
                     height: "100%",
-                    direction: localizationManager.strings.textDirection
+                    direction: localizationManager.strings.textDirection,
+                    overflowX: "hidden"
                 }}
             >
                 <div className="padding">
@@ -95,7 +96,10 @@ class Wallet extends Component {
                                         marginTop: "0px"
                                     }}
                                 >
-                                    {this.state.wallet ? (this.state.wallet.balance || 0) : 0} SAR
+                                    {this.state.wallet
+                                        ? this.state.wallet.balance || 0
+                                        : 0}{" "}
+                                    SAR
                                 </h2>
                             </center>
                         </div>

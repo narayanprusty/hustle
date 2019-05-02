@@ -689,7 +689,8 @@ class Bookings extends Component {
             <div
                 style={{
                     height: "100%",
-                    direction: localizationManager.strings.textDirection
+                    direction: localizationManager.strings.textDirection,
+                    overflowX: "hidden"
                 }}
             >
                 <Fragment>
