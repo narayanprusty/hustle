@@ -689,7 +689,8 @@ class Bookings extends Component {
             <div
                 style={{
                     height: "100%",
-                    direction: localizationManager.strings.textDirection
+                    direction: localizationManager.strings.textDirection,
+                    overflowX: "hidden"
                 }}
             >
                 <Fragment>
@@ -704,13 +705,17 @@ class Bookings extends Component {
                     {!this.state.loading_cards && (
                         <div className={conatinerClass}>
                             <label className="item item-input item-stacked-label">
-                                <span className="input-label">
-                                    {" "}
-                                    {
-                                        localizationManager.strings
-                                            .boardingPoint
-                                    }:{" "}
-                                </span>
+                                <div className="rightPadding">
+                                    <span
+                                        className="input-label"
+                                    >
+                                        {" "}
+                                        {
+                                            localizationManager.strings
+                                                .boardingPoint
+                                        }:{" "}
+                                    </span>
+                                </div>
                                 {mapApiLoaded && (
                                     <ReactGooglePlacesSuggest
                                         name="boardingPoint"
@@ -730,7 +735,10 @@ class Bookings extends Component {
                                                     .formatted_address
                                             }
                                             onClick={e => {
-                                                e.target.select();
+                                                e.target.setSelectionRange(
+                                                    0,
+                                                    e.target.value.length
+                                                );
                                                 this.setState({
                                                     droppingFocus: false
                                                 });
@@ -754,13 +762,15 @@ class Bookings extends Component {
                                 )}
                             </label>
                             <label className="item item-input item-stacked-label">
-                                <span className="input-label">
-                                    {" "}
-                                    {
-                                        localizationManager.strings
-                                            .droppingPoint
-                                    }:{" "}
-                                </span>
+                                <div className="rightPadding">
+                                    <span className="input-label">
+                                        {" "}
+                                        {
+                                            localizationManager.strings
+                                                .droppingPoint
+                                        }:{" "}
+                                    </span>
+                                </div>
                                 {mapApiLoaded && (
                                     <ReactGooglePlacesSuggest
                                         name="droppingPoint"
@@ -777,7 +787,10 @@ class Bookings extends Component {
                                             name="droppingPointInput"
                                             value={this.state.dropvalue}
                                             onClick={e => {
-                                                e.target.select();
+                                                e.target.setSelectionRange(
+                                                    0,
+                                                    e.target.value.length
+                                                );
                                                 this.setState({
                                                     droppingFocus: true
                                                 });

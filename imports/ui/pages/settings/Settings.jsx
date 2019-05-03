@@ -88,7 +88,8 @@ export default class Settings extends Component {
                 className=""
                 style={{
                     height: "100%",
-                    direction: localizationManager.strings.textDirection
+                    direction: localizationManager.strings.textDirection,
+                    overflowX: "hidden"
                 }}
             >
                 <div className="padding">

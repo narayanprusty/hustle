@@ -373,7 +373,8 @@ class Subscriptions extends Component {
                 className=""
                 style={{
                     height: "100%",
-                    direction: localizationManager.strings.textDirection
+                    direction: localizationManager.strings.textDirection,
+                    overflowX: "hidden"
                 }}
             >
                 <Modal
@@ -411,7 +412,11 @@ class Subscriptions extends Component {
                                         </b>
                                     </div>
                                     <div>
-                                        {this.state.subscriptionPlan ? ( this.state.subscriptionPlan.price || 0 ) : 0} SAR
+                                        {this.state.subscriptionPlan
+                                            ? this.state.subscriptionPlan
+                                                  .price || 0
+                                            : 0}{" "}
+                                        SAR
                                     </div>
                                 </li>
                                 <li
@@ -428,7 +433,10 @@ class Subscriptions extends Component {
                                     </div>
                                     <div>
                                         {localizationManager.strings.after}{" "}
-                                        {this.state.subscriptionPlan ? (this.state.subscriptionPlan.validity || 0) : 0 }{" "}
+                                        {this.state.subscriptionPlan
+                                            ? this.state.subscriptionPlan
+                                                  .validity || 0
+                                            : 0}{" "}
                                         {localizationManager.strings.days}
                                     </div>
                                 </li>
@@ -445,12 +453,12 @@ class Subscriptions extends Component {
                                         </b>
                                     </div>
                                     <div>
-                                        {
-                                            this.state.subscriptionPlan ? (this.state.subscriptionPlan[
-                                                "description_" +
-                                                    localizationManager.getLanguage()
-                                            ] || "") : ""
-                                        }
+                                        {this.state.subscriptionPlan
+                                            ? this.state.subscriptionPlan[
+                                                  "description_" +
+                                                      localizationManager.getLanguage()
+                                              ] || ""
+                                            : ""}
                                     </div>
                                 </li>
                             </ul>
