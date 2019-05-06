@@ -347,7 +347,7 @@ class CurrentBooking extends Component {
             );
         } else {
             open(
-                "http://maps.google.com/maps?q=loc:" +
+                "http://maps.google.com/maps?q=" +
                     this.state.boardingPoint.coordinates[1] +
                     "," +
                     this.state.boardingPoint.coordinates[0],
@@ -624,7 +624,11 @@ class CurrentBooking extends Component {
                                     {localizationManager.strings.fare}
                                 </span>
                             </a>
-                            <a className="item item-icon-left" href="#">
+                            <a
+                                className="item item-icon-left"
+                                href="#"
+                                onClick={this.navigateToRider}
+                            >
                                 <i
                                     className="icon fa fa-map-marker"
                                     style={{ color: "green" }}
@@ -634,7 +638,11 @@ class CurrentBooking extends Component {
                                     {localizationManager.strings.From}
                                 </span>
                             </a>
-                            <a className="item item-icon-left" href="#">
+                            <a
+                                className="item item-icon-left"
+                                href="#"
+                                onClick={this.navigateToDrop}
+                            >
                                 <i
                                     className="icon fa fa-map-marker"
                                     style={{ color: "red" }}
