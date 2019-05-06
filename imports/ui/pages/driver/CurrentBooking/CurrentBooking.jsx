@@ -423,7 +423,7 @@ class CurrentBooking extends Component {
             );
         } else {
             open(
-                "http://maps.google.com/maps?q=loc:" +
+                "http://maps.google.com/maps?q=" +
                     this.state.droppingPoint.coordinates[1] +
                     "," +
                     this.state.droppingPoint.coordinates[0],
