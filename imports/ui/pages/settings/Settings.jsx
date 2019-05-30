@@ -100,7 +100,7 @@ export default class Settings extends Component {
                 </div>
                 <div className="list">
                     <Link to="/app/profile" className="item item-icon-left">
-                        <i className="icon fa fa-user" />
+                        <i className="icon fa fa-user" />{" "}
                         {localizationManager.strings.editProfile}
                     </Link>
                     {driverMode && (
@@ -108,18 +108,18 @@ export default class Settings extends Component {
                             to="/app/subscriptions"
                             className="item item-icon-left"
                         >
-                            <i className="icon fa fa-diamond" />
+                            <i className="icon fa fa-diamond" />{" "}
                             {localizationManager.strings.subscriptions}
                         </Link>
                     )}
                     {!driverMode && (
                         <Link to="/app/wallet" className="item item-icon-left">
-                            <i className="icon fa fa-money" />
+                            <i className="icon fa fa-money" />{" "}
                             {localizationManager.strings.wallet}
                         </Link>
                     )}
                     <Link to="/app/myCards" className="item item-icon-left">
-                        <i className="icon fa fa-credit-card" />
+                        <i className="icon fa fa-credit-card" />{" "}
                         {localizationManager.strings.myCards}
                     </Link>
 
@@ -127,12 +127,12 @@ export default class Settings extends Component {
                         className="item item-icon-left item-icon-right"
                         href="tel:+966-582085037"
                     >
-                        <i className="icon ion-chatbubble-working" />
+                        <i className="icon ion-chatbubble-working" />{" "}
                         {localizationManager.strings.callSupport}
                         <i className="icon ion-ios-telephone-outline" />
                     </a>
                     <Link to="/app/econtacts" className="item item-icon-left">
-                        <i className="icon fa fa-phone" />
+                        <i className="icon fa fa-phone" />{" "}
                         {localizationManager.strings.emergencyContacts}
                     </Link>
                     <div className="item item-divider">
@@ -140,7 +140,7 @@ export default class Settings extends Component {
                     </div>
                     {this.state.isDriver ? (
                         <li className="item item-icon-left item-toggle">
-                            <i className="icon fa fa-car" />
+                            <i className="icon fa fa-car" />{" "}
                             <span
                                 style={{
                                     color: "#000"
@@ -171,7 +171,7 @@ export default class Settings extends Component {
                             to="/app/driver/pricingConfig"
                             className="item item-icon-left"
                         >
-                            <i className="icon fa fa-bolt" />
+                            <i className="icon fa fa-bolt" />{" "}
                             {localizationManager.strings.pricingConfig}
                         </Link>
                     )}
@@ -180,7 +180,7 @@ export default class Settings extends Component {
                             to="/app/applyForDriver"
                             className="item item-icon-left"
                         >
-                            <i className="icon fa fa-car" />
+                            <i className="icon fa fa-car" />{" "}
                             {localizationManager.strings.becomePartner}
                         </Link>
                     )}
@@ -190,7 +190,7 @@ export default class Settings extends Component {
                         className="item item-icon-left"
                         onClick={this.toggleLanguage}
                     >
-                        <i className="icon fa fa-language" />
+                        <i className="icon fa fa-language" />{" "}
                         {localizationManager.strings.changeLanguage}{" "}
                         {localizationManager.getLanguage() == "en"
                             ? localizationManager.strings.arabic
@@ -202,7 +202,7 @@ export default class Settings extends Component {
                         onClick={this.logout}
                         className="item item-icon-left"
                     >
-                        <i className="icon fa fa-sign-out" />
+                        <i className="icon fa fa-sign-out" />{" "}
                         {localizationManager.strings.logout}
                     </Link>
                 </div>
