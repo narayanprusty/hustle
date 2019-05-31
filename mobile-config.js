@@ -88,7 +88,6 @@ App.appendToConfig(`
     <string>Hustle needs access to your location for navigation purposes</string>
   </edit-config>
 `);
+App.setPreference("orientation", "portrait");
 App.setPreference("AutoHideSplashScreen", "true");
-App.setPreference("Orientation", "default");
-App.setPreference("Orientation", "all", "ios");
 App.setPreference("DisallowOverscroll", "false");
