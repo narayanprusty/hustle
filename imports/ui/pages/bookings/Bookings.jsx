@@ -726,7 +726,8 @@ class Bookings extends Component {
                                     <ReactGooglePlacesSuggest
                                         name="boardingPoint"
                                         autocompletionRequest={{
-                                            input: this.state.boardsearch
+                                            input: this.state.boardsearch,
+                                            rankBy:'distance'
                                         }}
                                         googleMaps={mapApi}
                                         onSelectSuggest={this.addBoardingPlace.bind(
@@ -782,7 +783,8 @@ class Bookings extends Component {
                                     <ReactGooglePlacesSuggest
                                         name="droppingPoint"
                                         autocompletionRequest={{
-                                            input: this.state.dropsearch
+                                            input: this.state.dropsearch,
+                                            rankBy:'distance'
                                         }}
                                         googleMaps={mapApi}
                                         onSelectSuggest={this.addDroppingPlace.bind(
