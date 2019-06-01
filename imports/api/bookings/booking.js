@@ -274,7 +274,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
     }).fetch()[0];
     const distanceObject = await getShortestDistance(p1, p2);
     const distance = JSON.parse(distanceObject).rows[0].elements[0].distance
-        .value;
+        ;
     const rideDuration = moment().diff(
         moment(bookingData.startedAt),
         "seconds"
@@ -283,7 +283,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
     const priceOp = await calculateFinalBookingPrice(
         bookingData.start_address,
         bookingData.end_address,
-        distance,
+        distance.value,
         bookingData.preferredCar,
         rideDuration
     );
@@ -381,7 +381,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                         walletTxn,
                         endingPoint,
                         rideDuration,
-                        distance,
+                        distance.value,
                         userId,
                         true
                     );
@@ -410,7 +410,8 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                     rideStatus: "finished",
                     actualEndingPoint: endingPoint,
                     rideDuration: rideDuration,
-                    totalFare: price
+                    totalFare: price,
+                    totalDistance:distance.value
                 }
             });
             await BookingRecord.update(
@@ -419,6 +420,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                 },
                 {
                     $set: {
+                        totalDistance:distance.text,
                         status: "finished",
                         totalFare: price,
                         active: false
@@ -426,7 +428,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                 }
             );
             //send receipt email
-            sendReceiptEmail(booking, userId, distance, rideDuration, price);
+            sendReceiptEmail(booking, userId, distance.value, rideDuration, price);
 
             return {
                 success: true,
@@ -440,7 +442,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                 walletTxn,
                 endingPoint,
                 rideDuration,
-                distance,
+                distance.value,
                 userId
             );
         }
