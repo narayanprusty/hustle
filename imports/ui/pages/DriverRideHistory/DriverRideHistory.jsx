@@ -255,8 +255,7 @@ class DriverRideHistory extends Component {
         });
 
         return (
-            <div>
-                {this.state.datas && this.state.datas.length ?
+
             <InfiniteScroll
                 pageStart={0}
                 loadMore={this.loadItems.bind(this)}
@@ -274,11 +273,13 @@ class DriverRideHistory extends Component {
                         <i className="fa fa-road" aria-hidden="true" />
                         {localizationManager.strings.yourRides}
                     </h3>
+                    <div style={{textAlign:'center'}}>
+                {this.state.datas && this.state.datas.length ? ''  : "No ride found"}</div>
                     <Accordion>{items}</Accordion>
                 </div>
             </InfiniteScroll>
-                : "No ride found"}
-            </div>
+
+
         );
     }
 }
