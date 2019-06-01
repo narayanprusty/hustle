@@ -222,6 +222,10 @@ class Bookings extends Component {
                             cardText
                     });
                 }
+                options.push({
+                    value:"newCard",
+                    text:"Add card now"
+                })
                 this.setState({
                     cards: options
                 });
@@ -317,6 +321,9 @@ class Bookings extends Component {
     }
 
     inputHandler = async e => {
+        if(e.target.value =="newCard"){
+            location.href='/app/myCards';
+        }
         if (e.target.name == "carType") {
             this.setState(
                 {
@@ -410,7 +417,7 @@ class Bookings extends Component {
                     // mapInstance.setZoom(this.state.zoom); //dont set the zoom otherwise it wont fit to map properly
 
                     this.poly = routePolyline;
-
+                    // routePolyline.setMap(null);
                     routePolyline.setMap(mapInstance);
                 } else if (status == "ZERO_RESULTS") {
                     notify.show("Cannot find path", "error");
@@ -706,14 +713,13 @@ class Bookings extends Component {
                         <div className={conatinerClass}>
                             <label className="item item-input item-stacked-label">
                                 <div className="rightPadding">
-                                    <span
-                                        className="input-label"
-                                    >
+                                    <span className="input-label">
                                         {" "}
                                         {
                                             localizationManager.strings
                                                 .boardingPoint
-                                        }:{" "}
+                                        }
+                                        :{" "}
                                     </span>
                                 </div>
                                 {mapApiLoaded && (
@@ -768,7 +774,8 @@ class Bookings extends Component {
                                         {
                                             localizationManager.strings
                                                 .droppingPoint
-                                        }:{" "}
+                                        }
+                                        :{" "}
                                     </span>
                                 </div>
                                 {mapApiLoaded && (
