@@ -1043,7 +1043,7 @@ class CurrentBookingRider extends Component {
                                                 metaData="drop"
                                             />
                                         )}
-                                    {this.state.driverLoc &&
+                                    {this.state.driverLoc && !this.state.rideStarted &&
                                         this.state.driverLoc.lat != 0 && (
                                             <Marker
                                                 lat={
@@ -1063,6 +1063,29 @@ class CurrentBookingRider extends Component {
                                                 metaData="cartop"
                                                 deg={
                                                     this.state.driverLoc.heading
+                                                }
+                                            />
+                                        )}
+                                        {this.state.currentPosition && this.state.rideStarted && 
+                                        this.state.currentPosition.lat != 0 && (
+                                            <Marker
+                                                lat={
+                                                    this.state.currentPosition.lat
+                                                        ? this.state.currentPosition
+                                                              .lat
+                                                        : this.state.currentPosition
+                                                              .lat
+                                                }
+                                                lng={
+                                                    this.state.currentPosition.lng
+                                                        ? this.state.currentPosition
+                                                              .lng
+                                                        : this.state.currentPosition
+                                                              .lng
+                                                }
+                                                metaData="cartop"
+                                                deg={
+                                                    this.state.currentPosition.heading
                                                 }
                                             />
                                         )}
