@@ -223,9 +223,9 @@ class Bookings extends Component {
                     });
                 }
                 options.push({
-                    value:"newCard",
-                    text:"Add card now"
-                })
+                    value: "newCard",
+                    text: "Add card now"
+                });
                 this.setState({
                     cards: options
                 });
@@ -321,8 +321,8 @@ class Bookings extends Component {
     }
 
     inputHandler = async e => {
-        if(e.target.value =="newCard"){
-            location.href='/app/myCards';
+        if (e.target.value == "newCard") {
+            location.href = "/app/myCards";
         }
         if (e.target.name == "carType") {
             this.setState(
@@ -728,7 +728,10 @@ class Bookings extends Component {
                                         autocompletionRequest={{
                                             input: this.state.boardsearch,
                                             radius: 1000 * 40,
-                                            location: new mapApi.LatLng(this.state.currentLocation.lat, this.state.currentLocation.lng),
+                                            location: new mapApi.LatLng(
+                                                this.state.currentLocation.lat,
+                                                this.state.currentLocation.lng
+                                            ),
                                             strictbounds: true
                                         }}
                                         googleMaps={mapApi}
@@ -787,7 +790,10 @@ class Bookings extends Component {
                                         autocompletionRequest={{
                                             input: this.state.dropsearch,
                                             radius: 1000 * 40,
-                                            location: new mapApi.LatLng(this.state.currentLocation.lat, this.state.currentLocation.lng),
+                                            location: new mapApi.LatLng(
+                                                this.state.currentLocation.lat,
+                                                this.state.currentLocation.lng
+                                            ),
                                             strictbounds: true
                                         }}
                                         googleMaps={mapApi}
@@ -1065,12 +1071,12 @@ class Bookings extends Component {
                                         this.isAndroid()
                                             ? {
                                                   ...mapOptions,
-                                                  fullscreenControl: true,
+                                                  fullscreenControl: false,
                                                   zoomControl: false
                                               }
                                             : {
                                                   ...mapOptions,
-                                                  fullscreenControl: true
+                                                  fullscreenControl: false
                                               }
                                     }
                                     bootstrapURLKeys={{
