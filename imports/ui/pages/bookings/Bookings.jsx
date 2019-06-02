@@ -223,9 +223,9 @@ class Bookings extends Component {
                     });
                 }
                 options.push({
-                    value:"newCard",
-                    text:"Add card now"
-                })
+                    value: "newCard",
+                    text: "Add card now"
+                });
                 this.setState({
                     cards: options
                 });
@@ -321,8 +321,8 @@ class Bookings extends Component {
     }
 
     inputHandler = async e => {
-        if(e.target.value =="newCard"){
-            location.href='/app/myCards';
+        if (e.target.value == "newCard") {
+            location.href = "/app/myCards";
         }
         if (e.target.name == "carType") {
             this.setState(
@@ -727,7 +727,12 @@ class Bookings extends Component {
                                         name="boardingPoint"
                                         autocompletionRequest={{
                                             input: this.state.boardsearch,
-                                            rankBy:'distance'
+                                            radius: 1000 * 40,
+                                            location: new mapApi.LatLng(
+                                                this.state.currentLocation.lat,
+                                                this.state.currentLocation.lng
+                                            ),
+                                            strictbounds: true
                                         }}
                                         googleMaps={mapApi}
                                         onSelectSuggest={this.addBoardingPlace.bind(
@@ -784,7 +789,12 @@ class Bookings extends Component {
                                         name="droppingPoint"
                                         autocompletionRequest={{
                                             input: this.state.dropsearch,
-                                            rankBy:'distance'
+                                            radius: 1000 * 40,
+                                            location: new mapApi.LatLng(
+                                                this.state.currentLocation.lat,
+                                                this.state.currentLocation.lng
+                                            ),
+                                            strictbounds: true
                                         }}
                                         googleMaps={mapApi}
                                         onSelectSuggest={this.addDroppingPlace.bind(
@@ -1061,12 +1071,12 @@ class Bookings extends Component {
                                         this.isAndroid()
                                             ? {
                                                   ...mapOptions,
-                                                  fullscreenControl: true,
+                                                  fullscreenControl: false,
                                                   zoomControl: false
                                               }
                                             : {
                                                   ...mapOptions,
-                                                  fullscreenControl: true
+                                                  fullscreenControl: false
                                               }
                                     }
                                     bootstrapURLKeys={{
