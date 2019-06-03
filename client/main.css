@@ -19,3 +19,8 @@ html, body, #react-target {
   margin-right: auto;
 }
 
+
+.footer {
+  position: relative !important;
+  bottom: 0px !important;
+}
