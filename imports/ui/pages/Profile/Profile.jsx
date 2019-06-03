@@ -156,6 +156,7 @@ class Profile extends Component {
             });
     };
     render() {
+        console.log(this.state.isEdit)
         return (
             <div
                 className=""
@@ -244,92 +245,117 @@ class Profile extends Component {
 
                 {!this.state.loader && (
                     <div className="padding-left padding-bottom padding-right">
-                        <div className="list">
-                            <div className="item item-icon-left">
-                                <i
-                                    className="icon fa fa-user"
-                                    aria-hidden="true"
-                                />{" "}
-                                {localizationManager.strings.name}
-                                <span className="item-note">
-                                    {this.state.name || "Loading..."}
-                                </span>
-                            </div>
-                            <div className="item item-icon-left">
-                                <i
-                                    className="icon fa fa-phone"
-                                    aria-hidden="true"
-                                />{" "}
-                                {localizationManager.strings.phone}
-                                <span className="item-note">
-                                    {this.state.phone || "Loading..."}
-                                </span>
-                            </div>
-                            <div className="item item-icon-left">
-                                <i
-                                    className="icon fa fa-at"
-                                    aria-hidden="true"
-                                />{" "}
-                                {localizationManager.strings.email}
-                                <span className="item-note">
-                                    {this.state.riderEmail
-                                        ? this.state.riderEmail
-                                        : this.state.riderEmail == null
-                                        ? "-"
-                                        : "Loading..."}
-                                </span>
-                            </div>
-                            {this.isDriver && (
+                        {!this.state.isEdit &&
+                            <div className="list">
                                 <div className="item item-icon-left">
                                     <i
                                         className="icon fa fa-user"
                                         aria-hidden="true"
                                     />{" "}
-                                    {localizationManager.strings.userType}
+                                    {localizationManager.strings.name}
                                     <span className="item-note">
+                                        {this.state.name || "Loading..."}
+                                    </span>
+                                </div>
+                                <div className="item item-icon-left">
+                                    <i
+                                        className="icon fa fa-phone"
+                                        aria-hidden="true"
+                                    />{" "}
+                                    {localizationManager.strings.phone}
+                                    <span className="item-note">
+                                        {this.state.phone || "Loading..."}
+                                    </span>
+                                </div>
+                                <div className="item item-icon-left">
+                                    <i
+                                        className="icon fa fa-at"
+                                        aria-hidden="true"
+                                    />{" "}
+                                    {localizationManager.strings.email}
+                                    <span className="item-note">
+                                        {this.state.riderEmail
+                                            ? this.state.riderEmail
+                                            : this.state.riderEmail == null
+                                            ? "-"
+                                            : "Loading..."}
+                                    </span>
+                                </div>
+                                {this.isDriver && (
+                                    <div className="item item-icon-left">
+                                        <i
+                                            className="icon fa fa-user"
+                                            aria-hidden="true"
+                                        />{" "}
                                         {localizationManager.strings.userType}
-                                    </span>
-                                </div>
-                            )}
-                            {this.isDriver && (
-                                <div className="item item-icon-left">
-                                    <i
-                                        className="icon fa fa-car"
-                                        aria-hidden="true"
-                                    />{" "}
-                                    {localizationManager.strings.carModel}
-                                    <span className="item-note">
-                                        {this.state.carModel || "Loading..."}
-                                    </span>
-                                </div>
-                            )}
-                            {this.isDriver && (
-                                <div className="item item-icon-left">
-                                    <i
-                                        className="icon fa fa-text-width"
-                                        aria-hidden="true"
-                                    />{" "}
-                                    {localizationManager.strings.carNumber}{" "}
-                                    <span className="item-note">
-                                        {this.state.carNumber || "Loading..."}
-                                    </span>
-                                </div>
-                            )}
+                                        <span className="item-note">
+                                            {localizationManager.strings.userType}
+                                        </span>
+                                    </div>
+                                )}
+                                {this.isDriver && (
+                                    <div className="item item-icon-left">
+                                        <i
+                                            className="icon fa fa-car"
+                                            aria-hidden="true"
+                                        />{" "}
+                                        {localizationManager.strings.carModel}
+                                        <span className="item-note">
+                                            {this.state.carModel || "Loading..."}
+                                        </span>
+                                    </div>
+                                )}
+                                {this.isDriver && (
+                                    <div className="item item-icon-left">
+                                        <i
+                                            className="icon fa fa-text-width"
+                                            aria-hidden="true"
+                                        />{" "}
+                                        {localizationManager.strings.carNumber}{" "}
+                                        <span className="item-note">
+                                            {this.state.carNumber || "Loading..."}
+                                        </span>
+                                    </div>
+                                )}
 
-                            {this.isDriver && (
+                                {this.isDriver && (
+                                    <div className="item item-icon-left">
+                                        <i
+                                            className="icon fa fa-star"
+                                            aria-hidden="true"
+                                        />{" "}
+                                        {localizationManager.strings.arad}
+                                        <span className="item-note">
+                                            <Ratings
+                                                start={0}
+                                                stop={5}
+                                                emptySymbol="fa fa-star-o fa-2x empty"
+                                                fullSymbol="fa fa-star fa-2x full"
+                                                initialRating={this.state.avgRating}
+                                                readonly
+                                                style={{
+                                                    fontSize: "10px"
+                                                }}
+                                            />
+                                        </span>
+                                    </div>
+                                )}
+
                                 <div className="item item-icon-left">
                                     <i
                                         className="icon fa fa-star"
                                         aria-hidden="true"
                                     />{" "}
-                                    {localizationManager.strings.arad}
+                                    {localizationManager.strings.arau}
                                     <span className="item-note">
                                         <Ratings
                                             start={0}
                                             stop={5}
                                             emptySymbol="fa fa-star-o fa-2x empty"
                                             fullSymbol="fa fa-star fa-2x full"
-                                            initialRating={this.state.avgRating}
+                                            initialRating={Number(
+                                                this.state.avgUserRating
+                                            )}
                                             readonly
                                             style={{
                                                 fontSize: "10px"
@@ -337,31 +363,9 @@ class Profile extends Component {
                                         />
                                     </span>
                                 </div>
-                            )}
-
-                            <div className="item item-icon-left">
-                                <i
-                                    className="icon fa fa-star"
-                                    aria-hidden="true"
-                                />{" "}
-                                {localizationManager.strings.arau}
-                                <span className="item-note">
-                                    <Ratings
-                                        start={0}
-                                        stop={5}
-                                        emptySymbol="fa fa-star-o fa-2x empty"
-                                        fullSymbol="fa fa-star fa-2x full"
-                                        initialRating={Number(
-                                            this.state.avgUserRating
-                                        )}
-                                        readonly
-                                        style={{
-                                            fontSize: "10px"
-                                        }}
-                                    />
-                                </span>
                             </div>
-                        </div>
+                        }
+                        
 
                         {!this.state.isEdit && (
                             <button
@@ -386,16 +390,6 @@ class Profile extends Component {
 
                         {this.state.isEdit && (
                             <div>
-                                <span className="seperator padding-left padding-right padding-bottom">
-                                    &nbsp;&nbsp;
-                                    {localizationManager.strings.editInfo}
-                                    &nbsp;&nbsp;
-                                </span>
-                                <div
-                                    style={{
-                                        marginBottom: "8px"
-                                    }}
-                                />
                                 <label className="item item-input item-stacked-label">
                                     <span className="input-label">
                                         {localizationManager.strings.name}

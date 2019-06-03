@@ -19,3 +19,12 @@ html, body, #react-target {
   margin-right: auto;
 }
 
+
+.footer {
+  position: relative !important;
+  bottom: 0px !important;
+}
+
+.scroll-content {
+  padding-bottom:0!important;
+}
