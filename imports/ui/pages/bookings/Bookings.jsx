@@ -727,11 +727,6 @@ class Bookings extends Component {
                                         name="boardingPoint"
                                         autocompletionRequest={{
                                             input: this.state.boardsearch,
-                                            radius: 1000 * 40,
-                                            location: new mapApi.LatLng(
-                                                this.state.currentLocation.lat,
-                                                this.state.currentLocation.lng
-                                            ),
                                             strictbounds: true
                                         }}
                                         googleMaps={mapApi}
@@ -789,11 +784,6 @@ class Bookings extends Component {
                                         name="droppingPoint"
                                         autocompletionRequest={{
                                             input: this.state.dropsearch,
-                                            radius: 1000 * 40,
-                                            location: new mapApi.LatLng(
-                                                this.state.currentLocation.lat,
-                                                this.state.currentLocation.lng
-                                            ),
                                             strictbounds: true
                                         }}
                                         googleMaps={mapApi}
