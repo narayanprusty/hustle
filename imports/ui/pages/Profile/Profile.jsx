@@ -390,16 +390,6 @@ class Profile extends Component {
 
                         {this.state.isEdit && (
                             <div>
-                                <span className="seperator padding-left padding-right padding-bottom">
-                                    &nbsp;&nbsp;
-                                    {localizationManager.strings.editInfo}
-                                    &nbsp;&nbsp;
-                                </span>
-                                <div
-                                    style={{
-                                        marginBottom: "8px"
-                                    }}
-                                />
                                 <label className="item item-input item-stacked-label">
                                     <span className="input-label">
                                         {localizationManager.strings.name}
