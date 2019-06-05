@@ -592,6 +592,7 @@ class Bookings extends Component {
             }
         });
     };
+    
 
     apiHasLoaded = (map, maps) => {
         this.setState({
@@ -1085,9 +1086,9 @@ class Bookings extends Component {
                                     gestureHandling="greedy"
                                     onClick={t => this.onChangeBoarding(t)}
                                     yesIWantToUseGoogleMapApiInternals
-                                    onGoogleApiLoaded={({ map, maps }) =>
+                                    onGoogleApiLoaded={({ map, maps }) => {
                                         this.apiHasLoaded(map, maps)
-                                    }
+                                    }}
                                 >
                                     {this.state.mapInstance && (
                                         <MapControl
