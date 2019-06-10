@@ -29,40 +29,24 @@ function resultRequest(resourcePath, callback) {
             path += "&authentication.entityId=" + config.HYPERPAY.EntityId;
             var options = {
                 port: 443,
-                host: config.HYPERPAY.host,
+                host: "https://" + config.HYPERPAY.host,
                 path: path,
                 method: "GET"
             };
 
-            console.log(options.host + options.path)
-
             axios
             .get(options.host + options.path)
             .then(function(response) {
-                // handle success
-
                 try {
-                    resDate = JSON.parse(response);
-                    console.log(resDate)
-                    resolve(resDate)
+                    resDate = response;
+                    resolve(resDate.data)
                 } catch (e) {
-                    console.log(e)
                     reject(e)
                 }
             })
             .catch(function(error) {
-                // handle error
                 reject(error)
             });
-
-            /*var postRequest = https.request(options, function(res) {
-                res.setEncoding("utf8");
-                res.on("data", function(chunk) {
-                    jsonRes = JSON.parse(chunk);
-                    resolve(jsonRes);
-                });
-            });
-            postRequest.end();*/
         } catch (ex) {
             reject(ex);
         }
@@ -112,14 +96,12 @@ const addCard = async (op, userId, resourcePath) => {
     console.log("lets try to revarse the deducted thing ");
     try {
         let responseData = await resultRequest(resourcePath);
-        console.log(responseData);
         const successPattern = /^(000\.000\.|000\.100\.1|000\.[36])/;
         const manuallPattern = /^(000\.400\.0[^3]|000\.400\.100)/;
 
         const match1 = successPattern.test(responseData.result.code);
         const match2 = manuallPattern.test(responseData.result.code);
-        console.log(match1, match2);
-        if (!match1 || !match2) {
+        if (!match1 && !match2) {
             return Promise.reject(
                 "Unable to add the card, please try again later!"
             );
