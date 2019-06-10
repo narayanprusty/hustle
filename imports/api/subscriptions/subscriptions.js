@@ -116,7 +116,8 @@ const subscribePlan = async ({
                     hyperPayId: hyperPayId,
                     startDate: (+new Date()).toString(),
                     validTill: (+validTill).toString(),
-                    renew: true
+                    renew: true,
+                    paymentType: 'card'
                 }
             });
             return {
@@ -235,6 +236,8 @@ const autoRenewal = async () => {
                         });
                         console.log(res);
                     } else {
+                        //here store the invoice if it's a cash payment.
+
                         console.log("Plan expired -> Deactivating plan");
                         let res = await node.callAPI('assets/updateAssetInfo', {
                             assetName: config.ASSET.Subscriptions,

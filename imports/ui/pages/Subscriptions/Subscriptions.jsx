@@ -18,7 +18,8 @@ class Subscriptions extends Component {
             showAddCardButton: false,
             cards: [],
             paymentMethod: "",
-            showPayNowButton: false
+            showPayNowButton: false,
+            isPaymentCash: true
         };
         const driverMode = localStorage.getItem("driverMode");
         if (!driverMode) {
@@ -90,7 +91,13 @@ class Subscriptions extends Component {
                     );
                 } else {
                     if (response.success && !response.message) {
+                        console.log(response)
                         this.setState({
+                            isPaymentCash: response.data.length > 0
+                            ? response.data[0].paymentType === 'cash'
+                                ? true
+                                : false
+                            : false,
                             userPlans: response.data ? response.data : [],
                             userAlreadySubscribed: response.data.length > 0,
                             renew:
@@ -580,7 +587,7 @@ class Subscriptions extends Component {
                                         className="button button-block button-calm activated"
                                         loading={this.state.showloader}
                                         disabled={
-                                            !this.state.userAlreadySubscribed
+                                            !this.state.userAlreadySubscribed || this.state.isPaymentCash
                                         }
                                         data-color="##FFFF00"
                                         data-spinner-size={30}
