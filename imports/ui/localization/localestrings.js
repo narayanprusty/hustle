@@ -49,9 +49,6 @@ module.exports = {
         Micro: "Hustle Standard",
         Mini: "Hustle Plus",
         Sedan: "Hustle Family",
-        SUV: "Prime SUV",
-        Exec: "Prime Exec",
-        Lux: "Prime Lux",
         unableToLoadCards: "Unable to load cards!",
         canNotChangeLocation:
             "Cant change location while raising booking request.",
