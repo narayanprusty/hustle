@@ -46,7 +46,7 @@ module.exports = {
         reset: "Reset",
         cardAdded: "Card added successfully!",
         failedAddingCard: "Failed adding card.",
-        Micro: "Micro",
+        Micro: "Hustle Standard",
         Mini: "Mini",
         Sedan: "Prime Sedan",
         SUV: "Prime SUV",
