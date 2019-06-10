@@ -7,6 +7,7 @@ var querystring = require("querystring");
 import { sendPushNotification } from "../../modules/helpers/server";
 import localizationManager from "../../ui/localization";
 import { rejects } from "assert";
+const axios = require('axios');
 
 function request(data, callback) {}
 
@@ -32,14 +33,36 @@ function resultRequest(resourcePath, callback) {
                 path: path,
                 method: "GET"
             };
-            var postRequest = https.request(options, function(res) {
+
+            console.log(options.host + options.path)
+
+            axios
+            .get(options.host + options.path)
+            .then(function(response) {
+                // handle success
+
+                try {
+                    resDate = JSON.parse(response);
+                    console.log(resDate)
+                    resolve(resDate)
+                } catch (e) {
+                    console.log(e)
+                    reject(e)
+                }
+            })
+            .catch(function(error) {
+                // handle error
+                reject(error)
+            });
+
+            /*var postRequest = https.request(options, function(res) {
                 res.setEncoding("utf8");
                 res.on("data", function(chunk) {
                     jsonRes = JSON.parse(chunk);
                     resolve(jsonRes);
                 });
             });
-            postRequest.end();
+            postRequest.end();*/
         } catch (ex) {
             reject(ex);
         }
