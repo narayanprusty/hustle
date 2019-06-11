@@ -29,7 +29,7 @@ function resultRequest(resourcePath, callback) {
             path += "&authentication.entityId=" + config.HYPERPAY.EntityId;
             var options = {
                 port: 443,
-                host: config.HYPERPAY.host,
+                host: 'https://' + config.HYPERPAY.host,
                 path: path,
                 method: "GET"
             };
@@ -73,7 +73,7 @@ const revarsalReq = paymentId => {
             "Content-Length": data.length
         },
         data,
-        url: config.HYPERPAY.host + path
+        url: 'https://' + config.HYPERPAY.host + path
     };
 
     return new Promise((resolve, reject) => {
@@ -391,7 +391,7 @@ const oneClickPayment = async (amount, hyperPayId, merchantTransactionId) => {
         });
         console.log(cardData);
         var options = {
-            url: config.HYPERPAY.host + path,
+            url: 'https://' + config.HYPERPAY.host + path,
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -468,7 +468,7 @@ const checkout = () => {
     });
     var options = {
         port: 443,
-        host: config.HYPERPAY.host,
+        host: 'https://' + config.HYPERPAY.host,
         path: path,
         method: "POST",
         headers: {
@@ -519,7 +519,7 @@ const checkPaymentStatus = id => {
 
         var options = {
             port: 443,
-            host: config.HYPERPAY.host,
+            host: 'https://' + config.HYPERPAY.host,
             path: path,
             method: "GET"
         };
