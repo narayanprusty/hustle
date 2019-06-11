@@ -29,7 +29,7 @@ function resultRequest(resourcePath, callback) {
             path += "&authentication.entityId=" + config.HYPERPAY.EntityId;
             var options = {
                 port: 443,
-                host: "https://" + config.HYPERPAY.host,
+                host: config.HYPERPAY.host,
                 path: path,
                 method: "GET"
             };
@@ -39,15 +39,18 @@ function resultRequest(resourcePath, callback) {
             .then(function(response) {
                 try {
                     resDate = response;
+                    console.log(resDate.data)
                     resolve(resDate.data)
                 } catch (e) {
                     reject(e)
                 }
             })
             .catch(function(error) {
+                console.log(error)
                 reject(error)
             });
         } catch (ex) {
+            console.log(ex)
             reject(ex);
         }
     });
@@ -64,27 +67,31 @@ const revarsalReq = paymentId => {
         paymentType: "RV"
     });
     var options = {
-        port: 443,
-        host: config.HYPERPAY.host,
-        path: path,
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             "Content-Length": data.length
-        }
+        },
+        data,
+        url: config.HYPERPAY.host + path
     };
 
     return new Promise((resolve, reject) => {
         try {
-            var postRequest = https.request(options, function(res) {
-                res.setEncoding("utf8");
-                res.on("data", function(chunk) {
-                    jsonRes = JSON.parse(chunk);
-                    resolve(jsonRes);
-                });
+            axios(options)
+            .then(function(response) {
+                try {
+                    resDate = response;
+                    console.log(resDate.data)
+                    resolve(resDate.data)
+                } catch (e) {
+                    reject(e)
+                }
+            })
+            .catch(function(error) {
+                console.log(error)
+                reject(error)
             });
-            postRequest.write(data);
-            postRequest.end();
         } catch (ex) {
             reject(ex);
         }
@@ -283,56 +290,6 @@ const saveCardToBlockcluster = async (data, userId) => {
     }
 };
 
-const saveCardToHyperPay = data => {
-    var path = "/v1/registrations";
-    let cardBrand = Payment.fns.cardType(data.number);
-    if (cardBrand == "visa" || cardBrand == "master" || cardBrand == "mada") {
-        var cardData = querystring.stringify({
-            "authentication.userId": config.HYPERPAY.UserId,
-            "authentication.password": config.HYPERPAY.Password,
-            "authentication.entityId": config.HYPERPAY.EntityId,
-            paymentBrand: cardBrand.toUpperCase(),
-            "card.number": data.number || "",
-            "card.holder": data.name || "",
-            "card.expiryMonth": data.expiryMonth || "",
-            "card.expiryYear": data.expiryYear || "",
-            "card.cvv": data.cvc || "",
-            recurringType: "INITIAL"
-        });
-        var options = {
-            port: 443,
-            host: config.HYPERPAY.host,
-            path: path,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Content-Length": cardData.length
-            }
-        };
-        return new Promise((resolve, reject) => {
-            try {
-                var postRequest = https.request(options, res => {
-                    res.setEncoding("utf8");
-                    res.on("data", chunk => {
-                        jsonRes = JSON.parse(chunk);
-                        resolve(jsonRes);
-                    });
-                });
-                postRequest.write(cardData);
-                postRequest.end();
-            } catch (ex) {
-                console.log(ex);
-                reject(ex);
-            }
-        });
-    } else {
-        return {
-            success: false,
-            message: localizationManager.strings.cardNotSupported
-        };
-    }
-};
-
 const getCards = async () => {
     try {
         let cards = await node.callAPI("assets/search", {
@@ -434,26 +391,24 @@ const oneClickPayment = async (amount, hyperPayId, merchantTransactionId) => {
         });
         console.log(cardData);
         var options = {
-            port: 443,
-            host: config.HYPERPAY.host,
-            path: path,
+            url: config.HYPERPAY.host + path,
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Content-Length": cardData.length
-            }
+            },
+            data: cardData
         };
         return new Promise((resolve, reject) => {
             try {
-                var postRequest = https.request(options, res => {
-                    res.setEncoding("utf8");
-                    res.on("data", async chunk => {
-                        jsonRes = JSON.parse(chunk);
+                axios(options)
+                .then(function(response) {
+                    try {
+                        let jsonRes = response.data
                         if (jsonRes.id) {
                             let code = jsonRes.result.code;
                             console.log(jsonRes);
                             var patt1 = /(000.000.|000.100.1|000.[36])/;
-
                             var patt2 = /(000.400.0[^3]|000.400.100)/;
 
                             if (patt1.test(code) || patt2.test(code)) {
@@ -479,10 +434,14 @@ const oneClickPayment = async (amount, hyperPayId, merchantTransactionId) => {
                                 reason: "Internal Error"
                             });
                         }
-                    });
+                    } catch (e) {
+                        reject(e)
+                    }
+                })
+                .catch(function(error) {
+                    console.log(error)
+                    reject(error)
                 });
-                postRequest.write(cardData);
-                postRequest.end();
             } catch (ex) {
                 console.log(ex);
                 reject(ex);

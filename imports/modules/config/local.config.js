@@ -61,7 +61,7 @@ module.exports = {
             "8ac7a4c967cba199016804c97cb83f25",
         Currency: process.env.HYPERPAY_CURRENCY || "SAR",
         PaymentType: process.env.HYPERPAY_PAYMENT_TYPE || "DB",
-        host: process.env.HYPERPAY_HOST || "test.oppwa.com",
+        host: 'https://' +  (process.env.HYPERPAY_HOST || "test.oppwa.com"),
         PaymentMethods: {
             VISA: "VISA",
             MASTERCARD: "MASTER"
