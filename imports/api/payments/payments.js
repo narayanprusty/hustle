@@ -468,7 +468,7 @@ const checkout = () => {
     });
     var options = {
         port: 443,
-        host: 'https://' + config.HYPERPAY.host,
+        host: config.HYPERPAY.host,
         path: path,
         method: "POST",
         headers: {
@@ -494,6 +494,7 @@ const checkout = () => {
     });
 };
 
+//this is called when we click add card button. A new checkout id is required when asking user to add card.
 const getCheckoutId = async () => {
     try {
         let op = await checkout();
