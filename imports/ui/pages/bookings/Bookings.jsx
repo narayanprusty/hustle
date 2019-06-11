@@ -25,19 +25,7 @@ const cartTypes = [
         name: localizationManager.strings.Sedan,
         value: "Sedan"
     },
-    {
-        name: localizationManager.strings.SUV,
-        value: "SUV"
-    },
-    {
-        name: localizationManager.strings.Exec,
-        value: "Exec"
-    },
-    {
-        name: localizationManager.strings.primeLux,
-        value: "Lux"
-    },
-    {
+     {
         name: localizationManager.strings.Dabbab,
         value: "Dabbab"
     },
@@ -684,7 +672,7 @@ class Bookings extends Component {
     };
     render() {
         const { mapApiLoaded, mapApi } = this.state;
-        const Ride = ["Micro", "Mini", "Sedan", "SUV", "Exec", "Lux", "Taxi"];
+        const Ride = ["Micro", "Mini", "Sedan", "Taxi"];
         const DeliveryOfGoods = ["Dabbab", "Pickup", "Dyna"];
 
         let conatinerClass = "list";
