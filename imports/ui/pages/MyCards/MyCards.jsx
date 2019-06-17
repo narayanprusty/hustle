@@ -62,7 +62,6 @@ export default class MyCards extends Component {
             //https://hustle-pay.gohustleapp.com
             //http://localhost:3001
             if (window.cordova) {
-                console.log('Open InAppBrowserWindow')
                 const win = window.cordova.InAppBrowser.open(
                     `${config.HUSTLE_PAY_BASE}/checkout?id=${
                         res.op.id
@@ -71,18 +70,16 @@ export default class MyCards extends Component {
                     "location=yes"
                 );
 
-                win.addEventListener("loadstart", function(event) {
+                win.addEventListener("loadstop", function(event) {
                     if (
                         event.url &&
                         event.url
                             .split("/")
                             .indexOf("booking.gohustleapp.com") > -1
                     ) {
-                        console.log('Closing InAppBrowser Window', event)
                         setTimeout(() => {
-                            win.close()
+                            win.close();
                         }, 5000)
-                        //win.close();
                     }
                 });
             } else {
