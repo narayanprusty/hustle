@@ -49,7 +49,7 @@ export default class AcceptCard extends Component {
                     if (window.cordova) {
                         window.shouldClose = true;
                     } else {
-                        close();
+                        //close();
                     }
                 } else {
                     if (data.success) {
@@ -65,7 +65,7 @@ export default class AcceptCard extends Component {
                         if (window.cordova) {
                             window.shouldClose = true;
                         } else {
-                            close();
+                            //close();
                         }
                     }
                 }
