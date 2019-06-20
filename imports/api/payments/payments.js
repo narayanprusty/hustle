@@ -378,7 +378,7 @@ const oneClickPayment = async (amount, hyperPayId, merchantTransactionId) => {
         var cardData = querystring.stringify({
             "authentication.userId": config.HYPERPAY.UserId,
             "authentication.password": config.HYPERPAY.Password,
-            "authentication.entityId": config.HYPERPAY.EntityId,
+            "authentication.entityId": config.HYPERPAY.EntityId_Auto,
             recurringType: "REPEATED",
             amount: amount,
             currency: config.HYPERPAY.Currency,
