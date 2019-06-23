@@ -59,6 +59,9 @@ module.exports = {
         EntityId:
             process.env.HYPERPAY_ENTITY_ID ||
             "8ac7a4c967cba199016804c97cb83f25",
+        EntityId_Auto:
+            process.env.EntityId_Auto ||
+            "8ac9a4ce688074ad01688f7869262931",
         Currency: process.env.HYPERPAY_CURRENCY || "SAR",
         PaymentType: process.env.HYPERPAY_PAYMENT_TYPE || "DB",
         host: process.env.HYPERPAY_HOST || "test.oppwa.com",
