@@ -169,7 +169,7 @@ export default class Rides extends Component {
                                             }
 
                                             {data.paymentMethod !== 'cash' && 
-                                                localizationManager.strings.card
+                                                localizationManager.strings.Card
                                             }
                                             
                                         </div>
