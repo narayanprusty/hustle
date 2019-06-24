@@ -341,9 +341,11 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
     //Push notification
     sendPushNotification("Ride completed", "Ride has been finished.", userId);
 
-    let meta = await mongoClient.find("DriverMeta", {
+    let meta = await DriverMeta.find("DriverMeta", {
         driverId: driverId
     });
+
+    console.log(meta)
 
     if(meta.governmentRegistration) {
         rideCompletedListForWASL.push(bookingId)
@@ -1376,7 +1378,7 @@ let registerWaslRide = async () => {
                 }
             }))[0];
 
-            let meta = await mongoClient.find("DriverMeta", {
+            let meta = await DriverMeta.find("DriverMeta", {
                 driverId: booking.driverId
             });
 
