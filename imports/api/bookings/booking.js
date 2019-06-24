@@ -1365,7 +1365,7 @@ const getPricingConfig = async () => {
     }
 };
 
-let registerWaslRide = () => {
+let registerWaslRide = async () => {
     let done = []
     for(let count = 0; count < rideCompletedListForWASL.length; count++) {
         try {
