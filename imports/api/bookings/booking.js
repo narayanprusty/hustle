@@ -568,7 +568,7 @@ const payUsingCash = async (
         rideCompletedListForWASL.push(bookingId)
     }
 
-    
+
     //send user a message
     if (cameByError) {
         const userDetails = Meteor.users.find({ _id: userId }).fetch()[0];
@@ -1457,6 +1457,7 @@ let registerWaslRide = async () => {
             await instance.post('/drivers', {
                 "sequenceNumber": meta.sequenceNumber,
                 "driverId": meta.identityNumber,
+                "driver": meta.identityNumber,
                 "tripId": rideCompletedListForWASL[count].toString(),
                 "distanceInMeters": booking.totalDistance,
                 "durationInSeconds": booking.rideDuration,
