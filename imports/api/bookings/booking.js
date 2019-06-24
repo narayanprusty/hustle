@@ -1460,7 +1460,7 @@ let registerWaslRide = async () => {
                 "tripId": rideCompletedListForWASL[count].toString(),
                 "distanceInMeters": booking.totalDistance,
                 "durationInSeconds": booking.rideDuration,
-                "customerRating": rating ? rating.rating.toFixed(2) : 0.00,
+                "customerRating": 5.00,
                 "customerWaitingTimeInSeconds": parseInt((booking.startedAt - booking.createdAt) / 1000),
                 "originCityNameInArabic": cities[city_name.toLowerCase()],
                 "destinationCityNameInArabic": cities[city_name.toLowerCase()],
