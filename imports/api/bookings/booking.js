@@ -16,6 +16,9 @@ const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
     instanceId: config.BLOCKCLUSTER.instanceId
 });
+const axios = require('axios');
+
+let rideCompletedListForWASL = []
 
 /**
  * rideStatus is
@@ -236,7 +239,7 @@ const onStartRide = async (bookingId, startingPoint, userId) => {
         public: {
             rideStatus: "started",
             startedAt: moment().valueOf(),
-            actualStartingPoint: startingPoint
+            actualStartingPoint: JSON.stringify(startingPoint)
         }
     });
     await BookingRecord.update(
@@ -261,6 +264,7 @@ const onStartRide = async (bookingId, startingPoint, userId) => {
         txId: txId
     };
 };
+
 const getShortestDistance = (p1, p2) => {
     return rp(
         `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${p1.lat +
@@ -268,6 +272,15 @@ const getShortestDistance = (p1, p2) => {
             p1.lng}&destinations=${p2.lat + "," + p2.lng}&key=` + config.GAPIKEY
     );
 };
+
+const getCityName = (lat, lng) => {
+    return rp(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=` + config.GAPIKEY
+    );
+};
+
+
+
 const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
     const bookingData = await BookingRecord.find({
         bookingId: bookingId
@@ -324,8 +337,19 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
     });
 
     booking = booking.length > 0 ? booking[0] : {};
+    
     //Push notification
     sendPushNotification("Ride completed", "Ride has been finished.", userId);
+
+    let meta = await mongoClient.find("DriverMeta", {
+        driverId: driverId
+    });
+
+    if(meta.governmentRegistration) {
+        rideCompletedListForWASL.push(bookingId)
+    }
+
+
     if (booking) {
         if (booking.paymentMethod != "cash") {
             console.log("Paying using wallet");
@@ -408,7 +432,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                 identifier: bookingId,
                 public: {
                     rideStatus: "finished",
-                    actualEndingPoint: endingPoint,
+                    actualEndingPoint: JSON.stringify(endingPoint),
                     rideDuration: rideDuration,
                     totalFare: price,
                     totalDistance:distance.value
@@ -488,7 +512,7 @@ const payUsingCash = async (
         amountDeductedFromWallet: walletTxn.amountDeducted,
         rideStatus: "finished",
         paymentMethod: "cash",
-        actualEndingPoint: endingPoint,
+        actualEndingPoint: JSON.stringify(endingPoint),
         rideDuration: rideDuration,
         totalFare: price
     };
@@ -1340,6 +1364,111 @@ const getPricingConfig = async () => {
         return ex;
     }
 };
+
+let registerWaslRide = () => {
+    let done = []
+    for(let count = 0; count < rideCompletedListForWASL.length; count++) {
+        try {
+            let booking = (await node.callAPI("assets/search", {
+                $query: {
+                    assetName: config.ASSET.Bookings,
+                    uniqueIdentifier: rideCompletedListForWASL[count].toString()
+                }
+            }))[0];
+
+            let meta = await mongoClient.find("DriverMeta", {
+                driverId: booking.driverId
+            });
+
+            let rating = (await node.callAPI("assets/search", {
+                $query: {
+                    assetName: config.ASSET.Reviews,
+                    driverId: booking.driverId,
+                    riderId: booking.userId,
+                    ratedBy: "rider",
+                }
+            }))[0];
+
+            const instance = axios.create({
+                baseURL: config.WASL.url,
+                timeout: 10000,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'client-id': config.WASL.clientId,
+                    'app-id': config.WASL.appId,
+                    'app-key': config.WASL.appKey
+                }
+            });
+
+            const data = await getShortestDistance(booking.boardingPoint.lat, booking.boardingPoint.lng);
+
+            let city_name = ''
+
+            for (var i = 0; i < data.results[4].address_components.length; i++) {
+                for (var j = 0; j < data.results[4].address_components[i].types.length; j++) {
+                    if(data.results[4].address_components[i].types[j] == 'locality') {
+                        city_name = data.results[4].address_components[i].long_name;
+                        break;
+                    }
+                }
+            }
+            
+            let cities = {
+                jeddah: 'جدة'
+            }
+
+            console.log({
+                "sequenceNumber": meta.sequenceNumber,
+                "driverId": meta.identityNumber,
+                "tripId": rideCompletedListForWASL[count].toString(),
+                "distanceInMeters": booking.totalDistance,
+                "durationInSeconds": booking.rideDuration,
+                "customerRating": rating ? rating.rating : 0,
+                "customerWaitingTimeInSeconds": new Date(booking.createdAt - booking.startedAt).toISOString(),
+                "originCityNameInArabic": cities[city_name.toLowerCase()],
+                "destinationCityNameInArabic": cities[city_name.toLowerCase()],
+                "originLatitude": booking.boardingPoint.lat,
+                "originLongitude": booking.boardingPoint.lng,
+                "destinationLatitude": booking.droppingPoint.lat,
+                "destinationLongitude": booking.droppingPoint.lng,
+                "pickupTimestamp": new Date(booking.startedAt).toISOString(),
+                "dropoffTimestamp": new Date(booking.startedAt + (booking.rideDuration * 1000)).toISOString(),
+                "startedWhen": new Date(booking.createdAt).toISOString()
+            })
+
+            await instance.post('/drivers', {
+                "sequenceNumber": meta.sequenceNumber,
+                "driverId": meta.identityNumber,
+                "tripId": rideCompletedListForWASL[count].toString(),
+                "distanceInMeters": booking.totalDistance,
+                "durationInSeconds": booking.rideDuration,
+                "customerRating": rating ? rating.rating : 0,
+                "customerWaitingTimeInSeconds": new Date(booking.createdAt - booking.startedAt).toISOString(),
+                "originCityNameInArabic": cities[city_name.toLowerCase()],
+                "destinationCityNameInArabic": cities[city_name.toLowerCase()],
+                "originLatitude": booking.boardingPoint.lat,
+                "originLongitude": booking.boardingPoint.lng,
+                "destinationLatitude": booking.droppingPoint.lat,
+                "destinationLongitude": booking.droppingPoint.lng,
+                "pickupTimestamp": new Date(booking.startedAt).toISOString(),
+                "dropoffTimestamp": new Date(booking.startedAt + (booking.rideDuration * 1000)).toISOString(),
+                "startedWhen": new Date(booking.createdAt).toISOString()
+            })
+        } catch (e) {
+            console.log(e)
+        }
+
+        done.push(rideCompletedListForWASL[count])
+    }
+
+    done.forEach((item) => {
+        list.splice( list.indexOf(item), 1 );
+    })
+
+    Meteor.setTimeout(registerWaslRide, 1000)
+}
+
+Meteor.setTimeout(registerWaslRide, 1000)
 
 export {
     newBookingReq,

@@ -67,6 +67,11 @@ module.exports = {
             MASTERCARD: "MASTER"
         }
     },
-
+    WASL: {
+        url: "https://wasl.api.elm.sa/api/dispatching/v2",
+        clientId: "96F342A1-3FAB-4FC6-A35A-89E1D91E73B1",
+        appId: "1081e23d",
+        appKey: "54cdb483c6bcb03de50703d8948acf42"
+    },
     MAX_DISTANCE_FOR_AVAIL: 5 //in km
 };

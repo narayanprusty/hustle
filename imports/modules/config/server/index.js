@@ -67,6 +67,7 @@ module.exports = {
         Wallet: "Wallet"
     },
     HYPERPAY: defaults.HYPERPAY,
+    WASL: defaults.WASL,
     GAPIKEY: defaults.GAPIKEY,
     farePerMeter: 0.04,
     fareUnit: "SAR",

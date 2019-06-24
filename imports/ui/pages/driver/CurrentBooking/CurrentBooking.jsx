@@ -761,7 +761,7 @@ class CurrentBooking extends Component {
                     )}
                     {this.state.status == "finished" &&
                         this.state.paymentMethod != "cash" && (
-                            <Reviews type="driver" userId={this.state.userId} />
+                            <Reviews type="driver" userId={this.state.userId} bookingId={this.state.bookingId} />
                         )}
                     {this.state.status == "finished" &&
                         this.state.paymentMethod == "cash" &&

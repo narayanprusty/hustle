@@ -14,7 +14,7 @@ const node = new Blockcluster.Dynamo({
  * @param {String} message
  * @param {Number} rateVal
  */
-const rateDriver = async ({ driverId, message, rateVal }) => {
+const rateDriver = async ({ driverId, message, rateVal, bookingId }) => {
     const userId = Meteor.userId();
     const identifier = Date.now() + shortid.generate();
     const data = {
@@ -22,7 +22,8 @@ const rateDriver = async ({ driverId, message, rateVal }) => {
         riderId: userId,
         message: message,
         rating: rateVal,
-        ratedBy: "rider"
+        ratedBy: "rider",
+        bookingId
     };
     await node.callAPI("assets/issueSoloAsset", {
         assetName: config.ASSET.Reviews,
@@ -70,7 +71,7 @@ const updateReviewRider = async (riderId, rateVal) => {
  * @param {String} message
  * @param {Number} rateVal
  */
-const rateRider = async ({ riderId, message, rateVal }) => {
+const rateRider = async ({ riderId, message, rateVal, bookingId }) => {
     const userId = Meteor.userId();
     const identifier = Date.now() + shortid.generate();
     const data = {
@@ -78,7 +79,8 @@ const rateRider = async ({ riderId, message, rateVal }) => {
         riderId: riderId,
         message: message,
         rating: rateVal,
-        ratedBy: "driver"
+        ratedBy: "driver", 
+        bookingId
     };
     await node.callAPI("assets/issueSoloAsset", {
         assetName: config.ASSET.Reviews,

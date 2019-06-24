@@ -29,7 +29,8 @@ class Reviews extends Component {
                 [this.props.type != "rider" ? "riderId" : "driverId"]: this
                     .props.userId,
                 message: this.state.reviewMessage,
-                rateVal: this.state.rating
+                rateVal: this.state.rating,
+                bookingId: this.props.bookingId
             },
             (err, updated) => {
                 if (err) {
