@@ -1404,8 +1404,8 @@ let registerWaslRide = async () => {
                 }
             });
 
-            const data = await getCityName(booking.boardingPoint.lat, booking.boardingPoint.lng);
-
+            let data = await getCityName(booking.boardingPoint.lat, booking.boardingPoint.lng);
+            data = JSON.parse(data)
             console.log(data)
 
             let city_name = ''
@@ -1468,7 +1468,7 @@ let registerWaslRide = async () => {
     }
 
     done.forEach((item) => {
-        list.splice( list.indexOf(item), 1 );
+        rideCompletedListForWASL.splice( rideCompletedListForWASL.indexOf(item), 1 );
     })
 
     Meteor.setTimeout(registerWaslRide, 1000)
