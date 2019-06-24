@@ -164,11 +164,14 @@ export default class Rides extends Component {
                                             </b>
                                         </div>
                                         <div>
-                                            {
-                                                localizationManager.strings[
-                                                    data.paymentMethod
-                                                ]
+                                            {data.paymentMethod === 'cash' && 
+                                                localizationManager.strings.cash
                                             }
+
+                                            {data.paymentMethod !== 'cash' && 
+                                                localizationManager.strings.Card
+                                            }
+                                            
                                         </div>
                                     </li>
                                     <li className="item">

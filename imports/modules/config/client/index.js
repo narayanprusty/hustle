@@ -14,7 +14,7 @@ module.exports = {
             process.env.PUBNUB_SECRET ||
             "sec-c-ODI1ZjY2MWUtMTIwNy00M2MxLWIzY2EtZDUwMjQ5MTlhNmY5"
     },
-    FRONTEND_HOST: process.env.ROOT_URL || "https://hustle.blockcluster.io",
+    FRONTEND_HOST: process.env.ROOT_URL || "https://booking.gohustleapp.com",
     BASE_URL: "https://gohustleapp.com",
     shareText: "Hey, click the below link to see my live location.",
     driversWithin: 5, //inKm,
