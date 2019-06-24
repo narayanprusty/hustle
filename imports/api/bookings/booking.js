@@ -1435,13 +1435,15 @@ let registerWaslRide = async () => {
                 jeddah: 'جدة'
             }
 
+            let random = Math.floor(Math.random() * 1000000000);
+
             console.log({
                 "sequenceNumber": meta.sequenceNumber,
                 "driverId": meta.identityNumber,
-                "tripId": rideCompletedListForWASL[count].toString(),
+                "tripId": random,
                 "distanceInMeters": booking.totalDistance,
                 "durationInSeconds": booking.rideDuration,
-                "customerRating": rating ? rating.rating.toFixed(2) : 0.00,
+                "customerRating": rating ? rating.rating.toFixed(1) : 0.00,
                 "customerWaitingTimeInSeconds": parseInt((booking.startedAt - booking.createdAt) / 1000),
                 "originCityNameInArabic": cities[city_name.toLowerCase()],
                 "destinationCityNameInArabic": cities[city_name.toLowerCase()],
@@ -1457,10 +1459,10 @@ let registerWaslRide = async () => {
             await instance.post('/trips', {
                 "sequenceNumber": meta.sequenceNumber,
                 "driverId": meta.identityNumber,
-                "tripId": rideCompletedListForWASL[count].toString(),
+                "tripId": random,
                 "distanceInMeters": booking.totalDistance,
                 "durationInSeconds": booking.rideDuration,
-                "customerRating": 4.9,
+                "customerRating": rating ? rating.rating.toFixed(1) : 0.00,
                 "customerWaitingTimeInSeconds": parseInt((booking.startedAt - booking.createdAt) / 1000),
                 "originCityNameInArabic": cities[city_name.toLowerCase()],
                 "destinationCityNameInArabic": cities[city_name.toLowerCase()],
@@ -1472,6 +1474,15 @@ let registerWaslRide = async () => {
                 "dropoffTimestamp": new Date(booking.startedAt + (booking.rideDuration * 1000)).toISOString(),
                 "startedWhen": new Date(booking.createdAt).toISOString()
             })
+
+            await node.callAPI("assets/updateAssetInfo", {
+                assetName: config.ASSET.Bookings,
+                fromAccount: node.getWeb3().eth.accounts[0],
+                identifier: rideCompletedListForWASL[count].toString(),
+                public: {
+                    tripId: random
+                }
+            });
         } catch (e) {
             console.log(e)
         }
