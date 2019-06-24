@@ -1454,10 +1454,9 @@ let registerWaslRide = async () => {
                 "startedWhen": new Date(booking.createdAt).toISOString()
             })
 
-            await instance.post('/drivers', {
+            await instance.post('/trips', {
                 "sequenceNumber": meta.sequenceNumber,
                 "driverId": meta.identityNumber,
-                "driver": meta.identityNumber,
                 "tripId": rideCompletedListForWASL[count].toString(),
                 "distanceInMeters": booking.totalDistance,
                 "durationInSeconds": booking.rideDuration,
