@@ -341,17 +341,6 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
     //Push notification
     sendPushNotification("Ride completed", "Ride has been finished.", userId);
 
-    const meta = DriverMeta.find({
-        driverId: booking.driverId
-    }).fetch()[0]
-
-    console.log(meta)
-
-    if(meta.governmentRegistration) {
-        rideCompletedListForWASL.push(bookingId)
-    }
-
-
     if (booking) {
         if (booking.paymentMethod != "cash") {
             console.log("Paying using wallet");
@@ -456,6 +445,17 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
             //send receipt email
             sendReceiptEmail(booking, userId, distance.value, rideDuration, price);
 
+            const meta = DriverMeta.find({
+                driverId: booking.driverId
+            }).fetch()[0]
+        
+            console.log(meta)
+        
+            if(meta.governmentRegistration) {
+                rideCompletedListForWASL.push(bookingId)
+            }
+        
+
             return {
                 success: true,
                 amountDeductedFromWallet: walletTxn.amountDeducted
@@ -557,6 +557,18 @@ const payUsingCash = async (
     );
     //send receipt email
     sendReceiptEmail(booking, userId, distance, rideDuration, price);
+
+    const meta = DriverMeta.find({
+        driverId: booking.driverId
+    }).fetch()[0]
+
+    console.log(meta)
+
+    if(meta.governmentRegistration) {
+        rideCompletedListForWASL.push(bookingId)
+    }
+
+    
     //send user a message
     if (cameByError) {
         const userDetails = Meteor.users.find({ _id: userId }).fetch()[0];
