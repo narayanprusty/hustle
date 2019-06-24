@@ -346,7 +346,7 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
     }).fetch()[0]
 
     console.log(meta)
-    
+
     if(meta.governmentRegistration) {
         rideCompletedListForWASL.push(bookingId)
     }
@@ -1404,7 +1404,9 @@ let registerWaslRide = async () => {
                 }
             });
 
-            const data = await getShortestDistance(booking.boardingPoint.lat, booking.boardingPoint.lng);
+            const data = await getCityName(booking.boardingPoint.lat, booking.boardingPoint.lng);
+
+            console.log(data)
 
             let city_name = ''
 
