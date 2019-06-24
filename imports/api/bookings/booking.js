@@ -1461,7 +1461,7 @@ let registerWaslRide = async () => {
                 "distanceInMeters": booking.totalDistance,
                 "durationInSeconds": booking.rideDuration,
                 "customerRating": rating ? rating.rating : 0,
-                "customerWaitingTimeInSeconds": (booking.createdAt - booking.startedAt) / 1000,
+                "customerWaitingTimeInSeconds": (booking.startedAt - booking.createdAt) / 1000,
                 "originCityNameInArabic": cities[city_name.toLowerCase()],
                 "destinationCityNameInArabic": cities[city_name.toLowerCase()],
                 "originLatitude": booking.boardingPoint.lat,
