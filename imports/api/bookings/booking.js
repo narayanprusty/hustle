@@ -1431,6 +1431,29 @@ let registerWaslRide = async () => {
 
             let random = Math.floor(Math.random() * 1000000000);
 
+            let convertTimestampToLocalISO = (timestamp) => {
+                return new Date(new Date(timestamp).toLocaleString("en-US", {timeZone: "Asia/Aden"})).toISOString()
+            }
+
+            console.log( {
+                "sequenceNumber": meta.sequenceNumber,
+                "driverId": meta.identityNumber,
+                "tripId": random,
+                "distanceInMeters": booking.totalDistance,
+                "durationInSeconds": booking.rideDuration,
+                "customerRating": rating ? rating.rating.toFixed(1) : 0.00,
+                "customerWaitingTimeInSeconds": parseInt((booking.startedAt - booking.createdAt) / 1000),
+                "originCityNameInArabic": cities[city_name.toLowerCase()],
+                "destinationCityNameInArabic": cities[city_name.toLowerCase()],
+                "originLatitude": booking.boardingPoint.lat,
+                "originLongitude": booking.boardingPoint.lng,
+                "destinationLatitude": booking.droppingPoint.lat,
+                "destinationLongitude": booking.droppingPoint.lng,
+                "pickupTimestamp": convertTimestampToLocalISO(booking.startedAt),
+                "dropoffTimestamp": convertTimestampToLocalISO(booking.startedAt + (booking.rideDuration * 1000)),
+                "startedWhen": convertTimestampToLocalISO(booking.createdAt) 
+            })
+
             await instance.post('/trips', {
                 "sequenceNumber": meta.sequenceNumber,
                 "driverId": meta.identityNumber,
@@ -1445,9 +1468,9 @@ let registerWaslRide = async () => {
                 "originLongitude": booking.boardingPoint.lng,
                 "destinationLatitude": booking.droppingPoint.lat,
                 "destinationLongitude": booking.droppingPoint.lng,
-                "pickupTimestamp": new Date(booking.startedAt).toISOString(),
-                "dropoffTimestamp": new Date(booking.startedAt + (booking.rideDuration * 1000)).toISOString(),
-                "startedWhen": new Date(booking.createdAt).toISOString()
+                "pickupTimestamp": convertTimestampToLocalISO(booking.startedAt),
+                "dropoffTimestamp": convertTimestampToLocalISO(booking.startedAt + (booking.rideDuration * 1000)),
+                "startedWhen": convertTimestampToLocalISO(booking.createdAt) 
             })
 
             await node.callAPI("assets/updateAssetInfo", {

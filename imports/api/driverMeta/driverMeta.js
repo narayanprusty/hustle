@@ -255,7 +255,6 @@ let updateDriverLocationToWASL = async () => {
         }
     }).fetch()
 
-
     let locations = [];
 
     try {
@@ -275,7 +274,6 @@ let updateDriverLocationToWASL = async () => {
             }
         }
 
-        console.log(locations)
     
         const instance = axios.create({
             baseURL: config.WASL.url,
