@@ -3,6 +3,7 @@ import { getDriverBookingData } from "../bookings/booking";
 import { sendEmail } from "../emails/email-sender";
 import moment from "moment";
 import { getEJSTemplate } from "../../modules/helpers/server";
+const axios = require('axios');
 
 const markAvailable = driverId => {
     return DriverMeta.update(
