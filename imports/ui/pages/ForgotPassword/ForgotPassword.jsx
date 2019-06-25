@@ -28,11 +28,6 @@ export default class ForgotPassword extends Component {
         if (user) {
             location.href = "/";
         }
-
-        $('input').on("blur",function (e) {
-            window.scrollTo(0, document.documentElement.clientHeight);
-        });
-
     };
     sendMessage = e => {
         const phoneParsed = parsePhoneNumberFromString(this.state.phone);

@@ -27,10 +27,6 @@ export default class Login extends Component {
         if (user) {
             location.href = "/";
         }
-
-        $('input').on("blur",function (e) {
-            window.scrollTo(0, document.documentElement.clientHeight);
-        });
     }
 
     inputHandler = e => {

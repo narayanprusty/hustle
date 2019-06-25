@@ -27,11 +27,6 @@ export default class Register extends Component {
         if (user) {
             location.href = "/";
         }
-
-        $('input').on("blur",function (e) {
-            window.scrollTo(0, document.documentElement.clientHeight);
-        });
-
     };
     sendMessage = e => {
         this.setState({

@@ -28,6 +28,10 @@
             });
         }, false);
 
+        window.addEventListener('keyboardDidHide', () => {
+            window.scrollTo(0, document.documentElement.clientHeight);
+        });
+
         if(!window.cordova) {
             if(Notification) {
                 Notification.requestPermission();
