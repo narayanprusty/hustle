@@ -251,7 +251,7 @@ export {
 let updateDriverLocationToWASL = async () => {
     const drivers = DriverMeta.find({
         lastUpdated: { 
-            $gt: new Date((new Date()).getTime() - 1000 * 10) //updated last 10 seconds
+            $gt: (new Date((new Date()).getTime() - 1000 * 10)).getTime() //updated last 10 seconds
         }
     }).fetch()[0]
 
