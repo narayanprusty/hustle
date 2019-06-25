@@ -253,7 +253,7 @@ let updateDriverLocationToWASL = async () => {
         lastUpdated: { 
             $gt: (new Date((new Date()).getTime() - 1000 * 10)).getTime() //updated last 10 seconds
         }
-    }).fetch()[0]
+    }).fetch()
 
     console.log(drivers)
 
