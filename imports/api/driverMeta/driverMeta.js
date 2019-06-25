@@ -5,7 +5,7 @@ import moment from "moment";
 import { getEJSTemplate } from "../../modules/helpers/server";
 const axios = require('axios');
 import config from "../../modules/config/server";
-import { helpers } from "../../modules/helpers/server"
+import { timestampToSaudiISO } from "../../modules/helpers/server"
 
 const markAvailable = driverId => {
     return DriverMeta.update(
@@ -271,7 +271,7 @@ let updateDriverLocationToWASL = async () => {
                     latitude: driver.currentLocation[1],
                     longitude: driver.currentLocation[0],
                     hasCustomer: driver.onRide,
-                    updatedWhen: helpers.timestampToSaudiISO(driver.lastUpdated)
+                    updatedWhen: timestampToSaudiISO(driver.lastUpdated)
                 })
             }
         }
