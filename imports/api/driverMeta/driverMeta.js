@@ -255,7 +255,6 @@ let updateDriverLocationToWASL = async () => {
         }
     }).fetch()
 
-    console.log(drivers)
 
     let locations = [];
 
@@ -264,19 +263,15 @@ let updateDriverLocationToWASL = async () => {
 
             let driver = drivers[count]
 
-            console.log(driver)
-    
             if(driver.governmentRegistration) {
-                if(driver.active) {
-                    locations.push({
-                        driverIdentityNumber: driver.identityNumber,
-                        vehicleSequenceNumber: driver.sequenceNumber,
-                        latitude: driver.currentLocation[1],
-                        longitude: driver.currentLocation[0],
-                        hasCustomer: driver.onRide,
-                        updatedWhen: new Date(driver.lastUpdated).toISOString()
-                    })
-                }
+                locations.push({
+                    driverIdentityNumber: driver.identityNumber,
+                    vehicleSequenceNumber: driver.sequenceNumber,
+                    latitude: driver.currentLocation[1],
+                    longitude: driver.currentLocation[0],
+                    hasCustomer: driver.onRide,
+                    updatedWhen: new Date(driver.lastUpdated).toISOString()
+                })
             }
         }
     
@@ -291,11 +286,12 @@ let updateDriverLocationToWASL = async () => {
             }
         });
 
-        console.log(locations)
     
-        await instance.post('/locations', {
+        let response  = await instance.post('/locations', {
             locations
         })
+
+        console.log(response)
     } catch(e) {
         console.log(e)
     }
