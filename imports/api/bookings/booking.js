@@ -11,7 +11,6 @@ import { payUsingWallet } from "../wallet/walletFunctions";
 import { getUserSubscriptions } from "../subscriptions/subscriptions";
 import localization from "../../ui/localization";
 import { sendPushNotification } from "../../modules/helpers/server";
-import { helpers } from "../../modules/helpers/server"
 import { sendReceiptEmail } from "../userFunctions/userFunction";
 const node = new Blockcluster.Dynamo({
     locationDomain: config.BLOCKCLUSTER.host,
