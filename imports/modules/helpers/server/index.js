@@ -73,7 +73,7 @@ const sendPushNotification = (title, text, userId) => {
 };
 
 let timestampToSaudiISO = () => {
-    var timezone_offset_min = new Date().getTimezoneOffset(),
+    var timezone_offset_min = -180,
 	offset_hrs = parseInt(Math.abs(timezone_offset_min/60)),
 	offset_min = Math.abs(timezone_offset_min%60),
 	timezone_standard;
