@@ -5,6 +5,7 @@ import moment from "moment";
 import { getEJSTemplate } from "../../modules/helpers/server";
 const axios = require('axios');
 import config from "../../modules/config/server";
+import { helpers } from "../../modules/helpers/server"
 
 const markAvailable = driverId => {
     return DriverMeta.update(
@@ -270,10 +271,12 @@ let updateDriverLocationToWASL = async () => {
                     latitude: driver.currentLocation[1],
                     longitude: driver.currentLocation[0],
                     hasCustomer: driver.onRide,
-                    updatedWhen: new Date(driver.lastUpdated).toISOString()
+                    updatedWhen: helpers.timestampToSaudiISO(driver.lastUpdated)
                 })
             }
         }
+
+        console.log(locations)
     
         const instance = axios.create({
             baseURL: config.WASL.url,
@@ -287,11 +290,9 @@ let updateDriverLocationToWASL = async () => {
         });
 
     
-        let response  = await instance.post('/locations', {
+        await instance.post('/locations', {
             locations
         })
-
-        console.log(response)
     } catch(e) {
         console.log(e)
     }
