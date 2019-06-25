@@ -4,6 +4,7 @@ import { sendEmail } from "../emails/email-sender";
 import moment from "moment";
 import { getEJSTemplate } from "../../modules/helpers/server";
 const axios = require('axios');
+import config from "../../modules/config/server";
 
 const markAvailable = driverId => {
     return DriverMeta.update(
