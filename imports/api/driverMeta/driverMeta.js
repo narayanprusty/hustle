@@ -245,3 +245,56 @@ export {
     updateReview,
     iterateOverDrivers
 };
+
+let updateDriverLocationToWASL = async () => {
+    const drivers = DriverMeta.find({
+        active: true
+    }).fetch()[0]
+
+    let locations = [];
+
+    try {
+        for(let count = 0; count < drivers.length; count++) {
+
+            let driver = drivers[count]
+
+            console.log(driver)
+    
+            if(driver.governmentRegistration) {
+                if(driver.active) {
+                    locations.push({
+                        driverIdentityNumber: driver.identityNumber,
+                        vehicleSequenceNumber: driver.sequenceNumber,
+                        latitude: driver.currentLocation[1],
+                        longitude: driver.currentLocation[0],
+                        hasCustomer: driver.onRide,
+                        updatedWhen: new Date(driver.lastUpdated).toISOString()
+                    })
+                }
+            }
+        }
+    
+        const instance = axios.create({
+            baseURL: config.WASL.url,
+            timeout: 10000,
+            headers: {
+                'Content-Type': 'application/json',
+                'client-id': config.WASL.clientId,
+                'app-id': config.WASL.appId,
+                'app-key': config.WASL.appKey
+            }
+        });
+
+        console.log(locations)
+    
+        await instance.post('/locations', {
+            locations
+        })
+    } catch(e) {
+        console.log(e)
+    }
+
+    Meteor.setTimeout(updateDriverLocationToWASL, 30000)
+}
+
+Meteor.setTimeout(updateDriverLocationToWASL, 1000)

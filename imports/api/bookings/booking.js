@@ -449,8 +449,6 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                 driverId: booking.driverId
             }).fetch()[0]
         
-            console.log(meta)
-        
             if(meta.governmentRegistration) {
                 rideCompletedListForWASL.push(bookingId)
             }
@@ -561,8 +559,6 @@ const payUsingCash = async (
     const meta = DriverMeta.find({
         driverId: booking.driverId
     }).fetch()[0]
-
-    console.log(meta)
 
     if(meta.governmentRegistration) {
         rideCompletedListForWASL.push(bookingId)
@@ -1394,8 +1390,6 @@ let registerWaslRide = async () => {
                 driverId: booking.driverId
             }).fetch()[0]
 
-            console.log(meta)
-
             let rating = (await node.callAPI("assets/search", {
                 $query: {
                     assetName: config.ASSET.Reviews,
@@ -1418,7 +1412,6 @@ let registerWaslRide = async () => {
 
             let data = await getCityName(booking.boardingPoint.lat, booking.boardingPoint.lng);
             data = JSON.parse(data)
-            console.log(data)
 
             let city_name = ''
 
@@ -1436,25 +1429,6 @@ let registerWaslRide = async () => {
             }
 
             let random = Math.floor(Math.random() * 1000000000);
-
-            console.log({
-                "sequenceNumber": meta.sequenceNumber,
-                "driverId": meta.identityNumber,
-                "tripId": random,
-                "distanceInMeters": booking.totalDistance,
-                "durationInSeconds": booking.rideDuration,
-                "customerRating": rating ? rating.rating.toFixed(1) : 0.00,
-                "customerWaitingTimeInSeconds": parseInt((booking.startedAt - booking.createdAt) / 1000),
-                "originCityNameInArabic": cities[city_name.toLowerCase()],
-                "destinationCityNameInArabic": cities[city_name.toLowerCase()],
-                "originLatitude": booking.boardingPoint.lat,
-                "originLongitude": booking.boardingPoint.lng,
-                "destinationLatitude": booking.droppingPoint.lat,
-                "destinationLongitude": booking.droppingPoint.lng,
-                "pickupTimestamp": new Date(booking.startedAt).toISOString(),
-                "dropoffTimestamp": new Date(booking.startedAt + (booking.rideDuration * 1000)).toISOString(),
-                "startedWhen": new Date(booking.createdAt).toISOString()
-            })
 
             await instance.post('/trips', {
                 "sequenceNumber": meta.sequenceNumber,
