@@ -1381,7 +1381,6 @@ const getPricingConfig = async () => {
 
 
 const registerWaslRide = async ready => {
-    console.log('Registering wasl rides')
     try {
         let bookings = await node.callAPI("assets/search", {
             $query: {
