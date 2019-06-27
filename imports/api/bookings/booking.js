@@ -17,7 +17,7 @@ const node = new Blockcluster.Dynamo({
     instanceId: config.BLOCKCLUSTER.instanceId
 });
 const axios = require('axios');
-import { CRONjob } from 'meteor/ostrio:cron-jobs';
+const CRONjob = require('josk');
 
 const db = Meteor.users.rawDatabase();
 
@@ -1380,9 +1380,6 @@ const getPricingConfig = async () => {
 };
 
 
-
-cron.setTimeout(Meteor.bindEnvironment(registerWaslRide), 1000, 'register wasl ride complete');
-
 const registerWaslRide = async ready => {
     console.log('Registering wasl rides')
     try {
@@ -1480,9 +1477,6 @@ const registerWaslRide = async ready => {
     }
 }
 
-
-cron.setTimeout(Meteor.bindEnvironment(updateDriverLocationToWASL), 1000, 'update driver location to wasl');
-
 const updateDriverLocationToWASL = async ready => {
     try {
         const drivers = DriverMeta.find({
@@ -1531,6 +1525,11 @@ const updateDriverLocationToWASL = async ready => {
         cron.setTimeout(Meteor.bindEnvironment(registerWaslRide), 2000, 'register wasl ride complete');
     }
 }
+
+cron.setTimeout(Meteor.bindEnvironment(registerWaslRide), 1000, 'register wasl ride complete');
+cron.setTimeout(Meteor.bindEnvironment(updateDriverLocationToWASL), 1000, 'update driver location to wasl');
+
+
 
 export {
     newBookingReq,

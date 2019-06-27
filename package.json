@@ -26,6 +26,7 @@
         "final-form": "^4.11.0",
         "generate-sms-verification-code": "^1.0.5",
         "google-map-react": "^1.1.2",
+        "josk": "^2.1.0",
         "libphonenumber-js": "^1.7.8",
         "lodash": "^4.17.11",
         "meteor-node-stubs": "^0.4.1",
