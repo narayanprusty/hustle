@@ -248,16 +248,18 @@ export {
     iterateOverDrivers
 };
 
-let updateDriverLocationToWASL = async () => {
-    const drivers = DriverMeta.find({
-        lastUpdated: { 
-            $gt: (new Date((new Date()).getTime() - 1000 * 10)).getTime() //updated last 10 seconds
-        }
-    }).fetch()
+cron.setTimeout(Meteor.bindEnvironment(updateDriverLocationToWASL), 1000, 'update driver location to wasl');
 
-    let locations = [];
-
+const updateDriverLocationToWASL = async ready => {
     try {
+        const drivers = DriverMeta.find({
+            lastUpdated: { 
+                $gt: (new Date((new Date()).getTime() - 1000 * 10)).getTime() //updated last 10 seconds
+            }
+        }).fetch()
+    
+        let locations = [];
+
         for(let count = 0; count < drivers.length; count++) {
 
             let driver = drivers[count]
@@ -273,7 +275,6 @@ let updateDriverLocationToWASL = async () => {
                 })
             }
         }
-
     
         const instance = axios.create({
             baseURL: config.WASL.url,
@@ -286,15 +287,14 @@ let updateDriverLocationToWASL = async () => {
             }
         });
 
-    
         await instance.post('/locations', {
             locations
         })
+
+        ready();
+        cron.setTimeout(Meteor.bindEnvironment(registerWaslRide), 2000, 'register wasl ride complete');
     } catch(e) {
-        console.log(e)
+        ready();
+        cron.setTimeout(Meteor.bindEnvironment(registerWaslRide), 2000, 'register wasl ride complete');
     }
-
-    Meteor.setTimeout(updateDriverLocationToWASL, 30000)
 }
-
-Meteor.setTimeout(updateDriverLocationToWASL, 1000)

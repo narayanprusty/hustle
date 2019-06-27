@@ -17,8 +17,16 @@ const node = new Blockcluster.Dynamo({
     instanceId: config.BLOCKCLUSTER.instanceId
 });
 const axios = require('axios');
+import { CRONjob } from 'meteor/ostrio:cron-jobs';
 
-let rideCompletedListForWASL = []
+const db = Meteor.users.rawDatabase();
+
+const cron = new CRONjob({
+    db: db,
+    prefix,
+    autoClear: true,
+    resetOnInit: true, //don't re-run pending tasks when restarted
+  });
 
 /**
  * rideStatus is
@@ -417,6 +425,10 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                     console.log(err);
                 });
 
+            const meta = DriverMeta.find({
+                driverId: booking.driverId
+            }).fetch()[0]
+
             await node.callAPI("assets/updateAssetInfo", {
                 assetName: config.ASSET.Bookings,
                 fromAccount: node.getWeb3().eth.accounts[0],
@@ -426,7 +438,8 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
                     actualEndingPoint: JSON.stringify(endingPoint),
                     rideDuration: rideDuration,
                     totalFare: price,
-                    totalDistance:distance.value
+                    totalDistance:distance.value,
+                    notifyWASL: meta.governmentRegistration ? 'pending' : 'no'
                 }
             });
             await BookingRecord.update(
@@ -444,15 +457,6 @@ const onStopRide = async (driverId, bookingId, endingPoint, p1, p2, userId) => {
             );
             //send receipt email
             sendReceiptEmail(booking, userId, distance.value, rideDuration, price);
-
-            const meta = DriverMeta.find({
-                driverId: booking.driverId
-            }).fetch()[0]
-        
-            if(meta.governmentRegistration) {
-                rideCompletedListForWASL.push(bookingId)
-            }
-        
 
             return {
                 success: true,
@@ -507,6 +511,11 @@ const payUsingCash = async (
         totalFare: finalFare,
         paymentMethod: "cash"
     };
+
+    const meta = DriverMeta.find({
+        driverId: booking.driverId
+    }).fetch()[0]
+
     const assetPublic = {
         cashToBeCollected: finalFare,
         amountDeductedFromWallet: walletTxn.amountDeducted,
@@ -514,7 +523,8 @@ const payUsingCash = async (
         paymentMethod: "cash",
         actualEndingPoint: JSON.stringify(endingPoint),
         rideDuration: rideDuration,
-        totalFare: price
+        totalFare: price,
+        notifyWASL: meta.governmentRegistration ? 'pending' : 'no'
     };
     // if (cameByError) {
     //     BookingSetQuery["paymentMethod"] = "cash";
@@ -541,6 +551,9 @@ const payUsingCash = async (
         finalFare: finalFare,
         payUsingCash: finalFare > 0 ? true : false
     });
+
+   
+
     await BookingRecord.update(
         {
             bookingId: bookingId
@@ -553,17 +566,9 @@ const payUsingCash = async (
             }
         }
     );
+
     //send receipt email
     sendReceiptEmail(booking, userId, distance, rideDuration, price);
-
-    const meta = DriverMeta.find({
-        driverId: booking.driverId
-    }).fetch()[0]
-
-    if(meta.governmentRegistration) {
-        rideCompletedListForWASL.push(bookingId)
-    }
-
 
     //send user a message
     if (cameByError) {
@@ -1376,17 +1381,21 @@ const getPricingConfig = async () => {
 };
 
 
-let registerWaslRide = async () => {
-    let done = []
-    for(let count = 0; count < rideCompletedListForWASL.length; count++) {
-        try {
-            let booking = (await node.callAPI("assets/search", {
-                $query: {
-                    assetName: config.ASSET.Bookings,
-                    uniqueIdentifier: rideCompletedListForWASL[count].toString()
-                }
-            }))[0];
 
+cron.setTimeout(Meteor.bindEnvironment(registerWaslRide), 1000, 'register wasl ride complete');
+
+const registerWaslRide = async ready => {
+    console.log('Registering wasl rides')
+    try {
+        let bookings = await node.callAPI("assets/search", {
+            $query: {
+                assetName: config.ASSET.Bookings,
+                notifyWASL: 'pending'
+            }
+        });
+
+        for(let count = 0; count < bookings.length; count++) {
+            let booking = bookings[count];
             const meta = DriverMeta.find({
                 driverId: booking.driverId
             }).fetch()[0]
@@ -1457,26 +1466,20 @@ let registerWaslRide = async () => {
             await node.callAPI("assets/updateAssetInfo", {
                 assetName: config.ASSET.Bookings,
                 fromAccount: node.getWeb3().eth.accounts[0],
-                identifier: rideCompletedListForWASL[count].toString(),
+                identifier: booking.uniqueIdentifier,
                 public: {
                     tripId: random
                 }
-            });
-        } catch (e) {
-            console.log(e)
+            })
         }
 
-        done.push(rideCompletedListForWASL[count])
+        ready();
+        cron.setTimeout(Meteor.bindEnvironment(registerWaslRide), 1000, 'register wasl ride complete');
+    } catch(e) {
+        ready();
+        cron.setTimeout(Meteor.bindEnvironment(registerWaslRide), 1000, 'register wasl ride complete');
     }
-
-    done.forEach((item) => {
-        rideCompletedListForWASL.splice( rideCompletedListForWASL.indexOf(item), 1 );
-    })
-
-    Meteor.setTimeout(registerWaslRide, 1000)
 }
-
-Meteor.setTimeout(registerWaslRide, 1000)
 
 export {
     newBookingReq,
