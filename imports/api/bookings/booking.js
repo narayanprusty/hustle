@@ -1063,7 +1063,7 @@ const calculateApproxBookingPrice = async (
                 status: "open"
             }
         });
-        console.log("pricingConfig", !!pricingConfig);
+        console.log("pricingConfig", pricingConfig);
         let usePerMeterRate = true;
         if (pricingConfig) {
             if (pricingConfig.length > 0) {
