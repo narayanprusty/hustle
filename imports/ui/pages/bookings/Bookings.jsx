@@ -42,6 +42,9 @@ const cartTypes = [
         value: "Taxi"
     }
 ];
+
+console.log(cartTypes)
+
 Geocode.setApiKey(config.GAPIKEY);
 
 import "./Bookings_client.scss";
@@ -100,7 +103,7 @@ class Bookings extends Component {
         mapApi: null,
         droppingPlace: {},
         boardingPlace: {},
-        carType: "Micro",
+        carType: "Hustle Standard",
         boardsearch: "",
         dropsearch: "",
         dropvalue: ""
@@ -672,7 +675,7 @@ class Bookings extends Component {
     };
     render() {
         const { mapApiLoaded, mapApi } = this.state;
-        const Ride = ["Micro", "Mini", "Sedan", "Taxi"];
+        const Ride = ["Hustle Standard", "Hustle Plus", "Hustle Family", "Taxi"];
         const DeliveryOfGoods = ["Dabbab", "Pickup", "Dyna"];
 
         let conatinerClass = "list";

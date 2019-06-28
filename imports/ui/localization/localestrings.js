@@ -46,7 +46,7 @@ module.exports = {
         reset: "Reset",
         cardAdded: "Card added successfully!",
         failedAddingCard: "Failed adding card.",
-        "Hustle_Standard": "Hustle Standard",
+        "Hustle Standard": "Hustle Standard",
         "Hustle Plus": "Hustle Plus",
         "Hustle Family": "Hustle Family",
         unableToLoadCards: "Unable to load cards!",
