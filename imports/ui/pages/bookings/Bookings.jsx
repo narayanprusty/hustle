@@ -14,15 +14,15 @@ import localizationManager from "../../localization/index";
 
 const cartTypes = [
     {
-        name: localizationManager.strings.Micro,
+        name: localizationManager.strings["Hustle Standard"],
         value: "Hustle Standard"
     },
     {
-        name: localizationManager.strings.Mini,
+        name: localizationManager.strings["Hustle Plus"],
         value: "Hustle Plus"
     },
     {
-        name: localizationManager.strings.Sedan,
+        name: localizationManager.strings["Hustle Family"],
         value: "Hustle Family"
     },
     {
