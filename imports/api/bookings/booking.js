@@ -1568,7 +1568,8 @@ const registerWaslRide = async ready => {
                 fromAccount: node.getWeb3().eth.accounts[0],
                 identifier: booking.uniqueIdentifier,
                 public: {
-                    tripId: random
+                    tripId: random,
+                    notifyWASL: "success"
                 }
             });
         }
