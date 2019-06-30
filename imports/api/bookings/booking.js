@@ -608,6 +608,7 @@ const payUsingCash = async (
         actualEndingPoint: JSON.stringify(endingPoint),
         rideDuration: rideDuration,
         totalFare: price,
+        totalDistance: distance,
         notifyWASL: meta.governmentRegistration ? "pending" : "no"
     };
     // if (cameByError) {
