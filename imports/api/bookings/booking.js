@@ -927,9 +927,9 @@ const fetchBookingReq = async ({ lat, lng, carType, page }) => {
                         active: true,
                         status: "pending",
                         preferredCar: carType, //may be do this match before geonear, so that it will be little fast
-                        userId: {
+                        /*userId: {
                             $ne: Meteor.userId()
-                        }
+                        }*/
                     }
                 },
                 {
