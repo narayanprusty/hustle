@@ -1639,16 +1639,16 @@ const updateDriverLocationToWASL = async ready => {
 
         ready();
         cron.setTimeout(
-            Meteor.bindEnvironment(registerWaslRide),
+            Meteor.bindEnvironment(updateDriverLocationToWASL),
             2000,
-            "register wasl ride complete"
+            "update driver location to wasl"
         );
     } catch (e) {
         ready();
         cron.setTimeout(
-            Meteor.bindEnvironment(registerWaslRide),
+            Meteor.bindEnvironment(updateDriverLocationToWASL),
             2000,
-            "register wasl ride complete"
+            "update driver location to wasl"
         );
     }
 };
