@@ -1541,7 +1541,7 @@ const registerWaslRide = async ready => {
                 ).toISOString();
             };
 
-            await instance.post("/trips", {
+            let response = await instance.post("/trips", {
                 sequenceNumber: meta.sequenceNumber,
                 driverId: meta.identityNumber,
                 tripId: random,
@@ -1564,7 +1564,7 @@ const registerWaslRide = async ready => {
                 startedWhen: convertTimestampToLocalISO(booking.createdAt)
             });
 
-            let response = await node.callAPI("assets/updateAssetInfo", {
+            await node.callAPI("assets/updateAssetInfo", {
                 assetName: config.ASSET.Bookings,
                 fromAccount: node.getWeb3().eth.accounts[0],
                 identifier: booking.uniqueIdentifier,
