@@ -1564,7 +1564,7 @@ const registerWaslRide = async ready => {
                 startedWhen: convertTimestampToLocalISO(booking.createdAt)
             });
 
-            await node.callAPI("assets/updateAssetInfo", {
+            let response = await node.callAPI("assets/updateAssetInfo", {
                 assetName: config.ASSET.Bookings,
                 fromAccount: node.getWeb3().eth.accounts[0],
                 identifier: booking.uniqueIdentifier,
@@ -1573,6 +1573,8 @@ const registerWaslRide = async ready => {
                     notifyWASL: "success"
                 }
             });
+
+            console.log(response)
         }
 
         ready();
