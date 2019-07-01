@@ -1547,7 +1547,7 @@ const registerWaslRide = async ready => {
                 tripId: random,
                 distanceInMeters: booking.totalDistance,
                 durationInSeconds: booking.rideDuration,
-                customerRating: rating ? rating.rating.toFixed(1) : 0.0,
+                customerRating: meta.avgRating ? meta.avgRating : 0.0,
                 customerWaitingTimeInSeconds: parseInt(
                     (booking.startedAt - booking.createdAt) / 1000
                 ),
