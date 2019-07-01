@@ -1631,6 +1631,8 @@ const updateDriverLocationToWASL = async ready => {
             }
         });
 
+        console.log('Posting Driver Locations to WASL: ', locations)
+
         await instance.post("/locations", {
             locations
         });
