@@ -1541,7 +1541,7 @@ const registerWaslRide = async ready => {
                 ).toISOString();
             };
 
-            let response = await instance.post("/trips", {
+            await instance.post("/trips", {
                 sequenceNumber: meta.sequenceNumber,
                 driverId: meta.identityNumber,
                 tripId: random,
@@ -1573,8 +1573,6 @@ const registerWaslRide = async ready => {
                     notifyWASL: "success"
                 }
             });
-
-            console.log(response)
         }
 
         ready();
