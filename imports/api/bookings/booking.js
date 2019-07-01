@@ -1633,9 +1633,11 @@ const updateDriverLocationToWASL = async ready => {
 
         console.log('Posting Driver Locations to WASL: ', locations)
 
-        await instance.post("/locations", {
+        let response =  await instance.post("/locations", {
             locations
         });
+
+        console.log(response)
 
         ready();
         cron.setTimeout(
