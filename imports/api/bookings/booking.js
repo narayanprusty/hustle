@@ -904,7 +904,7 @@ const getDistance = (driverLoc, boardingPoint) => {
 //for more exact u can pass mapApi obj from frontend only and do calculation
 //mapApi.geometry.spherical.computeDistanceBetween (latLngA, latLngB); //return values in Meter
 const fetchBookingReq = async ({ lat, lng, carType, page }) => {
-    console.log('Fetch requests for details: ', { lat, lng, carType, page })
+    console.log('Fetch requests for details: ', { lat, lng, carType, page, userId: Meteor.userId() })
     const data = await BookingRecord.rawCollection()
         .aggregate(
             [
