@@ -1651,6 +1651,64 @@ const updateDriverLocationToWASL = async ready => {
     }
 };
 
+const cancelOldBookings = async ready => {
+    try {
+
+        let bookings = await node.callAPI("assets/search", {
+            $query: {
+                assetName: config.ASSET.Bookings,
+                createdAt: {
+                    $lt: new Date( Date.now() - 1000 * 60 * 10 ).getTime()
+                }
+            }
+        });
+
+
+        for (let count = 0; count < bookings.length; count++) {
+
+            console.log(bookings[count])
+
+            await node.callAPI("assets/updateAssetInfo", {
+                assetName: config.ASSET.Bookings,
+                fromAccount: node.getWeb3().eth.accounts[0],
+                identifier: bookings[count].uniqueIdentifier,
+                public: {
+                    rideStatus: "cancelled",
+                    cancel_reason: "TOO_OLD"
+                }
+            });
+            await BookingRecord.update(
+                {
+                    bookingId: bookings[count].uniqueIdentifier
+                },
+                {
+                    $set: {
+                        active: false,
+                        status: "cancelled"
+                    }
+                }
+            );
+        }
+
+        console.log("Cancelled old bookings")
+
+        
+        ready();
+        cron.setTimeout(
+            Meteor.bindEnvironment(updateDriverLocationToWASL),
+            2000,
+            "cancel old bookings"
+        );
+    } catch (e) {
+        ready();
+        cron.setTimeout(
+            Meteor.bindEnvironment(updateDriverLocationToWASL),
+            2000,
+            "cancel old bookings"
+        );
+    }
+};
+
 cron.setTimeout(
     Meteor.bindEnvironment(registerWaslRide),
     1000,
@@ -1660,6 +1718,11 @@ cron.setTimeout(
     Meteor.bindEnvironment(updateDriverLocationToWASL),
     1000,
     "update driver location to wasl"
+);
+cron.setTimeout(
+    Meteor.bindEnvironment(cancelOldBookings),
+    10000,
+    "cancel old bookings"
 );
 
 export {
