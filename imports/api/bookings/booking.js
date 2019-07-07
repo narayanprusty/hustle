@@ -272,15 +272,6 @@ const onDriverAccept = async (bookingId, driverId, userId) => {
         if (!BookingData) {
             throw new Meteor.Error(localization.strings.acceptedBySomeone);
         }
-        const txId = await node.callAPI("assets/updateAssetInfo", {
-            assetName: config.ASSET.Bookings,
-            fromAccount: node.getWeb3().eth.accounts[0],
-            identifier: bookingId,
-            public: {
-                rideStatus: "accepted",
-                driverId: driverId
-            }
-        });
         await BookingRecord.update(
             {
                 bookingId: bookingId
@@ -305,6 +296,17 @@ const onDriverAccept = async (bookingId, driverId, userId) => {
                 }
             }
         );
+        
+        const txId = await node.callAPI("assets/updateAssetInfo", {
+            assetName: config.ASSET.Bookings,
+            fromAccount: node.getWeb3().eth.accounts[0],
+            identifier: bookingId,
+            public: {
+                rideStatus: "accepted",
+                driverId: driverId
+            }
+        });
+        
         //Push notification
         sendPushNotification(
             "Booking accepted by a driver",
