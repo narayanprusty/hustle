@@ -1657,6 +1657,7 @@ const cancelOldBookings = async ready => {
         let bookings = await node.callAPI("assets/search", {
             $query: {
                 assetName: config.ASSET.Bookings,
+                rideStatus: "pending",
                 createdAt: {
                     $lt: new Date( Date.now() - 1000 * 60 * 10 ).getTime()
                 }
