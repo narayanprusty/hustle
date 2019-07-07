@@ -1695,15 +1695,16 @@ const cancelOldBookings = async ready => {
         
         ready();
         cron.setTimeout(
-            Meteor.bindEnvironment(updateDriverLocationToWASL),
-            2000,
+            Meteor.bindEnvironment(cancelOldBookings),
+            10000,
             "cancel old bookings"
         );
     } catch (e) {
+        console.log(e)
         ready();
         cron.setTimeout(
-            Meteor.bindEnvironment(updateDriverLocationToWASL),
-            2000,
+            Meteor.bindEnvironment(cancelOldBookings),
+            10000,
             "cancel old bookings"
         );
     }
@@ -1721,7 +1722,7 @@ cron.setTimeout(
 );
 cron.setTimeout(
     Meteor.bindEnvironment(cancelOldBookings),
-    10000,
+    1000,
     "cancel old bookings"
 );
 
