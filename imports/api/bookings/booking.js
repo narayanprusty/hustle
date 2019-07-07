@@ -1691,8 +1691,6 @@ const cancelOldBookings = async ready => {
             );
         }
 
-        console.log("Cancelled old bookings")
-
         
         ready();
         cron.setTimeout(
