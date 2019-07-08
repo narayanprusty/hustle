@@ -148,7 +148,7 @@ const newBookingReq = async ({
 
     //create booking general assets
 
-    await sendRequest_BC({
+    /*await sendRequest_BC({
         locationDomain: config.BLOCKCLUSTER.host,
         instanceId: config.BLOCKCLUSTER.instanceId,
         requestType: 'POST',
@@ -170,9 +170,9 @@ const newBookingReq = async ({
         fromAccount: node.getWeb3().eth.accounts[0],
         identifier: identifier,
         public: data
-    })
+    })*/
 
-    /*await node.callAPI("assets/issueSoloAsset", {
+    await node.callAPI("assets/issueSoloAsset", {
         assetName: config.ASSET.Bookings,
         fromAccount: node.getWeb3().eth.accounts[0],
         toAccount: node.getWeb3().eth.accounts[0],
@@ -184,7 +184,7 @@ const newBookingReq = async ({
         fromAccount: node.getWeb3().eth.accounts[0],
         identifier: identifier,
         public: data
-    });*/
+    });
 
     BookingRecord.insert({
         riderPic:
