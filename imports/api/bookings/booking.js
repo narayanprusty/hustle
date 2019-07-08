@@ -38,6 +38,12 @@ const cron = new CRONjob({
  *
  */
 
+function sleep(seconds) {
+    return new Promise((resolve, reject) => {
+        setTimeout(resolve, seconds * 1000)
+    })
+}
+
 function printTime(msg) {
     var currentdate = new Date();
     var datetime =
@@ -262,13 +268,23 @@ const onCancellation = async (
     };
 };
 
+function genRand(min, max, decimalPlaces) {  
+    var rand = Math.random()*(max-min) + min;
+    var power = Math.pow(10, decimalPlaces);
+    return Math.floor(rand*power) / power;
+}
+
 const onDriverAccept = async (bookingId, driverId, userId) => {
     const subPlan = await getUserSubscriptions(Meteor.userId());
     if (subPlan.success && subPlan.data && subPlan.data.length) {
+
+        await sleep(genRand(1, 5, 2))
+
         const BookingData = BookingRecord.find({
             bookingId: bookingId,
             status: "pending"
         }).fetch()[0];
+        
         if (!BookingData) {
             throw new Meteor.Error(localization.strings.acceptedBySomeone);
         }
