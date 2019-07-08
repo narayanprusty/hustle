@@ -1665,6 +1665,8 @@ const cancelOldBookings = async ready => {
                 }
             }
         });
+        console.log(new Date( Date.now() - 1000 * 60 * 10 ).getTime())
+        console.log("Bookings to be cancelled", bookings)
 
 
         for (let count = 0; count < bookings.length; count++) {
