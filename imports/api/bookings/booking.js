@@ -826,11 +826,11 @@ const fetchDriverBookings = async (driverId, page) => {
 };
 
 const getBookingById = async bookingId => {
+    console.log("Searaching: ", bookingId);
     if (!bookingId) {
         return false;
     }
     try {
-        console.log("Searaching: ", bookingId);
         var records = await node.callAPI("assets/search", {
             $query: {
                 assetName: config.ASSET.Bookings,
