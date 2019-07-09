@@ -74,6 +74,7 @@ class RidePayment extends Component {
                     console.log(this.state.booking);
                 } else {
                     if (response.message) {
+                        console.log("2nd Error occured Calling getBookingById: ", error);
                         notify.show(response.message, "error");
                         this.props.history.push("/app/driver/newreqs");
                     }
