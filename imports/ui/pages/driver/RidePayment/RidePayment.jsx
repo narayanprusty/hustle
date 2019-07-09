@@ -47,7 +47,7 @@ class RidePayment extends Component {
         console.log("Calling getBookingById: ", rideId)
         Meteor.call("getBookingById", rideId, (error, response) => {
             if (error) {
-                console.log(error);
+                console.log("Error occured Calling getBookingById: ", error);
                 notify.show(
                     error.reason
                         ? error.reason
@@ -56,7 +56,7 @@ class RidePayment extends Component {
                 );
                 this.props.history.push("/app/driver/newreqs");
             } else {
-                console.log(response)
+                console.log("Success occured Calling getBookingById: ", response)
                 if (response.data && !response.message) {
                     this.setState({
                         booking: response.data,
