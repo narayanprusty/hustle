@@ -44,9 +44,10 @@ class RidePayment extends Component {
     };
 
     getBookingInfo = async rideId => {
+        console.log("Calling getBookingById: ", rideId)
         Meteor.call("getBookingById", rideId, (error, response) => {
             if (error) {
-                console.log(error);
+                console.log("Error occured Calling getBookingById: ", error);
                 notify.show(
                     error.reason
                         ? error.reason
@@ -55,6 +56,7 @@ class RidePayment extends Component {
                 );
                 this.props.history.push("/app/driver/newreqs");
             } else {
+                console.log("Success occured Calling getBookingById: ", response)
                 if (response.data && !response.message) {
                     this.setState({
                         booking: response.data,
@@ -72,6 +74,7 @@ class RidePayment extends Component {
                     console.log(this.state.booking);
                 } else {
                     if (response.message) {
+                        console.log("2nd Error occured Calling getBookingById: ", error);
                         notify.show(response.message, "error");
                         this.props.history.push("/app/driver/newreqs");
                     }
