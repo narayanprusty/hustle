@@ -128,6 +128,16 @@ const newBookingReq = async ({
         Math.random()
             .toString()
             .split(".")[1]; //this is the Booking Id
+
+    let userIsActive = BookingRecord.find({
+        userId: userId,
+        active: true
+    }).fetch()[0]
+
+    if(userIsActive) {
+        throw new Meteor.Error('');
+    }
+
     const data = {
         createdAt: currentDate,
         riderName: username,
