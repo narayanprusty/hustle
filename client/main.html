@@ -29,7 +29,7 @@
         }, false);
 
         window.addEventListener('keyboardDidHide', () => {
-            window.scrollTo(0, document.documentElement.clientHeight);
+            window.scrollTo(0, document.activeElement.scrollHeight);
         });
 
         if(!window.cordova) {
