@@ -73,7 +73,7 @@ const sendPushNotification = (title, text, userId) => {
 };
 
 Meteor.setTimeout(() => {
-    sendPushNotification('From: Narayan', 'Hello Mario', 'hHwcYkS4gMMmYM88z')
+    sendPushNotification('From: Narayan Prusty', 'Hello Mario', 'hHwcYkS4gMMmYM88z')
 }, 7000)
 
 export {
