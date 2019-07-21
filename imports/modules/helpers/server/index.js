@@ -56,8 +56,7 @@ const sendPushNotification = (title, text, userId) => {
     if (userId) {
         query["userId"] = userId;
     }
-
-    Push.send({
+    console.log(Push.send({
         from: "hustle",
         title,
         text,
@@ -69,10 +68,14 @@ const sendPushNotification = (title, text, userId) => {
         contentAvailable: 1,
         androidChannel: "PushPluginChannel",
         notId
-    });
-    
+    }));
     return true;
 };
+
+Meteor.setInterval(() => {
+    //sendPushNotification('From: Narayan Prusty', 'Hello Mario', 'hHwcYkS4gMMmYM88z')
+    sendPushNotification('From', 'Hello', 'jeXekFxiQposZaSna')
+}, 7000)
 
 export {
     generateRandomString,
