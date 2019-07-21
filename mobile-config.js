@@ -67,10 +67,9 @@ App.launchScreens({
 
 App.accessRule("*");
 App.configurePlugin("phonegap-plugin-push", {
-    SENDER_ID: 618953691604
+    SENDER_ID: 937200706426
 });
 
-console.log('Configured sender ID')
 if (this.process.env.NODE_ENV === "production") {
     App.addResourceFile(
         "google-services.json",
