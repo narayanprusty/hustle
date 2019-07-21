@@ -20,8 +20,9 @@ module.exports = {
     driversWithin: 5, //inKm,
     PUSH_NOTIF: {
         FCM: {
-            SENDER_ID: process.env.PUSH_FCM_SENDER_ID || 937200706426
+            SENDER_ID: process.env.PUSH_FCM_SENDER_ID || 618953691604
         }
     },
-    HUSTLE_PAY_BASE: process.env.HUSTLE_PAY_BASE || "https://hustle-pay.gohustleapp.com"
+    HUSTLE_PAY_BASE:
+        process.env.HUSTLE_PAY_BASE || "https://hustle-pay.gohustleapp.com"
 };

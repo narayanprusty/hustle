@@ -2,7 +2,7 @@ if (this.process.env.NODE_ENV === "production") {
     App.info({
         id: "com.gohustleapp.hustle",
         name: "Hustle",
-        version: "1.0.21" //version Major.Minor.patch //also put `-` *rc/alpha/beta whatever if needed
+        version: "1.0.22" //version Major.Minor.patch //also put `-` *rc/alpha/beta whatever if needed
     });
 } else {
     App.info({
@@ -67,7 +67,7 @@ App.launchScreens({
 
 App.accessRule("*");
 App.configurePlugin("phonegap-plugin-push", {
-    SENDER_ID: 937200706426
+    SENDER_ID: 618953691604
 });
 
 if (this.process.env.NODE_ENV === "production") {
@@ -92,6 +92,6 @@ App.appendToConfig(`
 App.setPreference("orientation", "portrait");
 App.setPreference("AutoHideSplashScreen", "true");
 App.setPreference("DisallowOverscroll", "false");
-App.setPreference("android-windowSoftInputMode", "adjustPan", "android")
-App.setPreference("windowSoftInputMode", "adjustPan", "android")
-App.setPreference("WindowSoftInputMode", "adjustPan", "android")
+App.setPreference("android-windowSoftInputMode", "adjustPan", "android");
+App.setPreference("windowSoftInputMode", "adjustPan", "android");
+App.setPreference("WindowSoftInputMode", "adjustPan", "android");

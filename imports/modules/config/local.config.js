@@ -46,10 +46,10 @@ module.exports = {
     },
     PUSH_NOTIF: {
         FCM: {
-            SENDER_ID: process.env.PUSH_FCM_SENDER_ID || 937200706426,
+            SENDER_ID: process.env.PUSH_FCM_SENDER_ID || 618953691604,
             SERVER_KEY:
                 process.env.PUSH_FCM_SERVER_KEY ||
-                "AAAA2jWD43o:APA91bED_7kx4YlbH_O1EztfUuBXPB1HNI3zQGz8sRjf9me8TGFpiGsRYYuGhB2qGEA96QkD_5akPeNMH8qk_JROJl2y8eymbkDSfeFFzdB6Dtv3SD9eHVwhbBYbMY8Fw7G2ffD7fapS"
+                "AAAAkByD0dQ:APA91bGKuVHg1EtTC_NHNPv3M4beBjM3vpCTYPTdJ32MjcjAIqMTcBPtJZc6zHXPSFyqrKy2C1o4Qop4ljfOz6u116EYUYeWBumB27Ew-o3GHH1qNTroowBd4i4gG-B8JXu9X8Xk3nOD"
         }
     },
     HYPERPAY: {
@@ -60,8 +60,7 @@ module.exports = {
             process.env.HYPERPAY_ENTITY_ID ||
             "8ac7a4c967cba199016804c97cb83f25",
         EntityId_Auto:
-            process.env.EntityId_Auto ||
-            "8ac9a4ce688074ad01688f7869262931",
+            process.env.EntityId_Auto || "8ac9a4ce688074ad01688f7869262931",
         Currency: process.env.HYPERPAY_CURRENCY || "SAR",
         PaymentType: process.env.HYPERPAY_PAYMENT_TYPE || "DB",
         host: process.env.HYPERPAY_HOST || "test.oppwa.com",
