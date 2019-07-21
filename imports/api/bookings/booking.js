@@ -292,12 +292,18 @@ const onDriverAccept = async (bookingId, driverId, userId) => {
 
         const BookingData = BookingRecord.find({
             bookingId: bookingId,
-            status: "pending"
+            status: "pending",
+            createdAt: {
+                $gt: new Date( Date.now() - 1000 * 60 * 10 ).getTime()
+            }
         }).fetch()[0];
         
         if (!BookingData) {
             throw new Meteor.Error(localization.strings.acceptedBySomeone);
         }
+
+        if(BookingData)
+
         await BookingRecord.update(
             {
                 bookingId: bookingId
@@ -1687,13 +1693,10 @@ const cancelOldBookings = async ready => {
                 assetName: config.ASSET.Bookings,
                 rideStatus: "pending",
                 createdAt: {
-                    $lt: new Date( Date.now() - 1000 * 60 * 10 ).getTime()
+                    $lt: new Date( Date.now() - 1000 * 60 * 12 ).getTime()
                 }
             }
         });
-        console.log(new Date( Date.now() - 1000 * 60 * 10 ).getTime())
-        console.log("Bookings to be cancelled", bookings)
-
 
         for (let count = 0; count < bookings.length; count++) {
 
