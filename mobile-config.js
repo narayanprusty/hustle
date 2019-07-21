@@ -91,3 +91,6 @@ App.appendToConfig(`
 App.setPreference("orientation", "portrait");
 App.setPreference("AutoHideSplashScreen", "true");
 App.setPreference("DisallowOverscroll", "false");
+App.setPreference("android-windowSoftInputMode", "adjustPan", "android")
+App.setPreference("windowSoftInputMode", "adjustPan", "android")
+App.setPreference("WindowSoftInputMode", "adjustPan", "android")

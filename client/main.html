@@ -39,7 +39,7 @@
         };
 
         window.addEventListener('keyboardDidHide', () => {
-            if(document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
+            if(document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA' || document.activeElement.tagName == 'SELECT'|| document.activeElement.tagName == 'CHECKBOX'|| document.activeElement.tagName == 'RADIO') {
                 if(!isInViewport(document.activeElement)) {
                     window.scrollTo(0, document.activeElement.scrollHeight);
                 }
