@@ -2,7 +2,7 @@ if (this.process.env.NODE_ENV === "production") {
     App.info({
         id: "com.gohustleapp.hustle",
         name: "Hustle",
-        version: "1.0.22" //version Major.Minor.patch //also put `-` *rc/alpha/beta whatever if needed
+        version: "1.0.23" //version Major.Minor.patch //also put `-` *rc/alpha/beta whatever if needed
     });
 } else {
     App.info({
