@@ -6,13 +6,13 @@ module.exports = {
     PUBNUB: {
         pubKey:
             process.env.PUBNUB_PUBKEY ||
-            "pub-c-f4bd0466-069e-4bd2-94cf-b299dc02f92a",
+            "pub-c-ac305c80-9d55-45f8-852d-f036f02ead60",
         subKey:
             process.env.PUBNUB_SUBKEY ||
-            "sub-c-b6590186-f6e1-11e8-b35b-72ed2feff2dd",
+            "sub-c-8d04e73a-4ee5-11e9-bace-daeb5080f5f6",
         secret:
             process.env.PUBNUB_SECRET ||
-            "sec-c-ODI1ZjY2MWUtMTIwNy00M2MxLWIzY2EtZDUwMjQ5MTlhNmY5"
+            "sec-c-NTUzODQ0NGEtNDg1YS00ODg3LWIxMzItMzc1YTZmODIyMmQ4"
     },
     FRONTEND_HOST: process.env.ROOT_URL || "https://booking.gohustleapp.com",
     BASE_URL: "https://gohustleapp.com",

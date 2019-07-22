@@ -288,11 +288,7 @@ const onDriverAccept = async (bookingId, driverId, userId) => {
     const subPlan = await getUserSubscriptions(Meteor.userId());
     if (subPlan.success && subPlan.data && subPlan.data.length) {
 
-        console.log('Driver Accept 1: ', printTime())
-
         await sleep(genRand(1, 5, 2))
-
-        console.log('Driver Accept 2: ', printTime())
 
         const BookingData = BookingRecord.find({
             bookingId: bookingId,
@@ -308,8 +304,6 @@ const onDriverAccept = async (bookingId, driverId, userId) => {
 
         if(BookingData)
 
-        console.log('Driver Accept 3: ', printTime())
-
         await BookingRecord.update(
             {
                 bookingId: bookingId
@@ -321,9 +315,6 @@ const onDriverAccept = async (bookingId, driverId, userId) => {
                 }
             }
         );
-
-        console.log('Driver Accept 4: ', printTime())
-
         await DriverMeta.update(
             {
                 driverId: driverId
@@ -337,8 +328,6 @@ const onDriverAccept = async (bookingId, driverId, userId) => {
                 }
             }
         );
-
-        console.log('Driver Accept 5: ', printTime())
         
         const txId = await node.callAPI("assets/updateAssetInfo", {
             assetName: config.ASSET.Bookings,
@@ -349,8 +338,6 @@ const onDriverAccept = async (bookingId, driverId, userId) => {
                 driverId: driverId
             }
         });
-
-        console.log('Driver Accept 6: ', printTime())
         
         //Push notification
         sendPushNotification(
