@@ -56,7 +56,7 @@ const sendPushNotification = (title, text, userId) => {
     if (userId) {
         query["userId"] = userId;
     }
-    console.log(Push.send({
+    Push.send({
         from: "hustle",
         title,
         text,
@@ -68,7 +68,7 @@ const sendPushNotification = (title, text, userId) => {
         contentAvailable: 1,
         androidChannel: "PushPluginChannel",
         notId
-    }));
+    });
     return true;
 };
 

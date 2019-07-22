@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "618953691604-1727p328rkr7rnqugf2qvufhn8phs3jk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gohustleapp.hustle",
+            "certificate_hash": "7231e0bd306b454e68c2fa5254ec1207997d00f2"
+          }
+        },
+        {
           "client_id": "618953691604-i4qemdu9juh7b1btl817bn8uv8dug0uh.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -25,15 +33,20 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "618953691604-i4qemdu9juh7b1btl817bn8uv8dug0uh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "618953691604-1dd229bams69oho6imm40hi5t0ict949.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.gohustleapp.hustle"
+              }
+            }
+          ]
         }
       }
     }
