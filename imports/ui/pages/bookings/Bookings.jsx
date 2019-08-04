@@ -719,7 +719,8 @@ class Bookings extends Component {
                                         name="boardingPoint"
                                         autocompletionRequest={{
                                             input: this.state.boardsearch,
-                                            strictbounds: true
+                                            strictbounds: true,
+                                            components:"country:sa"
                                         }}
                                         googleMaps={mapApi}
                                         onSelectSuggest={this.addBoardingPlace.bind(
