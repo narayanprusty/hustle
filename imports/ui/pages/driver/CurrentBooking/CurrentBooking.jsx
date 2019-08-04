@@ -776,6 +776,7 @@ class CurrentBooking extends Component {
                             launcher={handleToggle =>
                                 (this.toggleChatBox = handleToggle)
                             }
+                            autofocus="false"
                         />
                     )}
                 </div>
